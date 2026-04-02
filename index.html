@@ -4558,7 +4558,19 @@ function getGlobalBadgesForPlayer(player) {
   const gb = getGlobalBadges();
   const result = [];
   for(const [key, achiever] of Object.entries(gb)) {
-    // Nur Badges zurückgeben, die diesem SPEZIFISCHEN Account gehören
+    // S1 Badges können mehrere Empfänger haben (Array)
+    if(key.startsWith('s1_') && Array.isArray(achiever)) {
+      const playerEntry = achiever.find(a => a.internalId === iid && a.playerId === player.id);
+      if(playerEntry) {
+        const sb = STREAK_FIRST_BADGES.find(s=>s.key===key);
+        if(sb) { result.push({key, ...sb}); continue; }
+        const ab = ACHIEVEMENT_BADGES.find(a=>a.key===key);
+        if(ab) result.push({key, ...ab});
+      }
+      continue;
+    }
+    
+    // Normale Badges: nur ein Empfänger
     if(achiever.internalId !== iid) continue;
     // Wenn playerId gesetzt ist, nur für diesen Account anzeigen
     // Wenn nicht gesetzt (alte Daten), für alle Accounts dieses Spielers anzeigen
@@ -4576,6 +4588,18 @@ function checkAndSetGlobalBadge(player, key) {
   const iid = getPlayerInternalId(player);
   if(!iid) return false;
   const gb = getGlobalBadges();
+  
+  // S1 Badges können mehrfach vergeben werden
+  if(key.startsWith('s1_')) {
+    // S1 Badge: speichere als Array für mehrere Empfänger
+    if(!gb[key]) gb[key] = [];
+    if(!Array.isArray(gb[key])) gb[key] = [gb[key]]; // Konvertiere altes Format
+    gb[key].push({ internalId: iid, playerId: player.id, playerName: player.name, timestamp: Date.now() });
+    saveGlobalBadges(gb);
+    return true;
+  }
+  
+  // Normale Badges: nur einmal vergeben
   if(gb[key]) return false; // schon vergeben → überall weg
   gb[key] = { internalId: iid, playerId: player.id, playerName: player.name, timestamp: Date.now() };
   saveGlobalBadges(gb);
@@ -5039,7 +5063,10 @@ function renderDevConsole() {
   const badgeRows = allBadgeTypes.map(b => {
     const isRankB = !!RANK_FIRST_BADGE[b.key];
     const _gb = getGlobalBadges();
-    const achiever = isRankB ? state.firstRankAchievers?.[b.key] : (_gb[b.key] ? {playerName: _gb[b.key].playerName} : null);
+    // S1 Badges können mehrfach vergeben werden - immer als frei anzeigen
+    const achiever = isRankB ? state.firstRankAchievers?.[b.key] : 
+                       (b.key.startsWith('s1_') ? null : 
+                       (_gb[b.key] && !Array.isArray(_gb[b.key]) ? {playerName: _gb[b.key].playerName} : null));
     const bgStyle = b.bgSize ? `background:${b.bg};background-size:${b.bgSize};` : `background:${b.bg};`;
     const animClass = b.anim ? ` badge-anim-${b.anim}` : (b.rainbow ? ' first-badge-rainbow' : '');
     const isSet = !!achiever;
@@ -5164,7 +5191,14 @@ function devGrantBadge() {
   } else {
     const iid = getPlayerInternalId(player) || player.name;
     const gb = getGlobalBadges();
-    gb[bkey] = {internalId:iid, playerId:player.id, playerName:player.name, timestamp:Date.now()};
+    // S1 Badges können mehrfach vergeben werden - als Array speichern
+    if(bkey.startsWith('s1_')) {
+      if(!gb[bkey]) gb[bkey] = [];
+      if(!Array.isArray(gb[bkey])) gb[bkey] = [gb[bkey]];
+      gb[bkey].push({internalId:iid, playerId:player.id, playerName:player.name, timestamp:Date.now()});
+    } else {
+      gb[bkey] = {internalId:iid, playerId:player.id, playerName:player.name, timestamp:Date.now()};
+    }
     saveGlobalBadges(gb);
   }
   renderAll(); renderDevConsole();
