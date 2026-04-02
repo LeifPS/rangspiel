@@ -218,6 +218,34 @@
   .section-label{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;margin-top:2px;padding:0 2px}
   @keyframes flashUp{0%{background:rgba(76,232,122,0)}30%{background:rgba(76,232,122,.12)}100%{background:var(--bg2)}}
   @keyframes flashDown{0%{background:rgba(232,76,76,0)}30%{background:rgba(232,76,76,.12)}100%{background:var(--bg2)}}
+  .pp-badge-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;box-shadow:var(--shadow-sm)}
+
+  /* Badge Catalog Styles - Mobile Friendly */
+  .badge-catalog-modal{max-width:90vw;max-height:90vh;overflow-y:auto;padding:16px}
+  .badge-catalog-title{font-size:1.1rem;margin-bottom:12px;text-align:center}
+  .badge-catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;max-height:70vh;overflow-y:auto;padding-right:4px}
+  .badge-catalog-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;display:flex;align-items:center;gap:10px;transition:all .2s ease}
+  .badge-catalog-item:hover{border-color:var(--accent)}
+  .badge-catalog-icon{width:40px;height:40px;font-size:1.4rem;flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .badge-catalog-info{flex:1;min-width:0}
+  .badge-catalog-label{font-weight:600;font-size:.8rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .badge-catalog-desc{font-size:.65rem;color:var(--text2);margin-top:2px;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-clamp:2}
+  .badge-catalog-status{font-size:.55rem;color:var(--text3);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+  .badge-catalog-close{width:100%;margin-top:12px;padding:10px;font-size:.9rem}
+
+  /* Mobile Styles for Badge Catalog */
+  @media (max-width:600px){
+    .badge-catalog-modal{max-width:95vw;max-height:85vh;padding:12px}
+    .badge-catalog-title{font-size:1rem}
+    .badge-catalog-grid{grid-template-columns:1fr;gap:8px;max-height:65vh}
+    .badge-catalog-item{padding:8px}
+    .badge-catalog-icon{width:36px;height:36px;font-size:1.2rem}
+    .badge-catalog-label{font-size:.75rem}
+    .badge-catalog-desc{font-size:.6rem;-webkit-line-clamp:2;line-clamp:2}
+    .badge-catalog-status{font-size:.5rem}
+    .badge-catalog-close{padding:12px;font-size:.85rem}
+  }
+
   .player-rank-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;border:2px solid var(--rank-color,#4a5070);background:rgba(0,0,0,.3)}
   .player-info{flex:1;min-width:0;overflow:hidden}
   .player-name{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 40px)}
@@ -1444,25 +1472,47 @@
   @keyframes achShielded{0%,100%{box-shadow:0 0 5px rgba(249,168,37,.5)}50%{box-shadow:0 0 14px rgba(249,168,37,.9);transform:scale(1.05)}}
   @keyframes achTiefsturz{0%,100%{box-shadow:0 0 4px rgba(173,20,87,.5)}50%{box-shadow:0 0 14px rgba(173,20,87,.9),inset 0 0 6px rgba(252,228,236,.2)}}
   @keyframes achIron{0%,100%{box-shadow:0 0 4px rgba(84,110,122,.4)}50%{box-shadow:0 0 12px rgba(84,110,122,.8);transform:scale(1.04)}}
-  /* 🛠️ ERSTELLER - Ultra krasse Animation */
-  @keyframes achCreator{
-    0%{box-shadow:0 0 10px #ff006e,0 0 20px #8338ec;background-position:0% 50%;transform:scale(1) rotate(0deg)}
-    10%{box-shadow:0 0 20px #ff006e,0 0 40px #8338ec,0 0 60px #3a86ff;transform:scale(1.1) rotate(3deg)}
-    20%{box-shadow:0 0 30px #ff006e,0 0 60px #8338ec,0 0 90px #3a86ff;transform:scale(1.15) rotate(-3deg)}
-    30%{box-shadow:0 0 40px #ff006e,0 0 80px #8338ec,0 0 120px #3a86ff;transform:scale(1.2) rotate(5deg)}
-    40%{box-shadow:0 0 50px #ff006e,0 0 100px #8338ec,0 0 150px #3a86ff;transform:scale(1.25) rotate(-5deg)}
-    50%{box-shadow:0 0 60px #ff006e,0 0 120px #8338ec,0 0 180px #3a86ff,0 0 220px #ff006e;transform:scale(1.3) rotate(0deg);filter:brightness(1.3)}
-    60%{box-shadow:0 0 50px #ff006e,0 0 100px #8338ec,0 0 150px #3a86ff;transform:scale(1.25) rotate(5deg)}
-    70%{box-shadow:0 0 40px #ff006e,0 0 80px #8338ec,0 0 120px #3a86ff;transform:scale(1.2) rotate(-5deg)}
-    80%{box-shadow:0 0 30px #ff006e,0 0 60px #8338ec,0 0 90px #3a86ff;transform:scale(1.15) rotate(3deg)}
-    90%{box-shadow:0 0 20px #ff006e,0 0 40px #8338ec,0 0 60px #3a86ff;transform:scale(1.1) rotate(-3deg)}
-    100%{box-shadow:0 0 10px #ff006e,0 0 20px #8338ec;background-position:200% 50%;transform:scale(1) rotate(0deg)}
-  }
-  .badge-anim-achCreator{
-    animation:achCreator 2s ease-in-out infinite;
-    background-size:200% 200% !important;
-    border:2px solid rgba(255,255,255,0.5);
-  }
+  /* 🎨 20 NEUE BADGE ANIMATIONEN 🎨 */
+  @keyframes achLucky{0%,100%{box-shadow:0 0 5px rgba(102,187,106,.4);transform:rotate(0deg)}25%{box-shadow:0 0 15px rgba(102,187,106,.8);transform:rotate(-5deg)}50%{box-shadow:0 0 25px rgba(102,187,106,1);transform:rotate(0deg)}75%{box-shadow:0 0 15px rgba(102,187,106,.8);transform:rotate(5deg)}}
+  @keyframes achUnlucky{0%,100%{box-shadow:0 0 4px rgba(120,144,156,.4);transform:translateY(0)}50%{box-shadow:0 0 12px rgba(120,144,156,.8);transform:translateY(-3px)}}
+  @keyframes achPhoenix{0%,100%{box-shadow:0 0 8px rgba(255,87,34,.5);transform:scale(1)}50%{box-shadow:0 0 30px rgba(255,87,34,1),0 0 60px rgba(255,152,0,.8);transform:scale(1.1)}}
+  @keyframes achShadow{0%,100%{box-shadow:0 0 4px rgba(97,97,97,.3)}50%{box-shadow:0 0 10px rgba(97,97,97,.6);transform:translateX(3px)}}
+  @keyframes achMeteor{0%,100%{box-shadow:0 0 10px rgba(245,0,87,.5);transform:translateX(0)}25%{box-shadow:0 0 30px rgba(245,0,87,.9);transform:translateX(-5px)}50%{box-shadow:0 0 50px rgba(245,0,87,1);transform:translateX(0)}75%{box-shadow:0 0 30px rgba(245,0,87,.9);transform:translateX(5px)}}
+  @keyframes achIceKing{0%,100%{box-shadow:0 0 5px rgba(0,188,212,.4);transform:scale(1)}50%{box-shadow:0 0 20px rgba(0,188,212,.9),0 0 40px rgba(77,208,225,.6);transform:scale(1.05)}}
+  @keyframes achLightning{0%,100%{box-shadow:0 0 6px rgba(255,193,7,.5)}50%{box-shadow:0 0 25px rgba(255,193,7,1),0 0 50px rgba(255,213,79,.8)}}
+  @keyframes achMarathon{0%,100%{box-shadow:0 0 4px rgba(141,110,99,.4)}50%{box-shadow:0 0 15px rgba(141,110,99,.8);transform:translateX(5px)}}
+  @keyframes achDiamondHands{0%,100%{box-shadow:0 0 8px rgba(0,229,255,.5);transform:rotate(0deg)}50%{box-shadow:0 0 30px rgba(0,229,255,1),0 0 60px rgba(24,255,255,.8);transform:rotate(5deg)}}
+  @keyframes achSamurai{0%,100%{box-shadow:0 0 6px rgba(229,57,53,.5);transform:scale(1)}25%{box-shadow:0 0 20px rgba(229,57,53,.9);transform:scale(1.05) rotate(-3deg)}50%{box-shadow:0 0 35px rgba(229,57,53,1);transform:scale(1.1) rotate(0deg)}75%{box-shadow:0 0 20px rgba(229,57,53,.9);transform:scale(1.05) rotate(3deg)}}
+  @keyframes achNinja{0%,100%{box-shadow:0 0 4px rgba(55,71,79,.4);transform:translateY(0)}50%{box-shadow:0 0 12px rgba(55,71,79,.8);transform:translateY(-5px)}}
+  @keyframes achZen{0%,100%{box-shadow:0 0 6px rgba(186,104,200,.4)}50%{box-shadow:0 0 20px rgba(186,104,200,.9),0 0 40px rgba(243,229,245,.5);transform:scale(1.03)}}
+  @keyframes achCave{0%,100%{box-shadow:0 0 4px rgba(93,64,55,.4);transform:scale(1)}50%{box-shadow:0 0 12px rgba(93,64,55,.7);transform:scale(0.97)}}
+  @keyframes achRocket{0%,100%{box-shadow:0 0 8px rgba(255,111,0,.5);transform:translateY(0)}50%{box-shadow:0 0 35px rgba(255,111,0,1),0 0 70px rgba(255,143,0,.8);transform:translateY(-8px)}}
+  @keyframes achKingmaker{0%,100%{box-shadow:0 0 8px rgba(255,234,0,.5);transform:rotate(0deg)}50%{box-shadow:0 0 30px rgba(255,234,0,1),0 0 60px rgba(255,215,0,.8);transform:rotate(10deg)}}
+  @keyframes achInvisible{0%,100%{box-shadow:0 0 3px rgba(207,216,220,.3);opacity:1}50%{box-shadow:0 0 10px rgba(207,216,220,.6);opacity:0.7;transform:scale(0.95)}}
+  @keyframes achHoudini{0%,100%{box-shadow:0 0 4px rgba(66,66,66,.4);transform:rotate(0deg)}50%{box-shadow:0 0 15px rgba(66,66,66,.8);transform:rotate(180deg) scale(0.9)}}
+  @keyframes achCollector{0%,100%{box-shadow:0 0 6px rgba(240,98,146,.4);transform:rotate(0deg)}25%{box-shadow:0 0 15px rgba(240,98,146,.8);transform:rotate(90deg)}50%{box-shadow:0 0 25px rgba(240,98,146,1);transform:rotate(180deg)}75%{box-shadow:0 0 15px rgba(240,98,146,.8);transform:rotate(270deg)}}
+  @keyframes achUntouchable{0%,100%{box-shadow:0 0 6px rgba(41,182,246,.5),inset 0 0 3px rgba(41,182,246,.3)}50%{box-shadow:0 0 25px rgba(41,182,246,1),0 0 50px rgba(41,182,246,.8),inset 0 0 10px rgba(225,245,254,.5)}}
+  @keyframes achTimeTraveler{0%,100%{box-shadow:0 0 5px rgba(38,166,154,.4)}50%{box-shadow:0 0 20px rgba(38,166,154,.9),0 0 40px rgba(0,137,123,.6);transform:scale(1.05)}}
+  .badge-anim-achLucky{animation:achLucky 2.5s ease-in-out infinite}
+  .badge-anim-achUnlucky{animation:achUnlucky 3s ease-in-out infinite}
+  .badge-anim-achPhoenix{animation:achPhoenix 2s ease-in-out infinite}
+  .badge-anim-achShadow{animation:achShadow 4s ease-in-out infinite}
+  .badge-anim-achMeteor{animation:achMeteor 1.5s ease-in-out infinite}
+  .badge-anim-achIceKing{animation:achIceKing 3s ease-in-out infinite}
+  .badge-anim-achLightning{animation:achLightning 0.8s ease-in-out infinite}
+  .badge-anim-achMarathon{animation:achMarathon 2s ease-in-out infinite}
+  .badge-anim-achDiamondHands{animation:achDiamondHands 2.5s ease-in-out infinite}
+  .badge-anim-achSamurai{animation:achSamurai 2s ease-in-out infinite}
+  .badge-anim-achNinja{animation:achNinja 2.2s ease-in-out infinite}
+  .badge-anim-achZen{animation:achZen 3s ease-in-out infinite}
+  .badge-anim-achCave{animation:achCave 3.5s ease-in-out infinite}
+  .badge-anim-achRocket{animation:achRocket 2s ease-in-out infinite}
+  .badge-anim-achKingmaker{animation:achKingmaker 2.5s ease-in-out infinite}
+  .badge-anim-achInvisible{animation:achInvisible 4s ease-in-out infinite}
+  .badge-anim-achHoudini{animation:achHoudini 3s ease-in-out infinite}
+  .badge-anim-achCollector{animation:achCollector 4s linear infinite}
+  .badge-anim-achUntouchable{animation:achUntouchable 2s ease-in-out infinite}
+  .badge-anim-achTimeTraveler{animation:achTimeTraveler 3s ease-in-out infinite}
   /* Placement badge animations */
   @keyframes platzGold{0%,100%{box-shadow:0 0 8px rgba(255,215,0,.6),inset 0 0 4px rgba(255,215,0,.3)}50%{box-shadow:0 0 20px rgba(255,215,0,1),inset 0 0 10px rgba(255,215,0,.6);transform:scale(1.08)}}
   @keyframes platzSilber{0%,100%{box-shadow:0 0 5px rgba(144,164,174,.4)}50%{box-shadow:0 0 14px rgba(144,164,174,.9)}}
@@ -1743,6 +1793,14 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
+<div class="modal-overlay hidden" id="badgeCatalogModal" onclick="hideBadgeCatalog()">
+  <div class="modal badge-catalog-modal" onclick="event.stopPropagation()">
+    <h3 class="badge-catalog-title">📚 Badge-Katalog</h3>
+    <div id="badgeCatalogGrid" class="badge-catalog-grid"></div>
+    <button class="btn-modal-cancel badge-catalog-close" onclick="hideBadgeCatalog()">Schließen</button>
+  </div>
+</div>
+
 <script>
 /* ================================================================
    RÄNGE
@@ -1932,106 +1990,6 @@ async function loadFromFirestore() {
   }
 }
 
-// Lade Badges aus Firestore
-async function loadBadgesFromFirestore() {
-  try {
-    const doc = await db.collection(FIRESTORE_COLLECTION).doc('global_badges').get();
-    if(doc.exists) {
-      const data = doc.data();
-      if(data.badges) {
-        localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(data.badges));
-        console.log('Badges aus Firestore geladen');
-        return true;
-      }
-    }
-    return false;
-  } catch(e) {
-    console.error('Badge Load Error:', e);
-    return false;
-  }
-}
-
-// Echtzeit-Listener für Multi-User-Synchronisation
-let unsubscribeData = null;
-let unsubscribeBadges = null;
-
-function startRealtimeListeners() {
-  // Listener für Hauptdaten (Spieler, Runden, etc.)
-  unsubscribeData = db.collection(FIRESTORE_COLLECTION).doc(FIRESTORE_DOC)
-    .onSnapshot((doc) => {
-      if(doc.exists) {
-        const data = doc.data();
-        // Prüfe ob Änderung von anderem User kam (timestamp Vergleich)
-        const lastUpdate = data.timestamp?.toDate?.() || new Date(0);
-        const now = new Date();
-        const secondsSinceUpdate = (now - lastUpdate) / 1000;
-        
-        // Nur aktualisieren wenn Änderung älter als 2 Sekunden (nicht eigene)
-        if(secondsSinceUpdate > 2 && data.state) {
-          console.log('Echtzeit-Update von anderem User empfangen');
-          
-          // Aktuellen Zustand merken
-          const oldPlayers = JSON.stringify(state.players);
-          
-          // State aktualisieren
-          state = {
-            players: data.state.players || [],
-            round: data.state.round || 0,
-            history: data.state.history || [],
-            matchmakingOn: data.state.matchmakingOn || false,
-            mmPhase: data.state.mmPhase || 'low',
-            keys: data.state.keys || [],
-            profileName: data.state.profileName,
-            firstRankAchievers: data.state.firstRankAchievers || {}
-          };
-          if(data.nextId) nextId = data.nextId;
-          
-          // UI aktualisieren
-          renderAll();
-          
-          // Toast anzeigen wenn sich Spieler geändert haben
-          const newPlayers = JSON.stringify(state.players);
-          if(oldPlayers !== newPlayers) {
-            showToast('🔄 Daten von anderem Gerät aktualisiert');
-          }
-        }
-      }
-    }, (error) => {
-      console.error('Realtime Data Listener Error:', error);
-    });
-  
-  // Listener für Badges
-  unsubscribeBadges = db.collection(FIRESTORE_COLLECTION).doc('global_badges')
-    .onSnapshot((doc) => {
-      if(doc.exists) {
-        const data = doc.data();
-        if(data.badges) {
-          const currentBadges = JSON.stringify(getGlobalBadges());
-          const newBadges = JSON.stringify(data.badges);
-          
-          // Nur aktualisieren wenn sich was geändert hat
-          if(currentBadges !== newBadges) {
-            localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(data.badges));
-            console.log('Badges Echtzeit-Update empfangen');
-            renderAll();
-            showToast('🏅 Neue Badges synchronisiert');
-          }
-        }
-      }
-    }, (error) => {
-      console.error('Realtime Badges Listener Error:', error);
-    });
-  
-  console.log('Echtzeit-Listener gestartet');
-}
-
-// Stoppe Listener (z.B. beim Logout)
-function stopRealtimeListeners() {
-  if(unsubscribeData) { unsubscribeData(); unsubscribeData = null; }
-  if(unsubscribeBadges) { unsubscribeBadges(); unsubscribeBadges = null; }
-  console.log('Echtzeit-Listener gestoppt');
-}
-
 /* ================================================================
    ZUSTAND
    ================================================================ */
@@ -2131,15 +2089,12 @@ async function initFromFirestore() {
     return;
   }
   const loaded = await loadFromFirestore();
-  const badgesLoaded = await loadBadgesFromFirestore();
   if(loaded) {
     renderAll();
     showToast('Daten aus Cloud geladen');
   } else {
     showToast('Lokale Daten geladen');
   }
-  // Starte Echtzeit-Listener für Multi-User-Sync
-  startRealtimeListeners();
 }
 
 /* ================================================================
@@ -4416,11 +4371,92 @@ const ACHIEVEMENT_BADGES = [
   { key:'ach_iron',         sym:'🦾',  label:'Eisern',         desc:'Erster mit Streak ≥ 10 (10 Runden ohne Verlust)',
     bg:'linear-gradient(135deg,#37474f,#546e7a)', color:'#eceff1', priority:39, anim:'achIron' },
 
-  // 🛠️ ERSTELLER - Manuell vergebener Ultra-Badge
+  // 🎨 20 NEUE ANIMIERTE BADGES 🎨
+  // 11. Glückspilz: 3x hintereinander nur +0.5 Punkte bekommen (nur 3. Platz)
+  { key:'ach_lucky',        sym:'🍀',  label:'Glückspilz',     desc:'Erster der 3x hintereinander nur 0.5 Punkte bekommen hat',
+    bg:'linear-gradient(135deg,#2e7d32,#66bb6a)', color:'#e8f5e9', priority:45, anim:'achLucky' },
+
+  // 12. Pechvogel: 3x hintereinander letzter Platz
+  { key:'ach_unlucky',      sym:'🌧️',  label:'Pechvogel',      desc:'Erster der 3x hintereinander letzter war',
+    bg:'linear-gradient(135deg,#37474f,#78909c)', color:'#eceff1', priority:46, anim:'achUnlucky' },
+
+  // 13. Phönix: Vom letzten Platz auf ersten Platz in einer Runde
+  { key:'ach_phoenix',      sym:'🔥',  label:'Phönix',         desc:'Erster der vom letzten auf den ersten Platz kam',
+    bg:'linear-gradient(135deg,#ff5722,#ff9800)', color:'#fff3e0', priority:47, anim:'achPhoenix' },
+
+  // 14. Schattenspieler: 5x hintereinander im mittleren Drittel (2., 3., 4. bei 5 Spielern)
+  { key:'ach_shadow',       sym:'👤',  label:'Schattenspieler',desc:'Erster der 5x im mittleren Drittel blieb',
+    bg:'linear-gradient(135deg,#424242,#616161)', color:'#f5f5f5', priority:48, anim:'achShadow' },
+
+  // 15. Meteor: In einer Runde 3+ Punkte gewonnen
+  { key:'ach_meteor',       sym:'☄️',  label:'Meteor',         desc:'Erster der in einer Runde 3+ Punkte gewann',
+    bg:'linear-gradient(135deg,#ff1744,#f50057)', color:'#fce4ec', priority:49, anim:'achMeteor' },
+
+  // 16. Eiskönig: 5x hintereinander keine Punkte verloren (kein negativer Delta)
+  { key:'ach_iceking',      sym:'🧊',  label:'Eiskönig',       desc:'Erster der 5 Runden keine Punkte verlor',
+    bg:'linear-gradient(135deg,#00bcd4,#4dd0e1)', color:'#e0f7fa', priority:50, anim:'achIceKing' },
+
+  // 17. Blitzableiter: 3x hintereinander Punkte verloren aber nie letzter
+  { key:'ach_lightning',    sym:'⚡',  label:'Blitzableiter',  desc:'Erster der 3x verlor aber nie letzter war',
+    bg:'linear-gradient(135deg,#ffc107,#ffd54f)', color:'#fff8e1', priority:51, anim:'achLightning' },
+
+  // 18. Marathonläufer: 50 Runden gespielt
+  { key:'ach_marathon',     sym:'🏃',  label:'Marathonläufer', desc:'Erster der 50 Runden gespielt hat',
+    bg:'linear-gradient(135deg,#795548,#8d6e63)', color:'#efebe9', priority:52, anim:'achMarathon' },
+
+  // 19. Diamant-Hände: Nie unter 10 Punkte fallen nachdem 15 erreicht wurden
+  { key:'ach_diamondhands', sym:'💎',  label:'Diamant-Hände',  desc:'Erster der nie unter 10 fiel nach 15+ Punkten',
+    bg:'linear-gradient(135deg,#00e5ff,#18ffff)', color:'#e0f7fa', priority:53, anim:'achDiamondHands' },
+
+  // 20. Samurai: Exakt 7 Siege gesamt (die perfekte Zahl)
+  { key:'ach_samurai',      sym:'⚔️',  label:'Samurai',        desc:'Erster mit exakt 7 Siegen insgesamt',
+    bg:'linear-gradient(135deg,#c62828,#e53935)', color:'#ffebee', priority:54, anim:'achSamurai' },
+
+  // 21. Ninja: 3x hintereinander exakt 2. Platz
+  { key:'ach_ninja',        sym:'🥷',  label:'Ninja',          desc:'Erster der 3x hintereinander Zweiter war',
+    bg:'linear-gradient(135deg,#263238,#37474f)', color:'#eceff1', priority:55, anim:'achNinja' },
+
+  // 22. Zen-Meister: Immer positive Punkte über 10 Runden (nie 0 oder negativ)
+  { key:'ach_zen',          sym:'☯️',  label:'Zen-Meister',    desc:'Erster mit 10 Runden nur positiver Delta',
+    bg:'linear-gradient(135deg,#9c27b0,#ba68c8)', color:'#f3e5f5', priority:56, anim:'achZen' },
+
+  // 23. Höhlenforscher: 3x hintereinander unter 5 Punkte aber nicht letzter
+  { key:'ach_cave',         sym:'🦇',  label:'Höhlenforscher', desc:'Erster der 3x unter 5 Punkte war aber nicht letzter',
+    bg:'linear-gradient(135deg,#3e2723,#5d4037)', color:'#d7ccc8', priority:57, anim:'achCave' },
+
+  // 24. Rakete: Von unter 5 Punkten auf über 15 in nur 3 Runden
+  { key:'ach_rocket',       sym:'🚀',  label:'Rakete',         desc:'Erster der von <5 auf >15 in 3 Runden schaffte',
+    bg:'linear-gradient(135deg,#ff6f00,#ff8f00)', color:'#fff3e0', priority:58, anim:'achRocket' },
+
+  // 25. Königsmacher: 5x anderen Spieler zum Sieg verhelfen (immer 2. hinter demselben)
+  { key:'ach_kingmaker',    sym:'👑',  label:'Königsmacher',   desc:'Erster der 5x demselben Spieler den Sieg ermöglichte',
+    bg:'linear-gradient(135deg,#ffd700,#ffea00)', color:'#3e2723', priority:59, anim:'achKingmaker' },
+
+  // 26. Unsichtbarer: Nie über 10 Punkte aber 20 Runden gespielt
+  { key:'ach_invisible',    sym:'👻',  label:'Unsichtbarer',   desc:'Erster der 20 Runden spielte ohne über 10 Punkte zu kommen',
+    bg:'linear-gradient(135deg,#cfd8dc,#eceff1)', color:'#455a64', priority:60, anim:'achInvisible' },
+
+  // 27. Houdini: Aus letztem Platz nicht letzter werden in nächster Runde
+  { key:'ach_houdini',      sym:'🎩',  label:'Houdini',        desc:'Erster der 3x vom letzten Platz entkam',
+    bg:'linear-gradient(135deg,#212121,#424242)', color:'#fafafa', priority:61, anim:'achHoudini' },
+
+  // 28. Sammler: Alle 4 Platzierungen (1., 2., 3., 4.) in 4 aufeinanderfolgenden Runden
+  { key:'ach_collector',    sym:'🎲',  label:'Sammler',        desc:'Erster mit allen Platzierungen in 4 Runden',
+    bg:'linear-gradient(135deg,#ec407a,#f06292)', color:'#fce4ec', priority:62, anim:'achCollector' },
+
+  // 29. Unantastbar: Nie letzter über 15 Runden
+  { key:'ach_untouchable',  sym:'🛡️',  label:'Unantastbar',    desc:'Erster der 15 Runden nie letzter war',
+    bg:'linear-gradient(135deg,#0277bd,#29b6f6)', color:'#e1f5fe', priority:63, anim:'achUntouchable' },
+
+  // 30. Zeitreisender: Nach 20+ Runden Pause wieder spielen und gewinnen
+  { key:'ach_timetraveler', sym:'⏳',  label:'Zeitreisender',  desc:'Erster der nach 20 Runden Pause direkt gewann',
+    bg:'linear-gradient(135deg,#00897b,#26a69a)', color:'#e0f2f1', priority:64, anim:'achTimeTraveler' },
+
+  // 🛠️ ERSTELLER - Manuell vergebener Ultra-Badge (nur vergeben, nicht erhalten)
   { key:'ach_creator',      sym:'🛠️',  label:'Ersteller',      desc:'Vom Ersteller manuell verliehen - Ultra exklusiv',
     bg:'linear-gradient(135deg,#ff006e,#8338ec,#3a86ff)', bgSize:'200% 200%', color:'#fff', priority:100, anim:'achCreator', rainbow:true, manualOnly:true },
 
-  // ── PLATZIERUNGS-BADGES ─────────────────────────────────────────────────────
+  // ⬇️ PLATZIERUNGS-BADGES ⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️─────────────────────────────────────────────────────
   // 11. Erster Platz 1 im Profil
   { key:'platz_gold1',      sym:'🥇', label:'Erster Sieg',    desc:'Allerester Platz-1-Sieg im Profil',
     bg:'linear-gradient(135deg,#ffd700,#ff8f00)', color:'#3e2000', priority:40, anim:'platzGold' },
@@ -4455,23 +4491,6 @@ function getGlobalBadges() {
 }
 function saveGlobalBadges(gb) {
   localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(gb));
-  // Auch zu Firestore synchronisieren
-  syncBadgesToFirestore(gb);
-}
-
-// Speichere Badges zu Firestore
-async function syncBadgesToFirestore(gb) {
-  try {
-    const user = auth.currentUser;
-    if (!user) return;
-    await db.collection(FIRESTORE_COLLECTION).doc('global_badges').set({
-      badges: gb,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    console.log('Badges zu Firestore synchronisiert');
-  } catch(e) {
-    console.error('Badge Sync Error:', e);
-  }
 }
 
 /* Gibt den internen Spieler-Key (internalId) für einen Player zurück */
@@ -4999,8 +5018,55 @@ function renderDevConsole() {
       <div class="dev-warn">⚠ Änderungen gelten nur für dieses Profil</div>
     </div>
     <div class="dev-section">
+      <div class="dev-section-title">🏅 Badge-Katalog</div>
+      <div class="dev-row">
+        <button class="dev-btn" onclick="showBadgeCatalog()" style="background:linear-gradient(135deg,#ff006e,#8338ec);color:white">📚 Alle Badges anzeigen</button>
+      </div>
+    </div>
+    <div class="dev-section">
       <div class="dev-section-title">🏅 Badge-Übersicht (Klick zum Löschen)</div>
       <div class="dev-badge-grid">${badgeRows}</div>
+    </div>
+    <div class="dev-section">
+      <div class="dev-section-title">➕ Badge vergeben</div>
+      <div class="dev-row">
+        <span class="dev-label">Spieler</span>
+        <select class="dev-select" id="devPlayerSelect">${playerOpts}</select>
+      </div>
+      <div class="dev-row">
+        <span class="dev-label">Badge</span>
+        <select class="dev-select" id="devBadgeSelect">
+          <optgroup label="🎨 Neue Badges (20)">
+            <option value="ach_lucky">🍀 Glückspilz</option>
+            <option value="ach_unlucky">🌧️ Pechvogel</option>
+            <option value="ach_phoenix">🔥 Phönix</option>
+            <option value="ach_shadow">👤 Schattenspieler</option>
+            <option value="ach_meteor">☄️ Meteor</option>
+            <option value="ach_iceking">🧊 Eiskönig</option>
+            <option value="ach_lightning">⚡ Blitzableiter</option>
+            <option value="ach_marathon">🏃 Marathonläufer</option>
+            <option value="ach_diamondhands">💎 Diamant-Hände</option>
+            <option value="ach_samurai">⚔️ Samurai</option>
+            <option value="ach_ninja">🥷 Ninja</option>
+            <option value="ach_zen">☯️ Zen-Meister</option>
+            <option value="ach_cave">🦇 Höhlenforscher</option>
+            <option value="ach_rocket">🚀 Rakete</option>
+            <option value="ach_kingmaker">👑 Königsmacher</option>
+            <option value="ach_invisible">👻 Unsichtbarer</option>
+            <option value="ach_houdini">🎩 Houdini</option>
+            <option value="ach_collector">🎲 Sammler</option>
+            <option value="ach_untouchable">🛡️ Unantastbar</option>
+            <option value="ach_timetraveler">⏳ Zeitreisender</option>
+          </optgroup>
+          <optgroup label="⭐ Classic Achievements">
+            ${ACHIEVEMENT_BADGES.map(b => `<option value="${b.key}">${b.sym} ${b.label}</option>`).join('')}
+          </optgroup>
+        </select>
+      </div>
+      <div class="dev-row">
+        <button class="dev-btn" onclick="devGrantBadge()">Vergeben</button>
+        <button class="dev-btn danger" onclick="devRevokeBadge()">Entziehen</button>
+      </div>
     </div>
     <div class="dev-section">
       <div class="dev-section-title">🔧 Spieler-Punkte setzen</div>
@@ -5115,6 +5181,56 @@ function fmt(n){return n.toFixed(1)}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function getRankIcon(iconClass, small=false){
   return `<span class="rank-icon ${small ? 'small' : ''} rank-${iconClass}"></span>`;
+}
+
+/* ================================================================
+   BADGE KATALOG
+   ================================================================ */
+const ALL_BADGES = [
+  ...STREAK_FIRST_BADGES.map(b => ({...b, category:'Streak'})),
+  ...ACHIEVEMENT_BADGES.map(b => ({...b, category:'Achievement'})),
+  ...Object.entries(RANK_FIRST_BADGE).map(([key, b]) => ({...b, key, category:'Rang', locked:true}))
+];
+
+function showBadgeCatalog() {
+  const modal = document.getElementById('badgeCatalogModal');
+  const grid = document.getElementById('badgeCatalogGrid');
+  
+  // Badges nach Kategorie sortieren
+  const sorted = ALL_BADGES.sort((a,b) => {
+    const catOrder = { 'Rang': 0, 'Streak': 1, 'Achievement': 2 };
+    if(catOrder[a.category] !== catOrder[b.category]) return catOrder[a.category] - catOrder[b.category];
+    return (b.priority || 0) - (a.priority || 0);
+  });
+  
+  let currentCat = '';
+  let html = '';
+  
+  sorted.forEach(b => {
+    if(b.category !== currentCat) {
+      currentCat = b.category;
+      html += `<div style="grid-column:1/-1;font-size:.9rem;font-weight:700;color:var(--accent);margin-top:12px;padding-bottom:4px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1px">${b.category} Badges</div>`;
+    }
+    const animClass = b.anim ? `badge-anim-${b.anim}` : '';
+    const bgStyle = b.bgSize ? `background:${b.bg};background-size:${b.bgSize};` : `background:${b.bg};`;
+    html += `
+      <div class="badge-catalog-item">
+        <div class="badge-catalog-icon ${animClass}" style="${bgStyle}color:${b.color}">${b.sym}</div>
+        <div class="badge-catalog-info">
+          <div class="badge-catalog-label">${b.label}</div>
+          <div class="badge-catalog-desc">${b.desc}</div>
+          <div class="badge-catalog-status">${b.locked ? '🔒 Automatisch' : '✓ Manuell verfügbar'}</div>
+        </div>
+      </div>
+    `;
+  });
+  
+  grid.innerHTML = html || '<div style="color:var(--text3);text-align:center;padding:20px">Keine Badges gefunden</div>';
+  modal.classList.remove('hidden');
+}
+
+function hideBadgeCatalog() {
+  document.getElementById('badgeCatalogModal').classList.add('hidden');
 }
 
 /* INIT */
