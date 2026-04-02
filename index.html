@@ -1444,6 +1444,25 @@
   @keyframes achShielded{0%,100%{box-shadow:0 0 5px rgba(249,168,37,.5)}50%{box-shadow:0 0 14px rgba(249,168,37,.9);transform:scale(1.05)}}
   @keyframes achTiefsturz{0%,100%{box-shadow:0 0 4px rgba(173,20,87,.5)}50%{box-shadow:0 0 14px rgba(173,20,87,.9),inset 0 0 6px rgba(252,228,236,.2)}}
   @keyframes achIron{0%,100%{box-shadow:0 0 4px rgba(84,110,122,.4)}50%{box-shadow:0 0 12px rgba(84,110,122,.8);transform:scale(1.04)}}
+  /* 🛠️ ERSTELLER - Ultra krasse Animation */
+  @keyframes achCreator{
+    0%{box-shadow:0 0 10px #ff006e,0 0 20px #8338ec;background-position:0% 50%;transform:scale(1) rotate(0deg)}
+    10%{box-shadow:0 0 20px #ff006e,0 0 40px #8338ec,0 0 60px #3a86ff;transform:scale(1.1) rotate(3deg)}
+    20%{box-shadow:0 0 30px #ff006e,0 0 60px #8338ec,0 0 90px #3a86ff;transform:scale(1.15) rotate(-3deg)}
+    30%{box-shadow:0 0 40px #ff006e,0 0 80px #8338ec,0 0 120px #3a86ff;transform:scale(1.2) rotate(5deg)}
+    40%{box-shadow:0 0 50px #ff006e,0 0 100px #8338ec,0 0 150px #3a86ff;transform:scale(1.25) rotate(-5deg)}
+    50%{box-shadow:0 0 60px #ff006e,0 0 120px #8338ec,0 0 180px #3a86ff,0 0 220px #ff006e;transform:scale(1.3) rotate(0deg);filter:brightness(1.3)}
+    60%{box-shadow:0 0 50px #ff006e,0 0 100px #8338ec,0 0 150px #3a86ff;transform:scale(1.25) rotate(5deg)}
+    70%{box-shadow:0 0 40px #ff006e,0 0 80px #8338ec,0 0 120px #3a86ff;transform:scale(1.2) rotate(-5deg)}
+    80%{box-shadow:0 0 30px #ff006e,0 0 60px #8338ec,0 0 90px #3a86ff;transform:scale(1.15) rotate(3deg)}
+    90%{box-shadow:0 0 20px #ff006e,0 0 40px #8338ec,0 0 60px #3a86ff;transform:scale(1.1) rotate(-3deg)}
+    100%{box-shadow:0 0 10px #ff006e,0 0 20px #8338ec;background-position:200% 50%;transform:scale(1) rotate(0deg)}
+  }
+  .badge-anim-achCreator{
+    animation:achCreator 2s ease-in-out infinite;
+    background-size:200% 200% !important;
+    border:2px solid rgba(255,255,255,0.5);
+  }
   /* Placement badge animations */
   @keyframes platzGold{0%,100%{box-shadow:0 0 8px rgba(255,215,0,.6),inset 0 0 4px rgba(255,215,0,.3)}50%{box-shadow:0 0 20px rgba(255,215,0,1),inset 0 0 10px rgba(255,215,0,.6);transform:scale(1.08)}}
   @keyframes platzSilber{0%,100%{box-shadow:0 0 5px rgba(144,164,174,.4)}50%{box-shadow:0 0 14px rgba(144,164,174,.9)}}
@@ -4394,8 +4413,12 @@ const ACHIEVEMENT_BADGES = [
     bg:'linear-gradient(135deg,#4a148c,#7b1fa2)', color:'#f3e5f5', priority:38, anim:'achPerfectionist' },
 
   // 10. Eisern: erster der 10 Runden lang Punkte hält ohne zu verlieren (streak ≥10)
-  { key:'ach_iron',         sym:'⚙',  label:'Eisern',         desc:'Erster mit Streak ≥ 10 (10 Runden ohne Verlust)',
+  { key:'ach_iron',         sym:'🦾',  label:'Eisern',         desc:'Erster mit Streak ≥ 10 (10 Runden ohne Verlust)',
     bg:'linear-gradient(135deg,#37474f,#546e7a)', color:'#eceff1', priority:39, anim:'achIron' },
+
+  // 🛠️ ERSTELLER - Manuell vergebener Ultra-Badge
+  { key:'ach_creator',      sym:'🛠️',  label:'Ersteller',      desc:'Vom Ersteller manuell verliehen - Ultra exklusiv',
+    bg:'linear-gradient(135deg,#ff006e,#8338ec,#3a86ff)', bgSize:'200% 200%', color:'#fff', priority:100, anim:'achCreator', rainbow:true, manualOnly:true },
 
   // ── PLATZIERUNGS-BADGES ─────────────────────────────────────────────────────
   // 11. Erster Platz 1 im Profil
