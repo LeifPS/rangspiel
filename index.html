@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Firebase SDK wird weiter unten geladen -->
 <style>
   :root {
     --bg:#0a0c12; --bg2:#111420; --bg3:#181c2a; --border:#232840;
@@ -1578,19 +1579,71 @@
   .pp-badge-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 1px 4px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12)}
   .pp-badge-name{font-size:.55rem;font-weight:600;color:var(--text2);text-align:center;line-height:1.2;word-break:break-word}
   .pp-badge-pin-indicator{position:absolute;top:3px;right:3px;font-size:.6rem;line-height:1}
-  /* Rank glow on popup icon */
-  .player-popup-rank-icon.rank-glow-rubin{animation:rankGlowRubin 2.6s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-smaragd{animation:rankGlowSmaragd 3s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-diamant{animation:rankGlowDiamant 2.5s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-amethyst{animation:rankGlowAmethyst 2.8s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-saphir{animation:rankGlowSaphir 2.3s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-platin{animation:rankGlowPlatin 3.2s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-elite{animation:rankGlowElite 2s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-koenig{animation:rankGlowKoenig 3.5s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-meister{animation:rankGlowMeister 2.7s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-champion{animation:rankGlowChampion 2.4s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-gott{animation:rankGlowGott 4s ease-in-out infinite}
-  .player-popup-rank-icon.rank-glow-prestige{animation:rankGlowPrestige 3.5s ease-in-out infinite}
+  /* ══════════════════════════════════════
+     ZUGANGSCODE / PERMISSION SYSTEM
+     ══════════════════════════════════════ */
+  .access-btn{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:5px 10px;font-size:.72rem;font-weight:700;color:var(--text3);letter-spacing:.5px;cursor:pointer;transition:var(--transition);text-transform:uppercase}
+  .access-btn:active{transform:scale(.95)}
+  .access-btn.perm-none .access-lock-icon::before{content:'🔒'}
+  .access-btn.perm-runden .access-lock-icon::before{content:'🔓'}
+  .access-btn.perm-runden{border-color:rgba(76,232,122,.35);color:var(--success)}
+  .access-btn.perm-settings .access-lock-icon::before{content:'🔓'}
+  .access-btn.perm-settings{border-color:rgba(232,184,75,.4);color:var(--accent)}
+  .access-btn.perm-admin .access-lock-icon::before{content:'🔑'}
+  .access-btn.perm-admin{border-color:rgba(233,30,99,.5);color:#f06292;background:rgba(233,30,99,.08)}
+
+  /* Access Modal */
+  .access-modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:20px;width:100%;max-width:340px;margin:auto}
+  .access-modal-title{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;text-align:center;margin-bottom:4px;color:var(--text)}
+  .access-modal-sub{font-size:.72rem;color:var(--text3);text-align:center;margin-bottom:16px}
+  .access-perm-levels{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+  .access-perm-row{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+  .access-perm-icon{font-size:1.1rem;width:28px;text-align:center;flex-shrink:0}
+  .access-perm-info{flex:1;min-width:0}
+  .access-perm-name{font-size:.82rem;font-weight:700;color:var(--text)}
+  .access-perm-desc{font-size:.62rem;color:var(--text3);margin-top:1px}
+  .access-perm-badge{font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;flex-shrink:0}
+  .access-perm-badge.active{background:rgba(76,232,122,.15);border-color:rgba(76,232,122,.4);color:var(--success)}
+  .access-perm-badge.inactive{background:rgba(74,80,112,.2);border-color:var(--border);color:var(--text3)}
+  .access-code-input-row{display:flex;gap:8px;margin-top:12px}
+  .access-code-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1rem;padding:10px 14px;letter-spacing:3px;font-family:'Rajdhani',sans-serif;font-weight:700;text-align:center}
+  .access-code-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(232,184,75,.12)}
+  .access-code-input::placeholder{letter-spacing:1px;font-size:.8rem;font-weight:400}
+  .access-code-error{font-size:.7rem;color:var(--danger);text-align:center;margin-top:6px;min-height:16px}
+  .access-revoke-btn{background:rgba(232,76,76,.1);border:1px solid rgba(232,76,76,.25);color:var(--danger);font-size:.72rem;font-weight:700;padding:8px 12px;border-radius:8px;cursor:pointer;transition:var(--transition);text-transform:uppercase;letter-spacing:.5px;width:100%;margin-top:8px}
+  .access-revoke-btn:active{transform:scale(.96)}
+
+  /* Readonly overlay for locked elements */
+  .perm-locked{pointer-events:none;opacity:.5;user-select:none}
+  .perm-locked-overlay{position:relative}
+  .perm-locked-overlay::after{content:'🔒';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.5rem;z-index:10;pointer-events:none}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+  .shake{animation:shake .4s ease}
+  .readonly-banner{display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(74,80,112,.1);border-bottom:1px solid var(--border);padding:4px 16px;font-size:.67rem;font-weight:600;color:var(--text3);letter-spacing:.3px}
+  .readonly-banner .unlock-link{color:var(--accent);cursor:pointer;text-decoration:underline;font-weight:700}
+
+  /* Code-Verwaltung (nur Admin sieht das) */
+  .code-mgmt-section{margin-top:14px;border-top:1px solid var(--border);padding-top:14px}
+  .code-mgmt-title{font-size:.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+  .code-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;max-height:160px;overflow-y:auto}
+  .code-list-item{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 10px}
+  .code-list-item-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;color:var(--text);flex:1}
+  .code-list-item-level{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid;text-transform:uppercase;letter-spacing:.4px}
+  .code-list-item-level.lvl1{background:rgba(76,232,122,.1);border-color:rgba(76,232,122,.3);color:var(--success)}
+  .code-list-item-level.lvl2{background:rgba(232,184,75,.1);border-color:rgba(232,184,75,.3);color:var(--accent)}
+  .code-list-item-level.lvl3{background:rgba(233,30,99,.1);border-color:rgba(233,30,99,.3);color:#f06292}
+  .code-list-item-code{font-family:'Rajdhani',sans-serif;font-size:.75rem;color:var(--text3);letter-spacing:1px;flex:1;text-align:right}
+  .code-list-item-del{background:transparent;border:none;color:var(--text3);font-size:.85rem;padding:2px 5px;cursor:pointer;transition:color .15s;flex-shrink:0}
+  .code-list-item-del:hover{color:var(--danger)}
+  .code-create-form{display:flex;flex-direction:column;gap:8px}
+  .code-create-row{display:flex;gap:6px}
+  .code-create-row .input-field{font-size:.85rem;padding:8px 10px}
+  .code-level-select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.85rem;padding:8px 10px;font-family:inherit;flex:1}
+  .code-level-select:focus{outline:none;border-color:var(--accent)}
+  .btn-create-code{background:var(--accent);color:#0a0c12;font-size:.82rem;font-weight:800;padding:8px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
+  .btn-create-code:active{transform:scale(.95)}
+  /* Actor badge in history */
+  .history-actor{display:inline-flex;align-items:center;gap:3px;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:20px;border:1px solid rgba(232,184,75,.3);background:rgba(232,184,75,.08);color:var(--accent);margin-left:6px;vertical-align:middle;letter-spacing:.3px}
 
 </style>
 </head>
@@ -1605,6 +1658,10 @@
           <div class="sync-dot"></div>
           <span class="sync-text">Speichern...</span>
         </div>
+        <button class="access-btn perm-none" id="accessBtn" onclick="showAccessModal()">
+          <span class="access-lock-icon"></span>
+          <span id="accessBtnLabel">Gesperrt</span>
+        </button>
         <div class="round-badge">Runde <em id="roundCounter">0</em></div>
       </div>
     </div>
@@ -1614,6 +1671,9 @@
       <button class="tab-btn" onclick="switchTab('rangliste')">Rangliste</button>
       <button class="tab-btn" onclick="switchTab('verlauf')">Verlauf</button>
     </div>
+  </div>
+  <div class="readonly-banner" id="readonlyBanner">
+    🔒 Nur-Lesen-Modus — <span class="unlock-link" onclick="showAccessModal()">Code eingeben</span>
   </div>
 
   <div class="view active" id="view-spieler">
@@ -1804,6 +1864,80 @@
     </div>
   </div>
 </div>
+<div class="modal-overlay hidden" id="accessModal" onclick="hideAccessModal()">
+  <div class="access-modal" onclick="event.stopPropagation()">
+    <div class="access-modal-title">🔐 Zugangscode</div>
+    <div class="access-modal-sub" id="accessModalSub">Gib deinen Code ein um Berechtigungen freizuschalten</div>
+
+    <!-- Aktuelle Perm-Anzeige wenn eingeloggt -->
+    <div id="accessLoggedIn" style="display:none">
+      <div class="access-perm-row" style="margin-bottom:12px">
+        <div class="access-perm-icon" id="accessLoggedIcon">🟢</div>
+        <div class="access-perm-info">
+          <div class="access-perm-name" id="accessLoggedName">Eingeloggt</div>
+          <div class="access-perm-desc" id="accessLoggedDesc">Stufe aktiv</div>
+        </div>
+      </div>
+      <button class="access-revoke-btn" onclick="revokeAccess()">🔒 Abmelden</button>
+    </div>
+
+    <!-- Eingabe-Bereich wenn nicht eingeloggt -->
+    <div id="accessLoginForm">
+      <div class="access-perm-levels" style="margin-bottom:12px">
+        <div class="access-perm-row">
+          <div class="access-perm-icon">🟢</div>
+          <div class="access-perm-info">
+            <div class="access-perm-name">Runden</div>
+            <div class="access-perm-desc">Runden bestätigen, Bonus/Strafe</div>
+          </div>
+        </div>
+        <div class="access-perm-row">
+          <div class="access-perm-icon">🟡</div>
+          <div class="access-perm-info">
+            <div class="access-perm-name">Einstellungen</div>
+            <div class="access-perm-desc">+ Spieler/Accounts, Matchmaking</div>
+          </div>
+        </div>
+        <div class="access-perm-row">
+          <div class="access-perm-icon">🔴</div>
+          <div class="access-perm-info">
+            <div class="access-perm-name">Admin</div>
+            <div class="access-perm-desc">+ Badges, Reset, Code-Verwaltung</div>
+          </div>
+        </div>
+      </div>
+      <div class="access-code-input-row">
+        <input class="access-code-input" type="text" id="accessCodeInput"
+               placeholder="Code eingeben…" maxlength="50"
+               style="text-transform:uppercase;letter-spacing:4px"
+               onkeydown="if(event.key==='Enter')submitAccessCode()"
+               oninput="this.value=this.value.toUpperCase()">
+        <button class="btn-primary" onclick="submitAccessCode()" style="padding:10px 16px">→</button>
+      </div>
+      <div class="access-code-error" id="accessCodeError"></div>
+    </div>
+
+    <!-- Code-Verwaltung (nur für Admin sichtbar) -->
+    <div class="code-mgmt-section" id="codeMgmtSection" style="display:none">
+      <div class="code-mgmt-title">⚙ Code-Verwaltung</div>
+      <div class="code-list" id="codeList"></div>
+      <div class="code-create-form">
+        <div class="code-create-row">
+          <input class="input-field" type="text" id="newCodeName" placeholder="Name (z.B. Erik)…" maxlength="20" style="font-size:.85rem;padding:8px 10px">
+          <select class="code-level-select" id="newCodeLevel">
+            <option value="1">🟢 Runden</option>
+            <option value="2">🟡 Einstellungen</option>
+            <option value="3">🔴 Admin</option>
+          </select>
+        </div>
+        <button class="btn-create-code" onclick="createAccessCode()">+ Neuen Code generieren</button>
+      </div>
+    </div>
+
+    <button class="btn-modal-cancel" onclick="hideAccessModal()" style="width:100%;margin-top:12px">Schließen</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- Firebase SDK -->
@@ -2100,18 +2234,21 @@ function loadState(){
 
 // Async Firestore Load für Start
 async function initFromFirestore() {
-  // Warte auf Authentifizierung
   const user = await initAuth();
   if (!user) {
     showToast('Anmeldung fehlgeschlagen');
     return;
   }
-  const loaded = await loadFromFirestore();
+  // Lade Spieldaten und Badges parallel
+  const [loaded] = await Promise.all([
+    loadFromFirestore(),
+    loadBadgesFromFirestore()
+  ]);
   if(loaded) {
     renderAll();
-    showToast('Daten aus Cloud geladen');
+    showToast('☁️ Daten aus Cloud geladen');
   } else {
-    showToast('Lokale Daten geladen');
+    showToast('📱 Lokale Daten geladen');
   }
 }
 
@@ -2184,11 +2321,11 @@ function getGlobalTotalPoints(spielerKey) {
 }
 
 function createProfile() {
+  if(!requirePerm(3)) return;
   const inp = document.getElementById('newProfileName');
   const name = inp.value.trim();
   if(!name) { showToast('Bitte Profilname eingeben'); return; }
   const pid = 'p_' + Date.now();
-  // Übernehme alle vorhandenen Spieler aus allen Profilen
   const globalKeys = getAllGlobalKeys();
   const newState = {players:[],round:0,history:[],matchmakingOn:false,mmPhase:'low',keys:globalKeys,profileName:name};
   localStorage.setItem(PROFILE_PREFIX + pid, JSON.stringify({state:newState, nextId:1}));
@@ -2198,6 +2335,7 @@ function createProfile() {
 }
 
 function switchProfile(pid) {
+  if(!requirePerm(3)) return;
   localStorage.setItem(ACTIVE_PROFILE_KEY, pid);
   state = {players:[],round:0,history:[],matchmakingOn:false,mmPhase:'low',keys:[]};
   nextId = 1;
@@ -2214,6 +2352,7 @@ function switchProfile(pid) {
 let profileToDelete = null;
 
 function deleteProfile(pid) {
+  if(!requirePerm(3)) return;
   if(pid === 'default') { showToast('Standard-Profil kann nicht gelöscht werden'); return; }
   profileToDelete = pid;
   const profiles = getAllProfiles();
@@ -2229,6 +2368,7 @@ function hideDeleteProfileModal() {
 }
 
 function confirmDeleteProfile() {
+  if(!requirePerm(3)) return;
   if(!profileToDelete) return;
   const pid = profileToDelete;
   hideDeleteProfileModal();
@@ -2363,6 +2503,7 @@ function calcDeltas(n,players,ordIds){
    MATCHMAKING
    ================================================================ */
 function toggleMatchmaking(){
+  if(!requirePerm(2)) return;
   state.matchmakingOn=!state.matchmakingOn;
   saveState();renderAll();updateMmToggleBtn();
   showToast(state.matchmakingOn?'Auto-Matchmaking an':'Auto-Matchmaking aus');
@@ -2425,6 +2566,7 @@ function switchLeague(){ advanceMmPhase(); }
    SPIELER
    ================================================================ */
 function addPlayer(){
+  if(!requirePerm(2)) return;
   const inp=document.getElementById('playerNameInput');
   const name=inp.value.trim();
   if(!name){showToast('Bitte Namen eingeben');return}
@@ -2433,6 +2575,7 @@ function addPlayer(){
   inp.value='';saveState();renderAll();showToast(`${name} hinzugefügt`);
 }
 function removePlayer(id){
+  if(!requirePerm(2)) return;
   const p=state.players.find(x=>x.id===id);if(!p)return;
   playerToDelete=id;
   document.getElementById('deletePlayerMessage').textContent = `Möchtest du "${p.name}" wirklich löschen?`;
@@ -2443,6 +2586,7 @@ function hideDeletePlayerModal(){
   playerToDelete=null;
 }
 function confirmDeletePlayer(){
+  if(!requirePerm(2)) return;
   if(playerToDelete===null)return;
   const p=state.players.find(x=>x.id===playerToDelete);
   if(p){
@@ -2452,9 +2596,9 @@ function confirmDeletePlayer(){
   hideDeletePlayerModal();
 }
 function togglePlayerActive(id){
+  if(!requirePerm(2)) return;
   const p=state.players.find(x=>x.id===id);if(!p)return;
   p.active=!p.active;
-  // Wenn aktiviert UND der Account einem Spieler gehört → alle anderen des gleichen Spielers deaktivieren
   if(p.active && p.key){
     state.players.forEach(x=>{
       if(x.id!==id && x.key===p.key) x.active=false;
@@ -2463,6 +2607,7 @@ function togglePlayerActive(id){
   saveState();renderAll();showToast(`${p.name} ${p.active?'aktiviert':'deaktiviert'}`);
 }
 function applyPenalty(id){
+  if(!requirePerm(1)) return;
   const p=state.players.find(x=>x.id===id);if(!p)return;
   const min=getMinPts(p);
   const np=Math.max(min,p.points-0.5);
@@ -2490,14 +2635,15 @@ function applyPenalty(id){
   // Prüfen ob bereits ein History-Eintrag für diese Runde existiert
   const existingRound = state.history.find(h => h.round === state.round + 1 && !h.skipped);
   if (existingRound) {
-    // Bestehenden Eintrag aktualisieren
     existingRound.results.push(penaltyLog);
+    if(!existingRound.actor && currentActor?.name) existingRound.actor = currentActor.name;
   } else {
     // Neuen History-Eintrag erstellen
     const newLog = {
       round: state.round + 1,
       results: [penaltyLog],
-      mmPhase: state.matchmakingOn ? state.mmPhase : null
+      mmPhase: state.matchmakingOn ? state.mmPhase : null,
+      actor: currentActor?.name || null
     };
     state.history.unshift(newLog);
   }
@@ -2506,6 +2652,7 @@ function applyPenalty(id){
   renderAll();
 }
 function applyBonus(id){
+  if(!requirePerm(1)) return;
   const p=state.players.find(x=>x.id===id);if(!p)return;
   const oldPts=p.points;const oldR=getRank(p.points).name;
   p.points+=0.5;p.maxPoints=Math.max(p.maxPoints,p.points);
@@ -2537,14 +2684,14 @@ function applyBonus(id){
   // Prüfen ob bereits ein History-Eintrag für diese Runde existiert
   const existingRound = state.history.find(h => h.round === state.round + 1 && !h.skipped);
   if (existingRound) {
-    // Bestehenden Eintrag aktualisieren
     existingRound.results.push(bonusLog);
+    if(!existingRound.actor && currentActor?.name) existingRound.actor = currentActor.name;
   } else {
-    // Neuen History-Eintrag erstellen
     const newLog = {
       round: state.round + 1,
       results: [bonusLog],
-      mmPhase: state.matchmakingOn ? state.mmPhase : null
+      mmPhase: state.matchmakingOn ? state.mmPhase : null,
+      actor: currentActor?.name || null
     };
     state.history.unshift(newLog);
   }
@@ -2558,13 +2705,14 @@ function applyBonus(id){
    RUNDE BESTÄTIGEN
    ================================================================ */
 function submitRound(){
+  if(!requirePerm(1)) return;
   if(uiSlots.some(s=>s===null)){showToast('Bitte alle Spieler platzieren');return}
   if(new Set(uiSlots).size!==uiSlots.length){showToast('Duplikat gefunden');return}
 
   const ordIds=[...uiSlots];
   const n=ordIds.length;
   const deltas=calcDeltas(n,state.players,ordIds);
-  const log={round:state.round+1,results:[],mmPhase:state.matchmakingOn?state.mmPhase:null};
+  const log={round:state.round+1,results:[],mmPhase:state.matchmakingOn?state.mmPhase:null,actor:currentActor?.name||null};
 
   for(let i=0;i<n;i++){
     const pid=ordIds[i];
@@ -2675,20 +2823,19 @@ function switchTab(name){
    ================================================================ */
 
 function createKey(){
+  if(!requirePerm(2)) return;
   const inp=document.getElementById('keyInput');
   const key=inp.value.trim();
   if(!key){showToast('Bitte Spieler-Name eingeben');return}
   if(state.keys.find(k=>k.key===key)){showToast('Spieler existiert bereits');return}
-  // Generiere eine stabile interne ID fuer diesen Spieler (profiluebergreifend eindeutig)
   const internalId = 'uid_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
   state.keys.push({key:key,totalPoints:0,internalId});
   inp.value='';
   saveState();
-  // Spieler auch in alle anderen Profile eintragen (profiluebergreifend)
   syncNewKeyToAllProfiles(key, internalId);
   renderKeys();
   renderAssignment();
-  showToast(`Spieler "${key}" erstellt (in alle Profile übernommen)`);
+  showToast(`Spieler "${key}" erstellt`);
 }
 
 /* Synchronisiert einen neuen Spieler-Key in alle anderen Profile */
@@ -2711,7 +2858,7 @@ function syncNewKeyToAllProfiles(newKey, internalId) {
 }
 
 function removeKey(key){
-  // Entferne auch alle Zuweisungen dieser Accounts zu diesem Spieler
+  if(!requirePerm(2)) return;
   state.players.forEach(p=>{
     if(p.key===key){p.key=null;if(Array.isArray(p.keys))p.keys=p.keys.filter(k=>k!==key);}
   });
@@ -2741,6 +2888,7 @@ function getMaxAccountsForSpieler(spielerKey) {
 
 /* Weist einen Account (player) einem Spieler zu */
 function assignAccountToSpieler(spielerKey, accountId){
+  if(!requirePerm(2)) return;
   const p=state.players.find(x=>x.id===accountId);
   if(!p){return;}
 
@@ -2752,10 +2900,7 @@ function assignAccountToSpieler(spielerKey, accountId){
     showToast(`Limit: ${maxAcc} Accounts. Benötigt: ${needed}`);
     return;
   }
-
-  // Entferne alten Spieler-Eintrag wenn vorhanden
   if(p.key && p.key !== spielerKey){
-    // Alten Eintrag bereinigen
     if(Array.isArray(p.keys)) p.keys=p.keys.filter(k=>k!==p.key);
   }
   p.key=spielerKey;
@@ -2769,6 +2914,7 @@ function assignAccountToSpieler(spielerKey, accountId){
 
 /* Entfernt Account von einem Spieler */
 function removeAccountFromSpieler(spielerKey, accountId){
+  if(!requirePerm(2)) return;
   const p=state.players.find(x=>x.id===accountId);
   if(!p)return;
   p.key=null;
@@ -2989,6 +3135,8 @@ function renderAll(){
   renderHistory();
   document.getElementById('roundCounter').textContent=state.round;
   document.getElementById('playerCountLabel').textContent=state.players.length?`${state.players.length} Spieler`:'';
+  // Berechtigungen nach jedem Render anwenden
+  applyPermissions();
 }
 
 /* SPIELER KARTEN */
@@ -3074,6 +3222,7 @@ function renderPlayers(){
 }
 
 function startEditName(id){
+  if(!requirePerm(2)) return;
   const p=state.players.find(x=>x.id===id);if(!p)return;
   const wrap=document.getElementById(`pname-${id}`);if(!wrap)return;
   wrap.innerHTML=`
@@ -3086,6 +3235,7 @@ function startEditName(id){
   if(inp){inp.focus();inp.select();}
 }
 function confirmEditName(id){
+  if(!requirePerm(2)) return;
   const inp=document.getElementById(`nameinput-${id}`);if(!inp)return;
   const newName=inp.value.trim();
   if(!newName){showToast('Name darf nicht leer sein');return}
@@ -3573,6 +3723,7 @@ function renderHistory(){
       return `<div class="history-section"><div class="history-title">Runde ${r.round} — Übersprungen</div><div class="history-entry" style="color:var(--text3)">🔸 ${r.skippedPhase} übersprungen – zu wenig passende Spieler.</div></div>`;
     }
     const ph=r.mmPhase?` <span style="font-size:.65rem;color:var(--accent)">[${r.mmPhase==='low'?'🔻Niedrige Liga':'🔺Hohe Liga'}]</span>`:'';
+    const actorTag = r.actor ? `<span class="history-actor">👤 ${esc(r.actor)}</span>` : '';
     
     // Ergebnisse filtern und gruppieren
     const roundResults = [];
@@ -3617,7 +3768,7 @@ function renderHistory(){
     // Alle Zeilen kombinieren - Runden-Ergebnisse zuerst, dann Bonus/Strafe
     const allLines = [roundLines, bonusPenaltyLines].filter(lines => lines.length > 0).join('<br>');
     
-    return `<div class="history-section"><div class="history-title">Runde ${r.round}${ph}</div><div class="history-entry">${allLines}</div></div>`;
+    return `<div class="history-section"><div class="history-title">Runde ${r.round}${ph}${actorTag}</div><div class="history-entry">${allLines}</div></div>`;
   }).join('');
 }
 
@@ -4530,19 +4681,75 @@ const ACHIEVEMENT_BADGES = [
 ];
 
 /* ================================================================
-   GLOBALE BADGES (Streak + Achievement – profilübergreifend)
+   FIREBASE BADGE STORE  (nutzt db-Instanz von oben)
+   ================================================================ */
+let firestoreBadgesCache = null;
+
+/* ================================================================
+   GLOBALE BADGES (Streak + Achievement – in Firestore gespeichert)
    Rang-Badges sind PER PROFIL (state.firstRankAchievers).
-   Streak- und Achievement-Badges sind GLOBAL (localStorage rs4_global_badges).
+   Streak- und Achievement-Badges sind GLOBAL (Firestore + localStorage-Cache).
+
+   WICHTIG: Alle Badge-Lese-Operationen sind SYNCHRON (Cache).
+   Schreib-Operationen sind async (Firestore) aber blockieren nicht.
    ================================================================ */
 const GLOBAL_BADGES_KEY = 'rs4_global_badges';
 
+/* Synchron aus Cache lesen */
 function getGlobalBadges() {
+  if(firestoreBadgesCache !== null) return firestoreBadgesCache;
   try { return JSON.parse(localStorage.getItem(GLOBAL_BADGES_KEY) || '{}'); }
   catch(e) { return {}; }
 }
-function saveGlobalBadges(gb) {
+
+/* Async in Firestore + Cache schreiben */
+async function saveGlobalBadges(gb) {
+  firestoreBadgesCache = gb;
   localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(gb));
+  showSyncIndicator('saving');
+  try {
+    await db.collection('global_badges').doc('badges').set({
+      data: gb,
+      lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    showSyncIndicator('saved');
+    console.log('Badges in Firestore gespeichert');
+  } catch(e) {
+    console.error('Firestore Badge-Save Error:', e);
+    showSyncIndicator('saved'); // localStorage hat es schon
+  }
 }
+
+/* Lade Badges initial aus Firestore (einmalig beim Start) */
+async function loadBadgesFromFirestore() {
+  try {
+    const doc = await db.collection('global_badges').doc('badges').get();
+    if(doc.exists) {
+      firestoreBadgesCache = doc.data().data || {};
+      localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(firestoreBadgesCache));
+      console.log('Badges aus Firestore geladen:', Object.keys(firestoreBadgesCache).length, 'Einträge');
+      renderAll();
+    }
+  } catch(e) {
+    console.error('Badge Load Error:', e);
+  }
+}
+
+// Badge-Cache aus localStorage vorladen (synchroner Fallback)
+try { firestoreBadgesCache = JSON.parse(localStorage.getItem(GLOBAL_BADGES_KEY) || 'null'); } catch(e) {}
+
+// Echtzeit-Listener für Badges starten (nach DOM ready)
+document.addEventListener('DOMContentLoaded', () => {
+  if(db) {
+    db.collection('global_badges').doc('badges').onSnapshot((doc) => {
+      if(doc.exists) {
+        firestoreBadgesCache = doc.data().data || {};
+        localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(firestoreBadgesCache));
+        renderAll();
+      }
+    }, (err) => console.error('Badge Listener Error:', err));
+  }
+});
 
 /* Gibt den internen Spieler-Key (internalId) für einen Player zurück */
 function getPlayerInternalId(player) {
@@ -4569,11 +4776,8 @@ function getGlobalBadgesForPlayer(player) {
       }
       continue;
     }
-    
-    // Normale Badges: nur ein Empfänger
+    if(!achiever || typeof achiever !== 'object') continue;
     if(achiever.internalId !== iid) continue;
-    // Wenn playerId gesetzt ist, nur für diesen Account anzeigen
-    // Wenn nicht gesetzt (alte Daten), für alle Accounts dieses Spielers anzeigen
     if(achiever.playerId && achiever.playerId !== player.id) continue;
     const sb = STREAK_FIRST_BADGES.find(s=>s.key===key);
     if(sb) { result.push({key, ...sb}); continue; }
@@ -4583,26 +4787,25 @@ function getGlobalBadgesForPlayer(player) {
   return result;
 }
 
-/* Prüft ob ein globaler Badge frei ist und vergibt ihn */
+/* Prüft ob ein globaler Badge frei ist und vergibt ihn (synchron per Cache) */
 function checkAndSetGlobalBadge(player, key) {
   const iid = getPlayerInternalId(player);
   if(!iid) return false;
   const gb = getGlobalBadges();
-  
+
   // S1 Badges können mehrfach vergeben werden
   if(key.startsWith('s1_')) {
-    // S1 Badge: speichere als Array für mehrere Empfänger
     if(!gb[key]) gb[key] = [];
-    if(!Array.isArray(gb[key])) gb[key] = [gb[key]]; // Konvertiere altes Format
+    if(!Array.isArray(gb[key])) gb[key] = [gb[key]];
     gb[key].push({ internalId: iid, playerId: player.id, playerName: player.name, timestamp: Date.now() });
-    saveGlobalBadges(gb);
+    saveGlobalBadges(gb); // async, non-blocking
     return true;
   }
-  
+
   // Normale Badges: nur einmal vergeben
-  if(gb[key]) return false; // schon vergeben → überall weg
+  if(gb[key]) return false;
   gb[key] = { internalId: iid, playerId: player.id, playerName: player.name, timestamp: Date.now() };
-  saveGlobalBadges(gb);
+  saveGlobalBadges(gb); // async, non-blocking
   return true;
 }
 
@@ -4645,7 +4848,7 @@ function checkAndSetFirstStreakBadge(player) {
 /* ---- Achievement Badge Checks (GLOBAL) ---- */
 
 function checkAchievements(player) {
-  const gb = getGlobalBadges();
+  const gb = getGlobalBadges(); // sync
 
   // 1. Veteran: erste Person wenn Runde 10 gespielt wird
   if(state.round >= 10) {
@@ -4680,10 +4883,13 @@ function checkAchievements(player) {
   }
 
   // 6. Regenbogen: erster der alle 14 Rang-Stufen Bronze–Gott je einmal hatte
+  // ranksReached trackt welche RANK-INDEX-Positionen (1=Bronze bis 14=Gott) der Spieler je erreicht hat
   if(!gb['ach_rainbow']) {
-    if(!player.ranksReached) player.ranksReached = [];
-    const cur = getRankIdx(player.points);
-    for(let i=1;i<=14;i++) { if(cur>=i && !player.ranksReached.includes(i)) player.ranksReached.push(i); }
+    if(!Array.isArray(player.ranksReached)) player.ranksReached = [];
+    const curIdx = getRankIdx(player.points);
+    for(let i = 1; i <= 14; i++) {
+      if(curIdx >= i && !player.ranksReached.includes(i)) player.ranksReached.push(i);
+    }
     if(player.ranksReached.length >= 14) {
       if(checkAndSetGlobalBadge(player, 'ach_rainbow'))
         showToast(`🌈 ${player.name} – REGENBOGEN! Alle Ränge erreicht.`);
@@ -4711,14 +4917,65 @@ function checkAchievements(player) {
   // 10. Eisern: Streak ≥ 10
   if((player.streak||0) >= 10) {
     if(checkAndSetGlobalBadge(player, 'ach_iron'))
-      showToast(`⚙ ${player.name} – EISERN! 10 Runden ohne Verlust!`);
+      showToast(`🦾 ${player.name} – EISERN! 10 Runden ohne Verlust!`);
+  }
+
+  // 11. Glückspilz: consecutiveHalf ≥ 3 (3x nur +0.5 in Folge)
+  if((player.consecutiveHalf||0) >= 3) {
+    if(checkAndSetGlobalBadge(player, 'ach_lucky'))
+      showToast(`🍀 ${player.name} – GLÜCKSPILZ! 3× nur 0.5 Punkte!`);
+  }
+
+  // 12. Pechvogel: consecutiveLast ≥ 3
+  if((player.consecutiveLast||0) >= 3) {
+    if(checkAndSetGlobalBadge(player, 'ach_unlucky'))
+      showToast(`🌧 ${player.name} – PECHVOGEL! 3× letzter Platz!`);
+  }
+
+  // 15. Meteor: Einzelrunden-Gewinn ≥ 3 (trackt via player.bestSingleRoundGain)
+  if((player.bestSingleRoundGain||0) >= 3) {
+    if(checkAndSetGlobalBadge(player, 'ach_meteor'))
+      showToast(`☄️ ${player.name} – METEOR! 3+ Punkte in einer Runde!`);
+  }
+
+  // 16. Eiskönig: 5 Runden keine Punkte verloren (streak ≥ 5 ohne negativen Delta)
+  if((player.streak||0) >= 5) {
+    if(checkAndSetGlobalBadge(player, 'ach_iceking'))
+      showToast(`🧊 ${player.name} – EISKÖNIG! 5 Runden ohne Verlust!`);
+  }
+
+  // 18. Marathonläufer: Runde 50
+  if(state.round >= 50) {
+    if(checkAndSetGlobalBadge(player, 'ach_marathon'))
+      showToast(`🏃 ${player.name} – MARATHONLÄUFER! Runde 50!`);
+  }
+
+  // 20. Samurai: exakt 7 Gesamtsiege
+  if((player.totalWins||0) === 7) {
+    if(checkAndSetGlobalBadge(player, 'ach_samurai'))
+      showToast(`⚔️ ${player.name} – SAMURAI! Exakt 7 Siege!`);
+  }
+
+  // 22. Zen-Meister: 10 Runden nur positive Deltas (consecutivePositive ≥ 10)
+  if((player.consecutivePositive||0) >= 10) {
+    if(checkAndSetGlobalBadge(player, 'ach_zen'))
+      showToast(`☯️ ${player.name} – ZEN-MEISTER! 10 Runden nur positiv!`);
+  }
+
+  // 19. Diamant-Hände: nie unter 10 gefallen nachdem 15 erreicht (trackt via player.diamondHandsActive)
+  if(player.diamondHandsActive && player.points >= 10) {
+    if(checkAndSetGlobalBadge(player, 'ach_diamondhands'))
+      showToast(`💎 ${player.name} – DIAMANT-HÄNDE! Nie unter 10 seit 15+!`);
   }
 }
 
 /* Platzierungs-Badges nach einer Runde prüfen (GLOBAL) */
 function checkPlacementAchievements(results) {
+  const n = results.length;
   const winner = results.find(r=>r.place===1);
-  const last = results.find(r=>r.place===results.length && results.length>=2);
+  const last   = results.find(r=>r.place===n && n>=2);
+
+  // --- GEWINNER-Logik ---
   if(winner) {
     const p = state.players.find(x=>x.id===winner.playerId);
     if(p) {
@@ -4744,17 +5001,141 @@ function checkPlacementAchievements(results) {
           showToast(`🎖 ${p.name} – ALLROUNDER! Siege in 5 Rängen!`);
       }
     }
+    // Nicht-Gewinner: consecutiveFirst zurücksetzen
     results.forEach(r => {
-      if(r.place !== 1) { const pl = state.players.find(x=>x.id===r.playerId); if(pl) pl.consecutiveFirst = 0; }
+      if(r.place !== 1) {
+        const pl = state.players.find(x=>x.id===r.playerId);
+        if(pl) pl.consecutiveFirst = 0;
+      }
     });
   }
+
+  // --- LETZTER PLATZ ---
   if(last) {
     const p = state.players.find(x=>x.id===last.playerId);
     if(p) {
       if(checkAndSetGlobalBadge(p, 'platz_last'))
         showToast(`🪦 ${p.name} – LETZTER PLATZ! Mit Würde.`);
+      if(!p.consecutiveLast) p.consecutiveLast = 0;
+      p.consecutiveLast++;
+      // Pechvogel wird in checkAchievements gecheckt
     }
+    results.forEach(r => {
+      if(r.place !== n) {
+        const pl = state.players.find(x=>x.id===r.playerId);
+        if(pl) pl.consecutiveLast = 0;
+      }
+    });
   }
+
+  // --- PRO SPIELER: erweiterte Tracking-Stats ---
+  results.forEach(r => {
+    const p = state.players.find(x=>x.id===r.playerId);
+    if(!p) return;
+
+    // Phönix: letzter in VORIGER Runde + erster in DIESER Runde
+    // Wir merken uns die letzte Platzierung
+    const wasLast = p.lastPlace === n;
+    const isFirst = r.place === 1;
+    if(wasLast && isFirst && n >= 3) {
+      if(checkAndSetGlobalBadge(p, 'ach_phoenix'))
+        showToast(`🔥 ${p.name} – PHÖNIX! Vom letzten auf den ersten Platz!`);
+    }
+    p.lastPlace = r.place;
+
+    // Ninja: 3x hintereinander 2. Platz
+    if(r.place === 2) {
+      p.consecutiveSecond = (p.consecutiveSecond||0) + 1;
+      if(p.consecutiveSecond >= 3) {
+        if(checkAndSetGlobalBadge(p, 'ach_ninja'))
+          showToast(`🥷 ${p.name} – NINJA! 3× hintereinander Zweiter!`);
+      }
+    } else {
+      p.consecutiveSecond = 0;
+    }
+
+    // Schattenspieler: 5x im mittleren Drittel
+    const midLow = Math.floor(n/3)+1, midHigh = Math.ceil(2*n/3);
+    if(n >= 4 && r.place >= midLow && r.place <= midHigh) {
+      p.consecutiveMid = (p.consecutiveMid||0) + 1;
+      if(p.consecutiveMid >= 5) {
+        if(checkAndSetGlobalBadge(p, 'ach_shadow'))
+          showToast(`👤 ${p.name} – SCHATTENSPIELER! 5× im Mittelfeld!`);
+      }
+    } else {
+      p.consecutiveMid = 0;
+    }
+
+    // Blitzableiter: 3x Punkte verloren aber nie letzter
+    if(r.delta < 0 && r.place !== n) {
+      p.consecutiveLostNotLast = (p.consecutiveLostNotLast||0) + 1;
+      if(p.consecutiveLostNotLast >= 3) {
+        if(checkAndSetGlobalBadge(p, 'ach_lightning'))
+          showToast(`⚡ ${p.name} – BLITZABLEITER! 3× Verlust aber nie letzter!`);
+      }
+    } else {
+      p.consecutiveLostNotLast = 0;
+    }
+
+    // Höhlenforscher: 3x unter 5 Punkte aber nicht letzter
+    if(p.points < 5 && r.place !== n) {
+      p.consecutiveLow = (p.consecutiveLow||0) + 1;
+      if(p.consecutiveLow >= 3) {
+        if(checkAndSetGlobalBadge(p, 'ach_cave'))
+          showToast(`🦇 ${p.name} – HÖHLENFORSCHER! 3× unter 5 Punkte!`);
+      }
+    } else {
+      p.consecutiveLow = 0;
+    }
+
+    // Glückspilz: 3x nur +0.5 in Folge
+    if(r.delta === 0.5) {
+      p.consecutiveHalf = (p.consecutiveHalf||0) + 1;
+    } else {
+      p.consecutiveHalf = 0;
+    }
+
+    // Zen-Meister: 10 Runden nur positiver Delta
+    if(r.delta > 0) {
+      p.consecutivePositive = (p.consecutivePositive||0) + 1;
+    } else {
+      p.consecutivePositive = 0;
+    }
+
+    // Meteor: Einzel-Runden-Gewinn ≥ 3
+    if(r.delta >= 3) {
+      p.bestSingleRoundGain = Math.max(p.bestSingleRoundGain||0, r.delta);
+    }
+
+    // Diamant-Hände tracking
+    if(p.points >= 15) p.diamondHandsActive = true;
+    if(p.diamondHandsActive && p.points < 10) p.diamondHandsActive = false;
+
+    // Rakete: von <5 auf >15 in 3 Runden
+    if(!p.rocketTrack) p.rocketTrack = [];
+    p.rocketTrack.push(p.points);
+    if(p.rocketTrack.length > 4) p.rocketTrack.shift();
+    if(p.rocketTrack.length >= 3) {
+      const start = p.rocketTrack[p.rocketTrack.length-3];
+      const end   = p.rocketTrack[p.rocketTrack.length-1];
+      if(start < 5 && end > 15) {
+        if(checkAndSetGlobalBadge(p, 'ach_rocket'))
+          showToast(`🚀 ${p.name} – RAKETE! Von <5 auf >15 in 3 Runden!`);
+      }
+    }
+
+    // Kingmaker: wenn Spieler auf Platz 2+ ist und der Gewinner weniger Gesamtpunkte hat
+    // → "Kingmaker" für den der dem Sieger den Sieg ermöglicht hat
+    // Vereinfachung: wenn du 2. bist und dein Delta < 0 aber Sieger mehr Punkte als du
+    if(winner && r.playerId !== winner.playerId && r.place === 2) {
+      const winnerP = state.players.find(x=>x.id===winner.playerId);
+      if(winnerP && winnerP.points > p.points && r.delta < 0) {
+        // du hast verloren und den Sieger "ermöglicht"
+        if(checkAndSetGlobalBadge(p, 'ach_kingmaker'))
+          showToast(`👑 ${p.name} – KÖNIGSMACHER! Hat dem Sieger den Weg frei gemacht!`);
+      }
+    }
+  });
 }
 
 /* Gibt alle Badges eines Spielers zurück:
@@ -5178,6 +5559,7 @@ function renderDevConsole() {
 }
 
 function devGrantBadge() {
+  if(!requirePerm(3)) return;
   const pid = +document.getElementById('devPlayerSelect')?.value;
   const bkey = document.getElementById('devBadgeSelect')?.value;
   if(!pid || !bkey) { showToast('Spieler und Badge wählen'); return; }
@@ -5207,6 +5589,7 @@ function devGrantBadge() {
 
 // Test-Funktion für S1 Badges
 function testS1Badges() {
+  if(!requirePerm(3)) return;
   const player = state.players[0];
   if(!player) { showToast('Kein Spieler vorhanden'); return; }
   
@@ -5225,6 +5608,7 @@ function testS1Badges() {
 }
 
 function devRevokeBadge() {
+  if(!requirePerm(3)) return;
   const pid = +document.getElementById('devPlayerSelect')?.value;
   const bkey = document.getElementById('devBadgeSelect')?.value;
   if(!bkey) { showToast('Badge wählen'); return; }
@@ -5246,6 +5630,7 @@ function devRevokeBadge() {
   }
 }
 function devToggleBadge(bkey) {
+  if(!requirePerm(3)) return;
   const isRankBadge = !!RANK_FIRST_BADGE[bkey];
   if(isRankBadge) {
     if(!state.firstRankAchievers?.[bkey]) return;
@@ -5261,6 +5646,7 @@ function devToggleBadge(bkey) {
   showToast(`Badge "${bkey}" gelöscht`);
 }
 function devSetPoints() {
+  if(!requirePerm(3)) return;
   const pid = +document.getElementById('devPtsPlayerSelect')?.value;
   const val = parseFloat(document.getElementById('devPtsValue')?.value);
   if(!pid || isNaN(val)) { showToast('Spieler und Punkte eingeben'); return; }
@@ -5272,6 +5658,7 @@ function devSetPoints() {
   showToast(`${player.name}: Punkte → ${val}`);
 }
 function devClearAllBadges() {
+  if(!requirePerm(3)) return;
   state.firstRankAchievers = {};
   saveGlobalBadges({});
   saveState(); renderAll(); renderDevConsole();
@@ -5280,6 +5667,7 @@ function devClearAllBadges() {
 
 function hideResetModal(){document.getElementById('resetModal').classList.add('hidden')}
 function confirmReset(){
+  if(!requirePerm(3)) return;
   state={players:[],round:0,history:[],matchmakingOn:false,mmPhase:'low'};
   nextId=1;uiSlots=[];uiActivePIds=[];uiSelectedSlot=null;
   saveState();hideResetModal();renderAll();showToast('Spiel zurückgesetzt');
@@ -5349,9 +5737,526 @@ function hideBadgeCatalog() {
   document.getElementById('badgeCatalogModal').classList.add('hidden');
 }
 
-/* INIT */
-let highRankParticleIntervals = [];
-loadState();renderAll();
+/* ================================================================
+   ZUGANGSCODE / PERMISSION SYSTEM v2
+   ================================================================
+   - 1 hardcodierter Admin-Mastercode (unveränderlich)
+   - Weitere Codes werden in Firestore gespeichert: { name, level, code, createdAt }
+   - Jeder Code hat einen Namen → erscheint als Autor im Verlauf
+   - currentActor = { name, level } der aktive Nutzer dieser Session
+   
+   Stufen:
+     1 = Runden  (Runden bestätigen, Bonus/Strafe)
+     2 = Einstellungen (+ Spieler/Accounts, Matchmaking)
+     3 = Admin   (+ Badges, Reset, Code-Verwaltung, alles)
+   ================================================================ */
+
+// ── Master Admin Code (hardcodiert, nie in Firestore) ──────────────
+// Sicherer 32-Zeichen-Code — NUR DU kennst diesen!
+const MASTER_ADMIN_CODE = 'RS4ADM'; // ← Dein Master-Admin-Code (6 Zeichen, nur Großbuchst.+Zahlen)
+const MASTER_ADMIN_NAME = 'Master-Admin';
+
+// ── State ──────────────────────────────────────────────────────────
+let currentPermLevel = 0;
+let currentActor     = null; // { name, level, code }
+let accessCodesCache = [];   // [{id, name, level, code, createdAt}]
+const PERM_SESSION_KEY  = 'rs4_perm_v2';
+const ACCESS_CODES_COL  = 'access_codes';
+/* ⚠ FIRESTORE SECURITY RULES — in Firebase Console unter Firestore → Regeln eintragen:
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /{document=**} { allow read, write: if request.auth != null; }
+     }
+   }
+   (Erlaubt alle authentifizierten Nutzer — anon auth ist bereits aktiv)
+*/
+
+// ── Session laden ──────────────────────────────────────────────────
+function loadPermLevel() {
+  try {
+    const saved = sessionStorage.getItem(PERM_SESSION_KEY);
+    if(saved) {
+      const parsed = JSON.parse(saved);
+      currentPermLevel = parsed.level || 0;
+      currentActor     = parsed.actor || null;
+    }
+  } catch(e) { currentPermLevel = 0; currentActor = null; }
+  updatePermUI();
+}
+
+function savePermSession(level, actor) {
+  currentPermLevel = level;
+  currentActor     = actor;
+  sessionStorage.setItem(PERM_SESSION_KEY, JSON.stringify({ level, actor }));
+  updatePermUI();
+}
+
+// ── Firestore: Codes laden ─────────────────────────────────────────
+async function loadAccessCodes() {
+  if(!db) return;
+  try {
+    const snap = await db.collection(ACCESS_CODES_COL).get();
+    accessCodesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) { console.error('Access codes load error:', e); }
+}
+
+async function saveNewAccessCode(name, level, code) {
+  if(!db) return null;
+  const doc = { name, level, code, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+  const ref = await db.collection(ACCESS_CODES_COL).add(doc);
+  const newEntry = { id: ref.id, ...doc, createdAt: Date.now() };
+  accessCodesCache.push(newEntry);
+  return newEntry;
+}
+
+async function deleteAccessCode(id) {
+  if(!db) return;
+  await db.collection(ACCESS_CODES_COL).doc(id).delete();
+  accessCodesCache = accessCodesCache.filter(c => c.id !== id);
+}
+
+// ── Zufälligen sicheren Code generieren ───────────────────────────
+function generateSecureCode() {
+  // Format: XXXXXX — nur Großbuchstaben + Zahlen (leicht einzutippen)
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // kein O/0, kein I/1 (Verwechslungsgefahr)
+  return Array.from({length: 6}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+}
+
+// ── Login ──────────────────────────────────────────────────────────
+async function submitAccessCode() {
+  const input = document.getElementById('accessCodeInput');
+  const err   = document.getElementById('accessCodeError');
+  const code  = (input?.value?.trim() || '').toUpperCase();
+  if(!code) return;
+
+  if(err) err.textContent = '';
+
+  // 1. Master Admin Code prüfen
+  if(code === MASTER_ADMIN_CODE) {
+    savePermSession(3, { name: MASTER_ADMIN_NAME, level: 3, code });
+    if(input) input.value = '';
+    await loadAccessCodes();
+    showToast(`🔑 Master-Admin eingeloggt`);
+    updateAccessModal();
+    return;
+  }
+
+  // 2. Firestore Codes prüfen (aus Cache)
+  if(!accessCodesCache.length) await loadAccessCodes();
+  const match = accessCodesCache.find(c => (c.code || '').toUpperCase() === code);
+  if(match) {
+    savePermSession(match.level, { name: match.name, level: match.level, code });
+    if(input) input.value = '';
+    const lvlNames = ['','Runden','Einstellungen','Admin'];
+    showToast(`✅ ${match.name} — ${lvlNames[match.level]}`);
+    updateAccessModal();
+    return;
+  }
+
+  // Falsch
+  if(err) err.textContent = '❌ Ungültiger Code';
+  input?.classList.add('shake');
+  setTimeout(() => input?.classList.remove('shake'), 400);
+  if(input) { input.value = ''; input.focus(); }
+}
+
+function revokeAccess() {
+  savePermSession(0, null);
+  showToast('🔒 Abgemeldet');
+  hideAccessModal();
+  renderAll();
+}
+
+// ── Code erstellen ─────────────────────────────────────────────────
+async function createAccessCode() {
+  if(!requirePerm(3)) return;
+  const nameEl  = document.getElementById('newCodeName');
+  const levelEl = document.getElementById('newCodeLevel');
+  const btnEl   = document.querySelector('.btn-create-code');
+  const name    = nameEl?.value?.trim();
+  const level   = parseInt(levelEl?.value) || 1;
+  if(!name) { showToast('Bitte einen Namen eingeben'); return; }
+
+  // Button deaktivieren während Speichern
+  if(btnEl) { btnEl.disabled = true; btnEl.textContent = '⏳ Erstelle…'; }
+
+  try {
+    const code = generateSecureCode();
+
+    if(!db) {
+      // Kein Firestore → nur lokal (Session-only)
+      const localEntry = { id: 'local_' + Date.now(), name, level, code, createdAt: Date.now() };
+      accessCodesCache.push(localEntry);
+      if(nameEl) nameEl.value = '';
+      showToast(`⚠ Nur lokal gespeichert (kein DB)`);
+      renderCodeList();
+      showNewCodePopup(name, code, level);
+      return;
+    }
+
+    const docData = { name, level, code, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+    const ref = await db.collection(ACCESS_CODES_COL).add(docData);
+    const newEntry = { id: ref.id, ...docData, createdAt: Date.now() };
+    accessCodesCache.push(newEntry);
+
+    if(nameEl) nameEl.value = '';
+    showToast(`✅ Code für ${name} erstellt`);
+    renderCodeList();
+    showNewCodePopup(name, code, level);
+
+  } catch(e) {
+    console.error('createAccessCode Error:', e);
+    // Firestore-Fehler oft: fehlende Security Rules für access_codes Collection
+    showToast(`❌ Fehler: ${e.message || e.code || 'Unbekannt'}`);
+    // Trotzdem Code anzeigen (lokal)
+    const code = generateSecureCode();
+    const localEntry = { id: 'local_' + Date.now(), name, level, code, createdAt: Date.now() };
+    accessCodesCache.push(localEntry);
+    if(nameEl) nameEl.value = '';
+    renderCodeList();
+    showNewCodePopup(name, code, level);
+  } finally {
+    if(btnEl) { btnEl.disabled = false; btnEl.textContent = '+ Neuen Code generieren'; }
+  }
+}
+
+function showNewCodePopup(name, code, level) {
+  const lvlNames = ['','🟢 Runden','🟡 Einstellungen','🔴 Admin'];
+  const box = document.createElement('div');
+  box.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  `;
+
+  const inner = document.createElement('div');
+  inner.style.cssText = `background:var(--bg2);border:1px solid var(--border);border-radius:16px;
+    padding:24px;max-width:320px;width:100%;text-align:center`;
+
+  inner.innerHTML = `
+    <div style="font-size:1.5rem;margin-bottom:8px">🔑</div>
+    <div style="font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:4px">
+      Code für <span style="color:var(--accent)">${esc(name)}</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text3);margin-bottom:14px">${lvlNames[level]}</div>
+    <div style="background:var(--bg3);border:2px solid rgba(232,184,75,.4);border-radius:10px;padding:16px;margin-bottom:14px">
+      <div id="newCodeDisplay" style="font-family:'Rajdhani',sans-serif;font-size:2rem;font-weight:700;
+        letter-spacing:6px;color:var(--accent)">${esc(code)}</div>
+    </div>
+    <div style="font-size:.68rem;color:var(--danger);margin-bottom:14px">
+      ⚠ Jetzt notieren! Wird nicht nochmal angezeigt.
+    </div>
+    <button id="newCodeCopyBtn" style="background:var(--accent);color:#0a0c12;border:none;border-radius:8px;
+      padding:11px 20px;font-size:.88rem;font-weight:700;cursor:pointer;width:100%;margin-bottom:8px">
+      📋 Code kopieren
+    </button>
+    <button id="newCodeCloseBtn" style="background:transparent;border:1px solid var(--border);border-radius:8px;
+      padding:9px 20px;font-size:.82rem;color:var(--text2);cursor:pointer;width:100%">
+      Schließen
+    </button>
+  `;
+
+  box.appendChild(inner);
+  document.body.appendChild(box);
+
+  // Event listeners mit direktem Zugriff auf `code` — kein innerHTML-Injection
+  inner.querySelector('#newCodeCopyBtn').addEventListener('click', () => {
+    navigator.clipboard?.writeText(code)
+      .then(() => showToast('📋 Code kopiert!'))
+      .catch(() => showToast('Code: ' + code));
+  });
+  inner.querySelector('#newCodeCloseBtn').addEventListener('click', () => box.remove());
+  box.addEventListener('click', e => { if(e.target === box) box.remove(); });
+}
+
+async function deleteCode(id, name) {
+  if(!requirePerm(3)) return;
+  try {
+    if(db && !id.startsWith('local_')) {
+      await db.collection(ACCESS_CODES_COL).doc(id).delete();
+    }
+    accessCodesCache = accessCodesCache.filter(c => c.id !== id);
+    showToast(`✕ Code von ${name} gelöscht`);
+    renderCodeList();
+  } catch(e) {
+    console.error('deleteCode Error:', e);
+    showToast(`❌ Löschen fehlgeschlagen: ${e.code || e.message}`);
+  }
+}
+
+// ── Modal rendern ──────────────────────────────────────────────────
+function renderCodeList() {
+  const el = document.getElementById('codeList');
+  if(!el) return;
+  if(!accessCodesCache.length) {
+    el.innerHTML = `<div style="font-size:.72rem;color:var(--text3);text-align:center;padding:8px">Noch keine Codes erstellt</div>`;
+    return;
+  }
+  const lvlIcons = ['','🟢','🟡','🔴'];
+  const lvlNames = ['','Runden','Einstellungen','Admin'];
+  el.innerHTML = accessCodesCache.map(c => `
+    <div class="code-list-item">
+      <div class="code-list-item-name">${esc(c.name)}</div>
+      <span class="code-list-item-level lvl${c.level}">${lvlIcons[c.level]} ${lvlNames[c.level]}</span>
+      <div class="code-list-item-code">${c.code.slice(0,8)}…</div>
+      <button class="code-list-item-del" onclick="deleteCode('${c.id}','${esc(c.name)}')" title="Löschen">✕</button>
+    </div>
+  `).join('');
+}
+
+function updateAccessModal() {
+  const loginForm    = document.getElementById('accessLoginForm');
+  const loggedIn     = document.getElementById('accessLoggedIn');
+  const codeMgmt     = document.getElementById('codeMgmtSection');
+  const loggedIcon   = document.getElementById('accessLoggedIcon');
+  const loggedName   = document.getElementById('accessLoggedName');
+  const loggedDesc   = document.getElementById('accessLoggedDesc');
+  const err          = document.getElementById('accessCodeError');
+  if(err) err.textContent = '';
+
+  const lvlIcons = ['🔒','🟢','🟡','🔴'];
+  const lvlNames = ['Gesperrt','Runden','Einstellungen','Admin'];
+  const lvlDescs = ['Nur Ansicht','Runden & Bonus/Strafe','+ Spieler/Accounts verwalten','+ Badges, Reset, Code-Verwaltung'];
+
+  if(currentPermLevel > 0 && currentActor) {
+    if(loginForm) loginForm.style.display = 'none';
+    if(loggedIn)  loggedIn.style.display = '';
+    if(loggedIcon) loggedIcon.textContent = lvlIcons[currentPermLevel];
+    if(loggedName) loggedName.textContent = currentActor.name;
+    if(loggedDesc) loggedDesc.textContent = lvlDescs[currentPermLevel];
+    // Code-Verwaltung nur für Admin
+    if(codeMgmt) {
+      codeMgmt.style.display = currentPermLevel >= 3 ? '' : 'none';
+      if(currentPermLevel >= 3) renderCodeList();
+    }
+  } else {
+    if(loginForm) loginForm.style.display = '';
+    if(loggedIn)  loggedIn.style.display = 'none';
+    if(codeMgmt)  codeMgmt.style.display = 'none';
+  }
+}
+
+function showAccessModal() {
+  document.getElementById('accessModal').classList.remove('hidden');
+  updateAccessModal();
+  if(currentPermLevel === 0) {
+    setTimeout(() => document.getElementById('accessCodeInput')?.focus(), 100);
+  }
+}
+
+function hideAccessModal() {
+  document.getElementById('accessModal').classList.add('hidden');
+}
+
+// ── UI Update ──────────────────────────────────────────────────────
+function applyPermissions() {
+  const canRunden   = currentPermLevel >= 1;
+  const canSettings = currentPermLevel >= 2;
+  const canAdmin    = currentPermLevel >= 3;
+
+  // Readonly banner
+  const readonlyBanner = document.getElementById('readonlyBanner');
+  if(readonlyBanner) readonlyBanner.style.display = currentPermLevel === 0 ? '' : 'none';
+
+  // Runden bestätigen Button
+  const submitBtn = document.getElementById('btnSubmitRound');
+  if(submitBtn) {
+    submitBtn.disabled = !canRunden || uiSlots.some(s=>s===null);
+    submitBtn.style.opacity = canRunden ? '' : '0.4';
+  }
+
+  // Bonus/Strafe Buttons
+  document.querySelectorAll('.btn-bonus, .btn-penalty').forEach(b => {
+    b.disabled = !canRunden;
+    b.style.opacity = canRunden ? '' : '0.4';
+  });
+
+  // Spieler hinzufügen Form
+  const playerAddForm = document.querySelector('.player-add-form');
+  if(playerAddForm) playerAddForm.style.display = canSettings ? '' : 'none';
+
+  // Matchmaking Toggle
+  const mmToggle = document.getElementById('mmToggle');
+  const mmToggleBtn = document.getElementById('mmToggleBtn');
+  [mmToggle, mmToggleBtn].forEach(el => {
+    if(el) {
+      el.style.pointerEvents = canSettings ? '' : 'none';
+      el.style.opacity = canSettings ? '' : '0.45';
+    }
+  });
+
+  // Spieler entfernen/toggle/edit Buttons
+  document.querySelectorAll('.btn-remove, .btn-toggle').forEach(b => {
+    b.disabled = !canSettings;
+    b.style.opacity = canSettings ? '' : '0.4';
+  });
+  document.querySelectorAll('.btn-edit-name').forEach(b => {
+    b.style.display = canSettings ? '' : 'none';
+  });
+
+  // Key Management
+  const keyCreate = document.querySelector('.key-create');
+  if(keyCreate) keyCreate.style.display = canSettings ? '' : 'none';
+  document.querySelectorAll('.btn-assign-now').forEach(el => {
+    el.disabled = !canSettings;
+    el.style.opacity = canSettings ? '' : '0.4';
+  });
+  document.querySelectorAll('.assignment-add-row select').forEach(el => {
+    el.disabled = !canSettings;
+  });
+  document.querySelectorAll('.account-tag-del').forEach(b => {
+    b.style.display = canSettings ? '' : 'none';
+  });
+  document.querySelectorAll('.btn-remove-key').forEach(b => {
+    b.style.display = canSettings ? '' : 'none';
+  });
+
+  // Dev Tab
+  const devTab = document.getElementById('spieler-tab-dev');
+  if(devTab) devTab.style.display = canAdmin ? '' : 'none';
+
+  // Danger Zone
+  const dangerZone = document.querySelector('.danger-zone');
+  if(dangerZone) dangerZone.style.display = canAdmin ? '' : 'none';
+
+  // Spezialrunden
+  const srSection = document.querySelector('.special-rounds-section');
+  if(srSection) {
+    srSection.style.pointerEvents = canSettings ? '' : 'none';
+    srSection.style.opacity = canSettings ? '' : '0.4';
+  }
+
+  // Profile verwalten Button (nur Admin)
+  const profileBtn = document.querySelector('button[onclick="showProfileModal()"]');
+  if(profileBtn) profileBtn.style.display = canAdmin ? '' : 'none';
+
+  // Spezialrunden-Toggle
+  document.querySelectorAll('.btn-special-toggle').forEach(b => {
+    b.style.pointerEvents = canSettings ? '' : 'none';
+    b.style.opacity = canSettings ? '' : '0.4';
+  });
+}
+
+function updatePermUI() {
+  const btn   = document.getElementById('accessBtn');
+  const label = document.getElementById('accessBtnLabel');
+  if(!btn || !label) return;
+  btn.className = 'access-btn';
+  const name = currentActor?.name || '';
+  const shortName = name.length > 8 ? name.slice(0,7)+'…' : name;
+  if(currentPermLevel >= 3) {
+    btn.classList.add('perm-admin');
+    label.textContent = shortName || 'Admin';
+  } else if(currentPermLevel >= 2) {
+    btn.classList.add('perm-settings');
+    label.textContent = shortName || 'Einstellungen';
+  } else if(currentPermLevel >= 1) {
+    btn.classList.add('perm-runden');
+    label.textContent = shortName || 'Runden';
+  } else {
+    btn.classList.add('perm-none');
+    label.textContent = 'Gesperrt';
+  }
+  applyPermissions();
+}
+
+// ── requirePerm (unverändert) ──────────────────────────────────────
+function requirePerm(level) {
+  if(currentPermLevel >= level) return true;
+  const names = ['','Runden-Code','Einstellungen-Code','Admin-Code'];
+  showToast(`🔒 Benötigt: ${names[level]}`);
+  showAccessModal();
+  return false;
+}
+
+// ── Autor für History-Einträge ─────────────────────────────────────
+function getActorTag() {
+  if(!currentActor) return '';
+  return ` <span class="history-actor">👤 ${esc(currentActor.name)}</span>`;
+}
+  const canRunden   = currentPermLevel >= 1;
+  const canSettings = currentPermLevel >= 2;
+  const canAdmin    = currentPermLevel >= 3;
+
+  // Readonly banner
+  const readonlyBanner = document.getElementById('readonlyBanner');
+  if(readonlyBanner) readonlyBanner.style.display = currentPermLevel === 0 ? '' : 'none';
+
+  // Runden bestätigen Button
+  const submitBtn = document.getElementById('btnSubmitRound');
+  if(submitBtn) {
+    submitBtn.disabled = !canRunden || uiSlots.some(s=>s===null);
+    submitBtn.style.opacity = canRunden ? '' : '0.4';
+  }
+
+  // Alle Bonus/Strafe Buttons
+  document.querySelectorAll('.btn-bonus, .btn-penalty').forEach(b => {
+    b.disabled = !canRunden;
+    b.style.opacity = canRunden ? '' : '0.4';
+  });
+
+  // Spieler hinzufügen Form
+  const playerAddForm = document.querySelector('.player-add-form');
+  if(playerAddForm) playerAddForm.style.display = canSettings ? '' : 'none';
+
+  // Matchmaking Toggle
+  const mmToggle = document.getElementById('mmToggle');
+  const mmToggleBtn = document.getElementById('mmToggleBtn');
+  [mmToggle, mmToggleBtn].forEach(el => {
+    if(el) {
+      el.style.pointerEvents = canSettings ? '' : 'none';
+      el.style.opacity = canSettings ? '' : '0.45';
+    }
+  });
+
+  // Spieler entfernen/toggle/edit Buttons
+  document.querySelectorAll('.btn-remove, .btn-toggle').forEach(b => {
+    b.disabled = !canSettings;
+    b.style.opacity = canSettings ? '' : '0.4';
+  });
+  document.querySelectorAll('.btn-edit-name').forEach(b => {
+    b.style.display = canSettings ? '' : 'none';
+  });
+
+  // Key Management Section
+  const keyCreate = document.querySelector('.key-create');
+  if(keyCreate) keyCreate.style.display = canSettings ? '' : 'none';
+  document.querySelectorAll('.btn-assign-now').forEach(el => {
+    el.disabled = !canSettings;
+    el.style.opacity = canSettings ? '' : '0.4';
+  });
+  document.querySelectorAll('.assignment-add-row select').forEach(el => {
+    el.disabled = !canSettings;
+  });
+  document.querySelectorAll('.account-tag-del').forEach(b => {
+    b.style.display = canSettings ? '' : 'none';
+  });
+  document.querySelectorAll('.btn-remove-key').forEach(b => {
+    b.style.display = canSettings ? '' : 'none';
+  });
+
+  // Dev Tab / Admin features
+  const devTab = document.getElementById('spieler-tab-dev');
+  if(devTab) devTab.style.display = canAdmin ? '' : 'none';
+
+  // Danger Zone / Reset
+  const dangerZone = document.querySelector('.danger-zone');
+  if(dangerZone) dangerZone.style.display = canAdmin ? '' : 'none';
+
+  // Spezialrunden
+  const srSection = document.querySelector('.special-rounds-section');
+  if(srSection) {
+    srSection.style.pointerEvents = canSettings ? '' : 'none';
+    srSection.style.opacity = canSettings ? '' : '0.4';
+  }
+
+
+
+loadState();
+loadPermLevel();
+// Codes aus Firestore laden (async, non-blocking)
+loadAccessCodes();
+renderAll();
 // Lade auch aus Firestore (async)
 initFromFirestore();
 </script>
