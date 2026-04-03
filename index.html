@@ -4639,7 +4639,47 @@ let firestoreBadgesCache = null;
    WICHTIG: Alle Badge-Lese-Operationen sind SYNCHRON (Cache).
    Schreib-Operationen sind async (Firestore) aber blockieren nicht.
    ================================================================ */
-const GLOBAL_BADGES_KEY = 'rs4_global_badges';
+const GLOBAL_BADGES_KEY   = 'rs4_global_badges';
+
+/* ================================================================
+   PROFIL-SYSTEM – Konstanten & Hilfsfunktionen
+   ================================================================ */
+const ACTIVE_PROFILE_KEY = 'rs4_active_profile';
+const PROFILE_PREFIX     = 'rs4_profile_';
+const PROFILES_LIST_KEY  = 'rs4_profiles_list';
+
+function getActiveProfileId() {
+  return localStorage.getItem(ACTIVE_PROFILE_KEY) || 'default';
+}
+
+function getStorageKey() {
+  const pid = getActiveProfileId();
+  return pid === 'default' ? 'rs4' : PROFILE_PREFIX + pid;
+}
+
+function getAllProfiles() {
+  // Immer das Default-Profil + alle gespeicherten Profile
+  const raw = localStorage.getItem(PROFILES_LIST_KEY);
+  let list = [];
+  try { list = raw ? JSON.parse(raw) : []; } catch(e) { list = []; }
+  // Sicherstellen dass 'default' immer drin ist
+  if(!list.find(p => p.id === 'default')) {
+    const d = JSON.parse(localStorage.getItem('rs4') || '{}');
+    list.unshift({ id:'default', name:'Standard', players: (d?.state?.players||[]).length, round: d?.state?.round||0 });
+  }
+  // Metadaten aktualisieren
+  return list.map(p => {
+    const key = p.id === 'default' ? 'rs4' : PROFILE_PREFIX + p.id;
+    try {
+      const d = JSON.parse(localStorage.getItem(key) || '{}');
+      return { ...p, players: (d?.state?.players||[]).length, round: d?.state?.round||0, name: d?.state?.profileName || p.name };
+    } catch(e) { return p; }
+  });
+}
+
+function saveProfilesList(profiles) {
+  localStorage.setItem(PROFILES_LIST_KEY, JSON.stringify(profiles));
+}
 
 /* Synchron aus Cache lesen */
 function getGlobalBadges() {
@@ -5779,8 +5819,8 @@ async function submitAccessCode() {
     return;
   }
 
-  // 2. Firestore Codes prüfen (aus Cache)
-  if(!accessCodesCache.length) await loadAccessCodes();
+  // 2. Firestore Codes prüfen – immer frisch laden damit neue Codes anderer Geräte funktionieren
+  await loadAccessCodes();
   const match = accessCodesCache.find(c => (c.code || '').toUpperCase() === code);
   if(match) {
     savePermSession(match.level, { name: match.name, level: match.level, code });
@@ -5935,7 +5975,7 @@ function renderCodeList() {
     <div class="code-list-item">
       <div class="code-list-item-name">${esc(c.name)}</div>
       <span class="code-list-item-level lvl${c.level}">${lvlIcons[c.level]} ${lvlNames[c.level]}</span>
-      <div class="code-list-item-code">${c.code.slice(0,8)}…</div>
+      <div class="code-list-item-code">${c.code}</div>
       <button class="code-list-item-del" onclick="deleteCode('${c.id}','${esc(c.name)}')" title="Löschen">✕</button>
     </div>
   `).join('');
@@ -6111,83 +6151,6 @@ function getActorTag() {
   if(!currentActor) return '';
   return ` <span class="history-actor">👤 ${esc(currentActor.name)}</span>`;
 }
-  const canRunden   = currentPermLevel >= 1;
-  const canSettings = currentPermLevel >= 2;
-  const canAdmin    = currentPermLevel >= 3;
-
-  // Readonly banner
-  const readonlyBanner = document.getElementById('readonlyBanner');
-  if(readonlyBanner) readonlyBanner.style.display = currentPermLevel === 0 ? '' : 'none';
-
-  // Runden bestätigen Button
-  const submitBtn = document.getElementById('btnSubmitRound');
-  if(submitBtn) {
-    submitBtn.disabled = !canRunden || uiSlots.some(s=>s===null);
-    submitBtn.style.opacity = canRunden ? '' : '0.4';
-  }
-
-  // Alle Bonus/Strafe Buttons
-  document.querySelectorAll('.btn-bonus, .btn-penalty').forEach(b => {
-    b.disabled = !canRunden;
-    b.style.opacity = canRunden ? '' : '0.4';
-  });
-
-  // Spieler hinzufügen Form
-  const playerAddForm = document.querySelector('.player-add-form');
-  if(playerAddForm) playerAddForm.style.display = canSettings ? '' : 'none';
-
-  // Matchmaking Toggle
-  const mmToggle = document.getElementById('mmToggle');
-  const mmToggleBtn = document.getElementById('mmToggleBtn');
-  [mmToggle, mmToggleBtn].forEach(el => {
-    if(el) {
-      el.style.pointerEvents = canSettings ? '' : 'none';
-      el.style.opacity = canSettings ? '' : '0.45';
-    }
-  });
-
-  // Spieler entfernen/toggle/edit Buttons
-  document.querySelectorAll('.btn-remove, .btn-toggle').forEach(b => {
-    b.disabled = !canSettings;
-    b.style.opacity = canSettings ? '' : '0.4';
-  });
-  document.querySelectorAll('.btn-edit-name').forEach(b => {
-    b.style.display = canSettings ? '' : 'none';
-  });
-
-  // Key Management Section
-  const keyCreate = document.querySelector('.key-create');
-  if(keyCreate) keyCreate.style.display = canSettings ? '' : 'none';
-  document.querySelectorAll('.btn-assign-now').forEach(el => {
-    el.disabled = !canSettings;
-    el.style.opacity = canSettings ? '' : '0.4';
-  });
-  document.querySelectorAll('.assignment-add-row select').forEach(el => {
-    el.disabled = !canSettings;
-  });
-  document.querySelectorAll('.account-tag-del').forEach(b => {
-    b.style.display = canSettings ? '' : 'none';
-  });
-  document.querySelectorAll('.btn-remove-key').forEach(b => {
-    b.style.display = canSettings ? '' : 'none';
-  });
-
-  // Dev Tab / Admin features
-  const devTab = document.getElementById('spieler-tab-dev');
-  if(devTab) devTab.style.display = canAdmin ? '' : 'none';
-
-  // Danger Zone / Reset
-  const dangerZone = document.querySelector('.danger-zone');
-  if(dangerZone) dangerZone.style.display = canAdmin ? '' : 'none';
-
-  // Spezialrunden
-  const srSection = document.querySelector('.special-rounds-section');
-  if(srSection) {
-    srSection.style.pointerEvents = canSettings ? '' : 'none';
-    srSection.style.opacity = canSettings ? '' : '0.4';
-  }
-
-
 
 loadState();
 loadPermLevel();
