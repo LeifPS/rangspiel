@@ -2089,8 +2089,6 @@ async function _flushToFirestore() {
         firstRankAchievers: state.firstRankAchievers || {}
       },
       nextId,
-      profiles:        getAllProfiles(),
-      activeProfileId: getActiveProfileId(),
       lastWrittenBy:   SESSION_ID,
       timestamp:       firebase.firestore.FieldValue.serverTimestamp()
     };
