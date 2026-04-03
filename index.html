@@ -2122,6 +2122,8 @@ function _applyRemoteState(data) {
   _isApplyingRemote = false;
 }
 
+let _initialSnapshotReceived = false;
+
 function startRealtimeListeners() {
   if(!db) return;
 
@@ -2130,7 +2132,10 @@ function startRealtimeListeners() {
     .onSnapshot((doc) => {
       if(!doc.exists) return;
       const data = doc.data();
-      if(data.lastWrittenBy === SESSION_ID) return; // Echo-Schutz
+      // Echo-Schutz: eigene Writes nach dem ersten Laden ignorieren,
+      // aber beim ERSTEN Snapshot immer laden (auch wenn wir selbst geschrieben haben)
+      if(_initialSnapshotReceived && data.lastWrittenBy === SESSION_ID) return;
+      _initialSnapshotReceived = true;
       showSyncIndicator('syncing');
       _applyRemoteState(data);
       setTimeout(() => showSyncIndicator('saved'), 300);
@@ -2152,6 +2157,7 @@ async function initFromFirestore() {
   const user = await initAuth();
   if(!user) { showToast('Anmeldung fehlgeschlagen'); return; }
   showSyncIndicator('saving');
+  _initialSnapshotReceived = false; // Reset damit erster Snapshot immer geladen wird
   try {
     const [stateDoc, badgeDoc] = await Promise.all([
       db.collection(FIRESTORE_COLLECTION).doc(FIRESTORE_DOC).get(),
@@ -2163,6 +2169,7 @@ async function initFromFirestore() {
     }
     if(stateDoc.exists) {
       _applyRemoteState(stateDoc.data());
+      _initialSnapshotReceived = true; // Initialer Load zählt als erster Snapshot
       showToast('☁️ Live-Sync aktiv');
     } else {
       showToast('📱 Lokale Daten aktiv');
@@ -2171,7 +2178,7 @@ async function initFromFirestore() {
   } catch(e) {
     console.error('Init Error:', e);
     showSyncIndicator('error');
-    showToast('⚠ Cloud nicht erreichbar');
+    showToast('⚠ Cloud nicht erreichbar – lokale Daten werden verwendet');
   }
   startRealtimeListeners();
 }
