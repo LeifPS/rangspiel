@@ -43,10 +43,12 @@
   .sync-indicator.visible{opacity:1}
   .sync-indicator.saving{color:var(--accent);border-color:rgba(232,184,75,.4)}
   .sync-indicator.saved{color:var(--success);border-color:rgba(76,232,122,.4)}
+  .sync-indicator.syncing{color:#4a90d9;border-color:rgba(74,144,217,.4);animation:syncBlink .8s ease-in-out 2}
   .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);transition:all .3s ease}
   .sync-indicator.saving .sync-dot{background:var(--accent);animation:syncPulse 1s ease-in-out infinite}
   .sync-indicator.saved .sync-dot{background:var(--success)}
   @keyframes syncPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}
+  @keyframes syncBlink{0%,100%{opacity:1}50%{opacity:.4}}
 
   /* MATCHMAKING TOGGLE */
   .mm-toggle{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:.75rem;font-weight:700;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:var(--transition)}
@@ -2023,55 +2025,76 @@ function initAuth() {
 /* ================================================================
    FIRESTORE FUNKTIONEN
    ================================================================ */
-const FIRESTORE_COLLECTION = 'rangspiel_data';
-const FIRESTORE_DOC = 'main_data';
 
-// Sync Indicator Steuerung
+
+// ════════════════════════════════════════════════════════════════
+// FIRESTORE ECHTZEIT-SYNC
+// ════════════════════════════════════════════════════════════════
+// Architektur:
+//  - onSnapshot auf main_data + global_badges → Live-Updates für alle
+//  - Lokale Writes: 300ms debounced
+//  - SESSION_ID: Echo-Schutz (eigene Writes nicht zurückempfangen)
+// ════════════════════════════════════════════════════════════════
+
+const FIRESTORE_COLLECTION = 'rangspiel_data';
+const FIRESTORE_DOC        = 'main_data';
+const SESSION_ID = Math.random().toString(36).slice(2, 10);
+
+let _saveDebounceTimer   = null;
+let _listenerUnsubState  = null;
+let _listenerUnsubBadges = null;
+let _isApplyingRemote    = false;
+
 function showSyncIndicator(status) {
-  const indicator = document.getElementById('syncIndicator');
-  const text = indicator.querySelector('.sync-text');
-  if(!indicator) return;
-  
-  indicator.classList.add('visible');
-  
+  const el = document.getElementById('syncIndicator');
+  if(!el) return;
+  el.classList.add('visible');
   if(status === 'saving') {
-    indicator.classList.add('saving');
-    indicator.classList.remove('saved');
-    text.textContent = 'Speichern...';
+    el.classList.add('saving'); el.classList.remove('saved');
+    el.innerHTML = '<span class="sync-dot"></span><span class="sync-text">Speichert…</span>';
   } else if(status === 'saved') {
-    indicator.classList.remove('saving');
-    indicator.classList.add('saved');
-    text.textContent = 'Gespeichert';
-    // Nach 2 Sekunden ausblenden
-    setTimeout(() => {
-      indicator.classList.remove('visible');
-    }, 2000);
+    el.classList.remove('saving'); el.classList.add('saved');
+    el.innerHTML = '<span class="sync-dot"></span><span class="sync-text">Gespeichert</span>';
+    setTimeout(() => el.classList.remove('visible'), 2000);
+  } else if(status === 'syncing') {
+    el.classList.add('saving'); el.classList.remove('saved');
+    el.innerHTML = '<span class="sync-dot"></span><span class="sync-text">Sync…</span>';
+  } else if(status === 'error') {
+    el.classList.remove('saving'); el.classList.remove('saved');
+    el.innerHTML = '<span class="sync-dot"></span><span class="sync-text">Fehler</span>';
+    setTimeout(() => el.classList.remove('visible'), 3000);
   }
 }
 
-// Speichere alle Daten zu Firestore
-async function saveToFirestore() {
+function saveState() {
+  const key = getStorageKey();
+  localStorage.setItem(key, JSON.stringify({state, nextId}));
+  clearTimeout(_saveDebounceTimer);
+  _saveDebounceTimer = setTimeout(_flushToFirestore, 300);
+}
+
+async function _flushToFirestore() {
+  if(!db) return;
   showSyncIndicator('saving');
   try {
-    // Explizit alle wichtigen State-Felder sichern
     const data = {
       state: {
-        players: state.players,
-        round: state.round,
-        history: state.history,
-        matchmakingOn: state.matchmakingOn,
-        mmPhase: state.mmPhase,
-        keys: state.keys,
-        profileName: state.profileName || null,
+        players:            state.players,
+        round:              state.round,
+        history:            state.history,
+        matchmakingOn:      state.matchmakingOn,
+        mmPhase:            state.mmPhase,
+        keys:               state.keys,
+        profileName:        state.profileName || null,
         firstRankAchievers: state.firstRankAchievers || {}
       },
-      nextId: nextId,
-      profiles: getAllProfiles(),
+      nextId,
+      profiles:        getAllProfiles(),
       activeProfileId: getActiveProfileId(),
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      lastWrittenBy:   SESSION_ID,
+      timestamp:       firebase.firestore.FieldValue.serverTimestamp()
     };
     await db.collection(FIRESTORE_COLLECTION).doc(FIRESTORE_DOC).set(data);
-    console.log('Daten zu Firestore gespeichert (Runde:', state.round, ')');
     showSyncIndicator('saved');
   } catch(e) {
     console.error('Firestore Save Error:', e);
@@ -2079,135 +2102,78 @@ async function saveToFirestore() {
   }
 }
 
-// Lade alle Daten aus Firestore
-async function loadFromFirestore() {
-  try {
-    const doc = await db.collection(FIRESTORE_COLLECTION).doc(FIRESTORE_DOC).get();
-    if(doc.exists) {
-      const data = doc.data();
-      
-      // State wiederherstellen
-      if(data.state) {
-        state = {
-          players: data.state.players || [],
-          round: data.state.round || 0,
-          history: data.state.history || [],
-          matchmakingOn: data.state.matchmakingOn || false,
-          mmPhase: data.state.mmPhase || 'low',
-          keys: data.state.keys || [],
-          profileName: data.state.profileName,
-          firstRankAchievers: data.state.firstRankAchievers || {}
-        };
-      }
-      if(data.nextId) nextId = data.nextId;
-      
-      // Profile aus Firestore zu localStorage synchronisieren
-      if(data.profiles && Array.isArray(data.profiles)) {
-        data.profiles.forEach(profile => {
-          if(profile.id !== 'default') {
-            const key = PROFILE_PREFIX + profile.id;
-            // Nur speichern wenn noch nicht vorhanden oder aktualisiert
-            const existing = localStorage.getItem(key);
-            if(!existing) {
-              const profileData = {
-                state: {
-                  players: [],
-                  round: profile.round || 0,
-                  history: [],
-                  matchmakingOn: false,
-                  mmPhase: 'low',
-                  keys: [],
-                  profileName: profile.name
-                },
-                nextId: 1
-              };
-              localStorage.setItem(key, JSON.stringify(profileData));
-            }
-          }
-        });
-      }
-      
-      // Aktives Profil wiederherstellen
-      if(data.activeProfileId) {
-        localStorage.setItem(ACTIVE_PROFILE_KEY, data.activeProfileId);
-      }
-      
-      console.log('Daten aus Firestore geladen (Runde:', state.round, ', Profil:', data.activeProfileId, ')');
-      return true;
-    }
-    return false;
-  } catch(e) {
-    console.error('Firestore Load Error:', e);
-    return false;
-  }
-}
-
-/* ================================================================
-   ZUSTAND
-   ================================================================ */
-let state={players:[],round:0,history:[],matchmakingOn:true,mmPhase:'low',keys:[],firstRankAchievers:{}};
-let nextId=1;
-let playerToDelete=null;
-
-/* Placement-UI state */
-let uiSlots=[];          // pid | null pro Platz
-let uiActivePIds=[];     // Spieler-IDs die diese Runde spielen
-let uiSelectedSlot=null; // Slot der auf Spieler wartet
-
-/* ================================================================
-   SPEICHER
-   ================================================================ */
-
-/* ================================================================
-   PROFILE-SYSTEM
-   ================================================================ */
-const PROFILE_PREFIX = 'rs4_profile_';
-const ACTIVE_PROFILE_KEY = 'rs4_activeProfile';
-
-function getActiveProfileId() {
-  return localStorage.getItem(ACTIVE_PROFILE_KEY) || 'default';
-}
-
-function getStorageKey() {
-  const pid = getActiveProfileId();
-  return pid === 'default' ? 'rs4' : PROFILE_PREFIX + pid;
-}
-
-function getAllProfiles() {
-  const profiles = [];
-  // Always include default
-  const defData = localStorage.getItem('rs4');
-  const defState = defData ? JSON.parse(defData) : null;
-  profiles.push({
-    id: 'default',
-    name: defState?.state?.profileName || 'Standard',
-    round: defState?.state?.round || 0,
-    players: defState?.state?.players?.length || 0,
-  });
-  // Scan for custom profiles
-  for(let i=0; i<localStorage.length; i++) {
-    const k = localStorage.key(i);
-    if(k && k.startsWith(PROFILE_PREFIX)) {
-      const pid = k.slice(PROFILE_PREFIX.length);
-      try {
-        const d = JSON.parse(localStorage.getItem(k));
-        profiles.push({
-          id: pid,
-          name: d?.state?.profileName || pid,
-          round: d?.state?.round || 0,
-          players: d?.state?.players?.length || 0,
-        });
-      } catch(e) {}
-    }
-  }
-  return profiles;
-}
-
-function saveState(){
+function _applyRemoteState(data) {
+  if(!data?.state) return;
+  _isApplyingRemote = true;
+  state = {
+    players:            data.state.players            || [],
+    round:              data.state.round              || 0,
+    history:            data.state.history            || [],
+    matchmakingOn:      data.state.matchmakingOn      || false,
+    mmPhase:            data.state.mmPhase            || 'low',
+    keys:               data.state.keys               || [],
+    profileName:        data.state.profileName        || null,
+    firstRankAchievers: data.state.firstRankAchievers || {}
+  };
+  if(data.nextId) nextId = data.nextId;
   const key = getStorageKey();
   localStorage.setItem(key, JSON.stringify({state, nextId}));
-  // Auch zu Firestore speichern
-  saveToFirestore();
+  renderAll();
+  _isApplyingRemote = false;
+}
+
+function startRealtimeListeners() {
+  if(!db) return;
+
+  if(_listenerUnsubState) _listenerUnsubState();
+  _listenerUnsubState = db.collection(FIRESTORE_COLLECTION).doc(FIRESTORE_DOC)
+    .onSnapshot((doc) => {
+      if(!doc.exists) return;
+      const data = doc.data();
+      if(data.lastWrittenBy === SESSION_ID) return; // Echo-Schutz
+      showSyncIndicator('syncing');
+      _applyRemoteState(data);
+      setTimeout(() => showSyncIndicator('saved'), 300);
+    }, (err) => { console.error('State Listener Error:', err); showSyncIndicator('error'); });
+
+  if(_listenerUnsubBadges) _listenerUnsubBadges();
+  _listenerUnsubBadges = db.collection('global_badges').doc('badges')
+    .onSnapshot((doc) => {
+      if(!doc.exists) return;
+      const newBadges = doc.data().data || {};
+      if(JSON.stringify(firestoreBadgesCache) === JSON.stringify(newBadges)) return;
+      firestoreBadgesCache = newBadges;
+      localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(firestoreBadgesCache));
+      renderAll();
+    }, (err) => console.error('Badge Listener Error:', err));
+}
+
+async function initFromFirestore() {
+  const user = await initAuth();
+  if(!user) { showToast('Anmeldung fehlgeschlagen'); return; }
+  showSyncIndicator('saving');
+  try {
+    const [stateDoc, badgeDoc] = await Promise.all([
+      db.collection(FIRESTORE_COLLECTION).doc(FIRESTORE_DOC).get(),
+      db.collection('global_badges').doc('badges').get()
+    ]);
+    if(badgeDoc.exists) {
+      firestoreBadgesCache = badgeDoc.data().data || {};
+      localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(firestoreBadgesCache));
+    }
+    if(stateDoc.exists) {
+      _applyRemoteState(stateDoc.data());
+      showToast('☁️ Live-Sync aktiv');
+    } else {
+      showToast('📱 Lokale Daten aktiv');
+    }
+    showSyncIndicator('saved');
+  } catch(e) {
+    console.error('Init Error:', e);
+    showSyncIndicator('error');
+    showToast('⚠ Cloud nicht erreichbar');
+  }
+  startRealtimeListeners();
 }
 
 function loadState(){
@@ -2221,7 +2187,6 @@ function loadState(){
       return;
     }
     if(key === 'rs4') {
-      // Migriere v2/v3
       const old = localStorage.getItem('rangspiel_v2') || localStorage.getItem('rangspiel_v3');
       if(old) {
         const p = JSON.parse(old);
@@ -2232,25 +2197,6 @@ function loadState(){
   } catch(e) { console.error(e); }
 }
 
-// Async Firestore Load für Start
-async function initFromFirestore() {
-  const user = await initAuth();
-  if (!user) {
-    showToast('Anmeldung fehlgeschlagen');
-    return;
-  }
-  // Lade Spieldaten und Badges parallel
-  const [loaded] = await Promise.all([
-    loadFromFirestore(),
-    loadBadgesFromFirestore()
-  ]);
-  if(loaded) {
-    renderAll();
-    showToast('☁️ Daten aus Cloud geladen');
-  } else {
-    showToast('📱 Lokale Daten geladen');
-  }
-}
 
 /* ================================================================
    GLOBALES SPIELER-SYSTEM (profilübergreifend)
@@ -4738,30 +4684,22 @@ async function loadBadgesFromFirestore() {
 // Badge-Cache aus localStorage vorladen (synchroner Fallback)
 try { firestoreBadgesCache = JSON.parse(localStorage.getItem(GLOBAL_BADGES_KEY) || 'null'); } catch(e) {}
 
-// Echtzeit-Listener für Badges starten (nach DOM ready)
-document.addEventListener('DOMContentLoaded', () => {
-  if(db) {
-    db.collection('global_badges').doc('badges').onSnapshot((doc) => {
-      if(doc.exists) {
-        firestoreBadgesCache = doc.data().data || {};
-        localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(firestoreBadgesCache));
-        renderAll();
-      }
-    }, (err) => console.error('Badge Listener Error:', err));
-  }
-});
 
-/* Gibt den internen Spieler-Key (internalId) für einen Player zurück */
+/* Gibt den internen Spieler-Key (internalId) für einen Player zurück.
+   Fallback: player.name — so können auch Spieler ohne Key Badges bekommen */
 function getPlayerInternalId(player) {
-  if(!player.key) return null;
-  const k = state.keys.find(x => x.key === player.key);
-  return k ? (k.internalId || k.key) : player.key;
+  if(player.key) {
+    const k = state.keys.find(x => x.key === player.key);
+    if(k) return k.internalId || k.key;
+    return player.key;
+  }
+  // Kein Spieler zugewiesen → Account-Name als ID
+  return 'acc_' + (player.name || player.id);
 }
 
 /* Holt alle globalen Badges für einen Spieler (anhand seiner internalId UND playerId) */
 function getGlobalBadgesForPlayer(player) {
   const iid = getPlayerInternalId(player);
-  if(!iid) return [];
   const gb = getGlobalBadges();
   const result = [];
   for(const [key, achiever] of Object.entries(gb)) {
@@ -4789,8 +4727,7 @@ function getGlobalBadgesForPlayer(player) {
 
 /* Prüft ob ein globaler Badge frei ist und vergibt ihn (synchron per Cache) */
 function checkAndSetGlobalBadge(player, key) {
-  const iid = getPlayerInternalId(player);
-  if(!iid) return false;
+  const iid = getPlayerInternalId(player); // never null anymore
   const gb = getGlobalBadges();
 
   // S1 Badges können mehrfach vergeben werden
