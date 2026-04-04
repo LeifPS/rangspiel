@@ -1553,6 +1553,29 @@
   .badge-anim-s1Gold{animation:s1Gold 2.6s ease-in-out infinite}
   .badge-anim-s1Amethyst{animation:s1Amethyst 3s ease-in-out infinite}
   .badge-anim-s1Gold2{animation:s1Gold2 3.5s ease-in-out infinite}
+  
+  /* UNDO BUTTON */
+  .btn-undo{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--bg3),var(--bg2));border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:600;padding:12px 16px;cursor:pointer;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
+  .btn-undo::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(232,184,75,0.1),transparent);transition:left 0.6s}
+  .btn-undo:hover::before{left:100%}
+  .btn-undo:hover{background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-color:var(--accent);color:#0a0c12;transform:translateY(-2px);box-shadow:0 6px 20px rgba(232,184,75,0.3)}
+  .btn-undo:active{transform:translateY(0);box-shadow:0 2px 8px rgba(232,184,75,0.2)}
+  .btn-undo:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn-undo:disabled:hover{background:linear-gradient(135deg,var(--bg3),var(--bg2));border-color:var(--border);color:var(--text)}
+  .btn-undo-icon{font-size:1.1rem;transition:transform 0.3s}
+  .btn-undo:hover .btn-undo-icon{transform:rotate(-15deg) scale(1.1)}
+  .btn-undo-text{flex:1;text-align:center}
+  .btn-undo-count{font-size:.75rem;background:rgba(232,184,75,0.2);color:var(--accent);padding:2px 6px;border-radius:10px;font-weight:700;min-width:24px;text-align:center}
+  .btn-undo:hover .btn-undo-count{background:rgba(10,12,18,0.3);color:#0a0c12}
+  
+  /* PERMISSION INFO BUTTON */
+  .btn-perm-info{display:flex;align-items:center;justify-content:center;width:36px;height:36px;background:linear-gradient(135deg,var(--bg3),var(--bg2));border:1px solid var(--border);border-radius:50%;color:var(--text3);cursor:pointer;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);position:relative}
+  .btn-perm-info::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:50%;background:var(--accent);opacity:0;transition:opacity 0.3s}
+  .btn-perm-info:hover::before{opacity:0.1}
+  .btn-perm-info:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.1);box-shadow:0 4px 12px rgba(232,184,75,0.2)}
+  .btn-perm-info:active{transform:scale(0.95)}
+  .btn-perm-info-icon{font-size:1rem;z-index:1}
+  
   .player-popup-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
   .player-popup{background:var(--bg2);border:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:540px;padding:20px 20px 36px;position:relative;animation:popupSlideUp .3s cubic-bezier(0.34,1.56,0.64,1) both}
   @keyframes popupSlideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
@@ -1807,8 +1830,18 @@
           <span class="access-lock-icon"></span>
           <span id="accessBtnLabel">Gesperrt</span>
         </button>
-        <button class="btn-secondary" onclick="showPermInfoModal()" style="padding:6px 12px;font-size:.8rem" title="Berechtigungs-Info">ℹ️</button>
+        <button class="btn-perm-info" onclick="showPermInfoModal()" title="Berechtigungs-Info">
+          <span class="btn-perm-info-icon">ℹ️</span>
+        </button>
       </div>
+    </div>
+    <!-- Undo-Button für normale Benutzer -->
+    <div style="margin:12px 0">
+      <button class="btn-undo" onclick="performUndo()" id="mainUndoBtn" style="width:100%;justify-content:center">
+        <span class="btn-undo-icon">↩️</span>
+        <span class="btn-undo-text">Letzte Aktion rückgängig</span>
+        <span class="btn-undo-count" id="undoCount" style="display:none">(0)</span>
+      </button>
     </div>
     <div id="historyContainer"></div>
     <div class="danger-zone">
@@ -1943,6 +1976,16 @@
             <option value="2">🟡 Einstellungen</option>
             <option value="3">🔴 Admin</option>
           </select>
+        </div>
+        <div class="code-expiry-row">
+          <label style="font-size:.75rem;color:var(--text2);margin-bottom:4px;display:block">⏰ Ablaufzeit (optional)</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input class="input-field" type="number" id="codeExpiryMinutes" placeholder="Min" min="0" max="59" style="width:60px;font-size:.8rem;padding:6px">
+            <span style="color:var(--text2);font-size:.8rem">:</span>
+            <input class="input-field" type="number" id="codeExpiryHours" placeholder="Std" min="0" max="23" style="width:60px;font-size:.8rem;padding:6px">
+            <span style="color:var(--text2);font-size:.8rem">:</span>
+            <input class="input-field" type="number" id="codeExpiryDays" placeholder="Tage" min="0" max="365" style="width:70px;font-size:.8rem;padding:6px">
+          </div>
         </div>
         <button class="btn-create-code" onclick="createAccessCode()">+ Neuen Code generieren</button>
       </div>
@@ -2706,6 +2749,7 @@ function confirmDeletePlayer(){
   if(playerToDelete===null)return;
   const p=state.players.find(x=>x.id===playerToDelete);
   if(p){
+    saveUndoState(`Spieler ${p.name} gelöscht`);
     state.players=state.players.filter(x=>x.id!==playerToDelete);
     logAction('🗑️', `Spieler <strong>${esc(p.name)}</strong> gelöscht`);
     saveState();renderAll();showToast(`${p.name} entfernt`);
@@ -2731,32 +2775,36 @@ function applyPenalty(id){
   const np=Math.max(min,p.points-0.5);
   const actual=np-p.points;
   if(actual===0){showToast(`${p.name} ist beim Minimum`);return}
-  p.points=np;p.maxPoints=Math.max(p.maxPoints,p.points);
-  p.streak = 0; // Streak zurücksetzen
-  saveState();renderAll();animateCard(id,'down');showDelta(id,actual);
-  showToast(`${p.name}: ${actual.toFixed(1)} (Strafe)`);
   
-  // History-Eintrag für Strafe erstellen
+  const oldPts=p.points + 0.5; // Punkte vor der Strafe
+  const oldR=getRank(p.points + 0.5).name; // Rang vor der Strafe
+  
+  // State VOR der Änderung speichern für Undo
+  saveUndoState(`Strafe für ${p.name}`);
+  
+  // Punkte aktualisieren
+  p.points = np;
+  
   const penaltyLog = {
-    round: state.round + 1,
     type: 'penalty',
     playerId: id,
     playerName: p.name,
     points: -0.5,
-    oldPoints: p.points + 0.5, // Punkte vor der Strafe
+    oldPoints: oldPts,
     newPoints: p.points,
-    oldRank: getRank(p.points + 0.5).name, // Rang vor der Strafe
+    oldRank: oldR,
     newRank: getRank(p.points).name,
     rankUp: false
   };
   
-  // Prüfen ob bereits ein History-Eintrag für diese Runde existiert
-  const existingRound = state.history.find(h => h.round === state.round + 1 && !h.skipped);
+  // Logik: Zum ersten passenden Eintrag mit der gleichen Rundennummer hinzufügen
+  const existingRound = state.history.find(h => h.round === state.round + 1 && h.results && !h.skipped);
   if (existingRound) {
+    // Zum existierenden Eintrag hinzufügen
     existingRound.results.push(penaltyLog);
     if(!existingRound.actor && currentActor?.name) existingRound.actor = currentActor.name;
   } else {
-    // Neuen History-Eintrag erstellen
+    // Neuen Eintrag erstellen
     const newLog = {
       round: state.round + 1,
       results: [penaltyLog],
@@ -2768,15 +2816,24 @@ function applyPenalty(id){
   
   saveState();
   renderAll();
+  showToast(`${p.name}: ${actual.toFixed(1)} (Strafe)`);
+  
+  // Streak zurücksetzen
+  p.streak = 0;
+  animateCard(id,'down');showDelta(id,actual);
 }
 function applyBonus(id){
   if(!requirePerm(1)) return;
   const p=state.players.find(x=>x.id===id);if(!p)return;
   const oldPts=p.points;const oldR=getRank(p.points).name;
+  
+  // State VOR der Änderung speichern für Undo
+  saveUndoState(`Bonus für ${p.name}`);
+  
   p.points+=0.5;p.maxPoints=Math.max(p.maxPoints,p.points);
   p.streak = (p.streak || 0) + 1; // Streak erhöhen
   const newR=getRank(p.points).name;
-  saveState();renderAll();animateCard(id,'up');showDelta(id,0.5);
+  animateCard(id,'up');showDelta(id,0.5);
   if(newR!==oldR&&p.points>oldPts){animateRankUp(id); checkAndSetFirstRankAchiever(p, newR);}
   checkAndSetFirstStreakBadge(p);
   checkAchievements(p);
@@ -2799,12 +2856,14 @@ function applyBonus(id){
     rankUp: newR !== oldR && p.points > oldPts
   };
   
-  // Prüfen ob bereits ein History-Eintrag für diese Runde existiert
-  const existingRound = state.history.find(h => h.round === state.round + 1 && !h.skipped);
+  // Logik: Zum ersten passenden Eintrag mit der gleichen Rundennummer hinzufügen
+  const existingRound = state.history.find(h => h.round === state.round + 1 && h.results && !h.skipped);
   if (existingRound) {
+    // Zum existierenden Eintrag hinzufügen
     existingRound.results.push(bonusLog);
     if(!existingRound.actor && currentActor?.name) existingRound.actor = currentActor.name;
   } else {
+    // Neuen Eintrag erstellen
     const newLog = {
       round: state.round + 1,
       results: [bonusLog],
@@ -2826,6 +2885,9 @@ function submitRound(){
   if(!requirePerm(1)) return;
   if(uiSlots.some(s=>s===null)){showToast('Bitte alle Spieler platzieren');return}
   if(new Set(uiSlots).size!==uiSlots.length){showToast('Duplikat gefunden');return}
+
+  // State vor der Änderung speichern für Undo
+  saveUndoState(`Runde ${state.round + 1} bestätigen`);
 
   const ordIds=[...uiSlots];
   const n=ordIds.length;
@@ -3868,13 +3930,16 @@ function renderHistory(){
     const roundResults = [];
     const bonusPenalties = [];
     
-    r.results.forEach(res => {
-      if (res.type === 'bonus' || res.type === 'penalty') {
-        bonusPenalties.push(res);
-      } else {
-        roundResults.push(res);
-      }
-    });
+    // Nur verarbeiten wenn results existiert und ein Array ist
+    if (r.results && Array.isArray(r.results)) {
+      r.results.forEach(res => {
+        if (res.type === 'bonus' || res.type === 'penalty') {
+          bonusPenalties.push(res);
+        } else {
+          roundResults.push(res);
+        }
+      });
+    }
     
     // Runden-Ergebnisse anzeigen
     const roundLines = roundResults.sort((a,b)=>a.place-b.place).map(res=>{
@@ -3905,9 +3970,13 @@ function renderHistory(){
     }).join('<br>');
     
     // Alle Zeilen kombinieren - Runden-Ergebnisse zuerst, dann Bonus/Strafe
-    const allLines = [roundLines, bonusPenaltyLines].filter(lines => lines.length > 0).join('<br>');
+    // Wichtig: Auch wenn nur eine Art von Einträgen vorhanden ist, anzeigen
+    if (roundLines.length > 0 || bonusPenaltyLines.length > 0) {
+      const allLines = [roundLines, bonusPenaltyLines].filter(lines => lines.length > 0).join('<br>');
+      return `<div class="history-section"><div class="history-title">Runde ${r.round}${ph}${actorTag}</div><div class="history-entry">${allLines}</div></div>`;
+    }
     
-    return `<div class="history-section"><div class="history-title">Runde ${r.round}${ph}${actorTag}</div><div class="history-entry">${allLines}</div></div>`;
+    return ''; // Leerer String wenn keine Einträge vorhanden
   }).join('');
 }
 
@@ -5781,7 +5850,20 @@ function renderDevConsole() {
       <div class="dev-row">
         <button class="dev-btn danger" onclick="devClearAllBadges()">Alle Badges löschen</button>
       </div>
+    </div>
+    <div class="dev-section">
+      <div class="dev-section-title">↩️ Undo</div>
+      <div class="dev-row">
+        <button class="dev-btn" onclick="performUndo()" id="undoBtn">Letzte Aktion rückgängig</button>
+        <button class="dev-btn" onclick="showUndoHistory()">Verlauf anzeigen</button>
+      </div>
+      <div id="undoHistory" style="display:none;margin-top:10px;font-size:.75rem;color:var(--text2)">
+        <!-- Undo-Verlauf wird hier angezeigt -->
+      </div>
     </div>`;
+  
+  // Undo-Button aktualisieren
+  updateUndoButton();
 }
 
 function devGrantBadge() {
@@ -5882,14 +5964,23 @@ function devSetPoints() {
   const player = state.players.find(p=>p.id===pid);
   if(!player) return;
   const oldPts = player.points;
+  
+  // State vor der Änderung speichern für Undo
+  saveUndoState(`Punkte von ${player.name} ändern`);
+  
   player.points = Math.max(0, val);
   player.maxPoints = Math.max(player.maxPoints || 0, player.points);
   saveState(); renderAll(); renderDevConsole();
   showToast(`${player.name}: Punkte → ${val}`);
   logAction('🔧', `Punkte von <strong>${esc(player.name)}</strong> manuell gesetzt: ${fmt(oldPts)} → ${fmt(player.points)}`);
 }
+
 function devClearAllBadges() {
   if(!requirePerm(3)) return;
+  
+  // State vor der Änderung speichern für Undo
+  saveUndoState('Alle Badges löschen');
+  
   state.firstRankAchievers = {};
   saveGlobalBadges({});
   saveState(); renderAll(); renderDevConsole();
@@ -5897,14 +5988,150 @@ function devClearAllBadges() {
   logAction('🗑️', 'Alle Badges gelöscht (lokal + global)');
 }
 
+/* ================================================================
+   UNDO SYSTEM - Letzte Aktionen rückgängig machen
+   ================================================================ */
+let undoHistory = [];
+const MAX_UNDO_STEPS = 10;
+
+function saveUndoState(action) {
+  const stateCopy = JSON.parse(JSON.stringify({
+    state: state,
+    globalBadges: getGlobalBadges(),
+    timestamp: Date.now(),
+    action: action
+  }));
+  
+  undoHistory.unshift(stateCopy);
+  if(undoHistory.length > MAX_UNDO_STEPS) {
+    undoHistory.pop();
+  }
+  
+  updateUndoButton();
+}
+
+function performUndo() {
+  if(!requirePerm(2)) return;
+  
+  if(undoHistory.length === 0) {
+    showToast('Nichts zum Rückgängig machen');
+    return;
+  }
+  
+  const undoState = undoHistory.shift();
+  
+  try {
+    const restoredState = JSON.parse(JSON.stringify(undoState.state));
+    Object.keys(state).forEach(key => delete state[key]);
+    Object.assign(state, restoredState);
+    
+    saveGlobalBadges(undoState.globalBadges);
+    saveState();
+    
+    renderAll();
+    renderDevConsole();
+    showToast(`↩️ Rückgängig: ${undoState.action}`);
+    logAction('↩️', `Aktion rückgängig gemacht: <strong>${esc(undoState.action)}</strong>`);
+    
+    updateUndoButton();
+  } catch(e) {
+    console.error('Undo failed:', e);
+    showToast('❌ Rückgängig fehlgeschlagen');
+  }
+}
+
+function getUndoHistory() {
+  return undoHistory.map(h => ({
+    action: h.action,
+    timestamp: h.timestamp,
+    timeAgo: formatTimeAgo(h.timestamp)
+  }));
+}
+
+function formatTimeAgo(timestamp) {
+  const diff = Date.now() - timestamp;
+  const minutes = Math.floor(diff / 60000);
+  if(minutes < 1) return 'gerade eben';
+  if(minutes < 60) return `vor ${minutes} Min`;
+  const hours = Math.floor(minutes / 60);
+  if(hours < 24) return `vor ${hours} Std`;
+  const days = Math.floor(hours / 24);
+  return `vor ${days} Tagen`;
+}
+
+function showUndoHistory() {
+  const historyDiv = document.getElementById('undoHistory');
+  if(!historyDiv) return;
+  
+  if(historyDiv.style.display === 'none') {
+    const history = getUndoHistory();
+    if(history.length === 0) {
+      historyDiv.innerHTML = '<div style="color:var(--text3);font-style:italic">Kein Verlauf verfügbar</div>';
+    } else {
+      historyDiv.innerHTML = history.map((h, i) => 
+        `<div style="padding:4px 8px;margin:2px 0;background:var(--bg3);border-radius:4px;border-left:3px solid ${i === 0 ? '#4CAF50' : 'var(--border)'}">
+          <div style="font-weight:600">${i === 0 ? '↩️ Nächste:' : '•'} ${h.action}</div>
+          <div style="font-size:.7rem;color:var(--text3)">${h.timeAgo}</div>
+        </div>`
+      ).join('');
+    }
+    historyDiv.style.display = 'block';
+  } else {
+    historyDiv.style.display = 'none';
+  }
+}
+
+function updateUndoButton() {
+  const undoBtn = document.getElementById('undoBtn');
+  const mainUndoBtn = document.getElementById('mainUndoBtn');
+  const undoCount = document.getElementById('undoCount');
+  
+  const count = undoHistory.length;
+  const hasPermission = currentPermLevel >= 2;
+  const disabled = count === 0 || !hasPermission;
+  const opacity = disabled ? '0.5' : '';
+  
+  if(undoBtn) {
+    undoBtn.textContent = count > 0 ? `↩️ Rückgängig (${count})` : '↩️ Kein Verlauf';
+    undoBtn.disabled = disabled;
+    undoBtn.style.opacity = opacity;
+    undoBtn.title = !hasPermission ? 'Nur Admin+ darf rückgängig machen' : '';
+  }
+  
+  if(mainUndoBtn) {
+    mainUndoBtn.disabled = disabled;
+    mainUndoBtn.style.opacity = opacity;
+    
+    if(undoCount) {
+      undoCount.style.display = (count > 0 && hasPermission) ? 'inline-block' : 'none';
+      if(count > 0 && hasPermission) undoCount.textContent = `(${count})`;
+    }
+    
+    mainUndoBtn.title = !hasPermission ? 'Nur Admin+ darf rückgängig machen' : (count > 0 ? 'Letzte Aktion rückgängig machen' : '');
+  }
+}
+
 function hideResetModal(){document.getElementById('resetModal').classList.add('hidden')}
 function showResetModal(){document.getElementById('resetModal').classList.remove('hidden')}
 function confirmReset(){
   if(!requirePerm(3)) return;
+  
+  // State vor der Änderung speichern für Undo
+  saveUndoState('Spiel zurücksetzen');
+  
   logAction('💥', 'Spiel komplett zurückgesetzt');
   
-  // Alle Spielerdaten zurücksetzen
-  state={players:[],round:0,history:[],matchmakingOn:false,mmPhase:'low'};
+  // Alle State-Eigenschaften löschen (statt state neu zuzuweisen)
+  Object.keys(state).forEach(key => delete state[key]);
+  
+  // Neue Standardwerte setzen
+  state.players = [];
+  state.round = 0;
+  state.history = [];
+  state.matchmakingOn = false;
+  state.mmPhase = 'low';
+  state.firstRankAchievers = {};
+  
   nextId=1;uiSlots=[];uiActivePIds=[];uiSelectedSlot=null;
   
   // Alle Badges löschen
@@ -6072,17 +6299,29 @@ function loadPermLevel() {
     const saved = sessionStorage.getItem(PERM_SESSION_KEY);
     if(saved) {
       const parsed = JSON.parse(saved);
-      currentPermLevel = parsed.level || 0;
-      currentActor     = parsed.actor || null;
+      // Prüfen ob Session abgelaufen
+      if(parsed.expiresAt && Date.now() > parsed.expiresAt) {
+        console.log('Session abgelaufen');
+        sessionStorage.removeItem(PERM_SESSION_KEY);
+        currentPermLevel = 0;
+        currentActor = null;
+      } else {
+        currentPermLevel = parsed.level || 0;
+        currentActor = parsed.actor || null;
+        // Auto-Logout Timer starten wenn noch Zeit übrig
+        if(parsed.expiresAt && currentPermLevel > 0) {
+          startAutoLogoutTimer(parsed.expiresAt, currentActor?.name);
+        }
+      }
     }
   } catch(e) { currentPermLevel = 0; currentActor = null; }
   updatePermUI();
 }
 
-function savePermSession(level, actor) {
+function savePermSession(level, actor, expiresAt = null) {
   currentPermLevel = level;
   currentActor     = actor;
-  sessionStorage.setItem(PERM_SESSION_KEY, JSON.stringify({ level, actor }));
+  sessionStorage.setItem(PERM_SESSION_KEY, JSON.stringify({ level, actor, expiresAt }));
   updatePermUI();
 }
 
@@ -6152,12 +6391,50 @@ async function submitAccessCode() {
   await loadAccessCodes();
   const match = accessCodesCache.find(c => (c.code || '').toUpperCase() === code);
   if(match) {
-    savePermSession(match.level, { name: match.name, level: match.level, code });
+    // Prüfen ob Code abgelaufen ist
+    const now = Date.now();
+    if(match.expiresAt && match.expiresAt <= now) {
+      if(err) err.textContent = 'Dieser Code ist abgelaufen';
+      showToast('❌ Code abgelaufen');
+      return;
+    }
+    
+    // Prüfen ob Code bereits verwendet wurde
+    if(match.used) {
+      if(err) err.textContent = 'Dieser Code wurde bereits verwendet';
+      showToast('❌ Code bereits verwendet');
+      return;
+    }
+    
+    // Code als verwendet markieren
+    match.used = true;
+    match.usedAt = now;
+    match.usedBy = match.name; // Name des Nutzers
+    
+    // In Firestore speichern
+    if(db && !match.id.startsWith('local_')) {
+      try {
+        await db.collection(ACCESS_CODES_COL).doc(match.id).update({
+          used: true,
+          usedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          usedBy: match.name
+        });
+      } catch(e) {
+        console.error('Error marking code as used:', e);
+      }
+    }
+    
+    savePermSession(match.level, { name: match.name, level: match.level, code, codeId: match.id }, match.expiresAt);
     if(input) input.value = '';
-    const lvlNames = ['','Runden','Einstellungen','Admin'];
-    showToast(`✅ ${match.name} — ${lvlNames[match.level]}`);
-    logAction('🔑', `<strong>${esc(match.name)}</strong> eingeloggt (${lvlNames[match.level]})`);
+    showToast(`🔑 Eingeloggt als ${match.name}`);
+    logAction('🔑', `<strong>${esc(match.name)}</strong> eingeloggt (Level ${match.level})`);
     updateAccessModal();
+    updateUndoButton(); // Undo-Button nach Login aktualisieren
+    
+    // Timer für automatische Abmeldung bei Ablauf starten
+    if(match.expiresAt && match.expiresAt > now) {
+      startAutoLogoutTimer(match.expiresAt, match.name);
+    }
     return;
   }
 
@@ -6171,10 +6448,101 @@ async function submitAccessCode() {
 function revokeAccess() {
   const name = currentActor?.name || 'Unbekannt';
   logAction('🔒', `<strong>${esc(name)}</strong> abgemeldet`);
+  
+  // Auto-Logout Timer löschen
+  if(autoLogoutTimer) {
+    clearTimeout(autoLogoutTimer);
+    autoLogoutTimer = null;
+  }
+  
   savePermSession(0, null);
   showToast('🔒 Abgemeldet');
   hideAccessModal();
   renderAll();
+}
+
+// ── Auto-Logout Timer bei Ablauf ───────────────────────────────────
+let autoLogoutTimer = null;
+
+function startAutoLogoutTimer(expiresAt, userName) {
+  // Bestehenden Timer löschen
+  if(autoLogoutTimer) {
+    clearTimeout(autoLogoutTimer);
+    autoLogoutTimer = null;
+  }
+  
+  const now = Date.now();
+  const timeUntilExpiry = expiresAt - now;
+  
+  // Nur starten wenn noch Zeit übrig
+  if(timeUntilExpiry > 0) {
+    autoLogoutTimer = setTimeout(() => {
+      showExpiryPopup(userName);
+    }, timeUntilExpiry);
+  }
+}
+
+function showExpiryPopup(userName) {
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  `;
+  
+  const content = document.createElement('div');
+  content.style.cssText = `
+    background:var(--bg2);border:2px solid #ff4444;border-radius:16px;
+    padding:32px;max-width:400px;width:100%;text-align:center;animation:pulse 2s infinite;
+  `;
+  
+  content.innerHTML = `
+    <div style="font-size:3rem;margin-bottom:16px">⏰</div>
+    <div style="font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:#ff4444;margin-bottom:12px">
+      Zeit abgelaufen!
+    </div>
+    <div style="font-size:1rem;color:var(--text);margin-bottom:8px">
+      Hallo <strong>${esc(userName)}</strong>
+    </div>
+    <div style="font-size:.9rem;color:var(--text2);margin-bottom:24px">
+      Dein Zugangscode ist abgelaufen. Du wirst jetzt automatisch abgemeldet.
+    </div>
+    <div style="font-size:.8rem;color:var(--text3);margin-bottom:20px">
+      Diese Meldung schließt sich in 10 Sekunden...
+    </div>
+    <div style="font-size:.8rem;color:var(--text3);">
+      Countdown: <span id="expiryCountdown">10</span>
+    </div>
+  `;
+  
+  modal.appendChild(content);
+  document.body.appendChild(modal);
+  
+  // Countdown
+  let countdown = 10;
+  const countdownInterval = setInterval(() => {
+    countdown--;
+    const countdownEl = document.getElementById('expiryCountdown');
+    if(countdownEl) countdownEl.textContent = countdown;
+    
+    if(countdown <= 0) {
+      clearInterval(countdownInterval);
+      document.body.removeChild(modal);
+      
+      // Automatische Abmeldung
+      revokeAccess();
+      showToast('⏰ Zeit abgelaufen - automatisch abgemeldet');
+      logAction('⏰', `<strong>${esc(userName)}</strong> automatisch abgemeldet (Code abgelaufen)`);
+    }
+  }, 1000);
+  
+  // Manuelles Schließen möglich
+  modal.addEventListener('click', () => {
+    clearInterval(countdownInterval);
+    document.body.removeChild(modal);
+    revokeAccess();
+    showToast('⏰ Zeit abgelaufen - abgemeldet');
+    logAction('⏰', `<strong>${esc(userName)}</strong> abgemeldet (Code abgelaufen)`);
+  });
 }
 
 // ── Code erstellen ─────────────────────────────────────────────────
@@ -6182,9 +6550,15 @@ async function createAccessCode() {
   if(!requirePerm(3)) return;
   const nameEl  = document.getElementById('newCodeName');
   const levelEl = document.getElementById('newCodeLevel');
+  const minutesEl = document.getElementById('codeExpiryMinutes');
+  const hoursEl = document.getElementById('codeExpiryHours');
+  const daysEl = document.getElementById('codeExpiryDays');
   const btnEl   = document.querySelector('.btn-create-code');
   const name    = nameEl?.value?.trim();
   const level   = parseInt(levelEl?.value) || 1;
+  const minutes = parseInt(minutesEl?.value) || 0;
+  const hours   = parseInt(hoursEl?.value) || 0;
+  const days    = parseInt(daysEl?.value) || 0;
   if(!name) { showToast('Bitte einen Namen eingeben'); return; }
 
   // Button deaktivieren während Speichern
@@ -6192,28 +6566,43 @@ async function createAccessCode() {
 
   try {
     const code = generateSecureCode();
+    
+    // Ablaufzeit berechnen
+    let expiresAt = null;
+    if(minutes > 0 || hours > 0 || days > 0) {
+      const totalMs = (minutes * 60 * 1000) + (hours * 60 * 60 * 1000) + (days * 24 * 60 * 60 * 1000);
+      expiresAt = Date.now() + totalMs;
+    }
 
     if(!db) {
       // Kein Firestore → nur lokal (Session-only)
-      const localEntry = { id: 'local_' + Date.now(), name, level, code, createdAt: Date.now() };
+      const localEntry = { id: 'local_' + Date.now(), name, level, code, createdAt: Date.now(), expiresAt };
       accessCodesCache.push(localEntry);
       if(nameEl) nameEl.value = '';
+      if(minutesEl) minutesEl.value = '';
+      if(hoursEl) hoursEl.value = '';
+      if(daysEl) daysEl.value = '';
       showToast(`⚠ Nur lokal gespeichert (kein DB)`);
       renderCodeList();
-      showNewCodePopup(name, code, level);
+      showNewCodePopup(name, code, level, expiresAt);
       return;
     }
 
-    const docData = { name, level, code, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+    const docData = { name, level, code, createdAt: firebase.firestore.FieldValue.serverTimestamp(), expiresAt };
     const ref = await db.collection(ACCESS_CODES_COL).add(docData);
     const newEntry = { id: ref.id, ...docData, createdAt: Date.now() };
     accessCodesCache.push(newEntry);
 
     if(nameEl) nameEl.value = '';
-    showToast(`✅ Code für ${name} erstellt`);
-    logAction('🔐', `Zugangscode für <strong>${esc(name)}</strong> (Level ${level}) erstellt`);
+    if(minutesEl) minutesEl.value = '';
+    if(hoursEl) hoursEl.value = '';
+    if(daysEl) daysEl.value = '';
+    
+    const expiryText = expiresAt ? ` (läuft ab in ${days}d ${hours}h ${minutes}m)` : '';
+    showToast(`✅ Code für ${name}${expiryText} erstellt`);
+    logAction('🔐', `Zugangscode für <strong>${esc(name)}</strong> (Level ${level})${expiryText} erstellt`);
     renderCodeList();
-    showNewCodePopup(name, code, level);
+    showNewCodePopup(name, code, level, expiresAt);
 
   } catch(e) {
     console.error('createAccessCode Error:', e);
@@ -6224,6 +6613,9 @@ async function createAccessCode() {
     const localEntry = { id: 'local_' + Date.now(), name, level, code, createdAt: Date.now() };
     accessCodesCache.push(localEntry);
     if(nameEl) nameEl.value = '';
+    if(minutesEl) minutesEl.value = '';
+    if(hoursEl) hoursEl.value = '';
+    if(daysEl) daysEl.value = '';
     renderCodeList();
     showNewCodePopup(name, code, level);
   } finally {
@@ -6231,8 +6623,26 @@ async function createAccessCode() {
   }
 }
 
-function showNewCodePopup(name, code, level) {
+function showNewCodePopup(name, code, level, expiresAt = null) {
   const lvlNames = ['','🟢 Runden','🟡 Einstellungen','🔴 Admin'];
+  let expiryText = '';
+  if(expiresAt) {
+    const expiryDate = new Date(expiresAt);
+    const now = new Date();
+    const diffMs = expiresAt - now;
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if(diffHours > 24) {
+      const diffDays = Math.floor(diffHours / 24);
+      expiryText = `<div style="color:#ff6b6b;font-size:.75rem;margin-top:8px">⏰ Läuft ab in ${diffDays} Tagen ${diffHours % 24}h</div>`;
+    } else if(diffHours > 0) {
+      expiryText = `<div style="color:#ff6b6b;font-size:.75rem;margin-top:8px">⏰ Läuft ab in ${diffHours}h ${diffMins}min</div>`;
+    } else {
+      expiryText = `<div style="color:#ff6b6b;font-size:.75rem;margin-top:8px">⏰ Läuft ab in ${diffMins} Minuten</div>`;
+    }
+  }
+  
   const box = document.createElement('div');
   box.style.cssText = `
     position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;
@@ -6253,6 +6663,7 @@ function showNewCodePopup(name, code, level) {
       <div id="newCodeDisplay" style="font-family:'Rajdhani',sans-serif;font-size:2rem;font-weight:700;
         letter-spacing:6px;color:var(--accent)">${esc(code)}</div>
     </div>
+    ${expiryText}
     <div style="font-size:.68rem;color:var(--danger);margin-bottom:14px">
       ⚠ Jetzt notieren! Wird nicht nochmal angezeigt.
     </div>
@@ -6299,20 +6710,62 @@ async function deleteCode(id, name) {
 function renderCodeList() {
   const el = document.getElementById('codeList');
   if(!el) return;
-  if(!accessCodesCache.length) {
+  
+  // Abgelaufene Codes entfernen
+  const now = Date.now();
+  const validCodes = accessCodesCache.filter(c => !c.expiresAt || c.expiresAt > now);
+  
+  // Wenn Codes abgelaufen sind, Cache aktualisieren und ggf. aus Firestore löschen
+  if(validCodes.length < accessCodesCache.length) {
+    const expiredCodes = accessCodesCache.filter(c => c.expiresAt && c.expiresAt <= now);
+    expiredCodes.forEach(expired => {
+      if(db && !expired.id.startsWith('local_')) {
+        db.collection(ACCESS_CODES_COL).doc(expired.id).delete().catch(e => console.error('Error deleting expired code:', e));
+      }
+    });
+    accessCodesCache = validCodes;
+  }
+  
+  if(!validCodes.length) {
     el.innerHTML = `<div style="font-size:.72rem;color:var(--text3);text-align:center;padding:8px">Noch keine Codes erstellt</div>`;
     return;
   }
   const lvlIcons = ['','🟢','🟡','🔴'];
   const lvlNames = ['','Runden','Einstellungen','Admin'];
-  el.innerHTML = accessCodesCache.map(c => `
-    <div class="code-list-item">
-      <div class="code-list-item-name">${esc(c.name)}</div>
-      <span class="code-list-item-level lvl${c.level}">${lvlIcons[c.level]} ${lvlNames[c.level]}</span>
-      <div class="code-list-item-code">${c.code}</div>
-      <button class="code-list-item-del" onclick="deleteCode('${c.id}','${esc(c.name)}')" title="Löschen">✕</button>
-    </div>
-  `).join('');
+  
+  el.innerHTML = validCodes.map(c => {
+    let expiryInfo = '';
+    if(c.expiresAt) {
+      const diffMs = c.expiresAt - now;
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+      
+      if(diffHours > 24) {
+        const diffDays = Math.floor(diffHours / 24);
+        expiryInfo = `<div style="font-size:.65rem;color:#ff6b6b;margin-top:2px">⏰ ${diffDays}d ${diffHours % 24}h</div>`;
+      } else if(diffHours > 0) {
+        expiryInfo = `<div style="font-size:.65rem;color:#ff6b6b;margin-top:2px">⏰ ${diffHours}h ${diffMins}m</div>`;
+      } else {
+        expiryInfo = `<div style="font-size:.65rem;color:#ff6b6b;margin-top:2px">⏰ ${diffMins}m</div>`;
+      }
+    }
+    
+    let usedInfo = '';
+    if(c.used) {
+      usedInfo = `<div style="font-size:.65rem;color:#ff9800;margin-top:2px">✅ Verwendet von ${c.usedBy || 'Unbekannt'}</div>`;
+    }
+    
+    return `
+      <div class="code-list-item" style="${c.used ? 'opacity:0.6' : ''}">
+        <div class="code-list-item-name">${esc(c.name)}</div>
+        <span class="code-list-item-level lvl${c.level}">${lvlIcons[c.level]} ${lvlNames[c.level]}</span>
+        <div class="code-list-item-code">${c.code}</div>
+        ${expiryInfo}
+        ${usedInfo}
+        <button class="code-list-item-del" onclick="deleteCode('${c.id}','${esc(c.name)}')" title="Löschen">✕</button>
+      </div>
+    `;
+  }).join('');
 }
 
 function updateAccessModal() {
@@ -6353,10 +6806,23 @@ function showAccessModal() {
   if(currentPermLevel === 0) {
     setTimeout(() => document.getElementById('accessCodeInput')?.focus(), 100);
   }
+  
+  // Periodische Überprüfung für abgelaufene Codes (alle 30 Sekunden)
+  if(window.codeExpiryInterval) clearInterval(window.codeExpiryInterval);
+  window.codeExpiryInterval = setInterval(() => {
+    if(currentPermLevel >= 3 && !document.getElementById('accessModal').classList.contains('hidden')) {
+      renderCodeList();
+    }
+  }, 30000);
 }
 
 function hideAccessModal() {
   document.getElementById('accessModal').classList.add('hidden');
+  // Intervall stoppen
+  if(window.codeExpiryInterval) {
+    clearInterval(window.codeExpiryInterval);
+    window.codeExpiryInterval = null;
+  }
 }
 
 // ── UI Update ──────────────────────────────────────────────────────
@@ -6468,6 +6934,9 @@ function updatePermUI() {
     btn.classList.add('perm-none');
     label.textContent = 'Gesperrt';
   }
+  
+  // Undo-Button aktualisieren
+  updateUndoButton();
   applyPermissions();
 }
 
