@@ -1,9 +1,212 @@
-<html>
-  <head>
-    <title>Rangspiel</title>
-  </head>
-  <body>
-    <h1>Diese Version des Rangspiels erhaelt keine Updates mehr.</h1>
-    <p>Bitte verwende die neue Version unter <em><a href="https://finiverse.leifps.workers.dev/rangspiel">https://finiverse.leifps.workers.dev/rangspiel</a></em></p>
-  </body>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rangspiel - Version veraltet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0c12;
+            --bg2: #111420;
+            --bg3: #181c2a;
+            --border: #232840;
+            --accent: #e8b84b;
+            --accent2: #c97a2f;
+            --text: #e8eaf0;
+            --text2: #7c839f;
+            --text3: #4a5070;
+            --danger: #e84c4c;
+            --success: #4ce87a;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.22s ease;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hintergrund-Effekte */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 20% -10%, rgba(232, 184, 75, 0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(201, 122, 47, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 48px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            filter: drop-shadow(0 4px 12px rgba(232, 184, 75, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .warning-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(232, 76, 76, 0.1);
+            border: 1px solid rgba(232, 76, 76, 0.3);
+            color: var(--danger);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .message {
+            color: var(--text2);
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .new-version-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--accent);
+            color: var(--bg);
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 16px rgba(232, 184, 75, 0.3);
+        }
+
+        .new-version-link:hover {
+            background: var(--accent2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(232, 184, 75, 0.4);
+        }
+
+        .new-version-link::before {
+            content: '🚀';
+            font-size: 20px;
+        }
+
+        .footer-text {
+            margin-top: 32px;
+            color: var(--text3);
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* Mobile Optimierung */
+        @media (max-width: 600px) {
+            .container {
+                padding: 32px 24px;
+                margin: 20px;
+            }
+
+            .icon {
+                font-size: 60px;
+                margin-bottom: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .message {
+                font-size: 16px;
+            }
+
+            .new-version-link {
+                padding: 14px 24px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🎯</div>
+        
+        <div class="warning-badge">
+            ⚠️ Version veraltet
+        </div>
+        
+        <h1>Diese Version des Rangspiels erhält keine Updates mehr.</h1>
+        
+        <p class="message">
+            Bitte verwende die neue Version unter<br>
+            <a href="https://finiverse.leifps.workers.dev/rangspiel" 
+               style="color: var(--accent); text-decoration: none; font-weight: 600;"
+               onmouseover="this.style.textDecoration='underline'" 
+               onmouseout="this.style.textDecoration='none'">
+               https://finiverse.leifps.workers.dev/rangspiel
+            </a>
+        </p>
+        
+        <div style="background: rgba(232, 184, 75, 0.1); border: 1px solid rgba(232, 184, 75, 0.3); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                <span style="font-size: 20px;">⏰</span>
+                <strong style="color: var(--accent);">Wichtiger Hinweis:</strong>
+            </div>
+            <p style="color: var(--text2); font-size: 14px; line-height: 1.5; margin: 0;">
+                Die neue Seite kann bis zu 24 Stunden dauern, bis sie weltweit verfügbar ist. 
+                Bitte habe etwas Geduld - die Umstellung wird in Kürze abgeschlossen sein.
+            </p>
+        </div>
+        
+        <a href="https://finiverse.leifps.workers.dev/rangspiel" class="new-version-link">
+          Zur neuen Version
+        </a>
+        
+        <div class="footer-text">
+          FiniVerse RangSpiel • Jetzt besser als je zuvor
+        </div>
+    </div>
+</body>
 </html>
