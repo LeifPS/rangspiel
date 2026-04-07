@@ -1650,6 +1650,66 @@
   /* Actor badge in history */
   .history-actor{display:inline-flex;align-items:center;gap:3px;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:20px;border:1px solid rgba(232,184,75,.3);background:rgba(232,184,75,.08);color:var(--accent);margin-left:6px;vertical-align:middle;letter-spacing:.3px}
 
+  /* ── NACHTRÄGLICHE EINTRAGUNG MODAL ─────────────────────────── */
+  .retro-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:300;display:flex;align-items:flex-end;padding:0;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+  .retro-modal-overlay.hidden{display:none}
+  .retro-modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:540px;margin:0 auto;max-height:92dvh;display:flex;flex-direction:column;overflow:hidden}
+  .retro-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-shrink:0}
+  .retro-modal-title{font-family:'Rajdhani',sans-serif;font-size:1.15rem;font-weight:700;color:var(--accent);letter-spacing:1px;text-transform:uppercase}
+  .retro-modal-close{background:var(--bg3);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;color:var(--text2);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
+  .retro-modal-close:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .retro-step-indicator{display:flex;gap:6px;margin-bottom:16px;flex-shrink:0}
+  .retro-step-dot{flex:1;height:3px;border-radius:2px;background:var(--bg3);transition:background .3s}
+  .retro-step-dot.active{background:var(--accent)}
+  .retro-step-dot.done{background:rgba(232,184,75,.4)}
+  .retro-modal-body{overflow-y:auto;flex:1;min-height:0}
+  .retro-section-label{font-size:.7rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
+  /* Player grid in retro */
+  .retro-player-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+  .retro-player-btn{background:var(--bg3);border:2px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:var(--transition);text-align:left}
+  .retro-player-btn:active{transform:scale(.97)}
+  .retro-player-btn.selected{border-color:var(--accent);background:rgba(232,184,75,.1)}
+  .retro-player-btn.disabled{opacity:.35;pointer-events:none}
+  .retro-player-name{font-size:.85rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .retro-player-pts{font-size:.7rem;color:var(--text2)}
+  /* Selected players summary bar */
+  .retro-selected-bar{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;margin-bottom:14px;font-size:.85rem;font-weight:600}
+  .retro-vs{color:var(--text3);font-size:.75rem;font-weight:700}
+  /* Round count */
+  /* Tap-to-add interface */
+  .retro-score-bar{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:14px}
+  .retro-score-name{font-size:.8rem;font-weight:600;color:var(--text2);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .retro-score-num{font-family:'Rajdhani',sans-serif;font-size:2.2rem;font-weight:700;color:var(--accent);min-width:32px;text-align:center}
+  .retro-score-sep{font-size:1rem;color:var(--text3);font-weight:700}
+  .retro-tap-area{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .retro-tap-btn{padding:22px 8px;background:var(--bg3);border:2px solid var(--border);border-radius:var(--radius);font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text2);cursor:pointer;transition:var(--transition);text-align:center;letter-spacing:.5px;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .retro-tap-btn:active{transform:scale(.94)}
+  .retro-tap-btn.p1{border-color:rgba(232,184,75,.5);color:var(--accent);background:rgba(232,184,75,.07)}
+  .retro-tap-btn.p2{border-color:rgba(74,144,217,.5);color:#4a90d9;background:rgba(74,144,217,.07)}
+  .retro-tap-label{font-size:.65rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;opacity:.7}
+  /* History chips */
+  .retro-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;min-height:28px}
+  .retro-chip{padding:3px 8px;border-radius:20px;font-size:.72rem;font-weight:700;letter-spacing:.3px}
+  .retro-chip.p1{background:rgba(232,184,75,.15);border:1px solid rgba(232,184,75,.4);color:var(--accent)}
+  .retro-chip.p2{background:rgba(74,144,217,.15);border:1px solid rgba(74,144,217,.4);color:#4a90d9}
+  /* Bottom action row */
+  .retro-action-row{display:flex;gap:8px;margin-top:4px}
+  .btn-retro-undo{flex:0 0 auto;padding:11px 14px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:.8rem;font-weight:600;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition)}
+  .btn-retro-undo:disabled{opacity:.35;cursor:not-allowed}
+  .btn-retro-undo:not(:disabled):active{transform:scale(.96)}
+  /* Warning bar */
+  .retro-warning{background:rgba(232,184,75,.08);border:1px solid rgba(232,184,75,.3);border-radius:var(--radius-sm);padding:10px 12px;font-size:.78rem;color:var(--accent);margin-bottom:14px;line-height:1.5}
+  /* Submit button */
+  .btn-retro-submit{width:100%;padding:14px;background:var(--accent);color:#0a0c12;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:800;border-radius:var(--radius-sm);letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:var(--transition);margin-top:4px;flex-shrink:0}
+  .btn-retro-submit:disabled{opacity:.4;cursor:not-allowed}
+  .btn-retro-submit:not(:disabled):active{transform:scale(.97)}
+  .btn-retro-back{width:100%;padding:11px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:.85rem;font-weight:600;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);margin-bottom:8px;flex-shrink:0}
+  .btn-retro-back:active{transform:scale(.97)}
+  /* Open button in Runde tab */
+  .btn-retro-open{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;font-size:.78rem;font-weight:700;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:var(--transition)}
+  .btn-retro-open:hover{border-color:rgba(232,184,75,.4);color:var(--accent)}
+  .btn-retro-open:active{transform:scale(.95)}
+
 </style>
 </head>
 <body>
@@ -1727,6 +1787,9 @@
         <div class="special-rounds-grid" id="specialRoundsGrid"></div>
         <div class="special-rounds-hint" id="specialRoundsHint"></div>
       </div>
+    </div>
+    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px">
+      <button class="btn-retro-open" onclick="openRetroModal()">⏮ Nachträgliche Eintragung</button>
     </div>
   </div>
 
@@ -1987,6 +2050,21 @@
   </div>
 </div>
 
+<!-- ── NACHTRÄGLICHE EINTRAGUNG MODAL ──────────────────────────── -->
+<div class="retro-modal-overlay hidden" id="retroModal">
+  <div class="retro-modal">
+    <div class="retro-modal-header">
+      <div class="retro-modal-title">⏮ Nachträgliche Eintragung</div>
+      <button class="retro-modal-close" onclick="closeRetroModal()">✕</button>
+    </div>
+    <div class="retro-step-indicator">
+      <div class="retro-step-dot active" id="retroDot0"></div>
+      <div class="retro-step-dot" id="retroDot1"></div>
+    </div>
+    <div class="retro-modal-body" id="retroModalBody"></div>
+  </div>
+</div>
+
 <script>
 /* ================================================================
    GLOBALE ZUSTANDSVARIABLEN
@@ -2119,21 +2197,45 @@ function saveState() {
   _saveDebounceTimer = setTimeout(_flushToFirestore, 300);
 }
 
+function _cleanUndefinedValues(obj) {
+  if (obj === undefined) return null;
+  if (obj === null) return null;
+  if (typeof obj !== 'object') return obj;
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => _cleanUndefinedValues(item));
+  }
+  
+  const cleaned = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === undefined) {
+      cleaned[key] = null;
+    } else if (typeof value === 'object' && value !== null) {
+      cleaned[key] = _cleanUndefinedValues(value);
+    } else {
+      cleaned[key] = value;
+    }
+  }
+  return cleaned;
+}
+
 async function _flushToFirestore() {
   if(!db) return;
   showSyncIndicator('saving');
   try {
+    const cleanedState = _cleanUndefinedValues({
+      players:            state.players,
+      round:              state.round,
+      history:            state.history,
+      matchmakingOn:      state.matchmakingOn,
+      mmPhase:            state.mmPhase,
+      keys:               state.keys,
+      profileName:        state.profileName || null,
+      firstRankAchievers: state.firstRankAchievers || {}
+    });
+    
     const data = {
-      state: {
-        players:            state.players,
-        round:              state.round,
-        history:            state.history,
-        matchmakingOn:      state.matchmakingOn,
-        mmPhase:            state.mmPhase,
-        keys:               state.keys,
-        profileName:        state.profileName || null,
-        firstRankAchievers: state.firstRankAchievers || {}
-      },
+      state: cleanedState,
       nextId,
       lastWrittenBy:   SESSION_ID,
       timestamp:       firebase.firestore.FieldValue.serverTimestamp()
@@ -3714,7 +3816,7 @@ function renderStreakRanking(){
 function renderHistory(){
   const c=document.getElementById('historyContainer');
   if(!state.history.length){c.innerHTML=`<div class="empty-state"><div class="icon">📋</div><p>Noch keine Runden gespielt.</p></div>`;return}
-  c.innerHTML=state.history.slice().reverse().map(r=>{
+  c.innerHTML=state.history.map(r=>{
     if(r.skipped){
       // Übersprungene Runde mit Liga-Übersprung
       return `<div class="history-section"><div class="history-title">Runde ${r.round} — Übersprungen</div><div class="history-entry" style="color:var(--text3)">🔸 ${r.skippedPhase} übersprungen – zu wenig passende Spieler.</div></div>`;
@@ -4747,8 +4849,9 @@ async function saveGlobalBadges(gb) {
   localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(gb));
   showSyncIndicator('saving');
   try {
+    const cleanedBadges = _cleanUndefinedValues(gb);
     await db.collection('global_badges').doc('badges').set({
-      data: gb,
+      data: cleanedBadges,
       lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
     });
     showSyncIndicator('saved');
@@ -7091,6 +7194,286 @@ loadAccessCodes();
 renderAll();
 // Lade auch aus Firestore (async)
 initFromFirestore();
+
+/* ================================================================
+   NACHTRÄGLICHE EINTRAGUNG
+   ================================================================
+   Ablauf:
+     Schritt 1 – 2 Spieler auswählen
+     Schritt 2 – Runden-Anzahl festlegen + Gewinner pro Runde wählen
+
+   Regel: Sobald der Rang-Abstand zwischen den beiden Spielern
+   nach einem Match > 2 Rang-Stufen wird, zählen ALLE folgenden
+   Matches NICHT mehr (werden übersprungen).
+   ================================================================ */
+
+let _retro = {
+  step: 1,     // 1 oder 2
+  p1Id: null,
+  p2Id: null,
+  winners: [], // playerId des Siegers pro Runde, in Reihenfolge
+};
+
+function openRetroModal() {
+  if(!requirePerm(1)) return;
+  _retro = { step: 1, p1Id: null, p2Id: null, numRounds: 1, winners: [] };
+  document.getElementById('retroModal').classList.remove('hidden');
+  _retroRender();
+}
+
+function closeRetroModal() {
+  document.getElementById('retroModal').classList.add('hidden');
+}
+
+function _retroSetDots(step) {
+  document.getElementById('retroDot0').className = 'retro-step-dot ' + (step >= 1 ? (step > 1 ? 'done' : 'active') : '');
+  document.getElementById('retroDot1').className = 'retro-step-dot ' + (step >= 2 ? 'active' : '');
+}
+
+function _retroRender() {
+  _retroSetDots(_retro.step);
+  const body = document.getElementById('retroModalBody');
+  if(_retro.step === 1) {
+    _retroRenderStep1(body);
+  } else {
+    _retroRenderStep2(body);
+  }
+}
+
+function _retroRenderStep1(body) {
+  const active = state.players.filter(p => p.active);
+  let html = '<div class="retro-section-label">2 Spieler auswählen</div>';
+  html += '<div class="retro-player-grid">';
+  for(const p of active) {
+    const rank = getRank(p.points);
+    const sel = (p.id === _retro.p1Id || p.id === _retro.p2Id);
+    // disable if 2 already selected and this one isn't one of them
+    const bothSelected = _retro.p1Id !== null && _retro.p2Id !== null;
+    const disabled = bothSelected && !sel ? ' disabled' : '';
+    html += `<button class="retro-player-btn${sel?' selected':''}${disabled}" onclick="retroSelectPlayer(${p.id})">
+      ${getRankIcon(rank.icon, true)}
+      <div style="min-width:0">
+        <div class="retro-player-name">${esc(p.name)}</div>
+        <div class="retro-player-pts">${p.points} Pkt · ${rank.name}</div>
+      </div>
+    </button>`;
+  }
+  html += '</div>';
+  const canNext = _retro.p1Id !== null && _retro.p2Id !== null;
+  html += `<button class="btn-retro-submit" onclick="retroGoStep2()" ${canNext?'':'disabled'}>Weiter →</button>`;
+  body.innerHTML = html;
+}
+
+function retroSelectPlayer(id) {
+  if(_retro.p1Id === id) {
+    _retro.p1Id = null;
+  } else if(_retro.p2Id === id) {
+    _retro.p2Id = null;
+  } else if(_retro.p1Id === null) {
+    _retro.p1Id = id;
+  } else if(_retro.p2Id === null) {
+    _retro.p2Id = id;
+  }
+  _retroRender();
+}
+
+function retroGoStep2() {
+  if(!_retro.p1Id || !_retro.p2Id) return;
+  _retro.step = 2;
+  _retro.winners = [];
+  _retroRender();
+}
+
+function _retroRenderStep2(body) {
+  const p1 = state.players.find(p => p.id === _retro.p1Id);
+  const p2 = state.players.find(p => p.id === _retro.p2Id);
+  if(!p1 || !p2) { _retro.step = 1; _retroRender(); return; }
+
+  const w = _retro.winners;
+  const score1 = w.filter(x => x === p1.id).length;
+  const score2 = w.filter(x => x === p2.id).length;
+  const total  = w.length;
+
+  let html = '';
+
+  // Score bar
+  html += `<div class="retro-score-bar">
+    <div style="text-align:center">
+      <div class="retro-score-name">${esc(p1.name)}</div>
+      <div class="retro-score-num">${score1}</div>
+    </div>
+    <div class="retro-score-sep">:</div>
+    <div style="text-align:center">
+      <div class="retro-score-num">${score2}</div>
+      <div class="retro-score-name">${esc(p2.name)}</div>
+    </div>
+  </div>`;
+
+  // Tap buttons
+  html += `<div class="retro-tap-area">
+    <button class="retro-tap-btn p1" onclick="retroTapWinner(${p1.id})">
+      <span>${esc(p1.name)}</span>
+      <span class="retro-tap-label">hat gewonnen</span>
+    </button>
+    <button class="retro-tap-btn p2" onclick="retroTapWinner(${p2.id})">
+      <span>${esc(p2.name)}</span>
+      <span class="retro-tap-label">hat gewonnen</span>
+    </button>
+  </div>`;
+
+  // History chips
+  if(total > 0) {
+    html += '<div class="retro-chips">';
+    for(let i = 0; i < w.length; i++) {
+      const cls = w[i] === p1.id ? 'p1' : 'p2';
+      const name = w[i] === p1.id ? p1.name : p2.name;
+      html += `<div class="retro-chip ${cls}">R${i+1} ${esc(name)}</div>`;
+    }
+    html += '</div>';
+  } else {
+    html += '<div style="font-size:.75rem;color:var(--text3);margin-bottom:14px">Tippe auf den Gewinner jeder Runde…</div>';
+  }
+
+  // Warning
+  html += `<div class="retro-warning">Rang-Abstand &gt; 2 Stufen → alle folgenden Matches zählen nicht mehr.</div>`;
+
+  // Action row
+  html += `<div class="retro-action-row">
+    <button class="btn-retro-back" onclick="retroGoBack()" style="flex:0 0 auto">← Zurück</button>
+    <button class="btn-retro-undo" onclick="retroUndo()" ${total>0?'':'disabled'}>↩ Letzte</button>
+    <button class="btn-retro-submit" onclick="retroSubmit()" style="flex:1" ${total>0?'':'disabled'}>Eintragen (${total})</button>
+  </div>`;
+
+  body.innerHTML = html;
+}
+
+function retroTapWinner(winnerId) {
+  _retro.winners.push(winnerId);
+  _retroRender();
+}
+
+function retroUndo() {
+  _retro.winners.pop();
+  _retroRender();
+}
+
+function retroGoBack() {
+  _retro.step = 1;
+  _retroRender();
+}
+
+function retroSubmit() {
+  if(!requirePerm(1)) return;
+  const p1 = state.players.find(p => p.id === _retro.p1Id);
+  const p2 = state.players.find(p => p.id === _retro.p2Id);
+  if(!p1 || !p2) return;
+
+  const savedSR = activeSpecialRound;
+  activeSpecialRound = null; // Keine Spezialrunden bei nachträglichen Eintragungen
+
+  let processed = 0;
+  let skippedFromRound = -1; // -1 = kein Skip
+
+  for(let i = 0; i < _retro.winners.length; i++) {
+    const winnerId = _retro.winners[i];
+    if(winnerId === null) continue;
+
+    // Rang-Abstand prüfen BEVOR dieser Match zählt
+    const ri1 = getRankIdx(p1.points);
+    const ri2 = getRankIdx(p2.points);
+    if(Math.abs(ri1 - ri2) > 2) {
+      skippedFromRound = i + 1;
+      break;
+    }
+
+    const loserId = (winnerId === p1.id) ? p2.id : p1.id;
+    const winner = state.players.find(x => x.id === winnerId);
+    const loser  = state.players.find(x => x.id === loserId);
+    if(!winner || !loser) continue;
+
+    // Deltas berechnen (wie 2-Spieler-Match, ohne Spezialrunden)
+    const winDelta = 1;
+    const rawLoss  = getLoss(loser);
+    const lossDelta = rawLoss > 0 ? -rawLoss : 0;
+
+    // Winner anwenden
+    const wMin   = getMinPts(winner);
+    const wNewPts = Math.max(wMin, winner.points + winDelta);
+    const wActual = wNewPts - winner.points;
+    const wOldPts = winner.points;
+    const wOldR   = getRank(winner.points).name;
+    winner.points   = Math.max(0, wNewPts);
+    winner.maxPoints = Math.max(winner.maxPoints, winner.points);
+    if(winner.minPoints === undefined || winner.points < winner.minPoints) winner.minPoints = winner.points;
+    if(wActual > 0) winner.streak = (winner.streak || 0) + 1;
+    else if(wActual < 0) winner.streak = 0;
+    const wNewR = getRank(winner.points).name;
+    const wRankUp = wNewR !== wOldR && winner.points > wOldPts;
+    if(wRankUp) checkAndSetFirstRankAchiever(winner, wNewR);
+    if(winner.points >= 50) checkAndSetFirstPrestige(winner);
+    if(wActual > 0) checkAndSetFirstStreakBadge(winner);
+
+    // Loser anwenden
+    const lMin   = getMinPts(loser);
+    const lNewPts = Math.max(lMin, loser.points + lossDelta);
+    const lActual = lNewPts - loser.points;
+    const lOldPts = loser.points;
+    const lOldR   = getRank(loser.points).name;
+    loser.points   = Math.max(0, lNewPts);
+    loser.maxPoints = Math.max(loser.maxPoints, loser.points);
+    if(loser.minPoints === undefined || loser.points < loser.minPoints) loser.minPoints = loser.points;
+    if(lActual < 0) {
+      if(loser.points === 7  && lOldPts > 7)  loser.hitGoldFloor = true;
+      if(loser.points === 19 && lOldPts > 19) loser.hitAmethystFloor = true;
+      if(loser.points === 40 && lOldPts > 40) loser.hitGodFloor = true;
+    }
+    if(lActual > 0) loser.streak = (loser.streak || 0) + 1;
+    else if(lActual < 0) loser.streak = 0;
+    const lNewR = getRank(loser.points).name;
+    const lRankUp = lNewR !== lOldR && loser.points > lOldPts;
+    if(lRankUp) checkAndSetFirstRankAchiever(loser, lNewR);
+    if(loser.points >= 50) checkAndSetFirstPrestige(loser);
+
+    // History-Eintrag
+    const results = [
+      {playerId:winner.id, name:winner.name, place:1, delta:wActual, oldPoints:wOldPts, newPoints:winner.points, oldRank:wOldR, newRank:wNewR, rankUp:wRankUp, rankDown:false},
+      {playerId:loser.id,  name:loser.name,  place:2, delta:lActual, oldPoints:lOldPts, newPoints:loser.points,  oldRank:lOldR, newRank:lNewR, rankUp:lRankUp, rankDown:lNewR!==lOldR&&loser.points<lOldPts}
+    ];
+    checkPlacementAchievements(results);
+    checkAchievements(winner);
+    checkAchievements(loser);
+
+    state.round++;
+    state.history.unshift({
+      round: state.round,
+      results,
+      mmPhase: null,
+      actor: currentActor?.name || null,
+      retro: true
+    });
+
+    processed++;
+
+    // Rang-Abstand NACH diesem Match prüfen → gilt für die nächste Runde
+    const ri1After = getRankIdx(p1.points);
+    const ri2After = getRankIdx(p2.points);
+    if(Math.abs(ri1After - ri2After) > 2 && i < _retro.numRounds - 1) {
+      skippedFromRound = i + 2; // nächste Runde
+      break;
+    }
+  }
+
+  activeSpecialRound = savedSR;
+  saveState();
+  closeRetroModal();
+  renderAll();
+
+  let msg = `${processed} Runde(n) eingetragen.`;
+  if(skippedFromRound > 0) {
+    msg += ` Ab Runde ${skippedFromRound}: Rang-Abstand zu groß – Rest nicht gezählt.`;
+  }
+  showToast(msg);
+}
 </script>
 </body>
 </html>
