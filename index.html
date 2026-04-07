@@ -1175,6 +1175,9 @@
   .first-badge-more:hover{background:rgba(232,184,75,.15) !important;color:var(--accent) !important;border-color:rgba(232,184,75,.4) !important;}
   .btn-danger{width:100%;padding:11px;background:transparent;border:1px solid var(--danger);border-radius:var(--radius-sm);color:var(--danger);font-size:.9rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:var(--transition)}
   .btn-danger:active{background:rgba(232,76,76,.12)}
+  .btn-secondary{width:100%;padding:11px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.9rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;transition:var(--transition);margin-bottom:8px}
+  .btn-secondary:hover{background:var(--bg2);border-color:var(--text2);color:var(--text)}
+  .btn-secondary:active{background:var(--bg);transform:scale(.98)}
 
   /* TOAST */
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:10px 20px;font-size:.88rem;font-weight:600;color:var(--text);z-index:300;transition:transform .3s ease,opacity .3s ease;opacity:0;white-space:nowrap;pointer-events:none;box-shadow:0 4px 24px rgba(0,0,0,.5)}
@@ -1800,7 +1803,9 @@
     </div>
     <div id="historyContainer"></div>
     <div class="danger-zone">
-      <div class="danger-zone-title">⚠ Gefahrenbereich</div>
+      <div class="danger-zone-title">Daten-Management</div>
+      <button class="btn-secondary" onclick="exportData()">Daten exportieren</button>
+      <button class="btn-secondary" onclick="showImportModal()">Daten importieren</button>
       <button class="btn-danger" onclick="showResetModal()">Alles zurücksetzen</button>
     </div>
   </div>
@@ -1873,6 +1878,23 @@
     <div class="modal-btns">
       <button class="btn-modal-cancel" onclick="hideResetModal()">Abbrechen</button>
       <button class="btn-modal-confirm" onclick="confirmReset()">Zurücksetzen</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay hidden" id="importModal">
+  <div class="modal">
+    <h3> Daten importieren?</h3>
+    <p>Wähle eine JSON-Exportdatei aus, um alle Daten zu importieren. Bestehende Daten werden überschrieben!</p>
+    <div style="margin: 16px 0;">
+      <input type="file" id="importFileInput" accept=".json" style="width: 100%; padding: 8px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text);">
+      <div id="importPreview" style="margin-top: 12px; padding: 12px; background: var(--bg2); border-radius: var(--radius-sm); display: none;">
+        <div style="font-size: 0.85rem; color: var(--text2); margin-bottom: 8px;">Vorschau:</div>
+        <div id="importPreviewContent"></div>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="hideImportModal()">Abbrechen</button>
+      <button class="btn-modal-confirm" onclick="confirmImport()">Importieren</button>
     </div>
   </div>
 </div>
@@ -3692,7 +3714,7 @@ function renderStreakRanking(){
 function renderHistory(){
   const c=document.getElementById('historyContainer');
   if(!state.history.length){c.innerHTML=`<div class="empty-state"><div class="icon">📋</div><p>Noch keine Runden gespielt.</p></div>`;return}
-  c.innerHTML=state.history.map(r=>{
+  c.innerHTML=state.history.slice().reverse().map(r=>{
     if(r.skipped){
       // Übersprungene Runde mit Liga-Übersprung
       return `<div class="history-section"><div class="history-title">Runde ${r.round} — Übersprungen</div><div class="history-entry" style="color:var(--text3)">🔸 ${r.skippedPhase} übersprungen – zu wenig passende Spieler.</div></div>`;
@@ -4764,8 +4786,8 @@ function getPlayerInternalId(player) {
     if(k) return k.internalId || k.key;
     return player.key;
   }
-  // Kein Spieler zugewiesen → Account-Name als ID
-  return 'acc_' + (player.name || player.id);
+  // Kein Spieler zugewiesen -> Player-ID als konsistente ID verwenden
+  return 'player_' + player.id;
 }
 
 /* Holt alle globalen Badges für einen Spieler (anhand seiner internalId UND playerId) */
@@ -4801,13 +4823,11 @@ function checkAndSetGlobalBadge(player, key) {
   const iid = getPlayerInternalId(player); // never null anymore
   const gb = getGlobalBadges();
 
-  // S1 Badges können mehrfach vergeben werden
-  if(key.startsWith('s1_')) {
-    if(!gb[key]) gb[key] = [];
-    if(!Array.isArray(gb[key])) gb[key] = [gb[key]];
-    gb[key].push({ internalId: iid, playerId: player.id, playerName: player.name, timestamp: Date.now() });
-    saveGlobalBadges(gb); // async, non-blocking
-    return true;
+  // S1 Badges und Ersteller Badge können NUR manuell vergeben werden
+  // Sie werden beim Import/Export roh gespeichert
+  if(key.startsWith('s1_') || key === 'ach_creator') {
+    console.log('DEBUG: S1/Ersteller Badge', key, 'kann nur manuell vergeben werden');
+    return false; // Automatische Vergabe blockiert
   }
 
   // Normale Badges: nur einmal vergeben
@@ -4819,15 +4839,23 @@ function checkAndSetGlobalBadge(player, key) {
 
 function checkAndSetFirstRankAchiever(player, rankName) {
   if(!state.firstRankAchievers) state.firstRankAchievers = {};
+  console.log('DEBUG: checkAndSetFirstRankAchiever für', player.name, 'Rank:', rankName);
   const rankObj = RANKS.find(r => r.name === rankName);
-  if(!rankObj) return;
+  if(!rankObj) {
+    console.log('DEBUG: Rank nicht gefunden:', rankName);
+    return;
+  }
   const rankIcon = rankObj.icon;
   // Prestige-Rang prüfen (hat 'prestige' im icon oder in isPrestige)
   const key = rankIcon === 'gott' && rankName.includes('Gott') ? 'gott' : rankIcon;
+  console.log('DEBUG: RankIcon:', rankIcon, 'Key:', key);
   if(!state.firstRankAchievers[key]) {
     state.firstRankAchievers[key] = { playerId:player.id, playerName:player.name, timestamp:Date.now() };
     saveState();
     showToast(`🏅 ${player.name} erreicht als ERSTER ${rankName}!`);
+    console.log('DEBUG: Badge vergeben!', key, 'an', player.name);
+  } else {
+    console.log('DEBUG: Badge bereits vergeben an:', state.firstRankAchievers[key].playerName);
   }
 }
 
@@ -4856,6 +4884,7 @@ function checkAndSetFirstStreakBadge(player) {
 /* ---- Achievement Badge Checks (GLOBAL) ---- */
 
 function checkAchievements(player) {
+  console.log('DEBUG: checkAchievements für', player.name, 'mit', player.points, 'Punkten, Runde', state.round);
   const gb = getGlobalBadges(); // sync
 
   // 1. Veteran: erste Person wenn Runde 10 gespielt wird
@@ -4979,14 +5008,22 @@ function checkAchievements(player) {
 
 /* Platzierungs-Badges nach einer Runde prüfen (GLOBAL) */
 function checkPlacementAchievements(results) {
+  console.log('DEBUG: checkPlacementAchievements aufgerufen mit', results?.length, 'Ergebnissen');
+  if (!results || !Array.isArray(results) || results.length === 0) {
+    console.log('DEBUG: Keine Ergebnisse oder leeres Array');
+    return;
+  }
+  
   const n = results.length;
   const winner = results.find(r=>r.place===1);
   const last   = results.find(r=>r.place===n && n>=2);
 
   // --- GEWINNER-Logik ---
   if(winner) {
+    console.log('DEBUG: Gewinner gefunden:', winner.name, 'playerId:', winner.playerId);
     const p = state.players.find(x=>x.id===winner.playerId);
     if(p) {
+      console.log('DEBUG: Spieler gefunden:', p.name, 'consecutiveFirst:', p.consecutiveFirst, 'totalWins:', p.totalWins);
       if(checkAndSetGlobalBadge(p, 'platz_gold1'))
         showToast(`🥇 ${p.name} – ERSTER PLATZ! Allererster Sieg!`);
       if(!p.consecutiveFirst) p.consecutiveFirst = 0;
@@ -5003,7 +5040,9 @@ function checkPlacementAchievements(results) {
       }
       if(!p.winsAtRanks) p.winsAtRanks = [];
       const ri = getRankIdx(p.points);
+      console.log('DEBUG: winsAtRanks für', p.name, 'vorher:', p.winsAtRanks, 'aktueller Rank-Index:', ri);
       if(!p.winsAtRanks.includes(ri)) p.winsAtRanks.push(ri);
+      console.log('DEBUG: winsAtRanks nachher:', p.winsAtRanks);
       if(p.winsAtRanks.length >= 5) {
         if(checkAndSetGlobalBadge(p, 'platz_allrounder'))
           showToast(`🎖 ${p.name} – ALLROUNDER! Siege in 5 Rängen!`);
@@ -5689,7 +5728,7 @@ function showToast(msg){
 }
 
 /* HELPERS */
-function fmt(n){return n.toFixed(1)}
+function fmt(n){return (n !== undefined && n !== null && !isNaN(n)) ? n.toFixed(1) : '0.0'}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function getRankIcon(iconClass, small=false){
   return `<span class="rank-icon ${small ? 'small' : ''} rank-${iconClass}"></span>`;
@@ -6091,6 +6130,830 @@ function confirmReset() {
     
     // Show success message
     alert('Alle Daten wurden zurückgesetzt!');
+  }
+}
+
+function exportData() {
+  try {
+    // Progress-Feedback
+    showToast('Export wird vorbereitet...');
+    
+    // Alle Profile sammeln
+    const profiles = getAllProfiles();
+    const activeProfileId = getActiveProfileId();
+    
+    if (!profiles || profiles.length === 0) {
+      showToast('Keine Daten zum Exportieren gefunden');
+      return;
+    }
+    
+    // Globale Badges holen
+    const globalBadges = getGlobalBadges();
+    
+    // S1 Badges und Ersteller Badge als "manuell" markieren (roh speichern)
+    const processedBadges = {};
+    for (const [key, value] of Object.entries(globalBadges || {})) {
+      if (key.startsWith('s1_') || key === 'ach_creator') {
+        // Diese Badges werden "roh" gespeichert - sie können manuell zugewiesen werden
+        processedBadges[key] = {
+          ...value,
+          manualOnly: true,
+          rawStorage: true
+        };
+      } else {
+        processedBadges[key] = value;
+      }
+    }
+    
+    // Export-Objekt erstellen - FOKUS AUF VERLAUF
+    const exportData = {
+      metadata: {
+        exportDate: new Date().toISOString(),
+        exportTimestamp: Date.now(),
+        version: 'RangSpiel v3.0',
+        activeProfile: activeProfileId,
+        totalProfiles: profiles.length,
+        exportSource: 'RangSpiel Web App',
+        exportType: 'history-replay' // Neuer Export-Typ
+      },
+      // Basis-Daten für Setup
+      setupData: {
+        keys: (state && state.keys) ? state.keys : [],
+        accessCodes: [], // Leeren Array als Platzhalter
+        profiles: {},
+        globalBadges: processedBadges || {}
+      },
+      // VERLAUF-Daten zum Nachspielen
+      historyData: {
+        rounds: [],
+        totalRounds: 0
+      }
+    };
+    
+    // Profile-Setup-Daten sammeln (ohne kompletten State)
+    profiles.forEach(profile => {
+      const storageKey = profile.id === 'default' ? 'rs4' : 'rs4_profile_' + profile.id;
+      try {
+        const rawStorage = localStorage.getItem(storageKey);
+        if (!rawStorage) return;
+        
+        const data = JSON.parse(rawStorage);
+        const profileState = data.state || {};
+        
+        // Nur Basis-Setup-Informationen
+        exportData.setupData.profiles[profile.id] = {
+          profileInfo: {
+            id: profile.id,
+            name: profileState.profileName || profile.name || profile.id,
+            isActive: profile.id === activeProfileId
+          },
+          // Nur die initialen Spieler (ohne Punkte, Historie etc.)
+          initialPlayers: (profileState.players || []).map(p => ({
+            id: p.id,
+            name: p.name,
+            key: p.key || null,
+            active: false // Alle starten inaktiv
+          })),
+          nextId: data.nextId || 1
+        };
+        
+      } catch(e) {
+        console.warn('Setup-Daten für Profil nicht gefunden:', profile.id, e);
+      }
+    });
+    
+    // GESAMTEN VERLAUF von ALLEN Profilen sammeln
+    let allRounds = [];
+    profiles.forEach(profile => {
+      const storageKey = profile.id === 'default' ? 'rs4' : 'rs4_profile_' + profile.id;
+      try {
+        const rawStorage = localStorage.getItem(storageKey);
+        if (!rawStorage) return;
+        
+        const data = JSON.parse(rawStorage);
+        const profileState = data.state || {};
+        const history = profileState.history || [];
+        
+        // Runden mit Profil-Kennzeichnung
+        history.forEach(round => {
+          allRounds.push({
+            ...round,
+            profileId: profile.id,
+            profileName: profileState.profileName || profile.name || profile.id
+          });
+        });
+        
+      } catch(e) {
+        console.warn('Historie für Profil nicht gefunden:', profile.id, e);
+      }
+    });
+    
+    // Runden chronologisch sortieren (älteste zuerst für korrekten Replay)
+    allRounds.sort((a, b) => {
+      // Zuerst nach Rundennummer aufsteigend (älteste zuerst), dann nach Profil-ID für Konsistenz
+      if (a.round !== b.round) return a.round - b.round;
+      return a.profileId.localeCompare(b.profileId);
+    });
+    
+    exportData.historyData.rounds = allRounds;
+    exportData.historyData.totalRounds = allRounds.length;
+    
+    // JSON erstellen mit schöner Formatierung
+    let jsonString;
+    try {
+      jsonString = JSON.stringify(exportData, null, 2);
+    } catch(e) {
+      console.error('JSON Stringify Fehler:', e);
+      showToast('Fehler bei der JSON-Erstellung');
+      return;
+    }
+    
+    // Blob erstellen
+    let blob;
+    try {
+      blob = new Blob([jsonString], { type: 'application/json;charset=utf-8' });
+    } catch(e) {
+      console.error('Blob Erstellung Fehler:', e);
+      showToast('Fehler bei der Dateierstellung');
+      return;
+    }
+    
+    // Download-Link erstellen und auslösen
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rangspiel_history_export_${new Date().toISOString().split('T')[0]}_${new Date().toTimeString().split(' ')[0].replace(/:/g, '-')}.json`;
+    
+    // Sicher in DOM einfügen und klicken
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
+    
+    // Erfolgsmeldung mit Statistik
+    showToast(`History-Export erfolgreich! ${allRounds.length} Runden von ${profiles.length} Profilen`);
+    
+  } catch(error) {
+    console.error('Kritischer Fehler beim Export:', error);
+    showToast('Export fehlgeschlagen: ' + error.message);
+  }
+}
+
+let importDataCache = null;
+
+function showImportModal() {
+  document.getElementById('importModal').classList.remove('hidden');
+  document.getElementById('importFileInput').value = '';
+  document.getElementById('importPreview').style.display = 'none';
+  importDataCache = null;
+  
+  // File input change listener
+  const fileInput = document.getElementById('importFileInput');
+  fileInput.onchange = handleFileSelect;
+}
+
+function hideImportModal() {
+  document.getElementById('importModal').classList.add('hidden');
+  importDataCache = null;
+}
+
+function handleFileSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  if (!file.name.endsWith('.json')) {
+    showToast('Bitte wähle eine JSON-Datei aus');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      importDataCache = data;
+      
+      // Preview anzeigen
+      const preview = document.getElementById('importPreview');
+      const content = document.getElementById('importPreviewContent');
+      
+      const metadata = data.metadata || {};
+      const isHistoryReplay = metadata.exportType === 'history-replay';
+      
+      let profileCount, badgeCount, keyCount;
+      
+      if (isHistoryReplay) {
+        // History-Replay Format
+        profileCount = Object.keys(data.setupData?.profiles || {}).length;
+        badgeCount = Object.keys(data.setupData?.globalBadges || {}).length;
+        keyCount = data.setupData?.keys?.length || 0;
+      } else {
+        // Legacy Direct Import Format
+        profileCount = Object.keys(data.profiles || {}).length;
+        badgeCount = Object.keys(data.globalData?.badges || {}).length;
+        keyCount = data.globalData?.keys?.length || 0;
+      }
+      
+      content.innerHTML = `
+        <div style="display: grid; gap: 8px;">
+          <div><strong>Version:</strong> ${metadata.version || 'Unbekannt'}</div>
+          <div><strong>Export-Datum:</strong> ${metadata.exportDate ? new Date(metadata.exportDate).toLocaleString('de-DE') : 'Unbekannt'}</div>
+          <div><strong>Typ:</strong> ${isHistoryReplay ? 'History-Replay' : 'Legacy Direct'}</div>
+          <div><strong>Profile:</strong> ${profileCount}</div>
+          <div><strong>Spieler-Keys:</strong> ${keyCount}</div>
+          <div><strong>Badges:</strong> ${badgeCount}</div>
+          ${isHistoryReplay ? `<div><strong>Runden:</strong> ${data.historyData?.totalRounds || 0}</div>` : ''}
+          ${metadata.activeProfile ? `<div><strong>Aktives Profil:</strong> ${metadata.activeProfile}</div>` : ''}
+        </div>
+      `;
+      
+      preview.style.display = 'block';
+      
+    } catch(error) {
+      console.error('JSON Parse Fehler:', error);
+      showToast('Ungültige JSON-Datei: ' + error.message);
+      importDataCache = null;
+    }
+  };
+  
+  reader.readAsText(file);
+}
+
+async function confirmImport() {
+  if (!importDataCache) {
+    showToast('Bitte wähle zuerst eine Datei aus');
+    return;
+  }
+  
+  // Prüfen ob es ein History-Replay Export ist
+  const isHistoryReplay = importDataCache.metadata?.exportType === 'history-replay';
+  
+  if (isHistoryReplay) {
+    // HISTORY-REPLAY MODUS
+    const rounds = importDataCache.historyData?.rounds || [];
+    const profiles = importDataCache.setupData?.profiles || {};
+    
+    const confirmMessage = `HISTORY-REPLAY MODUS\n\n` +
+      `Profile: ${Object.keys(profiles).length}\n` +
+      `Runden: ${rounds.length}\n` +
+      `Spieler-Keys: ${importDataCache.setupData?.keys?.length || 0}\n\n` +
+      `Alle Runden werden neu gespielt und Achievements neu berechnet!\n` +
+      `Möchtest du wirklich fortfahren?`;
+      
+    if (!confirm(confirmMessage)) return;
+    
+    await performHistoryReplay(importDataCache);
+    
+  } else {
+    // LEGACY DIRECT IMPORT MODUS
+    const confirmMessage = `LEGACY IMPORT MODUS (direkte Überschreibung)\n\n` +
+      `Profile: ${Object.keys(importDataCache.profiles || {}).length}\n` +
+      `Badges: ${Object.keys(importDataCache.globalData?.badges || {}).length}\n` +
+      `Keys: ${importDataCache.globalData?.keys?.length || 0}\n\n` +
+      `WARNUNG: Alle aktuellen Daten werden überschrieben!\n` +
+      `Möchtest du wirklich fortfahren?`;
+      
+    if (!confirm(confirmMessage)) return;
+    
+    await performDirectImport(importDataCache);
+  }
+}
+
+async function performHistoryReplay(importData) {
+  try {
+    showToast('History-Replay wird vorbereitet...');
+    
+    // 1. COMPLETT RESET - alles löschen
+    state.players = [];
+    state.history = [];
+    state.round = 1; // Immer bei 1 starten
+    state.mmPhase = null;
+    state.matchmakingOn = false;
+    state.keys = [];
+    state.firstRankAchievers = {};
+    
+    // 2. SETUP-DATEN WIEDERHERSTELLEN
+    const setupData = importData.setupData || {};
+    
+    // Spieler-Keys wiederherstellen
+    if (setupData.keys) {
+      state.keys = setupData.keys;
+    }
+    
+    // Access Codes wiederherstellen (falls verfügbar)
+    if (setupData.accessCodes && setupData.accessCodes.length > 0) {
+      // Access Codes werden hier nicht wiederhergestellt, da die Variable nicht global ist
+      // Kann später implementiert werden, wenn nötig
+      console.log('Access Codes im Import gefunden, aber Wiederherstellung nicht implementiert');
+    }
+    
+    // Globale Badges zurücksetzen (nicht wiederherstellen!)
+    await saveGlobalBadges({});
+    
+    // Profile-Setup wiederherstellen
+    const profiles = setupData.profiles || {};
+    for (const [profileId, profileData] of Object.entries(profiles)) {
+      try {
+        const storageKey = profileId === 'default' ? 'rs4' : 'rs4_profile_' + profileId;
+        
+        // Profil mit initialen Spielern erstellen
+        const profileState = {
+          players: profileData.initialPlayers || [],
+          round: 0,
+          history: [],
+          matchmakingOn: false,
+          mmPhase: null,
+          keys: setupData.keys || [],
+          profileName: profileData.profileInfo?.name || profileId,
+          firstRankAchievers: {}
+        };
+        
+        const saveData = {
+          state: profileState,
+          nextId: profileData.nextId || 1
+        };
+        
+        localStorage.setItem(storageKey, JSON.stringify(saveData));
+        
+      } catch(error) {
+        console.error('Fehler beim Setup von Profil', profileId, error);
+      }
+    }
+    
+    // Profil-Liste aktualisieren
+    const profileList = Object.keys(profiles).map(id => ({
+      id: id,
+      name: profiles[id].profileInfo?.name || id
+    }));
+    saveProfilesList(profileList);
+    
+    // Aktives Profil setzen
+    if (importData.metadata?.activeProfile) {
+      localStorage.setItem('rs4_active_profile', importData.metadata.activeProfile);
+    }
+    
+    // 3. AKTUELLES PROFIL LADEN
+    const activeProfile = importData.metadata?.activeProfile || 'default';
+    if (profiles[activeProfile]) {
+      const storageKey = activeProfile === 'default' ? 'rs4' : 'rs4_profile_' + activeProfile;
+      const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      
+      if (data.state) {
+        state = data.state;
+        nextId = data.nextId || 1;
+      }
+    } else {
+      // Fallback: Standard-State initialisieren
+      state = {
+        players: [],
+        round: 0,
+        history: [],
+        matchmakingOn: false,
+        mmPhase: null,
+        keys: setupData.keys || [],
+        profileName: 'Standard',
+        firstRankAchievers: {}
+      };
+      nextId = 1;
+    }
+    
+    // 4. HISTORY REPLAY - Runden nachspielen
+    const rounds = importData.historyData?.rounds || [];
+    if (rounds.length === 0) {
+      showToast('Keine Runden zum Nachspielen gefunden');
+      return;
+    }
+    
+    showToast(`Replay startet: ${rounds.length} Runden werden nachgespielt...`);
+    
+    // UI aktualisieren vor dem Replay
+    renderAll();
+    
+    // Runden mit Verzögerung nachspielen für bessere User Experience
+    let currentRoundIndex = 0;
+    let renderCounter = 0;
+    
+    async function playNextRound() {
+      // DEBUG: Runden-Index und Nummer ausgeben
+      console.log('DEBUG: playNextRound - currentRoundIndex:', currentRoundIndex, 'von', rounds.length, 'Runden');
+      
+      if (currentRoundIndex >= rounds.length) {
+        // Replay beendet
+        showToast(`History-Replay abgeschlossen! ${rounds.length} Runden nachgespielt.`);
+        
+        // Firestore synchronisieren
+        if (typeof firebase !== 'undefined' && firebase.firestore()) {
+          await _flushToFirestore();
+        }
+        
+        hideImportModal();
+        renderAll();
+        return;
+      }
+      
+      const roundData = rounds[currentRoundIndex];
+      console.log('DEBUG: playNextRound - Aktuelle Runde (Original):', roundData.round);
+      
+      // Rundennummer aktualisieren (fortlaufend ab 1, nicht Original-Nummer)
+      state.round = currentRoundIndex + 1;
+      
+      // Runden-Daten mit neuer Nummer erstellen
+      const replayRoundData = {
+        ...roundData,
+        round: state.round // Neue fortlaufende Nummer
+      };
+      console.log('DEBUG: playNextRound - Replay Rundennummer:', state.round);
+      
+      // Profil wechseln wenn nötig (sichere Version für Replay)
+      if (roundData.profileId && roundData.profileId !== getActiveProfileId()) {
+        // Sicheres Profil-Wechseln ohne UI-Updates
+        const targetProfileId = roundData.profileId;
+        localStorage.setItem('rs4_active_profile', targetProfileId);
+        
+        // State neu laden ohne UI-Render
+        const storageKey = targetProfileId === 'default' ? 'rs4' : 'rs4_profile_' + targetProfileId;
+        const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        
+        if (data.state) {
+          state = data.state;
+          nextId = data.nextId || 1;
+        } else {
+          // Fallback für leeres Profil
+          state = {
+            players: [],
+            round: 0,
+            history: [],
+            matchmakingOn: false,
+            mmPhase: null,
+            keys: importData.setupData?.keys || [],
+            profileName: profiles[targetProfileId]?.profileInfo?.name || targetProfileId,
+            firstRankAchievers: {}
+          };
+          nextId = 1;
+        }
+        
+        // Kurze Verzögerung für Profil-Wechsel
+        setTimeout(() => playNextRound(), 100);
+        return;
+      }
+      
+      try {
+        // Runde nachspielen mit neuer Rundennummer
+        await replayRound(replayRoundData);
+        currentRoundIndex++;
+        
+        // UI aktualisieren (Performance-optimiert)
+        renderCounter++;
+        if (renderCounter % 10 === 0 || currentRoundIndex >= rounds.length) {
+          renderAll();
+        }
+        
+        // Nächste Runde mit kurzer Verzögerung
+        setTimeout(() => playNextRound(), 50);
+        
+      } catch(error) {
+        console.error('Fehler beim Nachspielen der Runde', state.round, error);
+        currentRoundIndex++;
+        setTimeout(() => playNextRound(), 50);
+      }
+    }
+    
+    // Replay starten
+    setTimeout(() => playNextRound(), 500);
+    
+  } catch(error) {
+    console.error('Kritischer Fehler beim History-Replay:', error);
+    showToast('History-Replay fehlgeschlagen: ' + error.message);
+    hideImportModal();
+  }
+}
+
+async function replayRound(roundData) {
+  // Spieler aktualisieren/erstellen
+  if (roundData.results) {
+    roundData.results.forEach(result => {
+      let player = state.players.find(p => p.id === result.playerId);
+      
+      if (!player) {
+        // Neuen Spieler erstellen mit allen notwendigen Attributen
+        player = {
+          id: result.playerId,
+          name: result.name,
+          points: result.newPoints || 0, // Punkte direkt setzen
+          active: true,
+          key: null, // Wird später gesetzt
+          maxPoints: result.newPoints || 0,
+          minPoints: result.newPoints || 0,
+          streak: 0,
+          totalWins: 0,
+          // Achievement-relevante Attribute initialisieren
+          consecutiveFirst: 0,
+          consecutiveLast: 0,
+          consecutiveHalf: 0,
+          consecutivePositive: 0,
+          consecutiveMid: 0,
+          consecutiveSecond: 0,
+          consecutiveLow: 0,
+          consecutiveLostNotLast: 0,
+          ranksReached: [],
+          winsAtRanks: [],
+          lastPlace: result.place || 0,
+          diamondHandsActive: false,
+          bestSingleRoundGain: 0,
+          rocketTrack: [result.newPoints || 0], // Direkt mit Punkten starten
+          internalId: null // Wird später gesetzt
+        };
+        state.players.push(player);
+      }
+      
+      // Spieler-Key und internalId zuweisen
+      const keyEntry = state.keys.find(k => k.key === result.name);
+      if (keyEntry) {
+        player.key = result.name;
+        player.internalId = keyEntry.internalId;
+      } else {
+        player.internalId = 'player_' + player.id;
+      }
+      
+      // Punkte aktualisieren (mit Safety Checks)
+      player.oldPoints = result.oldPoints !== undefined ? result.oldPoints : player.points || 0;
+      player.points = result.newPoints !== undefined ? result.newPoints : player.points || 0;
+      
+      // Wenn Punkte undefined sind, auf 0 setzen
+      if (player.points === undefined || player.points === null || isNaN(player.points)) {
+        player.points = 0;
+      }
+      
+      // Debug-Ausgabe für Punkte-Update
+      console.log('DEBUG: Punkte-Update für', player.name, ':', result.oldPoints, '→', result.newPoints, '= jetzt', player.points);
+      
+      // maxPoints und minPoints sicher aktualisieren
+      if (player.points !== undefined && player.points !== null && !isNaN(player.points)) {
+        player.maxPoints = Math.max(player.maxPoints || 0, player.points);
+        player.minPoints = Math.min(player.minPoints || 0, player.points);
+      }
+      
+      // Rang-Up/Down
+      player.rankUp = result.rankUp || false;
+      player.rankDown = result.rankDown || false;
+      player.oldRank = result.oldRank;
+      player.newRank = result.newRank;
+      
+      // DEBUG: Rang-Änderung prüfen
+      if (player.rankUp && result.newRank) {
+        console.log('DEBUG: Rang-UP für', player.name, 'zu', result.newRank);
+        checkAndSetFirstRankAchiever(player, result.newRank);
+      }
+      
+      // Streak und Platzierungs-Statistiken aktualisieren
+      if (result.place === 1) {
+        player.streak = (player.streak || 0) + 1;
+        player.totalWins = (player.totalWins || 0) + 1;
+        player.consecutiveFirst = (player.consecutiveFirst || 0) + 1;
+        player.consecutiveLast = 0;
+        player.consecutiveSecond = 0;
+        player.consecutiveMid = 0;
+        console.log('DEBUG: Streak++ für', player.name, 'jetzt:', player.streak, '(Platz 1)');
+      } else {
+        console.log('DEBUG: Streak reset für', player.name, '(nicht Platz 1, Platz:', result.place, ')');
+        player.streak = 0;
+        player.consecutiveFirst = 0;
+        
+        if (result.place === roundData.results.length) {
+          player.consecutiveLast = (player.consecutiveLast || 0) + 1;
+        } else {
+          player.consecutiveLast = 0;
+        }
+        
+        if (result.place === 2) {
+          player.consecutiveSecond = (player.consecutiveSecond || 0) + 1;
+        } else {
+          player.consecutiveSecond = 0;
+        }
+      }
+      
+      // Delta-Statistiken aktualisieren (mit Safety Checks)
+      if (result.delta !== undefined && result.delta !== null && !isNaN(result.delta)) {
+        if (result.delta > 0) {
+          player.consecutivePositive = (player.consecutivePositive || 0) + 1;
+        } else {
+          player.consecutivePositive = 0;
+        }
+        
+        if (result.delta === 0.5) {
+          player.consecutiveHalf = (player.consecutiveHalf || 0) + 1;
+        } else {
+          player.consecutiveHalf = 0;
+        }
+        
+        // Best single round gain
+        if (result.delta > (player.bestSingleRoundGain || 0)) {
+          player.bestSingleRoundGain = result.delta;
+        }
+        
+        // Rocket track (letzte 4 Runden) - nur wenn Punkte gültig
+        if (player.points !== undefined && player.points !== null && !isNaN(player.points)) {
+          if (!player.rocketTrack) player.rocketTrack = [];
+          player.rocketTrack.push(player.points);
+          if (player.rocketTrack.length > 4) {
+            player.rocketTrack.shift();
+          }
+        }
+      }
+      
+      // Ränge erreicht (mit Safety Check)
+      if (player.newRank && (!player.ranksReached || !player.ranksReached.includes(player.newRank))) {
+        try {
+          if (player.points !== undefined && player.points !== null && !isNaN(player.points)) {
+            const rankIdx = getRankIdx(player.points);
+            if (!player.ranksReached || !player.ranksReached.includes(rankIdx)) {
+              if (!player.ranksReached) player.ranksReached = [];
+              player.ranksReached.push(rankIdx);
+            }
+          }
+        } catch(e) {
+          console.warn('Fehler bei Rang-Berechnung:', e);
+        }
+      }
+      
+      // Wins at ranks (mit Safety Check)
+      if (result.place === 1 && player.newRank) {
+        try {
+          if (player.points !== undefined && player.points !== null && !isNaN(player.points)) {
+            if (!player.winsAtRanks) player.winsAtRanks = [];
+            const rankIdx = getRankIdx(player.points);
+            if (!player.winsAtRanks || !player.winsAtRanks.includes(rankIdx)) {
+              if (!player.winsAtRanks) player.winsAtRanks = [];
+              player.winsAtRanks.push(rankIdx);
+            }
+          }
+        } catch(e) {
+          console.warn('Fehler bei Wins-at-Ranks Berechnung:', e);
+        }
+      }
+      
+      // Diamond hands tracking (mit Safety Check)
+      if (player.points !== undefined && player.points !== null && !isNaN(player.points) && player.points >= 15 && !player.diamondHandsActive) {
+        player.diamondHandsActive = true;
+      }
+      
+      player.lastPlace = result.place;
+      player.active = true;
+    });
+  }
+  
+  // Rundennummer aktualisieren (fortlaufend ab 1)
+    // state.round wird bereits in playNextRound verwaltet
+  
+  // Matchmaking Phase
+  if (roundData.mmPhase) {
+    state.mmPhase = roundData.mmPhase;
+  }
+  
+  // Actor setzen
+  if (roundData.actor) {
+    currentActor = { name: roundData.actor, level: 3 }; // Admin-Level als Default
+  }
+  
+  // Runde zur Historie hinzufügen
+  state.history.push({
+    round: roundData.round,
+    results: roundData.results || [],
+    mmPhase: roundData.mmPhase,
+    actor: roundData.actor
+  });
+  
+  // Achievements prüfen (automatisch)
+  console.log('DEBUG: Achievements prüfen für', state.players.length, 'Spieler');
+  for (const player of state.players) {
+    console.log('DEBUG: Prüfe Achievements für Spieler', player.name, 'mit Punkten', player.points);
+    
+    // Safety Check: Wenn Spieler keine Punkte hat (weil er nie in Runden war), setze auf 0
+    if (player.points === undefined || player.points === null || isNaN(player.points)) {
+      player.points = 0;
+      console.log('DEBUG: Setze Punkte für', player.name, 'auf 0 (keine Runden-Daten gefunden)');
+    }
+    
+    await checkAchievements(player);
+  }
+  
+  if (roundData.results) {
+    // Validierung: Stelle sicher dass jedes Result eine playerId hat
+    const validResults = roundData.results.filter(r => {
+      if (!r.playerId && r.name) {
+        // Versuche playerId aus state.players zu finden
+        const player = state.players.find(p => p.name === r.name);
+        if (player) {
+          r.playerId = player.id;
+          console.log('DEBUG: playerId für', r.name, 'nachgepflegt:', player.id);
+        }
+      }
+      return r.playerId !== undefined && r.playerId !== null;
+    });
+    
+    console.log('DEBUG: Placement Achievements prüfen für', validResults.length, 'gültige Ergebnisse (von', roundData.results.length, ')');
+    if (validResults.length > 0) {
+      checkPlacementAchievements(validResults);
+    } else {
+      console.log('DEBUG: Keine gültigen Ergebnisse mit playerId gefunden!');
+    }
+  }
+  
+  // State speichern
+  saveState();
+  
+  // UI aktualisieren (Performance-optimiert)
+  // renderAll() wird in playNextRound() basierend auf renderCounter aufgerufen
+}
+
+async function performDirectImport(importData) {
+  // Originaler Direct Import Code für Legacy-Kompatibilität
+  try {
+    showToast('Direct Import wird durchgeführt...');
+    
+    // 1. Globale Badges importieren
+    if (importData.globalData?.badges) {
+      const globalBadges = importData.globalData.badges;
+      // S1 Badges und Ersteller Badge einfach laden (rohe Speicherung)
+      const processedBadges = {};
+      for (const [key, value] of Object.entries(globalBadges)) {
+        if (key.startsWith('s1_') || key === 'ach_creator') {
+          // Diese Badges werden einfach so geladen wie sie sind
+          processedBadges[key] = value;
+          console.log('DEBUG: S1/Ersteller Badge geladen:', key);
+        } else {
+          processedBadges[key] = value;
+        }
+      }
+      await saveGlobalBadges(processedBadges);
+    }
+    
+    // 2. Globale Keys importieren
+    if (importData.globalData?.keys) {
+      state.keys = importData.globalData.keys;
+    }
+    
+    // 3. Profile importieren
+    const profiles = importData.profiles || {};
+    let importedProfiles = 0;
+    
+    for (const [profileId, profileData] of Object.entries(profiles)) {
+      try {
+        const storageKey = profileId === 'default' ? 'rs4' : 'rs4_profile_' + profileId;
+        const saveData = {
+          state: profileData.state || {},
+          nextId: profileData.nextId || 1
+        };
+        
+        localStorage.setItem(storageKey, JSON.stringify(saveData));
+        importedProfiles++;
+        
+      } catch(error) {
+        console.error('Fehler beim Import von Profil', profileId, error);
+      }
+    }
+    
+    // 4. Aktives Profil setzen
+    if (importData.metadata?.activeProfile) {
+      localStorage.setItem('rs4_active_profile', importData.metadata.activeProfile);
+    }
+    
+    // 5. Profil-Liste aktualisieren
+    const profileList = Object.keys(profiles).map(id => ({
+      id: id,
+      name: profiles[id].profileInfo?.name || id
+    }));
+    saveProfilesList(profileList);
+    
+    // 6. Aktuellen State neu laden (falls aktives Profil)
+    const activeProfile = importData.metadata?.activeProfile || 'default';
+    if (profiles[activeProfile]) {
+      const storageKey = activeProfile === 'default' ? 'rs4' : 'rs4_profile_' + activeProfile;
+      const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      
+      if (data.state) {
+        state = data.state;
+        nextId = data.nextId || 1;
+      }
+    }
+    
+    // 7. UI aktualisieren
+    renderAll();
+    
+    // 8. Firestore synchronisieren (überschreiben)
+    if (typeof firebase !== 'undefined' && firebase.firestore()) {
+      await _flushToFirestore();
+    }
+    
+    hideImportModal();
+    showToast(`Direct Import erfolgreich! ${importedProfiles} Profile importiert`);
+    
+  } catch(error) {
+    console.error('Kritischer Fehler beim Direct Import:', error);
+    showToast('Import fehlgeschlagen: ' + error.message);
   }
 }
 
