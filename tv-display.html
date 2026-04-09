@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    * {
+      touch-action: manipulation;
+    }
+  </style>
+  <title>Rangspiel - TV Display</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+ ()      --bg:#0a0c12; --bg2:#111420; --bg3:#181c2a; --border:#2a3048;
+      --accent:#e8b84b; --accent2:#c97a2f; --text:#e8eaf0; --text2:#7c839f; --text3:#4a5070;
+      --success:#4ce87a; --danger:#e84c4c;
+      --radius:12px; --radius-sm:8px; --transition:0.3s ease;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px;-webkit-tap-highlight-color:transparent;background:#0a0c12}
+    body{background:#0a0c12;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:400;min-height:100vh;overflow-x:hidden}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% -10%,rgba(232,184,75,.06) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 110%,rgba(201,122,47,.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+    
+    .app{max-width:1400px;margin:0 auto;position:relative;z-index:1;padding:20px;height:100vh;display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:100vh;overflow:hidden;background:#0a0c12}
+    
+    @media (max-width:1024px) {
+      .app{grid-template-columns:1fr;grid-template-rows:auto 1fr 1fr;gap:15px;padding:15px;height:auto;max-height:none;overflow:visible}
+    }
+    
+    /* HEADER */
+    .header{grid-column:1/-1;padding:5px 15px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--bg2) 0%,transparent 100%);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:var(--radius)}
+    .header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+    .logo{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+    .logo span{color:var(--text2)}
+    .header-right{display:flex;align-items:center;gap:12px}
+    .round-badge{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:1rem;font-weight:600;color:var(--text2);letter-spacing:1px;text-transform:uppercase}
+    .round-badge em{color:var(--accent);font-style:normal}
+    .mm-toggle{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.9rem;font-weight:700;color:var(--text3);letter-spacing:0.5px;text-transform:uppercase;transition:var(--transition)}
+    .mm-toggle.on{border-color:rgba(232,184,75,.4);color:var(--accent);background:rgba(232,184,75,.08)}
+    .mm-dot{width:10px;height:10px;border-radius:50%;background:var(--text3);transition:var(--transition)}
+    .mm-toggle.on .mm-dot{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+    
+    /* LEFT PANEL - RANKLIST */
+    .left-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:0 8px 8px 8px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+    .panel-title{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--accent);letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;padding:4px 0;text-shadow:0 0 10px rgba(232,184,75,0.3)}
+    
+    .ranklist{flex:1;overflow-y:auto;padding-right:10px}
+    .ranklist::-webkit-scrollbar{width:6px}
+    .ranklist::-webkit-scrollbar-track{background:var(--bg3);border-radius:3px}
+    .ranklist::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+    .ranklist::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+    
+    .rank-item{display:flex;align-items:center;padding:14px 16px;margin-bottom:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);transition:var(--transition);animation:fadeIn 0.3s ease;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+    .rank-item:hover{border-color:rgba(232,184,75,.5);transform:translateX(4px);box-shadow:0 4px 16px rgba(232,184,75,.15)}
+    .rank-number{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;color:var(--accent);width:40px;text-align:center}
+    .rank-between{padding:8px 12px;margin:8px 0;background:rgba(232,184,75,0.05);border-left:3px solid var(--accent);border-radius:var(--radius-sm);animation:fadeIn 0.3s ease}
+    .rank-between-count{font-size:0.85rem;color:var(--accent);font-weight:600;margin-bottom:4px}
+    .rank-between-names{font-size:0.75rem;color:var(--text3)}
+    
+    /* INACTIVE LIST */
+    .inactive-list{flex:1;overflow-y:auto;max-height:200px;padding-right:8px}
+    .inactive-list::-webkit-scrollbar{width:4px}
+    .inactive-list::-webkit-scrollbar-track{background:var(--bg3);border-radius:2px}
+    .inactive-item{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;margin-bottom:4px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);opacity:0.6;font-size:0.75rem}
+    .inactive-name{font-size:0.75rem;color:var(--text2)}
+    .inactive-points{font-size:0.7rem;color:var(--text3)}
+    
+    /* MATCHMAKING LIST */
+    .matchmaking-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+    .matchmaking-section{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px}
+    .matchmaking-phase-title{font-size:1rem;font-weight:600;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+    .matchmaking-players{display:flex;flex-wrap:wrap;gap:6px}
+    .matchmaking-player{padding:4px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--text2)}
+    .rank-icon{display:inline-block;width:40px;height:40px;border-radius:50%;background-size:contain;background-repeat:no-repeat;background-position:center;flex-shrink:0;margin-right:0}
+    .rank-info{flex:1}
+    .rank-name{font-size:1.3rem;font-weight:600;margin-bottom:4px}
+    .rank-badge{display:inline-block;padding:4px 10px;border-radius:4px;font-size:0.9rem;font-weight:600;text-transform:uppercase;margin-left:8px}
+    .rank-points{font-size:1.1rem;color:var(--success);font-weight:600}
+    .rank-max{color:var(--text3);font-size:0.95rem;margin-left:6px}
+    .rank-streak{color:var(--accent);font-size:1rem;margin-left:12px}
+    .rank-accounts{color:var(--text2);font-size:0.9rem;margin-left:8px}
+    
+    /* RIGHT PANEL */
+    .right-panel{display:grid;grid-template-rows:1fr;gap:20px;overflow:hidden;min-height:0}
+    
+    /* MATCHMAKING PANEL */
+    .matchmaking-section{background:linear-gradient(135deg,var(--bg3) 0%,var(--bg2) 100%);border:2px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;animation:fadeIn 0.5s ease;box-shadow:0 8px 32px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.05)}
+    .matchmaking-panel-title{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;text-shadow:0 0 15px rgba(232,184,75,0.4);display:flex;align-items:center;gap:10px}
+    .matchmaking-panel-title::before{content:'🎮';font-size:1.6rem}
+    .matchmaking-phases{display:flex;flex-direction:column;gap:16px}
+    .matchmaking-phase{background:rgba(17,20,32,0.8);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;animation:scaleIn 0.3s ease;box-shadow:0 4px 16px rgba(0,0,0,0.3);position:relative;overflow:hidden}
+    .matchmaking-phase::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--accent) 0%,var(--accent2) 100%)}
+    .matchmaking-phase-header{font-size:1rem;font-weight:700;color:var(--accent);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;padding-left:10px;display:flex;align-items:center;gap:8px}
+    .matchmaking-phase-header::before{content:'⚡';font-size:0.9rem}
+    .matchmaking-phase-players{display:flex;flex-wrap:wrap;gap:6px}
+    .matchmaking-phase-player{padding:4px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:0.85rem;color:var(--text2);animation:fadeIn 0.3s ease;transition:var(--transition);box-shadow:0 2px 8px rgba(0,0,0,0.2);position:relative}
+    .matchmaking-phase-player:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(232,184,75,0.3)}
+    .matchmaking-phase-player.in-both{border-color:var(--success);background:rgba(76,232,122,0.1);color:var(--success)}
+    .matchmaking-phase-player.in-both::after{content:'✓';position:absolute;top:-6px;right:-6px;width:16px;height:16px;background:var(--success);border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;color:var(--bg);font-weight:700}
+    .matchmaking-phase-player.skipped{border-color:var(--danger);background:rgba(232,76,76,0.1);color:var(--danger);opacity:0.7}
+    .matchmaking-phase-player.skipped::after{content:'⏭';position:absolute;top:-6px;right:-6px;width:16px;height:16px;background:var(--danger);border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;color:var(--bg);font-weight:700}
+    
+    /* RANK UP EFFECT */
+    #rankUpContainer{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:flex;align-items:center;justify-content:center}
+    .rank-up-effect{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Rajdhani',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:2px;padding:16px 24px;border-radius:24px;box-shadow:0 8px 32px rgba(232,184,75,.5);border:2px solid rgba(255,255,255,.1);color:#0a0c12;background:linear-gradient(135deg,var(--accent),var(--accent2));font-size:1.2rem;animation:globalRankUp 2.5s ease forwards}
+    
+    @media (max-width:1024px) {
+      .right-panel{grid-template-rows:1fr;overflow:visible;min-height:auto}
+    }
+    
+    /* BOTTOM RIGHT - INFOGRAPHICS */
+    .info-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:0 8px 8px 8px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:opacity 0.5s ease}
+    .info-indicator{display:flex;gap:8px;padding:8px 0;margin-bottom:8px}
+    .info-dot{width:12px;height:12px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);transition:var(--transition)}
+    .info-dot.active{background:var(--accent);border-color:var(--accent);box-shadow:0 0 8px rgba(232,184,75,0.5)}
+    .info-dot.next{border-color:var(--accent);border-style:dashed}
+    .info-tabs{display:flex;gap:8px;margin-bottom:16px}
+    .info-tab{flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);font-size:0.9rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;transition:var(--transition)}
+    .info-tab.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+    .info-content{flex:1;display:flex;flex-direction:column;overflow:hidden;transition:opacity 0.4s ease,transform 0.4s ease}
+    .info-view{display:none;flex:1;animation:fadeIn 0.4s ease}
+    .info-view.active{display:flex;flex-direction:column}
+    
+    /* POINTS CHART */
+    .chart-container{flex:1;display:flex;align-items:flex-end;gap:12px;padding:20px 10px 30px 10px;overflow-x:auto;position:relative}
+    .chart-bar{flex:1;min-width:50px;background:linear-gradient(180deg,var(--accent) 0%,var(--accent2) 50%,rgba(201,122,47,0.6) 100%);border-radius:8px 8px 0 0;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);position:relative;box-shadow:0 4px 16px rgba(232,184,75,0.3);cursor:pointer}
+    .chart-bar:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(232,184,75,0.5)}
+    .chart-bar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.2) 100%);border-radius:8px 8px 0 0}
+    .chart-bar-label{position:absolute;bottom:-25px;left:50%;transform:translateX(-50%);font-size:0.85rem;color:var(--text2);font-weight:600;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,0.5)}
+    .chart-bar-value{position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:1rem;color:var(--accent);font-weight:700;text-shadow:0 2px 8px rgba(232,184,75,0.5);background:var(--bg3);padding:4px 10px;border-radius:12px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+    .chart-bar-rank{position:absolute;top:-55px;left:50%;transform:translateX(-50%);font-size:0.75rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:1px}
+    
+    /* STREAK VIEW */
+    .streak-list{flex:1;overflow-y:auto}
+    .streak-item{display:flex;align-items:center;padding:12px;margin-bottom:8px;background:var(--bg3);border-radius:var(--radius-sm);transition:var(--transition)}
+    .streak-item:hover{background:var(--border)}
+    .streak-icon{font-size:1.5rem;margin-right:12px}
+    .streak-name{flex:1;font-weight:600}
+    .streak-value{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:var(--accent)}
+    
+    /* MATCHES LIST */
+    .matches-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:10px}
+    .match-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);animation:fadeIn 0.3s ease}
+    .match-winner{font-size:1rem;color:var(--success);font-weight:600}
+    .match-loser{font-size:1rem;color:var(--danger);font-weight:600}
+    .match-date{font-size:0.85rem;color:var(--text3)}
+    .match-score{font-size:1.1rem;font-weight:700;color:var(--text)}
+    .match-divider{color:var(--text3);margin:0 8px}
+    
+    /* RANKS DISTRIBUTION */
+    .ranks-distribution{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px;padding-right:10px}
+    .rank-dist-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;text-align:center;animation:fadeIn 0.3s ease}
+    .rank-dist-count{font-size:1.5rem;font-weight:700;color:var(--accent)}
+    .rank-dist-name{font-size:0.75rem;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
+    
+    /* ACTIVITY STATS */
+    .activity-stats{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:10px}
+    .activity-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);animation:fadeIn 0.3s ease}
+    .activity-name{font-size:0.95rem;color:var(--text);font-weight:600}
+    .activity-count{font-size:1.1rem;color:var(--accent);font-weight:700}
+    
+    /* POINTS DISTRIBUTION */
+    .points-distribution{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-right:10px}
+    .points-dist-bar{height:24px;background:var(--bg2);border-radius:12px;overflow:hidden;position:relative;border:1px solid var(--border)}
+    .points-dist-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.5s ease}
+    .points-dist-label{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:0.8rem;color:var(--text);font-weight:600}
+    .points-dist-count{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:0.8rem;color:var(--text2);font-weight:600}
+    .points-dist-range{position:absolute;left:50%;top:-20px;transform:translateX(-50%);font-size:0.7rem;color:var(--accent);font-weight:700}
+    
+    /* TOP PERFORMERS */
+    .top-performers{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:10px}
+    .top-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);animation:fadeIn 0.3s ease}
+    .top-name{font-size:1rem;color:var(--text);font-weight:600}
+    .top-value{font-size:1.2rem;color:var(--accent);font-weight:700}
+    
+    /* MATCHMAKING STATS */
+    .matchmaking-stats{flex:1;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-right:10px}
+    .mm-stat-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;animation:fadeIn 0.3s ease}
+    .mm-stat-value{font-size:2rem;font-weight:700;color:var(--accent)}
+    .mm-stat-label{font-size:0.8rem;color:var(--text2);margin-top:6px;text-transform:uppercase;letter-spacing:0.5px}
+    
+    /* MATCH PHASE VIEW */
+    .phase-list{flex:1;overflow-y:auto}
+    .phase-item{padding:14px;margin-bottom:8px;background:var(--bg3);border-radius:var(--radius-sm);transition:var(--transition)}
+    .phase-item:hover{background:var(--border)}
+    .phase-label{font-size:0.9rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+    .phase-value{font-size:1.2rem;font-weight:600;color:var(--accent)}
+    
+    /* ANIMATIONS */
+    @keyframes fadeIn{0%{opacity:0;transform:translateY(10px)}30%{opacity:0.5}100%{opacity:1;transform:translateY(0)}}
+    @keyframes scaleIn{0%{opacity:0;transform:scale(0.8)}50%{opacity:0.8}100%{opacity:1;transform:scale(1)}}
+    @keyframes infographicFadeOut{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
+    @keyframes infographicFadeIn{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+    @keyframes particleRise{0%{opacity:0;transform:translateY(0) translateX(0) rotate(0) scale(0)}15%{opacity:1;transform:translateY(-30px) translateX(calc(var(--dx,0px)*0.1)) rotate(calc(var(--rot,0deg)*0.1)) scale(1)}100%{opacity:0;transform:translateY(var(--dy,-200px)) translateX(var(--dx,0px)) rotate(var(--rot,0deg)) scale(0.2)}}
+    @keyframes rankFlash{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+    @keyframes rankVignette{0%{opacity:0}10%{opacity:1}70%{opacity:0.8}100%{opacity:0}}
+    @keyframes rankShake{0%,100%{transform:none}15%{transform:translateX(-6px) rotate(-1deg)}30%{transform:translateX(8px) rotate(1.2deg)}45%{transform:translateX(-5px) rotate(-0.8deg)}60%{transform:translateX(4px) rotate(0.5deg)}75%{transform:translateX(-2px)}90%{transform:translateX(1px)}}
+    
+    /* SMOOTH TRANSITIONS */
+    *{transition:all 0.3s cubic-bezier(0.4,0,0.2,1)}
+    
+    /* RANK UP ANIMATIONS */
+    @keyframes globalRankUp{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.3) rotate(-5deg)}
+      20%{opacity:1;transform:translate(-50%,-50%) scale(1.1) rotate(2deg)}
+      30%{transform:translate(-50%,-50%) scale(0.95) rotate(-1deg)}
+      40%{transform:translate(-50%,-50%) scale(1.02) rotate(0.5deg)}
+      50%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      75%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-70%) scale(0.8) rotate(3deg)}
+    }
+    @keyframes globalRankUpGold{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.2) rotate(-10deg)}
+      20%{opacity:1;transform:translate(-50%,-50%) scale(1.2) rotate(5deg)}
+      30%{transform:translate(-50%,-50%) scale(0.9) rotate(-2deg)}
+      40%{transform:translate(-50%,-50%) scale(1.05) rotate(1deg)}
+      60%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      85%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-80%) scale(0.7) rotate(5deg)}
+    }
+    @keyframes globalRankUpRuby{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.15) rotate(-15deg)}
+      25%{opacity:1;transform:translate(-50%,-50%) scale(1.3) rotate(8deg)}
+      35%{transform:translate(-50%,-50%) scale(0.85) rotate(-3deg)}
+      45%{transform:translate(-50%,-50%) scale(1.08) rotate(2deg)}
+      65%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      90%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-90%) scale(0.6) rotate(8deg)}
+    }
+    @keyframes globalRankUpDiamond{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.1) rotate(-20deg)}
+      30%{opacity:1;transform:translate(-50%,-50%) scale(1.4) rotate(12deg)}
+      40%{transform:translate(-50%,-50%) scale(0.8) rotate(-5deg)}
+      50%{transform:translate(-50%,-50%) scale(1.1) rotate(3deg)}
+      70%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      95%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-100%) scale(0.5) rotate(12deg)}
+    }
+    @keyframes globalRankUpSmaragd{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.09) rotate(-22deg)}
+      31%{opacity:1;transform:translate(-50%,-50%) scale(1.42) rotate(13deg)}
+      41%{transform:translate(-50%,-50%) scale(0.79) rotate(-5.5deg)}
+      51%{transform:translate(-50%,-50%) scale(1.11) rotate(3.5deg)}
+      71%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      95%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-102%) scale(0.49) rotate(13deg)}
+    }
+    @keyframes globalRankUpAmethyst{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.08) rotate(-25deg)}
+      32%{opacity:1;transform:translate(-50%,-50%) scale(1.45) rotate(14deg)}
+      42%{transform:translate(-50%,-50%) scale(0.78) rotate(-6deg)}
+      52%{transform:translate(-50%,-50%) scale(1.12) rotate(4deg)}
+      72%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      96%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-105%) scale(0.48) rotate(14deg)}
+    }
+    @keyframes globalRankUpSaphir{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.07) rotate(-28deg)}
+      34%{opacity:1;transform:translate(-50%,-50%) scale(1.48) rotate(15deg)}
+      44%{transform:translate(-50%,-50%) scale(0.76) rotate(-7deg)}
+      54%{transform:translate(-50%,-50%) scale(1.14) rotate(5deg)}
+      74%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      97%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-110%) scale(0.46) rotate(16deg)}
+    }
+    @keyframes globalRankUpPlatin{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.05) rotate(-30deg)}
+      35%{opacity:1;transform:translate(-50%,-50%) scale(1.5) rotate(15deg)}
+      45%{transform:translate(-50%,-50%) scale(0.75) rotate(-7deg)}
+      55%{transform:translate(-50%,-50%) scale(1.12) rotate(4deg)}
+      75%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-120%) scale(0.4) rotate(18deg)}
+    }
+    @keyframes globalRankUpElite{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.02) rotate(-45deg)}
+      40%{opacity:1;transform:translate(-50%,-50%) scale(1.6) rotate(20deg)}
+      50%{transform:translate(-50%,-50%) scale(0.7) rotate(-10deg)}
+      60%{transform:translate(-50%,-50%) scale(1.15) rotate(5deg)}
+      80%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-150%) scale(0.3) rotate(25deg)}
+    }
+    @keyframes globalRankUpKing{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.01) rotate(-60deg)}
+      45%{opacity:1;transform:translate(-50%,-50%) scale(1.8) rotate(25deg)}
+      55%{transform:translate(-50%,-50%) scale(0.65) rotate(-12deg)}
+      65%{transform:translate(-50%,-50%) scale(1.18) rotate(6deg)}
+      85%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-200%) scale(0.2) rotate(35deg)}
+    }
+    @keyframes globalRankUpMeister{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0.008) rotate(-70deg)}
+      48%{opacity:1;transform:translate(-50%,-50%) scale(1.9) rotate(28deg)}
+      58%{transform:translate(-50%,-50%) scale(0.62) rotate(-14deg)}
+      68%{transform:translate(-50%,-50%) scale(1.2) rotate(7deg)}
+      88%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-250%) scale(0.15) rotate(40deg)}
+    }
+    @keyframes globalRankUpChampion{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(-90deg)}
+      50%{opacity:1;transform:translate(-50%,-50%) scale(2) rotate(30deg)}
+      60%{transform:translate(-50%,-50%) scale(0.6) rotate(-15deg)}
+      70%{transform:translate(-50%,-50%) scale(1.2) rotate(8deg)}
+      90%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-300%) scale(0.1) rotate(45deg)}
+    }
+    @keyframes globalRankUpGod{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(-180deg)}
+      55%{opacity:1;transform:translate(-50%,-50%) scale(2.5) rotate(45deg)}
+      65%{transform:translate(-50%,-50%) scale(0.5) rotate(-20deg)}
+      75%{transform:translate(-50%,-50%) scale(1.25) rotate(10deg)}
+      95%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-500%) scale(0) rotate(90deg)}
+    }
+    @keyframes globalRankUpOlymp{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0) translateY(-300px) rotate(10deg);filter:brightness(0)}
+      12%{opacity:1;transform:translate(-50%,-50%) scale(2.8) translateY(-25px) rotate(5deg);filter:brightness(3.5)}
+      28%{transform:translate(-50%,-50%) scale(0.5) translateY(8px) rotate(-3deg);filter:brightness(1.8)}
+      44%{transform:translate(-50%,-50%) scale(1.5) rotate(1.5deg);filter:brightness(1.4)}
+      58%{transform:translate(-50%,-50%) scale(0.88) rotate(-0.5deg)}
+      72%{transform:translate(-50%,-50%) scale(1.06)}
+      86%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(0) translateY(-900px) rotate(15deg);filter:brightness(5)}
+    }
+    @keyframes globalRankUpKosmos{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(0deg);filter:hue-rotate(0deg) brightness(0)}
+      8%{opacity:1;transform:translate(-50%,-50%) scale(4) rotate(360deg);filter:hue-rotate(180deg) brightness(4) blur(3px)}
+      20%{transform:translate(-50%,-50%) scale(0.3) rotate(-180deg);filter:hue-rotate(360deg) brightness(2)}
+      35%{transform:translate(-50%,-50%) scale(2.5) rotate(60deg);filter:hue-rotate(270deg) brightness(1.8)}
+      50%{transform:translate(-50%,-50%) scale(0.7) rotate(-15deg);filter:brightness(1.4)}
+      63%{transform:translate(-50%,-50%) scale(1.3) rotate(5deg)}
+      76%{transform:translate(-50%,-50%) scale(0.92)}
+      88%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(-360deg) translateY(-950px)}
+    }
+    @keyframes globalRankUpGalaxis{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(-720deg);filter:hue-rotate(0deg) brightness(0)}
+      8%{opacity:1;transform:translate(-50%,-50%) scale(4.5) rotate(0deg);filter:hue-rotate(120deg) brightness(5)}
+      18%{transform:translate(-50%,-50%) scale(0.25) rotate(20deg);filter:hue-rotate(240deg) brightness(2.5)}
+      30%{transform:translate(-50%,-50%) scale(3) rotate(-10deg);filter:hue-rotate(360deg) brightness(2.2)}
+      44%{transform:translate(-50%,-50%) scale(0.6) rotate(5deg);filter:hue-rotate(180deg) brightness(1.6)}
+      57%{transform:translate(-50%,-50%) scale(1.55) rotate(-2deg);filter:hue-rotate(60deg) brightness(1.3)}
+      69%{transform:translate(-50%,-50%) scale(0.9) rotate(0.5deg)}
+      80%{transform:translate(-50%,-50%) scale(1.08)}
+      91%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(720deg) translateY(-1050px);filter:brightness(4)}
+    }
+    @keyframes globalRankUpUniversum{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(20) rotate(0deg);filter:brightness(0) contrast(5)}
+      5%{opacity:1;transform:translate(-50%,-50%) scale(0.05) rotate(0deg);filter:brightness(20) contrast(1) saturate(0)}
+      15%{transform:translate(-50%,-50%) scale(5) rotate(20deg);filter:brightness(5) saturate(2)}
+      28%{transform:translate(-50%,-50%) scale(0.4) rotate(-10deg);filter:brightness(3)}
+      42%{transform:translate(-50%,-50%) scale(2.2) rotate(6deg);filter:brightness(2)}
+      55%{transform:translate(-50%,-50%) scale(0.75) rotate(-2deg);filter:brightness(1.5)}
+      66%{transform:translate(-50%,-50%) scale(1.3) rotate(1deg);filter:brightness(1.2)}
+      78%{transform:translate(-50%,-50%) scale(0.94)}
+      89%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(-180deg) translateY(-1150px);filter:brightness(12) saturate(0)}
+    }
+    @keyframes globalRankUpEwigkeit{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(0deg);filter:brightness(0) saturate(0)}
+      6%{opacity:1;transform:translate(-50%,-50%) scale(5.5) rotate(15deg);filter:brightness(9) saturate(0)}
+      16%{transform:translate(-50%,-50%) scale(0.2) rotate(-8deg);filter:brightness(4) saturate(0.5)}
+      28%{transform:translate(-50%,-50%) scale(3.2) rotate(4deg);filter:brightness(2.5) saturate(1)}
+      42%{transform:translate(-50%,-50%) scale(0.55) rotate(-2deg);filter:brightness(1.8)}
+      55%{transform:translate(-50%,-50%) scale(1.6) rotate(1deg);filter:brightness(1.4)}
+      68%{transform:translate(-50%,-50%) scale(0.88);filter:brightness(1.15)}
+      80%{transform:translate(-50%,-50%) scale(1.08)}
+      91%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(0) translateY(-1250px) rotate(0deg);filter:brightness(7) saturate(0)}
+    }
+    @keyframes globalRankUpUnendlichkeit{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(0deg);filter:hue-rotate(0deg) brightness(0)}
+      5%{opacity:1;transform:translate(-50%,-50%) scale(6) rotate(540deg);filter:hue-rotate(90deg) brightness(12) saturate(0)}
+      14%{transform:translate(-50%,-50%) scale(0.18) rotate(-270deg);filter:hue-rotate(270deg) brightness(5) saturate(3)}
+      24%{transform:translate(-50%,-50%) scale(3.8) rotate(180deg);filter:hue-rotate(450deg) brightness(3) saturate(2.5)}
+      36%{transform:translate(-50%,-50%) scale(0.48) rotate(-90deg);filter:hue-rotate(600deg) brightness(2.2)}
+      48%{transform:translate(-50%,-50%) scale(2.2) rotate(45deg);filter:hue-rotate(360deg) brightness(1.7)}
+      60%{transform:translate(-50%,-50%) scale(0.8) rotate(-15deg);filter:hue-rotate(180deg) brightness(1.4)}
+      71%{transform:translate(-50%,-50%) scale(1.35) rotate(5deg);filter:hue-rotate(60deg)}
+      81%{transform:translate(-50%,-50%) scale(0.94)}
+      91%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(360deg) translateY(-1350px);filter:hue-rotate(720deg) brightness(9)}
+    }
+    @keyframes globalRankUpTranszendenz{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(0deg);filter:brightness(0) saturate(0)}
+      4%{opacity:1;transform:translate(-50%,-50%) scale(7) rotate(0deg);filter:brightness(25) saturate(0)}
+      12%{transform:translate(-50%,-50%) scale(0.12) rotate(0deg);filter:brightness(8) saturate(0.3)}
+      22%{transform:translate(-50%,-50%) scale(4.5) rotate(8deg);filter:brightness(4.5) saturate(0.6)}
+      34%{transform:translate(-50%,-50%) scale(0.38) rotate(-4deg);filter:brightness(2.8) saturate(0.8)}
+      46%{transform:translate(-50%,-50%) scale(2.5) rotate(2deg);filter:brightness(2) saturate(1)}
+      58%{transform:translate(-50%,-50%) scale(0.72) rotate(-1deg);filter:brightness(1.6)}
+      69%{transform:translate(-50%,-50%) scale(1.4)}
+      79%{transform:translate(-50%,-50%) scale(0.93)}
+      89%{opacity:1;transform:translate(-50%,-50%) scale(1.02)}
+      96%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(0) translateY(-1450px);filter:brightness(22) saturate(0)}
+    }
+    @keyframes globalRankUpApex{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(0deg);filter:brightness(0)}
+      3%{opacity:1;transform:translate(-50%,-50%) scale(8) rotate(720deg);filter:brightness(30) saturate(0)}
+      10%{transform:translate(-50%,-50%) scale(0.12) rotate(-360deg);filter:brightness(10) saturate(4)}
+      18%{transform:translate(-50%,-50%) scale(5.2) rotate(180deg);filter:hue-rotate(90deg) brightness(3.5) saturate(3)}
+      28%{transform:translate(-50%,-50%) scale(0.42) rotate(-90deg);filter:hue-rotate(180deg) brightness(2.8) saturate(2)}
+      38%{transform:translate(-50%,-50%) scale(2.8) rotate(45deg);filter:hue-rotate(270deg) brightness(2.2) saturate(1.5)}
+      48%{transform:translate(-50%,-50%) scale(0.78) rotate(-15deg);filter:hue-rotate(180deg) brightness(1.8)}
+      58%{transform:translate(-50%,-50%) scale(1.55) rotate(5deg);filter:hue-rotate(90deg) brightness(1.5)}
+      68%{transform:translate(-50%,-50%) scale(0.92)}
+      78%{transform:translate(-50%,-50%) scale(1.12)}
+      88%{opacity:1;transform:translate(-50%,-50%) scale(1.02)}
+      96%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+      100%{opacity:0;transform:translate(-50%,-50%) scale(0) translateY(-1500px) rotate(360deg);filter:hue-rotate(720deg) brightness(12)}
+    }
+    @keyframes globalRankUpUltima{
+      0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(0deg);filter:hue-rotate(0deg) brightness(0) saturate(0)}
+      4%{opacity:1;transform:translate(-50%,-50%) scale(6) rotate(900deg);filter:hue-rotate(180deg) brightness(20) saturate(0)}
+      12%{transform:translate(-50%,-50%) scale(0.15) rotate(-540deg);filter:hue-rotate(360deg) brightness(6) saturate(4)}
+      22%{transform:translate(-50%,-50%) scale(4) rotate(360deg);filter:hue-rotate(540deg) brightness(3.5) saturate(3)}
+      33%{transform:translate(-50%,-50%) scale(0.5) rotate(-180deg);filter:hue-rotate(720deg) brightness(2.5) saturate(2)}
+      44%{transform:translate(-50%,-50%) scale(2.2) rotate(90deg);filter:hue-rotate(270deg) brightness(2) saturate(1.5)}
+      54%{transform:translate(-50%,-50%) scale(0.78) rotate(-30deg);filter:hue-rotate(180deg) brightness(1.7)}
+      63%{transform:translate(-50%,-50%) scale(1.5) rotate(12deg);filter:hue-rotate(90deg) brightness(1.4)}
+      72%{transform:translate(-50%,-50%) scale(0.9) rotate(-4deg);filter:hue-rotate(30deg) brightness(1.2)}
+      80%{transform:translate(-50%,-50%) scale(1.12) rotate(1.5deg)}
+      88%{transform:translate(-50%,-50%) scale(0.97) rotate(-0.3deg)}
+      94%{opacity:1;transform:translate(-50%,-50%) scale(1.02) rotate(0deg)}
+      98%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+      100%{opacity:0;transform:translate(-50%,-1200%) scale(0) rotate(720deg);filter:hue-rotate(720deg) brightness(15) saturate(0)}
+    }
+    
+    /* RANK SYMBOLE - Rounded Design */
+    .rank-icon{display:inline-block;width:40px;height:40px;border-radius:50%;position:relative;background-size:contain;background-repeat:no-repeat;background-position:center}
+    .rl-icon-outer{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid var(--accent,#4a5070);background:rgba(0,0,0,.3)}
+    .rl-icon-outer .rank-icon{width:24px;height:24px}
+    .rank-unranked{background:linear-gradient(135deg,#6c757d,#495057);border:2px solid #6c757d}
+    .rank-unranked::after{content:'—';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#343a40;font-weight:bold;font-size:14px;line-height:1}
+    .rank-bronze{background:linear-gradient(135deg,#cd7f32,#8b5a2b);border:2px solid #b8860b;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-bronze::after{content:'Ⅰ';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#f4e4c1;font-weight:bold;font-size:12px;line-height:1}
+    .rank-silber{background:linear-gradient(135deg,#e8e8e8,#c0c0c0);border:2px solid #a8a8a8;box-shadow:inset 0 2px 4px rgba(255,255,255,0.6)}
+    .rank-silber::after{content:'Ⅱ';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#8b8b8b;font-weight:bold;font-size:12px;line-height:1}
+    .rank-gold{background:linear-gradient(135deg,#ffd700,#ffed4e);border:2px solid #ffcc00;box-shadow:inset 0 2px 4px rgba(255,255,255,0.8)}
+    .rank-gold::after{content:'Ⅲ';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#cc9900;font-weight:bold;font-size:12px;line-height:1}
+    .rank-rubin{background:radial-gradient(circle,#e0115f,#8b0037);border:2px solid #c9184a;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-rubin::after{content:'◆';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff6b9d;font-weight:bold;font-size:14px;line-height:1}
+    .rank-smaragd{background:radial-gradient(circle,#50c878,#27ae60);border:2px solid #27ae60;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-smaragd::after{content:'▲';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#7dd87d;font-weight:bold;font-size:14px;line-height:1}
+    .rank-diamant{background:radial-gradient(circle,#88c3e8,#4a90d9);border:2px solid #5dade2;box-shadow:inset 0 2px 4px rgba(255,255,255,0.4)}
+    .rank-diamant::after{content:'⬡';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#b3d9ff;font-weight:bold;font-size:14px;line-height:1}
+    .rank-amethyst{background:radial-gradient(circle,#9b59b6,#8e44ad);border:2px solid #8e44ad;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-amethyst::after{content:'❖';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#c39bd3;font-weight:bold;font-size:14px;line-height:1}
+    .rank-saphir{background:radial-gradient(circle,#4a90d9,#3498db);border:2px solid #2980b9;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-saphir::after{content:'●';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#85c1e9;font-weight:bold;font-size:14px;line-height:1}
+    .rank-platin{background:linear-gradient(135deg,#70d8d8,#40e0d0);border:2px solid #48c9b0;box-shadow:inset 0 2px 4px rgba(255,255,255,0.5)}
+    .rank-platin::after{content:'◈';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#5dade2;font-weight:bold;font-size:14px;line-height:1}
+    .rank-elite{background:radial-gradient(circle,#ff6b35,#ff4500);border:2px solid #e74c3c;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-elite::after{content:'⬟';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff9999;font-weight:bold;font-size:14px;line-height:1}
+    .rank-koenig{background:linear-gradient(135deg,#d4af37,#b8860b);border:2px solid #b8860b;position:relative;box-shadow:inset 0 2px 4px rgba(255,255,255,0.4)}
+    .rank-koenig::after{content:'♔';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#f4d03f;font-weight:bold;font-size:14px;line-height:1}
+    .rank-meister{background:radial-gradient(circle,#c040fb,#9c27b0);border:2px solid #9c27b0;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-meister::after{content:'⬢';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#f0b3ff;font-weight:bold;font-size:14px;line-height:1}
+    .rank-champion{background:radial-gradient(circle,#ff1744,#d50000);border:2px solid #d50000;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-champion::after{content:'★';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff6b6b;font-weight:bold;font-size:14px;line-height:1}
+    .rank-gott{background:radial-gradient(circle,#ff8c00,#ffff00);border:2px solid #ffcc00;box-shadow:inset 0 2px 4px rgba(255,255,255,0.4)}
+    .rank-gott::after{content:'✦';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#cc6600;font-weight:bold;font-size:14px;line-height:1}
+    .rank-prestige{background:radial-gradient(circle,#e91e63,#f06292);border:2px solid #f06292;box-shadow:inset 0 2px 4px rgba(255,255,255,0.4)}
+    .rank-prestige::after{content:'⬣';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ff9999;font-weight:bold;font-size:14px;line-height:1}
+    .rank-titan{background:radial-gradient(circle,#8b4513,#5d3a1a);border:2px solid #8b4513;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-titan::after{content:'⚔️';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ffcc99;font-weight:bold;font-size:14px;line-height:1}
+    .rank-olymp{background:radial-gradient(circle,#ffd700,#daa520);border:2px solid #ffd700;box-shadow:inset 0 2px 4px rgba(255,255,255,0.5)}
+    .rank-olymp::after{content:'⚡';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff8dc;font-weight:bold;font-size:14px;line-height:1}
+    .rank-kosmos{background:radial-gradient(circle,#4b0082,#2e0854);border:2px solid #4b0082;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-kosmos::after{content:'🌌';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#d8bfd8;font-weight:bold;font-size:14px;line-height:1}
+    .rank-galaxis{background:radial-gradient(circle,#00bfff,#1e90ff);border:2px solid #00bfff;box-shadow:inset 0 2px 4px rgba(255,255,255,0.4)}
+    .rank-galaxis::after{content:'🌀';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#e0ffff;font-weight:bold;font-size:14px;line-height:1}
+    .rank-universum{background:radial-gradient(circle,#0a0a0a,#1a1a1a);border:2px solid #333;box-shadow:inset 0 2px 4px rgba(255,255,255,0.2)}
+    .rank-universum::after{content:'🌟';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ffffff;font-weight:bold;font-size:14px;line-height:1}
+    .rank-ewigkeit{background:radial-gradient(circle,#c0c0c0,#a9a9a9);border:2px solid #c0c0c0;box-shadow:inset 0 2px 4px rgba(255,255,255,0.5)}
+    .rank-ewigkeit::after{content:'∞';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#f5f5f5;font-weight:bold;font-size:14px;line-height:1}
+    .rank-unendlichkeit{background:linear-gradient(90deg,#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#8b00ff);border:2px solid #ff0000;box-shadow:inset 0 2px 4px rgba(255,255,255,0.4)}
+    .rank-unendlichkeit::after{content:'♾️';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ffffff;font-weight:bold;font-size:14px;line-height:1}
+    .rank-transzendenz{background:radial-gradient(circle,#ffffff,#f0f0f0);border:2px solid #ffd700;box-shadow:inset 0 2px 4px rgba(255,255,255,0.6)}
+    .rank-transzendenz::after{content:'✨';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ffd700;font-weight:bold;font-size:14px;line-height:1}
+    .rank-apex{background:radial-gradient(circle,#ff4500,#cc3700);border:2px solid #ff4500;box-shadow:inset 0 2px 4px rgba(255,255,255,0.3)}
+    .rank-apex::after{content:'🔥';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#ffcc99;font-weight:bold;font-size:14px;line-height:1}
+    .rank-ultima{background:radial-gradient(circle,#ffd700,#b8860b);border:2px solid #ffd700;box-shadow:inset 0 2px 4px rgba(255,255,255,0.5)}
+    .rank-ultima::after{content:'👑';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff8dc;font-weight:bold;font-size:14px;line-height:1}
+    
+    /* High Rank Animations */
+    .rank-rubin{animation:rankGlowRubin 2.6s ease-in-out infinite}
+    .rank-smaragd{animation:rankGlowSmaragd 3s ease-in-out infinite}
+    .rank-diamant{animation:rankGlowDiamant 2.5s ease-in-out infinite}
+    .rank-amethyst{animation:rankGlowAmethyst 2.8s ease-in-out infinite}
+    .rank-saphir{animation:rankGlowSaphir 2.3s ease-in-out infinite}
+    .rank-platin{animation:rankGlowPlatin 3.2s ease-in-out infinite}
+    .rank-elite{animation:rankGlowElite 2s ease-in-out infinite}
+    .rank-koenig{animation:rankGlowKoenig 3.5s ease-in-out infinite}
+    .rank-meister{animation:rankGlowMeister 2.7s ease-in-out infinite}
+    .rank-champion{animation:rankGlowChampion 2.4s ease-in-out infinite}
+    .rank-gott{animation:rankGlowGott 4s ease-in-out infinite}
+    .rank-prestige{animation:rankGlowPrestige 3.5s ease-in-out infinite}
+    .rank-titan{animation:rankGlowTitan 2.9s ease-in-out infinite}
+    .rank-olymp{animation:rankGlowOlymp 3.1s ease-in-out infinite}
+    .rank-kosmos{animation:rankGlowKosmos 3.3s ease-in-out infinite}
+    .rank-galaxis{animation:rankGlowGalaxis 3.4s ease-in-out infinite}
+    .rank-universum{animation:rankGlowUniversum 3.6s ease-in-out infinite}
+    .rank-ewigkeit{animation:rankGlowEwigkeit 3.8s ease-in-out infinite}
+    .rank-unendlichkeit{animation:rankGlowUnendlichkeit 4s ease-in-out infinite}
+    .rank-transzendenz{animation:rankGlowTranszendenz 4.2s ease-in-out infinite}
+    .rank-apex{animation:rankGlowApex 4.4s ease-in-out infinite}
+    .rank-ultima{animation:rankGlowUltima 4.6s ease-in-out infinite}
+    
+    @keyframes rankGlowRubin{
+      0%,100%{box-shadow:0 0 6px rgba(224,17,95,0.5),inset 0 0 3px rgba(224,17,95,0.3)}
+      50%{box-shadow:0 0 18px rgba(224,17,95,0.9),inset 0 0 9px rgba(224,17,95,0.5)}
+    }
+    @keyframes rankGlowSmaragd{
+      0%,100%{box-shadow:0 0 5px rgba(80,200,120,0.4),inset 0 0 3px rgba(80,200,120,0.2)}
+      50%{box-shadow:0 0 15px rgba(80,200,120,0.8),inset 0 0 8px rgba(80,200,120,0.4)}
+    }
+    @keyframes rankGlowDiamant{
+      0%,100%{box-shadow:0 0 8px rgba(136,195,232,0.5),inset 0 0 4px rgba(136,195,232,0.3)}
+      50%{box-shadow:0 0 20px rgba(136,195,232,0.9),inset 0 0 10px rgba(136,195,232,0.5)}
+    }
+    @keyframes rankGlowAmethyst{
+      0%,100%{box-shadow:0 0 6px rgba(155,89,182,0.5),inset 0 0 3px rgba(155,89,182,0.3)}
+      50%{box-shadow:0 0 18px rgba(155,89,182,0.9),inset 0 0 9px rgba(155,89,182,0.5)}
+    }
+    @keyframes rankGlowSaphir{
+      0%,100%{box-shadow:0 0 7px rgba(74,144,217,0.5),inset 0 0 4px rgba(74,144,217,0.3)}
+      50%{box-shadow:0 0 22px rgba(74,144,217,0.9),inset 0 0 11px rgba(74,144,217,0.5)}
+    }
+    @keyframes rankGlowPlatin{
+      0%,100%{box-shadow:0 0 10px rgba(112,216,216,0.6),inset 0 0 5px rgba(112,216,216,0.4)}
+      50%{box-shadow:0 0 25px rgba(112,216,216,1),inset 0 0 12px rgba(112,216,216,0.6)}
+    }
+    @keyframes rankGlowElite{
+      0%,100%{box-shadow:0 0 8px rgba(255,107,53,0.6),inset 0 0 4px rgba(255,107,53,0.4)}
+      50%{box-shadow:0 0 20px rgba(255,107,53,1),inset 0 0 10px rgba(255,107,53,0.6)}
+    }
+    @keyframes rankGlowKoenig{
+      0%,100%{box-shadow:0 0 12px rgba(212,175,55,0.7),inset 0 0 6px rgba(212,175,55,0.5)}
+      50%{box-shadow:0 0 30px rgba(212,175,55,1),inset 0 0 15px rgba(212,175,55,0.7)}
+    }
+    @keyframes rankGlowMeister{
+      0%,100%{box-shadow:0 0 10px rgba(192,64,251,0.7),inset 0 0 5px rgba(192,64,251,0.5)}
+      50%{box-shadow:0 0 28px rgba(192,64,251,1),inset 0 0 14px rgba(192,64,251,0.7)}
+    }
+    @keyframes rankGlowChampion{
+      0%,100%{box-shadow:0 0 15px rgba(255,23,68,0.8),inset 0 0 8px rgba(255,23,68,0.6)}
+      50%{box-shadow:0 0 35px rgba(255,23,68,1),inset 0 0 18px rgba(255,23,68,0.8)}
+    }
+    @keyframes rankGlowGott{
+      0%,100%{box-shadow:0 0 20px rgba(255,140,0,0.9),inset 0 0 10px rgba(255,140,0,0.7)}
+      50%{box-shadow:0 0 40px rgba(255,140,0,1),inset 0 0 20px rgba(255,140,0,0.9);transform:scale(1.05)}
+    }
+    @keyframes rankGlowPrestige{
+      0%,100%{box-shadow:0 0 22px rgba(233,30,99,0.8),inset 0 0 12px rgba(240,98,146,0.6)}
+      50%{box-shadow:0 0 45px rgba(233,30,99,1),inset 0 0 25px rgba(240,98,146,0.9);transform:scale(1.06)}
+    }
+    @keyframes rankGlowTitan{
+      0%{box-shadow:0 0 18px rgba(139,69,19,0.9),0 0 35px rgba(255,80,0,0.5),inset 0 0 10px rgba(255,60,0,0.6);transform:scale(1)}
+      15%{box-shadow:0 0 40px rgba(255,80,0,1),0 0 70px rgba(200,40,0,0.7),inset 0 0 22px rgba(255,120,0,0.8);transform:scale(1.09) rotate(-1.2deg)}
+      30%{box-shadow:0 0 25px rgba(139,69,19,0.85),0 0 50px rgba(255,60,0,0.5),inset 0 0 14px rgba(200,50,0,0.65);transform:scale(1.04) rotate(0.4deg)}
+      50%{box-shadow:0 0 55px rgba(255,120,30,1),0 0 100px rgba(200,40,0,0.9),0 0 140px rgba(139,69,19,0.4),inset 0 0 28px rgba(255,100,0,0.9);transform:scale(1.14) rotate(-0.7deg)}
+      70%{box-shadow:0 0 30px rgba(200,70,0,0.9),0 0 60px rgba(255,80,0,0.5),inset 0 0 16px rgba(220,60,0,0.6);transform:scale(1.06) rotate(0.5deg)}
+      85%{box-shadow:0 0 45px rgba(255,100,20,0.95),0 0 80px rgba(180,40,0,0.7),inset 0 0 24px rgba(255,80,0,0.75);transform:scale(1.1)}
+      100%{box-shadow:0 0 18px rgba(139,69,19,0.9),0 0 35px rgba(255,80,0,0.5),inset 0 0 10px rgba(255,60,0,0.6);transform:scale(1)}
+    }
+    @keyframes rankGlowOlymp{
+      0%{box-shadow:0 0 20px rgba(255,215,0,0.9),0 0 40px rgba(255,255,200,0.5),inset 0 0 12px rgba(255,215,0,0.7);transform:scale(1)}
+      20%{box-shadow:0 0 45px rgba(255,215,0,1),0 0 80px rgba(255,255,150,0.7),0 0 110px rgba(255,200,0,0.3),inset 0 0 24px rgba(255,240,120,0.8);transform:scale(1.1) rotate(0.8deg);filter:brightness(1.3)}
+      40%{box-shadow:0 0 28px rgba(255,200,0,0.85),0 0 55px rgba(255,215,0,0.55),inset 0 0 16px rgba(255,180,0,0.65);transform:scale(1.05)}
+      60%{box-shadow:0 0 60px rgba(255,230,80,1),0 0 110px rgba(255,215,0,0.9),0 0 160px rgba(255,200,0,0.4),inset 0 0 32px rgba(255,240,100,0.9);transform:scale(1.13);filter:brightness(1.4)}
+      80%{box-shadow:0 0 35px rgba(255,215,0,0.88),0 0 65px rgba(255,200,0,0.58),inset 0 0 18px rgba(255,200,0,0.68);transform:scale(1.07)}
+      100%{box-shadow:0 0 20px rgba(255,215,0,0.9),0 0 40px rgba(255,255,200,0.5),inset 0 0 12px rgba(255,215,0,0.7);transform:scale(1)}
+    }
+    @keyframes rankGlowKosmos{
+      0%{box-shadow:0 0 22px rgba(75,0,130,0.9),0 0 45px rgba(150,0,200,0.5),inset 0 0 12px rgba(100,0,160,0.7);transform:scale(1)}
+      18%{box-shadow:0 0 50px rgba(150,0,220,1),0 0 90px rgba(100,0,200,0.7),0 0 140px rgba(75,0,130,0.35),inset 0 0 26px rgba(180,0,255,0.8);transform:scale(1.11) rotate(-1deg);filter:brightness(1.35)}
+      36%{box-shadow:0 0 30px rgba(75,0,130,0.85),0 0 60px rgba(130,0,180,0.55),inset 0 0 18px rgba(100,0,150,0.65);transform:scale(1.05)}
+      55%{box-shadow:0 0 65px rgba(180,0,255,1),0 0 120px rgba(100,0,200,0.9),0 0 180px rgba(75,0,130,0.4),inset 0 0 35px rgba(200,50,255,0.9);transform:scale(1.16);filter:brightness(1.5) hue-rotate(20deg)}
+      75%{box-shadow:0 0 38px rgba(120,0,180,0.88),0 0 72px rgba(150,0,200,0.58),inset 0 0 20px rgba(100,0,160,0.68);transform:scale(1.08)}
+      100%{box-shadow:0 0 22px rgba(75,0,130,0.9),0 0 45px rgba(150,0,200,0.5),inset 0 0 12px rgba(100,0,160,0.7);transform:scale(1)}
+    }
+    @keyframes rankGlowGalaxis{
+      0%{box-shadow:0 0 24px rgba(0,191,255,0.9),0 0 50px rgba(0,150,255,0.5),inset 0 0 14px rgba(0,191,255,0.7);transform:scale(1);filter:hue-rotate(0deg)}
+      16%{box-shadow:0 0 55px rgba(0,200,255,1),0 0 100px rgba(50,150,255,0.72),0 0 155px rgba(0,100,200,0.38),inset 0 0 28px rgba(100,220,255,0.85);transform:scale(1.12);filter:hue-rotate(20deg) brightness(1.4)}
+      33%{box-shadow:0 0 32px rgba(0,150,255,0.85),0 0 65px rgba(0,100,200,0.55),inset 0 0 20px rgba(0,150,255,0.65);transform:scale(1.06);filter:hue-rotate(5deg)}
+      50%{box-shadow:0 0 70px rgba(100,220,255,1),0 0 130px rgba(0,180,255,0.95),0 0 200px rgba(0,100,200,0.42),inset 0 0 38px rgba(150,230,255,0.92);transform:scale(1.18);filter:hue-rotate(40deg) brightness(1.55)}
+      66%{box-shadow:0 0 40px rgba(0,191,255,0.88),0 0 78px rgba(0,150,255,0.58),inset 0 0 22px rgba(0,191,255,0.68);transform:scale(1.09);filter:hue-rotate(10deg)}
+      83%{box-shadow:0 0 58px rgba(0,200,255,0.95),0 0 108px rgba(50,180,255,0.72),inset 0 0 30px rgba(0,210,255,0.8);transform:scale(1.15);filter:hue-rotate(30deg) brightness(1.45)}
+      100%{box-shadow:0 0 24px rgba(0,191,255,0.9),0 0 50px rgba(0,150,255,0.5),inset 0 0 14px rgba(0,191,255,0.7);transform:scale(1);filter:hue-rotate(0deg)}
+    }
+    @keyframes rankGlowUniversum{
+      0%{box-shadow:0 0 28px rgba(5,5,20,0.95),0 0 55px rgba(255,255,255,0.25),inset 0 0 16px rgba(200,200,255,0.4);transform:scale(1);filter:brightness(1)}
+      20%{box-shadow:0 0 8px rgba(0,0,0,1),0 0 100px rgba(255,255,255,0.6),0 0 200px rgba(180,180,255,0.25),inset 0 0 40px rgba(255,255,255,0.7);transform:scale(0.96);filter:brightness(0.6) contrast(2)}
+      35%{box-shadow:0 0 60px rgba(50,0,100,0.9),0 0 120px rgba(255,255,255,0.5),0 0 220px rgba(100,50,255,0.3),inset 0 0 35px rgba(200,150,255,0.65);transform:scale(1.15);filter:brightness(1.5)}
+      50%{box-shadow:0 0 5px rgba(0,0,0,1),0 0 150px rgba(255,255,255,0.8),0 0 280px rgba(255,255,255,0.3),inset 0 0 50px rgba(255,255,255,0.9);transform:scale(0.92);filter:brightness(0.4) contrast(3)}
+      65%{box-shadow:0 0 70px rgba(80,0,150,0.95),0 0 140px rgba(255,220,255,0.6),0 0 240px rgba(100,50,255,0.35),inset 0 0 40px rgba(220,180,255,0.7);transform:scale(1.2);filter:brightness(1.6)}
+      80%{box-shadow:0 0 35px rgba(20,0,50,0.9),0 0 70px rgba(255,255,255,0.35),inset 0 0 22px rgba(200,180,255,0.5);transform:scale(1.08);filter:brightness(1.1)}
+      100%{box-shadow:0 0 28px rgba(5,5,20,0.95),0 0 55px rgba(255,255,255,0.25),inset 0 0 16px rgba(200,200,255,0.4);transform:scale(1);filter:brightness(1)}
+    }
+    @keyframes rankGlowEwigkeit{
+      0%{box-shadow:0 0 30px rgba(192,192,192,0.9),0 0 60px rgba(220,220,255,0.5),inset 0 0 16px rgba(210,210,210,0.7);transform:scale(1);filter:brightness(1)}
+      15%{box-shadow:0 0 60px rgba(220,220,220,1),0 0 110px rgba(255,255,255,0.75),0 0 170px rgba(200,200,255,0.4),inset 0 0 32px rgba(255,255,255,0.85);transform:scale(1.14);filter:brightness(1.5)}
+      30%{box-shadow:0 0 35px rgba(160,160,180,0.85),0 0 70px rgba(200,200,220,0.55),inset 0 0 20px rgba(180,180,200,0.65);transform:scale(1.07);filter:brightness(1.1)}
+      50%{box-shadow:0 0 75px rgba(240,240,255,1),0 0 140px rgba(255,255,255,0.9),0 0 220px rgba(210,210,255,0.45),inset 0 0 44px rgba(255,255,255,0.95);transform:scale(1.2);filter:brightness(1.7)}
+      68%{box-shadow:0 0 42px rgba(192,192,210,0.88),0 0 85px rgba(220,220,240,0.6),inset 0 0 24px rgba(200,200,220,0.7);transform:scale(1.1);filter:brightness(1.2)}
+      83%{box-shadow:0 0 62px rgba(230,230,255,0.95),0 0 120px rgba(255,255,255,0.78),inset 0 0 35px rgba(240,240,255,0.85);transform:scale(1.17);filter:brightness(1.55)}
+      100%{box-shadow:0 0 30px rgba(192,192,192,0.9),0 0 60px rgba(220,220,255,0.5),inset 0 0 16px rgba(210,210,210,0.7);transform:scale(1);filter:brightness(1)}
+    }
+    @keyframes rankGlowUnendlichkeit{
+      0%{box-shadow:0 0 32px rgba(255,0,0,0.95),0 0 65px rgba(255,50,0,0.6),inset 0 0 18px rgba(255,100,0,0.75);transform:scale(1);filter:hue-rotate(0deg) brightness(1.2)}
+      14%{box-shadow:0 0 55px rgba(255,150,0,1),0 0 100px rgba(255,80,0,0.75),inset 0 0 28px rgba(255,120,0,0.85);transform:scale(1.12);filter:hue-rotate(50deg) brightness(1.5)}
+      28%{box-shadow:0 0 40px rgba(0,200,50,0.95),0 0 80px rgba(0,255,100,0.6),inset 0 0 22px rgba(0,255,80,0.75);transform:scale(1.06);filter:hue-rotate(120deg) brightness(1.3)}
+      42%{box-shadow:0 0 65px rgba(0,180,255,1),0 0 120px rgba(0,100,255,0.75),inset 0 0 35px rgba(50,200,255,0.88);transform:scale(1.18);filter:hue-rotate(200deg) brightness(1.6)}
+      57%{box-shadow:0 0 45px rgba(180,0,255,0.95),0 0 90px rgba(130,0,200,0.65),inset 0 0 24px rgba(200,50,255,0.78);transform:scale(1.09);filter:hue-rotate(270deg) brightness(1.4)}
+      71%{box-shadow:0 0 70px rgba(255,0,180,1),0 0 130px rgba(255,0,100,0.78),inset 0 0 38px rgba(255,50,200,0.88);transform:scale(1.2);filter:hue-rotate(320deg) brightness(1.65)}
+      86%{box-shadow:0 0 38px rgba(255,50,0,0.9),0 0 75px rgba(255,0,50,0.6),inset 0 0 22px rgba(255,80,0,0.72);transform:scale(1.08);filter:hue-rotate(360deg) brightness(1.25)}
+      100%{box-shadow:0 0 32px rgba(255,0,0,0.95),0 0 65px rgba(255,50,0,0.6),inset 0 0 18px rgba(255,100,0,0.75);transform:scale(1);filter:hue-rotate(360deg) brightness(1.2)}
+    }
+    @keyframes rankGlowTranszendenz{
+      0%{box-shadow:0 0 35px rgba(255,255,255,0.95),0 0 70px rgba(255,240,200,0.6),inset 0 0 18px rgba(255,255,240,0.8);transform:scale(1);filter:brightness(1.2)}
+      12%{box-shadow:0 0 70px rgba(255,255,255,1),0 0 130px rgba(255,255,200,0.85),0 0 200px rgba(255,240,100,0.45),inset 0 0 40px rgba(255,255,255,1);transform:scale(1.15);filter:brightness(1.8) saturate(0.5)}
+      25%{box-shadow:0 0 42px rgba(255,220,180,0.9),0 0 88px rgba(255,255,150,0.62),inset 0 0 24px rgba(255,250,200,0.75);transform:scale(1.07);filter:brightness(1.3)}
+      40%{box-shadow:0 0 90px rgba(255,255,255,1),0 0 180px rgba(255,255,255,0.95),0 0 280px rgba(255,240,150,0.5),inset 0 0 55px rgba(255,255,255,1);transform:scale(1.23);filter:brightness(2.2) saturate(0.3)}
+      55%{box-shadow:0 0 48px rgba(255,240,220,0.9),0 0 95px rgba(255,255,200,0.65),inset 0 0 28px rgba(255,250,230,0.78);transform:scale(1.1);filter:brightness(1.4)}
+      70%{box-shadow:0 0 80px rgba(255,255,255,1),0 0 155px rgba(255,255,220,0.9),0 0 250px rgba(255,230,100,0.45),inset 0 0 50px rgba(255,255,255,1);transform:scale(1.21);filter:brightness(2.0) saturate(0.4)}
+      85%{box-shadow:0 0 95px rgba(255,255,255,1),0 0 185px rgba(255,255,200,0.95),0 0 300px rgba(255,230,100,0.5),inset 0 0 60px rgba(255,255,255,1);transform:scale(1.25);filter:brightness(2.5) saturate(0.35)}
+      100%{box-shadow:0 0 35px rgba(255,255,255,0.95),0 0 70px rgba(255,240,200,0.6),inset 0 0 18px rgba(255,255,240,0.8);transform:scale(1);filter:brightness(1.2)}
+    }
+    @keyframes rankGlowApex{
+      0%{box-shadow:0 0 40px rgba(255,69,0,0.95),0 0 80px rgba(255,100,0,0.6),0 0 120px rgba(255,50,0,0.4),inset 0 0 20px rgba(255,80,0,0.7);transform:scale(1);filter:brightness(1.2)}
+      10%{box-shadow:0 0 80px rgba(255,150,0,1),0 0 150px rgba(255,100,0,0.75),0 0 220px rgba(255,50,0,0.45),inset 0 0 40px rgba(255,120,0,0.85);transform:scale(1.18);filter:brightness(1.8) rotate(15deg)}
+      25%{box-shadow:0 0 50px rgba(200,50,0,0.9),0 0 100px rgba(255,80,0,0.55),inset 0 0 25px rgba(220,60,0,0.65);transform:scale(1.06);filter:brightness(1.3) rotate(-7deg)}
+      40%{box-shadow:0 0 100px rgba(255,200,0,1),0 0 190px rgba(255,100,0,0.85),0 0 280px rgba(200,50,0,0.5),inset 0 0 50px rgba(255,120,0,0.9);transform:scale(1.25);filter:brightness(2.2) rotate(5deg)}
+      55%{box-shadow:0 0 60px rgba(220,70,0,0.9),0 0 115px rgba(255,80,0,0.58),inset 0 0 30px rgba(230,60,0,0.68);transform:scale(1.1);filter:brightness(1.4) rotate(-3deg)}
+      70%{box-shadow:0 0 90px rgba(255,180,0,1),0 0 170px rgba(255,100,0,0.78),inset 0 0 45px rgba(255,120,0,0.88);transform:scale(1.22);filter:brightness(2.0) rotate(2deg)}
+      85%{box-shadow:0 0 70px rgba(255,120,0,0.95),0 0 135px rgba(255,80,0,0.72),inset 0 0 35px rgba(255,100,0,0.8);transform:scale(1.15);filter:brightness(1.7) rotate(-1deg)}
+      100%{box-shadow:0 0 40px rgba(255,69,0,0.95),0 0 80px rgba(255,100,0,0.6),0 0 120px rgba(255,50,0,0.4),inset 0 0 20px rgba(255,80,0,0.7);transform:scale(1);filter:brightness(1.2)}
+    }
+    @keyframes rankGlowUltima{
+      0%{box-shadow:0 0 45px rgba(255,215,0,0.95),0 0 90px rgba(255,255,200,0.6),0 0 140px rgba(255,200,0,0.4),inset 0 0 22px rgba(255,240,150,0.8);transform:scale(1);filter:brightness(1.3)}
+      12%{box-shadow:0 0 90px rgba(255,255,200,1),0 0 170px rgba(255,240,100,0.85),0 0 260px rgba(255,200,0,0.5),inset 0 0 45px rgba(255,255,255,1);transform:scale(1.2);filter:brightness(2.0) saturate(0.4)}
+      25%{box-shadow:0 0 55px rgba(255,220,180,0.9),0 0 110px rgba(255,255,150,0.62),inset 0 0 28px rgba(255,250,200,0.75);transform:scale(1.08);filter:brightness(1.4)}
+      40%{box-shadow:0 0 115px rgba(255,255,255,1),0 0 220px rgba(255,255,255,0.95),0 0 340px rgba(255,240,150,0.5),inset 0 0 65px rgba(255,255,255,1);transform:scale(1.28);filter:brightness(2.5) saturate(0.3)}
+      55%{box-shadow:0 0 65px rgba(255,240,220,0.9),0 0 125px rgba(255,255,200,0.65),inset 0 0 32px rgba(255,250,230,0.78);transform:scale(1.12);filter:brightness(1.6)}
+      70%{box-shadow:0 0 105px rgba(255,255,255,1),0 0 200px rgba(255,255,220,0.9),0 0 310px rgba(255,230,100,0.45),inset 0 0 55px rgba(255,255,255,1);transform:scale(1.25);filter:brightness(2.3) saturate(0.35)}
+      85%{box-shadow:0 0 80px rgba(255,255,200,0.95),0 0 155px rgba(255,255,150,0.72),inset 0 0 40px rgba(255,255,255,0.85);transform:scale(1.18);filter:brightness(1.9) saturate(0.4)}
+      100%{box-shadow:0 0 45px rgba(255,215,0,0.95),0 0 90px rgba(255,255,200,0.6),0 0 140px rgba(255,200,0,0.4),inset 0 0 22px rgba(255,240,150,0.8);transform:scale(1);filter:brightness(1.3)}
+    }
+    
+    /* LOADING & ERROR */
+    #loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000}
+    #error{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:1000}
+    #loading *, #error *{background:transparent}
+    .loading-spinner{width:50px;height:50px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+    .loading-text{margin-top:20px;font-size:1.2rem;color:var(--text2);background:transparent}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    /* ERROR */
+    .error{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000}
+    .error-icon{font-size:4rem;color:var(--danger);margin-bottom:20px}
+    .error-text{font-size:1.4rem;color:var(--text2);text-align:center;padding:0 40px;background:transparent}
+    .loading-spinner{width:50px;height:50px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+    .loading-text{margin-top:20px;font-size:1.2rem;color:var(--text2)}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    /* ERROR */
+    .error{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000}
+    .error-icon{font-size:4rem;color:var(--danger);margin-bottom:20px}
+    .error-text{font-size:1.4rem;color:var(--text2);text-align:center;padding:0 40px}
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Lade Daten...</div>
+  </div>
+  
+  <div class="error" id="error" style="display:none;">
+    <div class="error-icon">⚠️</div>
+    <div class="error-text" id="errorText"></div>
+  </div>
+  
+  <div class="app" id="app" style="display:none;">
+    <div class="left-panel">
+      <div class="panel-title">🏆 Rangliste</div>
+      <div class="ranklist" id="ranklist"></div>
+    </div>
+    
+    <div class="right-panel">
+      <div class="info-panel">
+        <div class="matchmaking-section">
+          <div class="matchmaking-panel-title">Matchmaking-Phasen</div>
+          <div class="matchmaking-phases" id="matchmakingPhases"></div>
+        </div>
+        <div class="panel-title">📈 Infografiken</div>
+        <div class="info-indicator" id="infoIndicator"></div>
+        <div class="info-content" id="infographic"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="rankUpContainer"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBM_AjoVl-zKTLYTc1ezIQppE9SkDhHX8Y",
+      authDomain: "rangspiel1.firebaseapp.com",
+      projectId: "rangspiel1",
+      storageBucket: "rangspiel1.firebasestorage.app",
+      messagingSenderId: "583128697480",
+      appId: "1:583128697480:web:9226b855a5ad39ea766d3d",
+      measurementId: "G-X6N83GQETY"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    const RANKS = [
+      {name:'Unranked',icon:'unranked',points:0, color:'#4a5070',loss:0},
+      {name:'Bronze',  icon:'bronze',points:1, color:'#cd7f32',loss:0},
+      {name:'Silber',  icon:'silber',points:4, color:'#a8b0c0',loss:0},
+      {name:'Gold',    icon:'gold',points:7, color:'#ffd700',loss:1},
+      {name:'Rubin',   icon:'rubin',points:10,color:'#e0115f',loss:1},
+      {name:'Smaragd', icon:'smaragd',points:13,color:'#50c878',loss:1},
+      {name:'Diamant', icon:'diamant',points:16,color:'#88c3e8',loss:2},
+      {name:'Amethyst',icon:'amethyst',points:19,color:'#9b59b6',loss:2},
+      {name:'Saphir',  icon:'saphir',points:22,color:'#4a90d9',loss:2},
+      {name:'Platin',  icon:'platin',points:25,color:'#70d8d8',loss:3},
+      {name:'Elite',   icon:'elite',points:28,color:'#ff6b35',loss:3},
+      {name:'König',   icon:'koenig',points:31,color:'#d4af37',loss:4},
+      {name:'Meister', icon:'meister',points:34,color:'#c040fb',loss:4},
+      {name:'Champion',icon:'champion',points:37,color:'#ff1744',loss:5},
+      {name:'Gott',    icon:'gott',points:40,color:'#ff8c00',loss:5},
+      {name:'Titan',   icon:'titan',points:46,color:'#8b4513',loss:20},
+      {name:'Olymp',   icon:'olymp',points:52,color:'#ffd700',loss:20},
+      {name:'Kosmos',  icon:'kosmos',points:58,color:'#4b0082',loss:20},
+      {name:'Galaxis', icon:'galaxis',points:64,color:'#00bfff',loss:20},
+      {name:'Universum',icon:'universum',points:70,color:'#0a0a0a',loss:20},
+      {name:'Ewigkeit',icon:'ewigkeit',points:76,color:'#c0c0c0',loss:20},
+      {name:'Unendlichkeit',icon:'unendlichkeit',points:82,color:'linear-gradient(90deg,#ff0000,#ff7f00,#ffff00,#00ff00,#0000ff,#8b00ff)',loss:20},
+      {name:'Transzendenz',icon:'transzendenz',points:88,color:'#ffffff',loss:20},
+      {name:'Apex',    icon:'apex',points:94,color:'#ff4500',loss:20},
+      {name:'Ultima',  icon:'ultima',points:100,color:'#ffd700',loss:20},
+    ];
+    const PROT_GOLD=7, PROT_PLAT=19, PROT_GOD=40, PROT_EWIGKEIT=76, PROT_ULTIMA=100;
+
+    let state = null;
+    let globalBadges = {};
+    let currentTab = 'points';
+    let tabInterval = null;
+    let currentInfographicIndex = 0;
+    let infographicInterval = null;
+    let previousRanks = {};
+
+    function getRankIdx(pts){let i=0;for(let j=0;j<RANKS.length;j++){if(pts>=RANKS[j].points)i=j;else break}return i}
+    function getMinPts(p){const mx=RANKS[getRankIdx(p.maxPoints)].points;if(mx>=PROT_ULTIMA)return PROT_ULTIMA;if(mx>=PROT_EWIGKEIT)return PROT_EWIGKEIT;if(mx>=PROT_GOD)return PROT_GOD;if(mx>=PROT_PLAT)return PROT_PLAT;if(mx>=PROT_GOLD)return PROT_GOLD;return 0}
+    function getLoss(p){return getRank(p.points).loss}
+    function getRank(pts){let r=RANKS[0];for(const x of RANKS){if(pts>=x.points)r=x;else break}
+      if(r.icon === 'gott' && pts >= 110) {
+        const prestigeLevel = Math.floor((pts - 100) / 10);
+        return {...r,name:`Gott<span class="prestige-box">P${prestigeLevel}</span>`,prestigeLevel:prestigeLevel,isPrestige:true};
+      }
+      return {...r,isPrestige:false};
+    }
+    function getMaxAccountsForSpieler(spielerKey){
+      const accounts = state.players.filter(p=>p.key===spielerKey);
+      if(!accounts.length) return 1;
+      const bestPts = Math.max(...accounts.map(p=>Math.max(p.points||0, p.maxPoints||0)));
+      if(bestPts >= 100) return 10;
+      if(bestPts >= 76) return 7;
+      if(bestPts >= 40) return 5;
+      if(bestPts >= 19) return 3;
+      if(bestPts >= 7)  return 2;
+      return 1;
+    }
+    
+    function getRankUpEffect(rankName){
+      if(!rankName) {
+        rankName = 'Unranked';
+      }
+      
+      if(rankName && rankName.includes && rankName.includes('prestige-box')) {
+        const prestigeMatch = rankName.match(/<span class="prestige-box">(\d+)<\/span>/);
+        const prestigeLevel = parseInt(prestigeMatch?.[1] || '1');
+        const baseSize = 1.5 + (prestigeLevel * 0.05);
+        const baseDuration = 4.5 + (prestigeLevel * 0.1);
+        const iconSize = '22px';
+        const shadow = '0 6px 24px rgba(205,127,50,.5)';
+        const border = '2px solid rgba(255,255,255,.2)';
+        const baseParticles = 100 + (prestigeLevel * 15);
+        const baseShake = 0.5 + (prestigeLevel * 0.05);
+        
+        return {
+          bg:'conic-gradient(from 0deg, rgba(255,0,0,0.8), rgba(255,127,0,0.8), rgba(255,255,0,0.8), rgba(0,255,0,0.8), rgba(0,255,255,0.8), rgba(0,0,255,0.8), rgba(75,0,130,0.8), rgba(148,0,211,0.8), rgba(255,20,147,0.8), rgba(255,105,180,0.8), rgba(255,0,0,0.8))',
+          color:'#fff',
+          fontSize:`${baseSize}rem`,
+          animation:'globalRankUpGod',
+          duration:baseDuration,
+          iconSize,
+          shadow:`0 ${44 + prestigeLevel * 4}px ${176 + prestigeLevel * 8}px rgba(255,105,180,1),0 0 ${400 + prestigeLevel * 20}px rgba(255,20,147,1)`,
+          border:`${4 + Math.floor(prestigeLevel / 3)}px solid rgba(255,105,180,${0.85 + prestigeLevel * 0.015})`,
+          particles:'prestige',
+          particleCount:baseParticles,
+          flash:'conic-gradient(from 0deg, rgba(255,0,0,0.8), rgba(255,127,0,0.8), rgba(255,255,0,0.8), rgba(0,255,0,0.8), rgba(0,255,255,0.8), rgba(0,0,255,0.8), rgba(75,0,130,0.8), rgba(148,0,211,0.8), rgba(255,20,147,0.8), rgba(255,105,180,0.8), rgba(255,0,0,0.8))',
+          flashDur:0.85 + prestigeLevel * 0.05,
+          vignette:'conic-gradient(from 0deg, rgba(255,0,0,0.2), rgba(255,127,0,0.2), rgba(255,255,0,0.2), rgba(0,255,0,0.2), rgba(0,255,255,0.2), rgba(0,0,255,0.2), rgba(75,0,130,0.2), rgba(148,0,211,0.2), rgba(255,20,147,0.2), rgba(255,105,180,0.2), rgba(255,0,0,0.2))',
+          extraWave:3 + Math.floor(prestigeLevel / 3),
+          shake:baseShake,
+        };
+      }
+      
+      const effects={
+        'Bronze':{
+          bg:'linear-gradient(135deg,#cd7f32,#8b5a2b)',color:'#fff',
+          fontSize:'1.05rem',padding:'13px 20px',borderRadius:'18px',
+          animation:'globalRankUp',duration:2.2,iconSize:'22px',
+          shadow:'0 6px 24px rgba(205,127,50,.5)',border:'2px solid rgba(255,255,255,.2)',
+        },
+        'Silber':{
+          bg:'linear-gradient(135deg,#c0c0c0,#808080)',color:'#000',
+          fontSize:'1.08rem',padding:'14px 22px',borderRadius:'20px',
+          animation:'globalRankUp',duration:2.3,iconSize:'23px',
+          shadow:'0 7px 28px rgba(192,192,192,.6)',border:'2px solid rgba(255,255,255,.3)',
+        },
+        'Gold':{
+          bg:'linear-gradient(135deg,#ffd700,#ffaa00)',color:'#000',
+          fontSize:'1.1rem',padding:'16px 24px',borderRadius:'22px',
+          animation:'globalRankUpGold',duration:2.5,iconSize:'24px',
+          shadow:'0 10px 40px rgba(255,215,0,.7),0 0 80px rgba(255,215,0,.3)',
+          border:'2px solid rgba(255,255,255,.45)',
+          particles:'gold',particleCount:22,
+          flash:'radial-gradient(circle,rgba(255,215,0,0.25),transparent 70%)',flashDur:0.35,
+        },
+        'Rubin':{
+          bg:'linear-gradient(135deg,#e0115f,#8b0037)',color:'#fff',
+          fontSize:'1.28rem',padding:'18px 28px',borderRadius:'26px',
+          animation:'globalRankUpRuby',duration:2.8,iconSize:'26px',
+          shadow:'0 12px 50px rgba(224,17,95,.8),0 0 100px rgba(224,17,95,.4)',
+          border:'2px solid rgba(255,100,150,.4)',
+          particles:'ruby',particleCount:28,
+          flash:'radial-gradient(circle,rgba(224,17,95,0.3),transparent 70%)',flashDur:0.4,
+          vignette:'radial-gradient(ellipse at center,transparent 40%,rgba(224,17,95,0.15) 100%)',
+        },
+        'Smaragd':{
+          bg:'linear-gradient(135deg,#50c878,#1a7a3c)',color:'#fff',
+          fontSize:'1.35rem',padding:'20px 30px',borderRadius:'28px',
+          animation:'globalRankUpRuby',duration:3.0,iconSize:'27px',
+          shadow:'0 14px 56px rgba(80,200,120,.85),0 0 120px rgba(80,200,120,.4)',
+          border:'2px solid rgba(100,255,160,.4)',
+          particles:'smaragd',particleCount:30,
+          flash:'radial-gradient(circle,rgba(80,200,120,0.28),transparent 70%)',flashDur:0.4,
+          vignette:'radial-gradient(ellipse at center,transparent 35%,rgba(80,200,120,0.12) 100%)',
+        },
+        'Diamant':{
+          bg:'linear-gradient(135deg,#88c3e8,#3070c0)',color:'#fff',
+          fontSize:'1.42rem',padding:'22px 32px',borderRadius:'30px',
+          animation:'globalRankUpRuby',duration:3.2,iconSize:'28px',
+          shadow:'0 16px 64px rgba(136,195,232,.9),0 0 140px rgba(136,195,232,.5)',
+          border:'2px solid rgba(180,220,255,.5)',
+          particles:'diamond',particleCount:33,
+          flash:'radial-gradient(circle,rgba(136,195,232,0.35),transparent 70%)',flashDur:0.45,
+          vignette:'radial-gradient(ellipse at center,transparent 30%,rgba(136,195,232,0.14) 100%)',
+        },
+        'Amethyst':{
+          bg:'linear-gradient(135deg,#b06ac0,#6a2080)',color:'#fff',
+          fontSize:'1.48rem',padding:'24px 34px',borderRadius:'32px',
+          animation:'globalRankUpRuby',duration:3.4,iconSize:'29px',
+          shadow:'0 18px 70px rgba(155,89,182,.9),0 0 160px rgba(155,89,182,.5)',
+          border:'2px solid rgba(200,140,255,.5)',
+          particles:'amethyst',particleCount:35,
+          flash:'radial-gradient(circle,rgba(155,89,182,0.38),transparent 70%)',flashDur:0.45,
+          vignette:'radial-gradient(ellipse at center,transparent 25%,rgba(155,89,182,0.16) 100%)',
+        },
+        'Saphir':{
+          bg:'linear-gradient(135deg,#4a90d9,#1040a0)',color:'#fff',
+          fontSize:'1.55rem',padding:'26px 36px',borderRadius:'34px',
+          animation:'globalRankUpRuby',duration:3.6,iconSize:'30px',
+          shadow:'0 20px 78px rgba(74,144,217,.95),0 0 180px rgba(74,144,217,.55)',
+          border:'2px solid rgba(140,180,255,.55)',
+          particles:'saphir',particleCount:37,
+          flash:'radial-gradient(circle,rgba(74,144,217,0.4),transparent 70%)',flashDur:0.5,
+          vignette:'radial-gradient(ellipse at center,transparent 20%,rgba(74,144,217,0.18) 100%)',
+          extraWave:1,
+        },
+        'Platin':{
+          bg:'linear-gradient(135deg,#afeeee,#40e0d0)',color:'#000',
+          fontSize:'1.62rem',padding:'28px 38px',borderRadius:'36px',
+          animation:'globalRankUpRuby',duration:3.8,iconSize:'31px',
+          shadow:'0 22px 86px rgba(112,216,216,1),0 0 200px rgba(112,216,216,.6)',
+          border:'2px solid rgba(180,255,255,.6)',
+          particles:'platin',particleCount:40,
+          flash:'radial-gradient(circle,rgba(112,216,216,0.42),transparent 70%)',flashDur:0.5,
+          vignette:'radial-gradient(ellipse at center,transparent 15%,rgba(112,216,216,0.2) 100%)',
+          extraWave:1,
+        },
+        'Elite':{
+          bg:'linear-gradient(135deg,#ff6b35,#cc4400)',color:'#fff',
+          fontSize:'1.68rem',padding:'30px 40px',borderRadius:'38px',
+          animation:'globalRankUpRuby',duration:4.0,iconSize:'32px',
+          shadow:'0 24px 96px rgba(255,107,53,1),0 0 220px rgba(255,107,53,.65)',
+          border:'3px solid rgba(255,180,100,.5)',
+          particles:'fire',particleCount:44,
+          flash:'radial-gradient(circle,rgba(255,107,53,0.5),transparent 70%)',flashDur:0.55,
+          vignette:'radial-gradient(ellipse at center,transparent 10%,rgba(255,107,53,0.22) 100%)',
+          extraWave:1,shake:0.3,
+        },
+        'König':{
+          bg:'linear-gradient(135deg,#d4af37,#b8860b)',color:'#fff',
+          fontSize:'1.74rem',padding:'32px 42px',borderRadius:'40px',
+          animation:'globalRankUpRuby',duration:4.2,iconSize:'33px',
+          shadow:'0 28px 112px rgba(212,175,55,1),0 0 260px rgba(212,175,55,.8)',
+          border:'3px solid rgba(255,220,100,.6)',
+          particles:'crown',particleCount:48,
+          flash:'radial-gradient(circle,rgba(212,175,55,0.55),transparent 70%)',flashDur:0.6,
+          vignette:'radial-gradient(ellipse at center,transparent 5%,rgba(212,175,55,0.25) 100%)',
+          extraWave:2,shake:0.4,
+        },
+        'Meister':{
+          bg:'linear-gradient(135deg,#c040fb,#800080)',color:'#fff',
+          fontSize:'1.8rem',padding:'34px 44px',borderRadius:'42px',
+          animation:'globalRankUpRuby',duration:4.4,iconSize:'34px',
+          shadow:'0 32px 128px rgba(192,64,251,1),0 0 300px rgba(192,64,251,.85)',
+          border:'3px solid rgba(230,180,255,.65)',
+          particles:'meister',particleCount:52,
+          flash:'radial-gradient(circle,rgba(192,64,251,0.6),transparent 70%)',flashDur:0.65,
+          vignette:'radial-gradient(ellipse at center,rgba(192,64,251,0.05),rgba(192,64,251,0.3) 100%)',
+          extraWave:2,shake:0.5,
+        },
+        'Champion':{
+          bg:'linear-gradient(135deg,#ff1744,#8b0000)',color:'#fff',
+          fontSize:'1.85rem',padding:'36px 46px',borderRadius:'44px',
+          animation:'globalRankUpRuby',duration:4.6,iconSize:'35px',
+          shadow:'0 36px 144px rgba(255,23,68,1),0 0 350px rgba(255,23,68,.9)',
+          border:'3px solid rgba(255,150,150,.7)',
+          particles:'champion',particleCount:60,
+          flash:'radial-gradient(circle,rgba(255,23,68,0.65),transparent 70%)',flashDur:0.7,
+          vignette:'radial-gradient(ellipse at center,rgba(255,23,68,0.08),rgba(255,23,68,0.35) 100%)',
+          extraWave:2,shake:0.6,
+        },
+        'Gott':{
+          bg:'linear-gradient(135deg,#ff8c00,#cc6600)',color:'#fff',
+          fontSize:'1.9rem',padding:'38px 48px',borderRadius:'46px',
+          animation:'globalRankUpRuby',duration:4.8,iconSize:'36px',
+          shadow:'0 44px 176px rgba(255,140,0,1),0 0 400px rgba(255,200,0,1)',
+          border:'4px solid rgba(255,255,180,.8)',
+          particles:'god',particleCount:70,
+          flash:'radial-gradient(circle,rgba(255,200,0,0.75),transparent 70%)',flashDur:0.8,
+          vignette:'radial-gradient(ellipse at center,rgba(255,140,0,0.1),rgba(255,60,0,0.4) 100%)',
+          extraWave:3,shake:0.8,
+        },
+        'Olymp':{
+          bg:'linear-gradient(135deg,#ffd700,#ffaa00)',color:'#000',
+          fontSize:'1.95rem',padding:'40px 50px',borderRadius:'48px',
+          animation:'globalRankUpRuby',duration:5.0,iconSize:'37px',
+          shadow:'0 52px 215px rgba(255,215,0,1),0 0 530px rgba(255,220,100,0.9),0 0 340px rgba(255,200,0,0.65)',
+          border:'4px solid rgba(255,240,120,0.9)',
+          particles:'olymp',particleCount:88,
+          flash:'radial-gradient(circle,rgba(255,220,0,0.87),transparent 65%)',flashDur:0.96,
+          vignette:'radial-gradient(ellipse at center,rgba(255,200,0,0.12),rgba(120,80,0,0.55) 100%)',
+          extraWave:4,shake:1.08,
+        },
+        'Kosmos':{
+          bg:'linear-gradient(135deg,#9400d3,#4b0082)',color:'#fff',
+          fontSize:'2.0rem',padding:'42px 52px',borderRadius:'50px',
+          animation:'globalRankUpRuby',duration:5.2,iconSize:'38px',
+          shadow:'0 53px 220px rgba(150,0,220,1),0 0 545px rgba(100,0,200,0.92),0 0 350px rgba(75,0,130,0.7)',
+          border:'4px solid rgba(200,100,255,0.9)',
+          particles:'kosmos',particleCount:90,
+          flash:'radial-gradient(circle,rgba(150,0,220,0.88),transparent 65%)',flashDur:0.97,
+          vignette:'radial-gradient(ellipse at center,rgba(100,0,200,0.14),rgba(40,0,80,0.62) 100%)',
+          extraWave:4,shake:1.1,
+        },
+        'Galaxis':{
+          bg:'linear-gradient(135deg,#00bfff,#0066cc)',color:'#fff',
+          fontSize:'2.05rem',padding:'44px 54px',borderRadius:'52px',
+          animation:'globalRankUpRuby',duration:5.4,iconSize:'39px',
+          shadow:'0 54px 225px rgba(0,191,255,1),0 0 560px rgba(0,150,255,0.92),0 0 360px rgba(0,100,200,0.7)',
+          border:'4px solid rgba(100,220,255,0.92)',
+          particles:'galaxis',particleCount:92,
+          flash:'radial-gradient(circle,rgba(0,191,255,0.88),transparent 64%)',flashDur:0.98,
+          vignette:'radial-gradient(ellipse at center,rgba(0,150,255,0.15),rgba(0,20,80,0.62) 100%)',
+          extraWave:4,shake:1.12,
+        },
+        'Universum':{
+          bg:'linear-gradient(135deg,#6425ff,#1a0080)',color:'#fff',
+          fontSize:'2.1rem',padding:'46px 56px',borderRadius:'54px',
+          animation:'globalRankUpRuby',duration:5.6,iconSize:'40px',
+          shadow:'0 55px 230px rgba(100,50,255,1),0 0 575px rgba(255,255,255,0.7),0 0 370px rgba(50,0,150,0.65)',
+          border:'4px solid rgba(200,180,255,0.88)',
+          particles:'universum',particleCount:95,
+          flash:'radial-gradient(circle,rgba(255,255,255,0.9),transparent 58%)',flashDur:1.0,
+          vignette:'radial-gradient(ellipse at center,rgba(0,0,20,0.3),rgba(0,0,0,0.82) 100%)',
+          extraWave:5,shake:1.15,
+        },
+        'Ewigkeit':{
+          bg:'linear-gradient(135deg,#ffffff,#b0b0b0)',color:'#000',
+          fontSize:'2.15rem',padding:'48px 58px',borderRadius:'56px',
+          animation:'globalRankUpRuby',duration:5.8,iconSize:'41px',
+          shadow:'0 56px 235px rgba(220,220,220,1),0 0 590px rgba(255,255,255,0.9),0 0 380px rgba(200,200,220,0.68)',
+          border:'4px solid rgba(255,255,255,0.95)',
+          particles:'ewigkeit',particleCount:98,
+          flash:'radial-gradient(circle,rgba(255,255,255,0.92),transparent 58%)',flashDur:1.05,
+          vignette:'radial-gradient(ellipse at center,rgba(200,200,220,0.15),rgba(100,100,120,0.5) 100%)',
+          extraWave:5,shake:1.18,
+        },
+        'Unendlichkeit':{
+          bg:'linear-gradient(135deg,#ff00c8,#ff0080)',color:'#fff',
+          fontSize:'2.2rem',padding:'50px 60px',borderRadius:'58px',
+          animation:'globalRankUpRuby',duration:6.0,iconSize:'42px',
+          shadow:'0 57px 240px rgba(255,0,200,1),0 0 600px rgba(0,200,255,0.85),0 0 390px rgba(255,200,0,0.7)',
+          border:'5px solid rgba(255,255,255,0.98)',
+          particles:'unendlichkeit',particleCount:100,
+          flash:'radial-gradient(circle,rgba(255,255,255,0.95),transparent 55%)',flashDur:1.1,
+          vignette:'radial-gradient(ellipse at center,rgba(255,0,200,0.15),rgba(0,0,200,0.3) 55%,rgba(200,255,0,0.15) 100%)',
+          extraWave:5,shake:1.2,
+        },
+        'Transzendenz':{
+          bg:'linear-gradient(135deg,#ffffff,#e0e0e0)',color:'#000',
+          fontSize:'2.25rem',padding:'52px 62px',borderRadius:'60px',
+          animation:'globalRankUpRuby',duration:6.2,iconSize:'43px',
+          shadow:'0 58px 248px rgba(255,255,255,1),0 0 620px rgba(255,255,220,0.95),0 0 410px rgba(255,240,150,0.72)',
+          border:'5px solid rgba(255,255,255,1)',
+          particles:'transzendenz',particleCount:103,
+          flash:'radial-gradient(circle,rgba(255,255,255,1),transparent 50%)',flashDur:1.2,
+          vignette:'radial-gradient(ellipse at center,rgba(255,255,200,0.18),rgba(200,200,100,0.35) 100%)',
+          extraWave:5,shake:1.23,
+        },
+        'Apex':{
+          bg:'linear-gradient(135deg,#ff3c00,#8b0000)',color:'#fff',
+          fontSize:'2.3rem',padding:'54px 64px',borderRadius:'62px',
+          animation:'globalRankUpRuby',duration:6.4,iconSize:'44px',
+          shadow:'0 60px 255px rgba(255,60,0,1),0 0 640px rgba(255,30,0,0.98),0 0 430px rgba(200,0,0,0.75)',
+          border:'5px solid rgba(255,130,50,0.98)',
+          particles:'apex',particleCount:107,
+          flash:'radial-gradient(circle,rgba(255,80,0,0.92),transparent 55%)',flashDur:1.25,
+          vignette:'radial-gradient(ellipse at center,rgba(255,50,0,0.2),rgba(100,0,0,0.7) 100%)',
+          extraWave:6,shake:1.25,
+        },
+        'Titan':{
+          bg:'linear-gradient(135deg,#ff8c00,#8b1a00)',color:'#fff',
+          fontSize:'2.35rem',padding:'56px 66px',borderRadius:'64px',
+          animation:'globalRankUpRuby',duration:6.6,iconSize:'45px',
+          shadow:'0 52px 210px rgba(200,50,0,1),0 0 520px rgba(255,100,0,0.95),0 0 320px rgba(139,69,19,0.7)',
+          border:'4px solid rgba(255,150,60,0.92)',
+          particles:'titan',particleCount:85,
+          flash:'radial-gradient(circle,rgba(255,110,0,0.85),transparent 65%)',flashDur:0.95,
+          vignette:'radial-gradient(ellipse at center,rgba(200,50,0,0.12),rgba(80,15,0,0.65) 100%)',
+          extraWave:4,shake:1.05,
+        },
+        'Ultima':{
+          bg:'linear-gradient(135deg,#ffd700,#ffffff,#ff00ff,#00ffff,#ffd700)',color:'#000',
+          fontSize:'4rem',padding:'60px 70px',borderRadius:'70px',
+          animation:'globalRankUpUltima',duration:11,
+          shadow:'0 64px 260px rgba(255,215,0,1),0 0 650px rgba(255,255,255,0.85),0 0 450px rgba(255,0,220,0.55),0 0 350px rgba(0,200,255,0.45)',
+          border:'5px solid rgba(255,255,255,1)',
+          particles:'ultima',particleCount:110,
+          flash:'radial-gradient(circle,rgba(255,255,255,1),transparent 55%)',flashDur:1.3,
+          vignette:'radial-gradient(ellipse at center,rgba(255,215,0,0.18),rgba(255,0,200,0.32) 55%,rgba(0,200,255,0.22) 100%)',
+          extraWave:6,shake:1.3,
+        },
+      };
+      
+      return effects[rankName] || {
+        bg:'linear-gradient(135deg,var(--accent),var(--accent2))',color:'#0a0c12',
+        fontSize:'1.2rem',padding:'16px 24px',borderRadius:'24px',
+        animation:'globalRankUp',duration:2.5,iconSize:'24px',
+        shadow:'0 8px 32px rgba(232,184,75,.5)',border:'2px solid rgba(255,255,255,.1)',
+      };
+    }
+    
+    function showRankUpEffect(playerName, rankName) {
+      const container = document.getElementById('rankUpContainer');
+      const effect = getRankUpEffect(rankName);
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position:fixed;top:50%;left:50%;
+        transform:translate(-50%,-50%);
+        background:${effect.bg};
+        color:${effect.color};
+        font-family:"Barlow Condensed",sans-serif;
+        font-size:${effect.fontSize};
+        font-weight:700;
+        padding:${effect.padding};
+        border-radius:${effect.borderRadius};
+        z-index:300;
+        animation:${effect.animation} ${effect.duration}s cubic-bezier(0.34,1.56,0.64,1) forwards;
+        white-space:nowrap;
+        box-shadow:${effect.shadow};
+        border:${effect.border};
+        text-align:center;
+        line-height:1.4;
+        letter-spacing:1px;
+      `;
+      notification.innerHTML = `${playerName}<br>${rankName}`;
+      container.appendChild(notification);
+      
+      // === PARTIKEL ===
+      if(effect.particles) createParticles(effect.particles, effect.particleCount||20);
+      
+      // === EXTRA PARTIKEL-WELLE für Ultra-Ränge ===
+      if(effect.extraWave){
+        setTimeout(()=>createParticles(effect.particles, effect.particleCount||20), 600);
+        if(effect.extraWave>=2) setTimeout(()=>createParticles(effect.particles, effect.particleCount||20), 1200);
+      }
+      
+      // === FLASH ===
+      if(effect.flash){
+        const flash=document.createElement('div');
+        flash.style.cssText=`position:fixed;inset:0;background:${effect.flash};animation:rankFlash ${effect.flashDur||0.5}s ease-out forwards;pointer-events:none;z-index:298`;
+        document.body.appendChild(flash);
+        setTimeout(()=>flash.remove(),(effect.flashDur||0.5)*1000);
+      }
+      
+      // === VIGNETTE ===
+      if(effect.vignette){
+        const vignette=document.createElement('div');
+        vignette.style.cssText=`position:fixed;inset:0;background:${effect.vignette};animation:rankVignette 0.8s ease-out forwards;pointer-events:none;z-index:298`;
+        document.body.appendChild(vignette);
+        setTimeout(()=>vignette.remove(),800);
+      }
+      
+      // === SHAKE ===
+      if(effect.shake){
+        document.body.style.animation=`rankShake 0.6s ease`;
+        setTimeout(()=>document.body.style.animation='',600);
+      }
+      
+      setTimeout(() => {
+        notification.remove();
+      }, effect.duration * 1000);
+    }
+    
+    function createParticles(type, count=24){
+      const container=document.createElement('div');
+      container.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:299;overflow:hidden';
+      document.body.appendChild(container);
+
+      const shapes = type==='ultima'||type==='apex'||type==='transzendenz'||type==='unendlichkeit'?['circle','square','diamond','star','cross']:
+                     type==='titan'||type==='ewigkeit'||type==='universum'||type==='galaxis'?['circle','square','diamond','star','cross']:
+                     type==='kosmos'||type==='olymp'?['circle','star','diamond']:
+                     type==='prestige'?['circle','square','diamond','star','cross']:
+                     type==='god'?['circle','star','diamond']:
+                     type==='champion'||type==='meister'?['circle','diamond']:['circle'];
+
+      for(let i=0;i<count;i++){
+        setTimeout(()=>{
+          const particle=document.createElement('div');
+          const size=Math.random()*(type==='ultima'?32:type==='apex'?30:type==='transzendenz'?29:type==='unendlichkeit'?28:type==='ewigkeit'?27:type==='universum'?26:type==='galaxis'?25:type==='kosmos'?24:type==='olymp'?23:type==='titan'?26:type==='prestige'?20:type==='god'?22:type==='champion'?18:14)+6;
+          const startX=Math.random()*100;
+          const dur=Math.random()*2.5+1.5;
+          const dx=(Math.random()-0.5)*300;
+          const dy=-(Math.random()*400+100);
+          const rot=Math.random()*720-360;
+          const shape=shapes[Math.floor(Math.random()*shapes.length)];
+          const bg=getParticleColor(type);
+          const borderR=shape==='diamond'?'0':shape==='star'?'2px':shape==='square'?'0':shape==='cross'?'2px':'50%';
+          const transform=shape==='diamond'?'rotate(45deg)':shape==='cross'?'rotate(45deg)':'';
+          
+          particle.style.cssText=`
+            position:absolute;
+            left:${startX}vw;bottom:0;
+            width:${size}px;height:${size}px;
+            border-radius:${borderR};
+            background:${bg};
+            transform:${transform};
+            box-shadow:0 0 ${size*0.8}px ${bg.includes('gradient')?'rgba(255,105,180,0.8)':'currentColor'};
+            animation:particleRise ${dur}s ease-out forwards;
+            --dx:${dx}px;--dy:${dy}px;--rot:${rot}deg;
+          `;
+          container.appendChild(particle);
+          setTimeout(()=>particle.remove(),dur*1000+200);
+        }, Math.random()*(type==='ultima'?2200:type==='apex'?2100:type==='transzendenz'?2000:type==='unendlichkeit'?1900:type==='ewigkeit'?1800:type==='universum'?1700:type==='galaxis'?1650:type==='kosmos'?1600:type==='olymp'?1550:type==='titan'?1600:type==='god'?1200:800));
+      }
+      setTimeout(()=>container.remove(),4000);
+    }
+    
+    function getParticleColor(type){
+      if(type === 'prestige') {
+        const rainbowColors = [
+          'radial-gradient(circle,#ff0000,#ff6666)',
+          'radial-gradient(circle,#ff7f00,#ffaa33)',
+          'radial-gradient(circle,#ffff00,#ffff66)',
+          'radial-gradient(circle,#00ff00,#66ff66)',
+          'radial-gradient(circle,#00ffff,#66ffff)',
+          'radial-gradient(circle,#0000ff,#6666ff)',
+          'radial-gradient(circle,#4b0082,#7f33aa)',
+          'radial-gradient(circle,#9400d3,#cc33ff)',
+          'radial-gradient(circle,#ff1493,#ff66cc)',
+          'radial-gradient(circle,#ff69b4,#ff99dd)'
+        ];
+        return rainbowColors[Math.floor(Math.random() * rainbowColors.length)];
+      }
+      
+      const colors={
+        gold:'radial-gradient(circle,#ffd700,#ffed4e)',
+        ruby:'radial-gradient(circle,#ff1493,#e0115f)',
+        diamond:'radial-gradient(circle,#b0e0e6,#88c3e8)',
+        smaragd:'radial-gradient(circle,#7dffb0,#50c878)',
+        amethyst:'radial-gradient(circle,#d8a0f8,#9b59b6)',
+        saphir:'radial-gradient(circle,#7fb3e8,#4a90d9)',
+        platin:'radial-gradient(circle,#afeeee,#70d8d8)',
+        fire:'radial-gradient(circle,#ffcc44,#ff6b35)',
+        crown:'radial-gradient(circle,#ffe566,#d4af37)',
+        meister:'radial-gradient(circle,#f0a0ff,#c040fb)',
+        champion:'radial-gradient(circle,#ff8888,#ff1744)',
+        god:'radial-gradient(circle,#ffff88,#ff8c00)',
+        titan:'radial-gradient(circle,#ff8c00,#8b1a00)',
+        olymp:'radial-gradient(circle,#ffe566,#ffd700)',
+        kosmos:'radial-gradient(circle,#d070ff,#4b0082)',
+        galaxis:'radial-gradient(circle,#80d8ff,#0080ff)',
+        ewigkeit:'radial-gradient(circle,#ffffff,#b0b0b0)',
+        apex:'radial-gradient(circle,#ff8c00,#800000)',
+      };
+      if(type==='universum'){
+        const univColors=[
+          'radial-gradient(circle,#ffffff,#4040ff)',
+          'radial-gradient(circle,#ffffff,#800080)',
+          'radial-gradient(circle,#c0c0ff,#000040)',
+          'radial-gradient(circle,#ffffff,#000020)',
+          'radial-gradient(circle,#d0d0ff,#200060)',
+        ];
+        return univColors[Math.floor(Math.random() * univColors.length)];
+      }
+      if(type==='unendlichkeit'){
+        const unendColors=[
+          'radial-gradient(circle,#ff0000,#ff6666)',
+          'radial-gradient(circle,#ff8000,#ffaa33)',
+          'radial-gradient(circle,#ffff00,#ffff66)',
+          'radial-gradient(circle,#00ff00,#66ff66)',
+          'radial-gradient(circle,#00ffff,#66ffff)',
+          'radial-gradient(circle,#0000ff,#6666ff)',
+          'radial-gradient(circle,#ff00ff,#ff66ff)',
+        ];
+        return unendColors[Math.floor(Math.random() * unendColors.length)];
+      }
+      if(type==='transzendenz'){
+        return 'radial-gradient(circle,#ffffff,#e0e0e0)';
+      }
+      return colors[type] || 'radial-gradient(circle,#e8b84b,#c97a2f)';
+    }
+    
+    function checkRankUps() {
+      if(!state.players || !Array.isArray(state.players)) return;
+      
+      state.players.forEach(player => {
+        if(!player.active) return;
+        const currentRank = getRank(player.points);
+        const previousRank = previousRanks[player.id];
+        
+        if(previousRank && previousRank.points < currentRank.points) {
+          showRankUpEffect(player.name, currentRank.name);
+        }
+        
+        previousRanks[player.id] = currentRank;
+      });
+    }
+    
+    function renderMatchmakingPhases() {
+      if(!state.players || !Array.isArray(state.players)) return;
+      const sortedPlayers = [...state.players].filter(p => p.active !== false).sort((a, b) => b.points - a.points);
+      const matchmakingPhases = document.getElementById('matchmakingPhases');
+      
+      const currentPhase = state.mmPhase || 'low';
+      const nextPhase = currentPhase === 'low' ? 'high' : 'low';
+      
+      const currentPhasePlayers = sortedPlayers.filter(p => {
+        const rank = getRank(p.points);
+        if (currentPhase === 'low') {
+          return rank.points < PROT_PLAT;
+        } else {
+          return rank.points >= PROT_PLAT;
+        }
+      });
+      
+      const nextPhasePlayers = sortedPlayers.filter(p => {
+        const rank = getRank(p.points);
+        if (nextPhase === 'low') {
+          return rank.points < PROT_PLAT;
+        } else {
+          return rank.points >= PROT_PLAT;
+        }
+      });
+      
+      // Spieler identifizieren, die in beiden Phasen vorkommen
+      const currentPhasePlayerIds = new Set(currentPhasePlayers.map(p => p.id));
+      const nextPhasePlayerIds = new Set(nextPhasePlayers.map(p => p.id));
+      const inBoth = sortedPlayers.filter(p => currentPhasePlayerIds.has(p.id) && nextPhasePlayerIds.has(p.id));
+      const inBothIds = new Set(inBoth.map(p => p.id));
+      
+      // Übersprungene Spieler identifizieren (in aktueller Phase aber nicht in nächster)
+      const skippedPlayers = currentPhasePlayers.filter(p => !nextPhasePlayerIds.has(p.id));
+      const skippedIds = new Set(skippedPlayers.map(p => p.id));
+      
+      matchmakingPhases.innerHTML = `
+        <div class="matchmaking-phase">
+          <div class="matchmaking-phase-header">Aktuell: ${currentPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
+          <div class="matchmaking-phase-players">
+            ${currentPhasePlayers.map(p => {
+              let classes = 'matchmaking-phase-player';
+              if (inBothIds.has(p.id)) classes += ' in-both';
+              return `<div class="${classes}">${p.name}</div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div class="matchmaking-phase">
+          <div class="matchmaking-phase-header">Nächste: ${nextPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
+          <div class="matchmaking-phase-players">
+            ${nextPhasePlayers.map(p => {
+              let classes = 'matchmaking-phase-player';
+              if (inBothIds.has(p.id)) classes += ' in-both';
+              return `<div class="${classes}">${p.name}</div>`;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function render() {
+      if(!state) return;
+      if(!state.players || !Array.isArray(state.players)) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'flex';
+        document.getElementById('errorText').textContent = 'Keine Spieler-Daten gefunden';
+        return;
+      }
+      
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('app').style.display = 'grid';
+      
+      // Start infographic rotation
+      if(!infographicInterval) {
+        infographicInterval = setInterval(() => {
+          currentInfographicIndex++;
+          renderInfographics();
+        }, 8000);
+      }
+      
+      // Header elements removed
+      
+      // Matchmaking Phases
+      renderMatchmakingPhases();
+      
+      // Ranklist
+      const allPlayersSorted = [...state.players].sort((a, b) => b.points - a.points);
+      const activePlayers = allPlayersSorted.filter(p => p.active !== false);
+      const inactivePlayers = allPlayersSorted.filter(p => p.active === false);
+      const ranklist = document.getElementById('ranklist');
+      ranklist.innerHTML = '';
+      
+      activePlayers.forEach((player, index) => {
+        const absoluteRank = allPlayersSorted.findIndex(p => p.id === player.id) + 1;
+        const rank = getRank(player.points);
+        const maxAccounts = getMaxAccountsForSpieler(player.key);
+        const accounts = state.players.filter(p => p.key === player.key).length;
+        
+        const item = document.createElement('div');
+        item.className = 'rank-item';
+        const rankIconClass = 'rank-' + rank.icon.toLowerCase();
+        item.innerHTML = `
+          <div class="rank-number">${absoluteRank}.</div>
+          <div class="rl-icon-outer" style="border-color:${rank.color}">
+            <div class="rank-icon ${rankIconClass}"></div>
+          </div>
+          <div class="rank-info">
+            <div class="rank-name">
+              ${player.name}
+              <span class="rank-badge" style="background:${rank.color};color:${rank.color === '#0a0a0a' || rank.color.includes('gradient') ? '#fff' : '#000'}">${rank.name}</span>
+            </div>
+            <div>
+              <span class="rank-points">${player.points}</span>
+              <span class="rank-max">(${player.maxPoints})</span>
+              <span class="rank-streak">🔥 ${player.streak || 0}</span>
+              <span class="rank-accounts">${accounts}/${maxAccounts}</span>
+            </div>
+          </div>
+        `;
+        ranklist.appendChild(item);
+        
+        // Inaktive Spieler zwischen aktiven Spielern anzeigen
+        const nextActivePlayer = activePlayers[index + 1];
+        if (nextActivePlayer) {
+          const currentRank = allPlayersSorted.findIndex(p => p.id === player.id);
+          const nextRank = allPlayersSorted.findIndex(p => p.id === nextActivePlayer.id);
+          const playersBetween = allPlayersSorted.slice(currentRank + 1, nextRank).filter(p => p.active === false);
+          
+          if (playersBetween.length > 0) {
+            const betweenItem = document.createElement('div');
+            betweenItem.className = 'rank-between';
+            const playerNames = playersBetween.map(p => p.name).join(', ');
+            betweenItem.innerHTML = `
+              <div class="rank-between-count">${playersBetween.length} Spieler dazwischen</div>
+              <div class="rank-between-names">(${playerNames})</div>
+            `;
+            ranklist.appendChild(betweenItem);
+          }
+        }
+      });
+      
+      // Auto-scroll für Rangliste wenn zu viele Spieler
+      if (activePlayers.length > 5) {
+        let scrollIndex = 0;
+        const scrollInterval = setInterval(() => {
+          if (!document.getElementById('ranklist')) {
+            clearInterval(scrollInterval);
+            return;
+          }
+          const items = ranklist.querySelectorAll('.rank-item');
+          if (items.length === 0) {
+            clearInterval(scrollInterval);
+            return;
+          }
+          if (scrollIndex >= items.length) {
+            scrollIndex = 0;
+            ranklist.scrollTop = 0;
+          } else {
+            const currentItem = items[scrollIndex];
+            if (currentItem) {
+              currentItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            scrollIndex++;
+          }
+        }, 3000);
+      }
+      
+      // Infographics
+      renderInfographics();
+      
+      // Check for rank-ups
+      checkRankUps();
+    }
+
+    function renderInfographics() {
+      if(!state.players || !Array.isArray(state.players)) return;
+      const sortedPlayers = [...state.players].sort((a, b) => b.points - a.points);
+      const infographicContainer = document.getElementById('infographic');
+      const infoIndicator = document.getElementById('infoIndicator');
+      
+      const tabs = ['points', 'streaks', 'matches', 'inactive', 'ranks', 'activity', 'distribution', 'top', 'matchmaking'];
+      const currentIndex = currentInfographicIndex % tabs.length;
+      const currentTab = tabs[currentIndex];
+      const nextIndex = (currentIndex + 1) % tabs.length;
+      const nextTab = tabs[nextIndex];
+      
+      // Update indicator dots
+      const tabNames = { points: 'Punkte', streaks: 'Streaks', matches: 'Spiele', inactive: 'Inaktiv', ranks: 'Ränge', activity: 'Aktivität', distribution: 'Verteilung', top: 'Top', matchmaking: 'Matchmaking' };
+      let indicatorHTML = '';
+      tabs.forEach((tab, index) => {
+        let dotClass = 'info-dot';
+        if (index === currentIndex) dotClass += ' active';
+        if (index === nextIndex) dotClass += ' next';
+        indicatorHTML += `<div class="${dotClass}" title="${tabNames[tab]}"></div>`;
+      });
+      infoIndicator.innerHTML = indicatorHTML;
+      
+      let html = '';
+      if (currentTab === 'points') {
+        html = '<h3>Punkteverlauf</h3><div class="chart-container" id="pointsChart"></div>';
+      } else if (currentTab === 'streaks') {
+        html = '<h3>Aktuelle Streaks</h3><div class="streaks-list" id="streaksList"></div>';
+      } else if (currentTab === 'matches') {
+        html = '<h3>Letzte Spiele</h3><div class="matches-list" id="matchesList"></div>';
+      } else if (currentTab === 'inactive') {
+        html = '<h3>Inaktive Spieler</h3><div class="inactive-list" id="inactiveList"></div>';
+      } else if (currentTab === 'ranks') {
+        html = '<h3>Rang-Verteilung</h3><div class="ranks-distribution" id="ranksDistribution"></div>';
+      } else if (currentTab === 'activity') {
+        html = '<h3>Aktivitäts-Statistiken</h3><div class="activity-stats" id="activityStats"></div>';
+      } else if (currentTab === 'distribution') {
+        html = '<h3>Punkte-Verteilung</h3><div class="points-distribution" id="pointsDistribution"></div>';
+      } else if (currentTab === 'top') {
+        html = '<h3>Top-Performer</h3><div class="top-performers" id="topPerformers"></div>';
+      } else if (currentTab === 'matchmaking') {
+        html = '<h3>Matchmaking-Statistiken</h3><div class="matchmaking-stats" id="matchmakingStats"></div>';
+      }
+      
+      infographicContainer.style.opacity = '0';
+      infographicContainer.style.transform = 'translateY(-10px)';
+      
+      setTimeout(() => {
+        infographicContainer.innerHTML = html;
+        infographicContainer.style.opacity = '1';
+        infographicContainer.style.transform = 'translateY(0)';
+      }, 300);
+      
+      if (currentTab === 'points') {
+        const pointsChart = document.getElementById('pointsChart');
+        const allPlayersSorted = [...state.players].sort((a, b) => b.points - a.points);
+        sortedPlayers.slice(0, 5).forEach((player, index) => {
+          const bar = document.createElement('div');
+          bar.className = 'chart-bar';
+          const maxPoints = Math.max(...sortedPlayers.map(p => p.points));
+          const percentage = (player.points / maxPoints) * 100;
+          const absoluteRank = allPlayersSorted.findIndex(p => p.id === player.id) + 1;
+          bar.style.cssText = `height:${percentage}%`;
+          bar.innerHTML = `
+            <span class="chart-bar-rank">#${absoluteRank}</span>
+            <span class="chart-bar-value">${player.points}</span>
+            <span class="chart-bar-label">${player.name.substring(0, 8)}</span>
+          `;
+          pointsChart.appendChild(bar);
+        });
+      } else if (currentTab === 'streaks') {
+        const streaksList = document.getElementById('streaksList');
+        const playersWithStreaks = sortedPlayers.filter(p => p.streak > 0).sort((a, b) => b.streak - a.streak);
+        playersWithStreaks.slice(0, 5).forEach(player => {
+          const item = document.createElement('div');
+          item.className = 'streak-item';
+          item.innerHTML = `
+            <span class="streak-name">${player.name}</span>
+            <span class="streak-value">🔥 ${player.streak}</span>
+          `;
+          streaksList.appendChild(item);
+        });
+        if (playersWithStreaks.length === 0) {
+          streaksList.innerHTML = '<div class="no-data">Keine Streaks</div>';
+        }
+      } else if (currentTab === 'matches') {
+        const matchesList = document.getElementById('matchesList');
+        const matches = state.recentMatches || [];
+        
+        if (matches.length === 0) {
+          matchesList.innerHTML = '<div class="no-data">Keine Spiele</div>';
+        } else {
+          matches.slice(0, 5).forEach(match => {
+            const item = document.createElement('div');
+            item.className = 'match-item';
+            item.innerHTML = `
+              <div>
+                <span class="match-winner">${match.winner}</span>
+                <span class="match-divider">vs</span>
+                <span class="match-loser">${match.loser}</span>
+              </div>
+              <div class="match-score">${match.winnerScore} - ${match.loserScore}</div>
+            `;
+            matchesList.appendChild(item);
+          });
+        }
+      } else if (currentTab === 'inactive') {
+        const inactiveList = document.getElementById('inactiveList');
+        const inactivePlayers = sortedPlayers.filter(p => p.active === false);
+        
+        inactiveList.innerHTML = '';
+        inactivePlayers.forEach(player => {
+          const item = document.createElement('div');
+          item.className = 'inactive-item';
+          item.innerHTML = `
+            <span class="inactive-name">${player.name}</span>
+            <span class="inactive-points">${player.points} Pkt</span>
+          `;
+          inactiveList.appendChild(item);
+        });
+        if (inactivePlayers.length === 0) {
+          inactiveList.innerHTML = '<div class="no-data">Keine inaktiven Spieler</div>';
+        }
+        
+        // Auto-scroll für inaktive Spieler
+        if (!window.inactiveScrollInterval) {
+          window.inactiveScrollIndex = 0;
+          window.inactiveScrollInterval = setInterval(() => {
+            const inactiveList = document.getElementById('inactiveList');
+            if (!inactiveList) {
+              clearInterval(window.inactiveScrollInterval);
+              window.inactiveScrollInterval = null;
+              return;
+            }
+            const items = inactiveList.querySelectorAll('.inactive-item');
+            if (items.length === 0) {
+              window.inactiveScrollIndex = 0;
+              return;
+            }
+            if (window.inactiveScrollIndex >= items.length) {
+              window.inactiveScrollIndex = 0;
+              inactiveList.scrollTop = 0;
+            } else {
+              const currentItem = items[window.inactiveScrollIndex];
+              if (currentItem) {
+                currentItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+              window.inactiveScrollIndex++;
+            }
+          }, 2000);
+        }
+      } else if (currentTab === 'ranks') {
+        const ranksDistribution = document.getElementById('ranksDistribution');
+        const rankCounts = {};
+        sortedPlayers.forEach(player => {
+          const rank = getRank(player.points);
+          rankCounts[rank.name] = (rankCounts[rank.name] || 0) + 1;
+        });
+        
+        ranksDistribution.innerHTML = '';
+        Object.entries(rankCounts).forEach(([rankName, count]) => {
+          const item = document.createElement('div');
+          item.className = 'rank-dist-item';
+          item.innerHTML = `
+            <div class="rank-dist-count">${count}</div>
+            <div class="rank-dist-name">${rankName}</div>
+          `;
+          ranksDistribution.appendChild(item);
+        });
+      } else if (currentTab === 'activity') {
+        const activityStats = document.getElementById('activityStats');
+        const playerActivity = {};
+        sortedPlayers.forEach(player => {
+          const gamesPlayed = player.gamesPlayed || 0;
+          playerActivity[player.name] = gamesPlayed;
+        });
+        
+        const sortedActivity = Object.entries(playerActivity).sort((a, b) => b[1] - a[1]).slice(0, 8);
+        
+        activityStats.innerHTML = '';
+        sortedActivity.forEach(([name, count]) => {
+          const item = document.createElement('div');
+          item.className = 'activity-item';
+          item.innerHTML = `
+            <span class="activity-name">${name}</span>
+            <span class="activity-count">${count} Spiele</span>
+          `;
+          activityStats.appendChild(item);
+        });
+      } else if (currentTab === 'distribution') {
+        const pointsDistribution = document.getElementById('pointsDistribution');
+        const pointRanges = [
+          { label: '0-5 Pkt', min: 0, max: 5 },
+          { label: '6-10 Pkt', min: 6, max: 10 },
+          { label: '11-15 Pkt', min: 11, max: 15 },
+          { label: '16-20 Pkt', min: 16, max: 20 },
+          { label: '21-30 Pkt', min: 21, max: 30 },
+          { label: '31-50 Pkt', min: 31, max: 50 },
+          { label: '50+ Pkt', min: 51, max: Infinity }
+        ];
+        
+        const distribution = pointRanges.map(range => ({
+          ...range,
+          count: sortedPlayers.filter(p => p.points >= range.min && p.points <= range.max).length
+        }));
+        
+        const maxCount = Math.max(...distribution.map(d => d.count));
+        
+        pointsDistribution.innerHTML = '';
+        distribution.forEach(range => {
+          const percentage = maxCount > 0 ? (range.count / maxCount) * 100 : 0;
+          const bar = document.createElement('div');
+          bar.className = 'points-dist-bar';
+          bar.innerHTML = `
+            <div class="points-dist-fill" style="width:${percentage}%"></div>
+            <span class="points-dist-label">${range.label}</span>
+            <span class="points-dist-count">${range.count}</span>
+            <span class="points-dist-range">${range.min}-${range.max === Infinity ? '∞' : range.max} Pkt</span>
+          `;
+          pointsDistribution.appendChild(bar);
+        });
+      } else if (currentTab === 'top') {
+        const topPerformers = document.getElementById('topPerformers');
+        const topGainers = sortedPlayers.slice(0, 5);
+        
+        topPerformers.innerHTML = '';
+        topGainers.forEach((player, index) => {
+          const item = document.createElement('div');
+          item.className = 'top-item';
+          item.innerHTML = `
+            <span class="top-name">#${index + 1} ${player.name}</span>
+            <span class="top-value">${player.points} Pkt</span>
+          `;
+          topPerformers.appendChild(item);
+        });
+      } else if (currentTab === 'matchmaking') {
+        const matchmakingStats = document.getElementById('matchmakingStats');
+        const activePlayers = sortedPlayers.filter(p => p.active !== false);
+        const lowPhasePlayers = activePlayers.filter(p => p.points < PROT_PLAT);
+        const highPhasePlayers = activePlayers.filter(p => p.points >= PROT_PLAT);
+        
+        matchmakingStats.innerHTML = `
+          <div class="mm-stat-box">
+            <div class="mm-stat-value">${activePlayers.length}</div>
+            <div class="mm-stat-label">Aktive Spieler</div>
+          </div>
+          <div class="mm-stat-box">
+            <div class="mm-stat-value">${lowPhasePlayers.length}</div>
+            <div class="mm-stat-label">Niedrige Liga</div>
+          </div>
+          <div class="mm-stat-box">
+            <div class="mm-stat-value">${highPhasePlayers.length}</div>
+            <div class="mm-stat-label">Hohe Liga</div>
+          </div>
+          <div class="mm-stat-box">
+            <div class="mm-stat-value">${state.round || 0}</div>
+            <div class="mm-stat-label">Aktuelle Runde</div>
+          </div>
+        `;
+      }
+    }
+
+
+
+    function loadState() {
+      db.collection('rangspiel_data').doc('main_data')
+        .onSnapshot((doc) => {
+          if(doc.exists) {
+            const data = doc.data();
+            state = data.state || data; // Firebase data is nested in 'state' property
+            console.log('State loaded from Firebase:', state);
+            console.log('Players:', state.players);
+            console.log('Players type:', typeof state.players);
+            console.log('Players is array:', Array.isArray(state.players));
+            render();
+          } else {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'flex';
+            document.getElementById('errorText').textContent = 'Keine Daten gefunden - Dokument existiert nicht';
+          }
+        }, (error) => {
+          console.error('Firebase error:', error);
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('error').style.display = 'flex';
+          document.getElementById('errorText').textContent = 'Fehler: ' + error.message;
+        });
+      
+      db.collection('global_badges').doc('badges')
+        .onSnapshot((doc) => {
+          if(doc.exists) {
+            globalBadges = doc.data().data || {};
+          }
+        });
+    }
+
+    auth.signInAnonymously().catch((error) => {
+      console.error('Auth error:', error);
+    });
+
+    loadState();
+  </script>
+</body>
+</html>
