@@ -97,6 +97,7 @@
     .matchmaking-phase-header::before{content:'⚡';font-size:0.9rem}
     .matchmaking-phase-players{display:flex;flex-wrap:wrap;gap:6px}
     .matchmaking-phase-player{padding:4px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:0.85rem;color:var(--text2);animation:fadeIn 0.3s ease;transition:var(--transition);box-shadow:0 2px 8px rgba(0,0,0,0.2);position:relative}
+    .mm-num{font-size:1.1rem;font-weight:800;color:var(--accent);margin-right:4px;display:inline-block;min-width:18px;text-align:center;text-shadow:0 0 8px rgba(232,184,75,0.5)}
     .matchmaking-phase-player:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(232,184,75,0.3)}
     .matchmaking-phase-player.in-both{border-color:var(--success);background:rgba(76,232,122,0.1);color:var(--success)}
     .matchmaking-phase-player.in-both::after{content:'✓';position:absolute;top:-6px;right:-6px;width:16px;height:16px;background:var(--success);border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;color:var(--bg);font-weight:700}
@@ -192,6 +193,15 @@
     .hmc-1{background:#27ae60;color:rgba(0,0,0,0.75)}.hmc-2{background:#f1c40f;color:rgba(0,0,0,0.75)}
     .hmc-3{background:#e67e22;color:rgba(0,0,0,0.75)}.hmc-4{background:#e74c3c;color:rgba(255,255,255,0.9)}
     .hmc-empty{background:var(--bg2)}
+
+    /* SLIDE: PUNKTEVERLAUF */
+    .pv-outer{flex:1;overflow:auto;min-height:0}
+    .pv-head{display:flex;gap:2px;padding-left:60px;margin-bottom:2px}
+    .pv-hlbl{width:22px;font-size:0.56rem;color:var(--text3);text-align:center;flex-shrink:0}
+    .pv-row{display:flex;gap:2px;align-items:center;margin-bottom:2px}
+    .pv-lbl{width:56px;font-size:0.68rem;color:var(--text2);font-weight:600;text-align:right;padding-right:5px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .pv-cell{width:22px;height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:700;flex-shrink:0;background:var(--bg2)}
+    .pv-empty{background:var(--bg2);opacity:0.3}
 
     /* SLIDE: AKTIVE RUNDE */
     .ar-row{display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);flex-shrink:0}
@@ -1348,8 +1358,8 @@
           const highestIdx = highest ? getRankIdx(highest.points) : 0;
           return rankIdx >= highestIdx - 2;
         }
-      });
-      
+      }).sort((a, b) => a.points - b.points);
+
       const nextPhasePlayers = sortedPlayers.filter(p => {
         if (!p.active) return false;
         const rankIdx = getRankIdx(p.points);
@@ -1362,22 +1372,22 @@
           const highestIdx = highest ? getRankIdx(highest.points) : 0;
           return rankIdx >= highestIdx - 2;
         }
-      });
+      }).sort((a, b) => a.points - b.points);
       
       matchmakingPhases.innerHTML = `
         <div class="matchmaking-phase">
-          <div class="matchmaking-phase-header">Aktuell: ${currentPhase === 'low' ? 'Niedrige Liga (1. niedrigste Punkte → letzter höchste Punkte)' : 'Hohe Liga (1. höchste Punkte → letzter niedrigste Punkte)'}</div>
+          <div class="matchmaking-phase-header">Aktuell: ${currentPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
           <div class="matchmaking-phase-players">
-            ${currentPhasePlayers.map(p => {
-              return `<div class="matchmaking-phase-player">${p.name}</div>`;
+            ${currentPhasePlayers.map((p, i) => {
+              return `<div class="matchmaking-phase-player"><span class="mm-num">${i + 1}</span> ${p.name}</div>`;
             }).join('')}
           </div>
         </div>
         <div class="matchmaking-phase">
-          <div class="matchmaking-phase-header">Nächste: ${nextPhase === 'low' ? 'Niedrige Liga (1. niedrigste Punkte → letzter höchste Punkte)' : 'Hohe Liga (1. höchste Punkte → letzter niedrigste Punkte)'}</div>
+          <div class="matchmaking-phase-header">Nächste: ${nextPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
           <div class="matchmaking-phase-players">
-            ${nextPhasePlayers.map(p => {
-              return `<div class="matchmaking-phase-player">${p.name}</div>`;
+            ${nextPhasePlayers.map((p, i) => {
+              return `<div class="matchmaking-phase-player"><span class="mm-num">${i + 1}</span> ${p.name}</div>`;
             }).join('')}
           </div>
         </div>
@@ -1573,7 +1583,7 @@
       const slides = ['leaderboard', 'streaks'];
       if (history.length > 0) slides.push('last-round');
       slides.push('plac-dist');
-      if (history.length > 0) slides.push('delta', 'rang-bilanz', 'heatmap');
+      if (history.length > 0) slides.push('delta', 'rang-bilanz', 'punkte-verlauf', 'heatmap');
       if (hasRound) slides.push('active-round');
 
       const idx = currentInfographicIndex % slides.length;
@@ -1598,6 +1608,7 @@
         'plac-dist':  'PLATZIERUNGEN',
         delta:        'Ø PUNKTE-DELTA',
         'rang-bilanz':'RANG-BILANZ',
+        'punkte-verlauf': 'PUNKTEVERLAUF',
         heatmap:      'HEATMAP',
         'active-round':'AKTIVE RUNDE',
       };
@@ -1608,6 +1619,7 @@
         'plac-dist':  'Platzierungsverteilung',
         delta:        'Ø Punkte pro Runde',
         'rang-bilanz':'Rang Auf / Abstieg',
+        'punkte-verlauf': 'Kumulierter Punkteverlauf',
         heatmap:      'Platzierungs-Heatmap',
         'active-round':'Runde läuft gerade',
       };
@@ -1766,6 +1778,47 @@
             row.innerHTML = `<div class="rb-name" title="${r.name}">${r.name.substring(0,8)}</div><div class="rb-bars"><div class="rb-up" style="width:${uw}%">${r.up>0?'▲ '+r.up:''}</div><div class="rb-down" style="width:${dw}%">${r.down>0?'▼ '+r.down:''}</div></div><div class="rb-score" style="color:${net>0?'#2ecc71':net<0?'#e74c3c':'var(--text3)'}">${net>0?'+':''}${net}</div>`;
             body.appendChild(row);
           });
+        }
+      }
+
+      // ── PUNKTEVERLAUF ──────────────────────────────────────────
+      else if (slide === 'punkte-verlauf') {
+        const rounds = [...history].filter(r=>r.results&&r.results.length>0).slice(-10).sort((a,b)=>a.round-b.round);
+        if (rounds.length === 0) {
+          body.innerHTML = '<div class="ig-empty">Noch keine Rundenhistorie</div>';
+        } else {
+          const outer = document.createElement('div');
+          outer.className = 'pv-outer';
+          const head = document.createElement('div');
+          head.className = 'pv-head';
+          rounds.forEach(r => { const l=document.createElement('div');l.className='pv-hlbl';l.textContent='R'+r.round;head.appendChild(l); });
+          outer.appendChild(head);
+          const seen = new Set();
+          rounds.forEach(r=>r.results.forEach(res=>{const p=state.players.find(pl=>pl.name===res.name);if(p)seen.add(p.id);}));
+          allSorted.filter(p=>seen.has(p.id)).forEach(player => {
+            const row = document.createElement('div');
+            row.className = 'pv-row';
+            const lbl = document.createElement('div');
+            lbl.className = 'pv-lbl'; lbl.title = player.name; lbl.textContent = player.name.substring(0,7);
+            row.appendChild(lbl);
+            let cumPoints = 0;
+            rounds.forEach(rnd => {
+              const res = rnd.results.find(r=>r.name===player.name);
+              const cell = document.createElement('div');
+              if (res) {
+                cumPoints += (res.delta || 0);
+                cell.className = 'pv-cell';
+                cell.textContent = cumPoints.toFixed(1);
+                const delta = res.delta || 0;
+                cell.style.color = delta > 0 ? '#2ecc71' : delta < 0 ? '#e74c3c' : 'var(--text)';
+              } else {
+                cell.className = 'pv-cell pv-empty';
+              }
+              row.appendChild(cell);
+            });
+            outer.appendChild(row);
+          });
+          body.appendChild(outer);
         }
       }
 
