@@ -1712,6 +1712,8 @@
   /* TOAST */
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:10px 20px;font-size:.88rem;font-weight:600;color:var(--text);z-index:300;transition:transform .3s ease,opacity .3s ease;opacity:0;white-space:nowrap;pointer-events:none;box-shadow:0 4px 24px rgba(0,0,0,.5)}
   .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  .badge-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,rgba(232,184,75,.15),rgba(201,122,47,.15));border:2px solid rgba(232,184,75,.5);border-radius:24px;padding:16px 32px;font-size:1.2rem;font-weight:700;color:var(--accent);z-index:400;transition:transform .4s ease,opacity .4s ease;opacity:0;white-space:nowrap;pointer-events:none;box-shadow:0 8px 32px rgba(232,184,75,.3)}
+  .badge-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
   /* MISC */
   .shield-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(232,184,75,.1);border:1px solid rgba(232,184,75,.2);border-radius:4px;padding:1px 5px;font-size:.65rem;font-weight:700;color:var(--accent);letter-spacing:.5px;text-transform:uppercase}
@@ -2567,6 +2569,7 @@
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="badge-toast" id="badgeToast"></div>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -5709,7 +5712,7 @@ function checkAndSetFirstRankAchiever(player, rankName) {
   if(!state.firstRankAchievers[key]) {
     state.firstRankAchievers[key] = { playerId:player.id, playerName:player.name, timestamp:Date.now() };
     saveState();
-    showToast(`🏅 ${player.name} erreicht als ERSTER ${rankName}!`);
+    showBadgeToast(`🏅 ${player.name} erreicht als ERSTER ${rankName}!`);
     console.log('DEBUG: Badge vergeben!', key, 'an', player.name);
   } else {
     console.log('DEBUG: Badge bereits vergeben an:', state.firstRankAchievers[key].playerName);
@@ -5722,7 +5725,7 @@ function checkAndSetFirstPrestige(player) {
   if(!state.firstRankAchievers['prestige']) {
     state.firstRankAchievers['prestige'] = { playerId:player.id, playerName:player.name, timestamp:Date.now() };
     saveState();
-    showToast(`⬣ ${player.name} erreicht als ERSTER Prestige!`);
+    showBadgeToast(`⬣ ${player.name} erreicht als ERSTER Prestige!`);
   }
 }
 
@@ -5732,7 +5735,7 @@ function checkAndSetFirstStreakBadge(player) {
   for(const sb of STREAK_FIRST_BADGES) {
     if(streak >= sb.threshold) {
       if(checkAndSetGlobalBadge(player, sb.key)) {
-        showToast(`🔥 ${player.name} als ERSTER mit Streak ×${sb.threshold}!`);
+        showBadgeToast(`🔥 ${player.name} als ERSTER mit Streak ×${sb.threshold}!`);
       }
     }
   }
@@ -5747,45 +5750,45 @@ function checkAchievements(player) {
   // 1. Veteran: erste Person wenn Runde 10 gespielt wird
   if(state.round >= 10) {
     if(checkAndSetGlobalBadge(player, 'ach_veteran'))
-      showToast(`🌙 ${player.name} ist der erste VETERAN! (Runde 10)`);
+      showBadgeToast(`🌙 ${player.name} ist der erste VETERAN! (Runde 10)`);
   }
 
   // 2. Duellant: erster Spieler mit 3+ Accounts in einem Profil (braucht Amethyst)
   if(player.key) {
     if(state.players.filter(p=>p.key===player.key).length >= 3) {
       if(checkAndSetGlobalBadge(player, 'ach_duelist'))
-        showToast(`⚔ ${player.key} ist der erste DUELLANT! (3 Accounts)`);
+        showBadgeToast(`⚔ ${player.key} ist der erste DUELLANT! (3 Accounts)`);
     }
   }
 
   // 3. Beschützt: erster der Gold (7 Pkt) erreicht
   if(player.points >= 7) {
     if(checkAndSetGlobalBadge(player, 'ach_shielded'))
-      showToast(`🛡 ${player.name} – BESCHÜTZT! Gold-Schutzwall aktiv.`);
+      showBadgeToast(`🛡 ${player.name} – BESCHÜTZT! Gold-Schutzwall aktiv.`);
   }
 
   // 4. Tiefsturz
   if(player.hitGoldFloor) {
     if(checkAndSetGlobalBadge(player, 'ach_tiefsturz'))
-      showToast(`📉 ${player.name} – TIEFSTURZ! Auf den Gold-Boden gefallen.`);
+      showBadgeToast(`📉 ${player.name} – TIEFSTURZ! Auf den Gold-Boden gefallen.`);
   }
 
   // 5. Aufsteiger: erster der Amethyst (19 Pkt) erreicht
   if(player.points >= 19) {
     if(checkAndSetGlobalBadge(player, 'ach_climber'))
-      showToast(`📈 ${player.name} – AUFSTEIGER! Amethyst erreicht.`);
+      showBadgeToast(`📈 ${player.name} – AUFSTEIGER! Amethyst erreicht.`);
   }
 
   // 6. Ewigkeit-Schutz: erster der Ewigkeit (76 Pkt) erreicht
   if(player.points >= 76) {
     if(checkAndSetGlobalBadge(player, 'ach_eternity_shield'))
-      showToast(`∞ ${player.name} – EWIGKEIT-SCHUTZ! Zeitloser Schutzwall erreicht.`);
+      showBadgeToast(`∞ ${player.name} – EWIGKEIT-SCHUTZ! Zeitloser Schutzwall erreicht.`);
   }
 
   // 7. Ultima-Schutz: erster der Ultima (100 Pkt) erreicht
   if(player.points >= 100) {
     if(checkAndSetGlobalBadge(player, 'ach_ultima_shield'))
-      showToast(`🛡️ ${player.name} – ULTIMA-SCHUTZ! Höchster Schutzwall erreicht.`);
+      showBadgeToast(`🛡️ ${player.name} – ULTIMA-SCHUTZ! Höchster Schutzwall erreicht.`);
   }
 
   // 6. Regenbogen: erster der alle 14 Rang-Stufen Bronze–Gott je einmal hatte
@@ -5798,80 +5801,80 @@ function checkAchievements(player) {
     }
     if(player.ranksReached.length >= 14) {
       if(checkAndSetGlobalBadge(player, 'ach_rainbow'))
-        showToast(`🌈 ${player.name} – REGENBOGEN! Alle Ränge erreicht.`);
+        showBadgeToast(`🌈 ${player.name} – REGENBOGEN! Alle Ränge erreicht.`);
     }
   }
 
   // 7. Centurion: erste Person wenn Runde 100 gespielt wird
   if(state.round >= 100) {
     if(checkAndSetGlobalBadge(player, 'ach_hundred'))
-      showToast(`💯 ${player.name} – CENTURION! Runde 100!`);
+      showBadgeToast(`💯 ${player.name} – CENTURION! Runde 100!`);
   }
 
   // 8. Sammler: erster der 25 Punkte (Platin) erreicht
   if(player.points >= 25) {
     if(checkAndSetGlobalBadge(player, 'ach_hoarder'))
-      showToast(`💰 ${player.name} – SAMMLER! 25 Punkte!`);
+      showBadgeToast(`💰 ${player.name} – SAMMLER! 25 Punkte!`);
   }
 
   // 9. Perfektionist: 3× Platz 1 in Folge
   if((player.consecutiveFirst||0) >= 3) {
     if(checkAndSetGlobalBadge(player, 'ach_perfectionist'))
-      showToast(`✨ ${player.name} – PERFEKTIONIST! 3× Platz 1 in Folge!`);
+      showBadgeToast(`✨ ${player.name} – PERFEKTIONIST! 3× Platz 1 in Folge!`);
   }
 
   // 10. Eisern: Streak ≥ 10
   if((player.streak||0) >= 10) {
     if(checkAndSetGlobalBadge(player, 'ach_iron'))
-      showToast(`🦾 ${player.name} – EISERN! 10 Runden ohne Verlust!`);
+      showBadgeToast(`🦾 ${player.name} – EISERN! 10 Runden ohne Verlust!`);
   }
 
   // 11. Glückspilz: consecutiveHalf ≥ 3 (3x nur +0.5 in Folge)
   if((player.consecutiveHalf||0) >= 3) {
     if(checkAndSetGlobalBadge(player, 'ach_lucky'))
-      showToast(`🍀 ${player.name} – GLÜCKSPILZ! 3× nur 0.5 Punkte!`);
+      showBadgeToast(`🍀 ${player.name} – GLÜCKSPILZ! 3× nur 0.5 Punkte!`);
   }
 
   // 12. Pechvogel: consecutiveLast ≥ 3
   if((player.consecutiveLast||0) >= 3) {
     if(checkAndSetGlobalBadge(player, 'ach_unlucky'))
-      showToast(`🌧 ${player.name} – PECHVOGEL! 3× letzter Platz!`);
+      showBadgeToast(`🌧 ${player.name} – PECHVOGEL! 3× letzter Platz!`);
   }
 
   // 15. Meteor: Einzelrunden-Gewinn ≥ 3 (trackt via player.bestSingleRoundGain)
   if((player.bestSingleRoundGain||0) >= 3) {
     if(checkAndSetGlobalBadge(player, 'ach_meteor'))
-      showToast(`☄️ ${player.name} – METEOR! 3+ Punkte in einer Runde!`);
+      showBadgeToast(`☄️ ${player.name} – METEOR! 3+ Punkte in einer Runde!`);
   }
 
   // 16. Eiskönig: 5 Runden keine Punkte verloren (streak ≥ 5 ohne negativen Delta)
   if((player.streak||0) >= 5) {
     if(checkAndSetGlobalBadge(player, 'ach_iceking'))
-      showToast(`🧊 ${player.name} – EISKÖNIG! 5 Runden ohne Verlust!`);
+      showBadgeToast(`🧊 ${player.name} – EISKÖNIG! 5 Runden ohne Verlust!`);
   }
 
   // 18. Marathonläufer: Runde 50
   if(state.round >= 50) {
     if(checkAndSetGlobalBadge(player, 'ach_marathon'))
-      showToast(`🏃 ${player.name} – MARATHONLÄUFER! Runde 50!`);
+      showBadgeToast(`🏃 ${player.name} – MARATHONLÄUFER! Runde 50!`);
   }
 
   // 20. Samurai: exakt 7 Gesamtsiege
   if((player.totalWins||0) === 7) {
     if(checkAndSetGlobalBadge(player, 'ach_samurai'))
-      showToast(`⚔️ ${player.name} – SAMURAI! Exakt 7 Siege!`);
+      showBadgeToast(`⚔️ ${player.name} – SAMURAI! Exakt 7 Siege!`);
   }
 
   // 22. Zen-Meister: 10 Runden nur positive Deltas (consecutivePositive ≥ 10)
   if((player.consecutivePositive||0) >= 10) {
     if(checkAndSetGlobalBadge(player, 'ach_zen'))
-      showToast(`☯️ ${player.name} – ZEN-MEISTER! 10 Runden nur positiv!`);
+      showBadgeToast(`☯️ ${player.name} – ZEN-MEISTER! 10 Runden nur positiv!`);
   }
 
   // 19. Diamant-Hände: nie unter 10 gefallen nachdem 15 erreicht (trackt via player.diamondHandsActive)
   if(player.diamondHandsActive && player.points >= 10) {
     if(checkAndSetGlobalBadge(player, 'ach_diamondhands'))
-      showToast(`💎 ${player.name} – DIAMANT-HÄNDE! Nie unter 10 seit 15+!`);
+      showBadgeToast(`💎 ${player.name} – DIAMANT-HÄNDE! Nie unter 10 seit 15+!`);
   }
 }
 
@@ -5894,18 +5897,18 @@ function checkPlacementAchievements(results) {
     if(p) {
       console.log('DEBUG: Spieler gefunden:', p.name, 'consecutiveFirst:', p.consecutiveFirst, 'totalWins:', p.totalWins);
       if(checkAndSetGlobalBadge(p, 'platz_gold1'))
-        showToast(`🥇 ${p.name} – ERSTER PLATZ! Allererster Sieg!`);
+        showBadgeToast(`🥇 ${p.name} – ERSTER PLATZ! Allererster Sieg!`);
       if(!p.consecutiveFirst) p.consecutiveFirst = 0;
       p.consecutiveFirst++;
       if(!p.totalWins) p.totalWins = 0;
       p.totalWins++;
       if(p.totalWins >= 5) {
         if(checkAndSetGlobalBadge(p, 'platz_silber3'))
-          showToast(`🏅 ${p.name} – PODIUM-KÖNIG! 5 Siege!`);
+          showBadgeToast(`🏅 ${p.name} – PODIUM-KÖNIG! 5 Siege!`);
       }
       if(p.consecutiveFirst >= 5) {
         if(checkAndSetGlobalBadge(p, 'platz_dominator'))
-          showToast(`👹 ${p.name} – DOMINATOR! 5 Siege in Folge!`);
+          showBadgeToast(`👹 ${p.name} – DOMINATOR! 5 Siege in Folge!`);
       }
       if(!p.winsAtRanks) p.winsAtRanks = [];
       const ri = getRankIdx(p.points);
@@ -5914,7 +5917,7 @@ function checkPlacementAchievements(results) {
       console.log('DEBUG: winsAtRanks nachher:', p.winsAtRanks);
       if(p.winsAtRanks.length >= 5) {
         if(checkAndSetGlobalBadge(p, 'platz_allrounder'))
-          showToast(`🎖 ${p.name} – ALLROUNDER! Siege in 5 Rängen!`);
+          showBadgeToast(`🎖 ${p.name} – ALLROUNDER! Siege in 5 Rängen!`);
       }
     }
     // Nicht-Gewinner: consecutiveFirst zurücksetzen
@@ -5931,7 +5934,7 @@ function checkPlacementAchievements(results) {
     const p = state.players.find(x=>x.id===last.playerId);
     if(p) {
       if(checkAndSetGlobalBadge(p, 'platz_last'))
-        showToast(`🪦 ${p.name} – LETZTER PLATZ! Mit Würde.`);
+        showBadgeToast(`🪦 ${p.name} – LETZTER PLATZ! Mit Würde.`);
       if(!p.consecutiveLast) p.consecutiveLast = 0;
       p.consecutiveLast++;
       // Pechvogel wird in checkAchievements gecheckt
@@ -5955,7 +5958,7 @@ function checkPlacementAchievements(results) {
     const isFirst = r.place === 1;
     if(wasLast && isFirst && n >= 3) {
       if(checkAndSetGlobalBadge(p, 'ach_phoenix'))
-        showToast(`🔥 ${p.name} – PHÖNIX! Vom letzten auf den ersten Platz!`);
+        showBadgeToast(`🔥 ${p.name} – PHÖNIX! Vom letzten auf den ersten Platz!`);
     }
     p.lastPlace = r.place;
 
@@ -5964,7 +5967,7 @@ function checkPlacementAchievements(results) {
       p.consecutiveSecond = (p.consecutiveSecond||0) + 1;
       if(p.consecutiveSecond >= 3) {
         if(checkAndSetGlobalBadge(p, 'ach_ninja'))
-          showToast(`🥷 ${p.name} – NINJA! 3× hintereinander Zweiter!`);
+          showBadgeToast(`🥷 ${p.name} – NINJA! 3× hintereinander Zweiter!`);
       }
     } else {
       p.consecutiveSecond = 0;
@@ -5976,7 +5979,7 @@ function checkPlacementAchievements(results) {
       p.consecutiveMid = (p.consecutiveMid||0) + 1;
       if(p.consecutiveMid >= 5) {
         if(checkAndSetGlobalBadge(p, 'ach_shadow'))
-          showToast(`👤 ${p.name} – SCHATTENSPIELER! 5× im Mittelfeld!`);
+          showBadgeToast(`👤 ${p.name} – SCHATTENSPIELER! 5× im Mittelfeld!`);
       }
     } else {
       p.consecutiveMid = 0;
@@ -5987,7 +5990,7 @@ function checkPlacementAchievements(results) {
       p.consecutiveLostNotLast = (p.consecutiveLostNotLast||0) + 1;
       if(p.consecutiveLostNotLast >= 3) {
         if(checkAndSetGlobalBadge(p, 'ach_lightning'))
-          showToast(`⚡ ${p.name} – BLITZABLEITER! 3× Verlust aber nie letzter!`);
+          showBadgeToast(`⚡ ${p.name} – BLITZABLEITER! 3× Verlust aber nie letzter!`);
       }
     } else {
       p.consecutiveLostNotLast = 0;
@@ -5998,7 +6001,7 @@ function checkPlacementAchievements(results) {
       p.consecutiveLow = (p.consecutiveLow||0) + 1;
       if(p.consecutiveLow >= 3) {
         if(checkAndSetGlobalBadge(p, 'ach_cave'))
-          showToast(`🦇 ${p.name} – HÖHLENFORSCHER! 3× unter 5 Punkte!`);
+          showBadgeToast(`🦇 ${p.name} – HÖHLENFORSCHER! 3× unter 5 Punkte!`);
       }
     } else {
       p.consecutiveLow = 0;
@@ -6036,7 +6039,7 @@ function checkPlacementAchievements(results) {
       const end   = p.rocketTrack[p.rocketTrack.length-1];
       if(start < 5 && end > 15) {
         if(checkAndSetGlobalBadge(p, 'ach_rocket'))
-          showToast(`🚀 ${p.name} – RAKETE! Von <5 auf >15 in 3 Runden!`);
+          showBadgeToast(`🚀 ${p.name} – RAKETE! Von <5 auf >15 in 3 Runden!`);
       }
     }
 
@@ -6048,7 +6051,7 @@ function checkPlacementAchievements(results) {
       if(winnerP && winnerP.points > p.points && r.delta < 0) {
         // du hast verloren und den Sieger "ermöglicht"
         if(checkAndSetGlobalBadge(p, 'ach_kingmaker'))
-          showToast(`👑 ${p.name} – KÖNIGSMACHER! Hat dem Sieger den Weg frei gemacht!`);
+          showBadgeToast(`👑 ${p.name} – KÖNIGSMACHER! Hat dem Sieger den Weg frei gemacht!`);
       }
     }
   });
@@ -6616,9 +6619,14 @@ function confirmReset(){
 
 /* TOAST */
 let toastTimer=null;
+let badgeToastTimer=null;
 function showToast(msg){
   const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2400);
+}
+function showBadgeToast(msg){
+  const el=document.getElementById('badgeToast');el.textContent=msg;el.classList.add('show');
+  clearTimeout(badgeToastTimer);badgeToastTimer=setTimeout(()=>el.classList.remove('show'),4000);
 }
 
 /* HELPERS */
