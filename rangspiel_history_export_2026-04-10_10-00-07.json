@@ -1,0 +1,7265 @@
+{
+  "metadata": {
+    "exportDate": "2026-04-10T08:00:07.915Z",
+    "exportTimestamp": 1775808007915,
+    "version": "RangSpiel v3.0",
+    "activeProfile": "default",
+    "totalProfiles": 1,
+    "exportSource": "RangSpiel Web App",
+    "exportType": "history-replay"
+  },
+  "setupData": {
+    "keys": [
+      {
+        "key": "Leif",
+        "internalId": "uid_1775205491716_9xbfh",
+        "totalPoints": 0
+      },
+      {
+        "internalId": "uid_1775205493747_2mbvd",
+        "key": "Erik",
+        "totalPoints": 0
+      },
+      {
+        "totalPoints": 0,
+        "key": "Thore",
+        "internalId": "uid_1775205495897_3tb10"
+      },
+      {
+        "key": "Nico",
+        "internalId": "uid_1775205499615_c1rlg",
+        "totalPoints": 0
+      },
+      {
+        "internalId": "uid_1775205501265_b8yky",
+        "key": "Joris",
+        "totalPoints": 0
+      },
+      {
+        "key": "Papa",
+        "totalPoints": 0,
+        "internalId": "uid_1775807936825_6z38a"
+      }
+    ],
+    "accessCodes": [],
+    "profiles": {
+      "default": {
+        "profileInfo": {
+          "id": "default",
+          "name": "Standard",
+          "isActive": true
+        },
+        "initialPlayers": [
+          {
+            "id": 29,
+            "name": "Leif",
+            "key": "Leif",
+            "active": false
+          },
+          {
+            "id": 30,
+            "name": "Erik",
+            "key": "Erik",
+            "active": false
+          },
+          {
+            "id": 31,
+            "name": "Thore",
+            "key": "Thore",
+            "active": false
+          },
+          {
+            "id": 32,
+            "name": "Nico",
+            "key": "Nico",
+            "active": false
+          },
+          {
+            "id": 33,
+            "name": "Joris",
+            "key": "Joris",
+            "active": false
+          },
+          {
+            "id": 34,
+            "name": "Nico2",
+            "key": "Nico",
+            "active": false
+          },
+          {
+            "id": 35,
+            "name": "Erik2",
+            "key": "Erik",
+            "active": false
+          },
+          {
+            "id": 36,
+            "name": "Joris2",
+            "key": "Joris",
+            "active": false
+          },
+          {
+            "id": 37,
+            "name": "Leif2",
+            "key": "Leif",
+            "active": false
+          },
+          {
+            "id": 38,
+            "name": "Papa",
+            "key": "Papa",
+            "active": false
+          },
+          {
+            "id": 42,
+            "name": "Erik3",
+            "key": "Erik",
+            "active": false
+          }
+        ],
+        "nextId": 43
+      }
+    },
+    "globalBadges": {
+      "ach_zen": {
+        "playerId": 32,
+        "timestamp": 1775807762181,
+        "playerName": "Nico",
+        "internalId": "uid_1775205499615_c1rlg"
+      },
+      "ach_shadow": {
+        "timestamp": 1775807761782,
+        "playerId": 32,
+        "playerName": "Nico",
+        "internalId": "uid_1775205499615_c1rlg"
+      },
+      "ach_cave": {
+        "timestamp": 1775807761605,
+        "playerId": 31,
+        "internalId": "uid_1775205495897_3tb10",
+        "playerName": "Thore"
+      },
+      "platz_silber3": {
+        "timestamp": 1775807761781,
+        "playerId": 30,
+        "playerName": "Erik",
+        "internalId": "uid_1775205493747_2mbvd"
+      },
+      "ach_veteran": {
+        "internalId": "uid_1775205491716_9xbfh",
+        "playerName": "Leif",
+        "timestamp": 1775807762014,
+        "playerId": 29
+      },
+      "platz_dominator": {
+        "internalId": "uid_1775205499615_c1rlg",
+        "playerName": "Nico",
+        "timestamp": 1775807762015,
+        "playerId": 32
+      },
+      "ach_perfectionist": {
+        "internalId": "uid_1775205499615_c1rlg",
+        "playerName": "Nico",
+        "playerId": 32,
+        "timestamp": 1775807761950
+      },
+      "ach_marathon": {
+        "playerName": "Leif",
+        "internalId": "uid_1775205491716_9xbfh",
+        "playerId": 29,
+        "timestamp": 1775807764447
+      },
+      "ach_hundred": {
+        "timestamp": 1775807767504,
+        "playerId": 29,
+        "playerName": "Leif",
+        "internalId": "uid_1775205491716_9xbfh"
+      },
+      "ach_climber": {
+        "internalId": "uid_1775205493747_2mbvd",
+        "playerName": "Erik",
+        "playerId": 30,
+        "timestamp": 1775807770573
+      },
+      "platz_gold1": {
+        "playerId": 30,
+        "timestamp": 1775807761484,
+        "playerName": "Erik",
+        "internalId": "uid_1775205493747_2mbvd"
+      },
+      "ach_shielded": {
+        "internalId": "uid_1775205499615_c1rlg",
+        "playerName": "Nico",
+        "playerId": 32,
+        "timestamp": 1775807762180
+      },
+      "ach_unlucky": {
+        "playerId": 30,
+        "timestamp": 1775807761949,
+        "playerName": "Erik",
+        "internalId": "uid_1775205493747_2mbvd"
+      },
+      "ach_diamondhands": {
+        "playerId": 30,
+        "timestamp": 1775807764868,
+        "playerName": "Erik",
+        "internalId": "uid_1775205493747_2mbvd"
+      },
+      "ach_lucky": {
+        "timestamp": 1775807761546,
+        "playerId": 29,
+        "playerName": "Leif",
+        "internalId": "uid_1775205491716_9xbfh"
+      },
+      "ach_iceking": {
+        "playerId": 32,
+        "timestamp": 1775807762127,
+        "playerName": "Nico",
+        "internalId": "uid_1775205499615_c1rlg"
+      },
+      "ach_kingmaker": {
+        "playerName": "Joris",
+        "internalId": "uid_1775205501265_b8yky",
+        "playerId": 33,
+        "timestamp": 1775807764386
+      },
+      "ach_ninja": {
+        "playerName": "Leif",
+        "internalId": "uid_1775205491716_9xbfh",
+        "playerId": 29,
+        "timestamp": 1775807761548
+      },
+      "ach_samurai": {
+        "playerName": "Nico",
+        "internalId": "uid_1775205499615_c1rlg",
+        "playerId": 32,
+        "timestamp": 1775807762071
+      },
+      "platz_last": {
+        "timestamp": 1775807761485,
+        "playerId": 32,
+        "playerName": "Nico",
+        "internalId": "uid_1775205499615_c1rlg"
+      },
+      "platz_allrounder": {
+        "internalId": "uid_1775205493747_2mbvd",
+        "playerName": "Erik",
+        "timestamp": 1775807764511,
+        "playerId": 30
+      }
+    }
+  },
+  "historyData": {
+    "rounds": [
+      {
+        "round": 1,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik",
+            "newPoints": 1,
+            "rankDown": false,
+            "rankUp": true,
+            "delta": 1,
+            "playerId": 30,
+            "place": 1,
+            "newRank": "Bronze",
+            "oldRank": "Unranked",
+            "oldPoints": 0
+          },
+          {
+            "newRank": "Unranked",
+            "oldRank": "Unranked",
+            "oldPoints": 0,
+            "playerId": 29,
+            "place": 2,
+            "delta": 0.5,
+            "rankUp": false,
+            "newPoints": 0.5,
+            "rankDown": false,
+            "name": "Leif"
+          },
+          {
+            "rankUp": false,
+            "delta": 0,
+            "newPoints": 0,
+            "rankDown": false,
+            "oldRank": "Unranked",
+            "oldPoints": 0,
+            "newRank": "Unranked",
+            "place": 3,
+            "playerId": 31,
+            "name": "Thore"
+          },
+          {
+            "place": 4,
+            "playerId": 33,
+            "newRank": "Unranked",
+            "oldPoints": 0,
+            "oldRank": "Unranked",
+            "rankDown": false,
+            "newPoints": 0,
+            "delta": 0,
+            "rankUp": false,
+            "name": "Joris"
+          },
+          {
+            "oldRank": "Unranked",
+            "oldPoints": 0,
+            "newRank": "Unranked",
+            "playerId": 32,
+            "place": 5,
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 0,
+            "name": "Nico"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 2,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris",
+            "place": 1,
+            "playerId": 33,
+            "oldRank": "Unranked",
+            "newRank": "Bronze",
+            "oldPoints": 0,
+            "rankDown": false,
+            "newPoints": 1,
+            "delta": 1,
+            "rankUp": true
+          },
+          {
+            "name": "Leif",
+            "delta": 0.5,
+            "rankUp": true,
+            "newPoints": 1,
+            "rankDown": false,
+            "oldPoints": 0.5,
+            "newRank": "Bronze",
+            "oldRank": "Unranked",
+            "place": 2,
+            "playerId": 29
+          },
+          {
+            "name": "Nico",
+            "place": 3,
+            "playerId": 32,
+            "oldPoints": 0,
+            "newRank": "Unranked",
+            "oldRank": "Unranked",
+            "newPoints": 0,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0
+          },
+          {
+            "name": "Thore",
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 0,
+            "oldPoints": 0,
+            "oldRank": "Unranked",
+            "newRank": "Unranked",
+            "place": 4,
+            "playerId": 31
+          },
+          {
+            "oldPoints": 1,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "place": 5,
+            "playerId": 30,
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 1,
+            "name": "Erik"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 3,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 2,
+            "rankUp": false,
+            "delta": 1,
+            "playerId": 30,
+            "place": 1,
+            "oldRank": "Bronze",
+            "oldPoints": 1,
+            "newRank": "Bronze",
+            "name": "Erik"
+          },
+          {
+            "oldPoints": 0,
+            "oldRank": "Unranked",
+            "newRank": "Unranked",
+            "place": 2,
+            "playerId": 32,
+            "delta": 0.5,
+            "rankUp": false,
+            "newPoints": 0.5,
+            "rankDown": false,
+            "name": "Nico"
+          },
+          {
+            "name": "Thore",
+            "newRank": "Unranked",
+            "oldRank": "Unranked",
+            "oldPoints": 0,
+            "place": 3,
+            "playerId": 31,
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 0
+          },
+          {
+            "playerId": 29,
+            "place": 4,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "oldPoints": 1,
+            "rankDown": false,
+            "newPoints": 1,
+            "delta": 0,
+            "rankUp": false,
+            "name": "Leif"
+          },
+          {
+            "place": 5,
+            "playerId": 33,
+            "oldPoints": 1,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "newPoints": 1,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 4,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "newPoints": 2,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false,
+            "place": 1,
+            "playerId": 29,
+            "oldRank": "Bronze",
+            "oldPoints": 1,
+            "newRank": "Bronze"
+          },
+          {
+            "name": "Joris",
+            "playerId": 33,
+            "place": 2,
+            "oldPoints": 1,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "rankDown": false,
+            "newPoints": 1.5,
+            "rankUp": false,
+            "delta": 0.5
+          },
+          {
+            "newRank": "Unranked",
+            "oldRank": "Unranked",
+            "oldPoints": 0,
+            "playerId": 31,
+            "place": 3,
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 0,
+            "name": "Thore"
+          },
+          {
+            "name": "Nico",
+            "rankDown": false,
+            "newPoints": 0.5,
+            "delta": 0,
+            "rankUp": false,
+            "playerId": 32,
+            "place": 4,
+            "oldRank": "Unranked",
+            "newRank": "Unranked",
+            "oldPoints": 0.5
+          },
+          {
+            "name": "Erik",
+            "oldRank": "Bronze",
+            "oldPoints": 2,
+            "newRank": "Bronze",
+            "playerId": 30,
+            "place": 5,
+            "rankUp": false,
+            "delta": 0,
+            "newPoints": 2,
+            "rankDown": false
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 5,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 2.5,
+            "delta": 1,
+            "rankUp": false,
+            "place": 1,
+            "playerId": 33,
+            "newRank": "Bronze",
+            "oldPoints": 1.5,
+            "oldRank": "Bronze",
+            "name": "Joris"
+          },
+          {
+            "newRank": "Bronze",
+            "oldPoints": 0.5,
+            "oldRank": "Unranked",
+            "playerId": 32,
+            "place": 2,
+            "delta": 0.5,
+            "rankUp": true,
+            "rankDown": false,
+            "newPoints": 1,
+            "name": "Nico"
+          },
+          {
+            "name": "Leif",
+            "newPoints": 2,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "place": 3,
+            "playerId": 29,
+            "oldPoints": 2,
+            "oldRank": "Bronze",
+            "newRank": "Bronze"
+          },
+          {
+            "newPoints": 2,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "playerId": 30,
+            "place": 4,
+            "newRank": "Bronze",
+            "oldPoints": 2,
+            "oldRank": "Bronze",
+            "name": "Erik"
+          },
+          {
+            "newRank": "Unranked",
+            "oldPoints": 0,
+            "oldRank": "Unranked",
+            "place": 5,
+            "playerId": 31,
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 0,
+            "name": "Thore"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 6,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "playerId": 30,
+            "place": 1,
+            "oldPoints": 2,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "rankDown": false,
+            "newPoints": 3,
+            "delta": 1,
+            "rankUp": false,
+            "name": "Erik"
+          },
+          {
+            "oldRank": "Bronze",
+            "oldPoints": 1,
+            "newRank": "Bronze",
+            "playerId": 32,
+            "place": 2,
+            "rankUp": false,
+            "delta": 0.5,
+            "newPoints": 1.5,
+            "rankDown": false,
+            "name": "Nico"
+          },
+          {
+            "name": "Thore",
+            "newPoints": 0,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "place": 3,
+            "playerId": 31,
+            "oldRank": "Unranked",
+            "oldPoints": 0,
+            "newRank": "Unranked"
+          },
+          {
+            "rankUp": false,
+            "delta": 0,
+            "newPoints": 2.5,
+            "rankDown": false,
+            "newRank": "Bronze",
+            "oldPoints": 2.5,
+            "oldRank": "Bronze",
+            "playerId": 33,
+            "place": 4,
+            "name": "Joris"
+          },
+          {
+            "playerId": 29,
+            "place": 5,
+            "oldPoints": 2,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "newPoints": 2,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 7,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "oldPoints": 2,
+            "playerId": 29,
+            "place": 1,
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 3
+          },
+          {
+            "rankDown": false,
+            "newPoints": 3,
+            "rankUp": false,
+            "delta": 0.5,
+            "playerId": 33,
+            "place": 2,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "oldPoints": 2.5,
+            "name": "Joris"
+          },
+          {
+            "oldRank": "Bronze",
+            "oldPoints": 1.5,
+            "newRank": "Bronze",
+            "playerId": 32,
+            "place": 3,
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 1.5,
+            "rankDown": false,
+            "name": "Nico"
+          },
+          {
+            "name": "Erik",
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 3,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "oldPoints": 3,
+            "playerId": 30,
+            "place": 4
+          },
+          {
+            "name": "Thore",
+            "rankDown": false,
+            "newPoints": 0,
+            "rankUp": false,
+            "delta": 0,
+            "place": 5,
+            "playerId": 31,
+            "oldRank": "Unranked",
+            "newRank": "Unranked",
+            "oldPoints": 0
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 8,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newRank": "Bronze",
+            "oldPoints": 1.5,
+            "oldRank": "Bronze",
+            "playerId": 32,
+            "place": 1,
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 2.5,
+            "name": "Nico"
+          },
+          {
+            "name": "Thore",
+            "place": 2,
+            "playerId": 31,
+            "newRank": "Unranked",
+            "oldPoints": 0,
+            "oldRank": "Unranked",
+            "newPoints": 0.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0.5
+          },
+          {
+            "name": "Joris",
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 3,
+            "newRank": "Bronze",
+            "oldPoints": 3,
+            "oldRank": "Bronze",
+            "playerId": 33,
+            "place": 3
+          },
+          {
+            "name": "Leif",
+            "playerId": 29,
+            "place": 4,
+            "newRank": "Bronze",
+            "oldPoints": 3,
+            "oldRank": "Bronze",
+            "newPoints": 3,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false
+          },
+          {
+            "name": "Erik",
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 3,
+            "rankDown": false,
+            "oldPoints": 3,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "playerId": 30,
+            "place": 5
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 9,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldPoints": 2.5,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "place": 1,
+            "playerId": 32,
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 3.5,
+            "rankDown": false,
+            "name": "Nico"
+          },
+          {
+            "name": "Joris",
+            "playerId": 33,
+            "place": 2,
+            "oldRank": "Bronze",
+            "oldPoints": 3,
+            "newRank": "Bronze",
+            "newPoints": 3.5,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": false
+          },
+          {
+            "name": "Leif",
+            "newPoints": 3,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "playerId": 29,
+            "place": 3,
+            "oldPoints": 3,
+            "oldRank": "Bronze",
+            "newRank": "Bronze"
+          },
+          {
+            "name": "Thore",
+            "playerId": 31,
+            "place": 4,
+            "newRank": "Unranked",
+            "oldRank": "Unranked",
+            "oldPoints": 0.5,
+            "newPoints": 0.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0
+          },
+          {
+            "name": "Erik",
+            "rankDown": false,
+            "newPoints": 3,
+            "rankUp": false,
+            "delta": 0,
+            "place": 5,
+            "playerId": 30,
+            "oldPoints": 3,
+            "newRank": "Bronze",
+            "oldRank": "Bronze"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 10,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldRank": "Bronze",
+            "newRank": "Silber",
+            "oldPoints": 3.5,
+            "place": 1,
+            "playerId": 32,
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 4.5,
+            "name": "Nico"
+          },
+          {
+            "newPoints": 3.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0.5,
+            "place": 2,
+            "playerId": 29,
+            "newRank": "Bronze",
+            "oldPoints": 3,
+            "oldRank": "Bronze",
+            "name": "Leif"
+          },
+          {
+            "name": "Erik",
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 3,
+            "rankDown": false,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "oldPoints": 3,
+            "place": 3,
+            "playerId": 30
+          },
+          {
+            "oldRank": "Unranked",
+            "newRank": "Unranked",
+            "oldPoints": 0.5,
+            "playerId": 31,
+            "place": 4,
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 0.5,
+            "name": "Thore"
+          },
+          {
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "oldPoints": 3.5,
+            "place": 5,
+            "playerId": 33,
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 3.5,
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 11,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Nico",
+            "rankDown": false,
+            "newPoints": 5.5,
+            "rankUp": false,
+            "delta": 1,
+            "place": 1,
+            "playerId": 32,
+            "oldPoints": 4.5,
+            "newRank": "Silber",
+            "oldRank": "Silber"
+          },
+          {
+            "name": "Joris",
+            "playerId": 33,
+            "place": 2,
+            "newRank": "Silber",
+            "oldRank": "Bronze",
+            "oldPoints": 3.5,
+            "rankDown": false,
+            "newPoints": 4,
+            "delta": 0.5,
+            "rankUp": true
+          },
+          {
+            "place": 3,
+            "playerId": 30,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "oldPoints": 3,
+            "newPoints": 3,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0,
+            "name": "Erik"
+          },
+          {
+            "name": "Thore",
+            "place": 4,
+            "playerId": 31,
+            "oldPoints": 0.5,
+            "oldRank": "Unranked",
+            "newRank": "Unranked",
+            "newPoints": 0.5,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false
+          },
+          {
+            "name": "Leif",
+            "playerId": 29,
+            "place": 5,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "oldPoints": 3.5,
+            "newPoints": 3.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 12,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Nico",
+            "oldPoints": 5.5,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "playerId": 32,
+            "place": 1,
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 6.5
+          },
+          {
+            "name": "Erik",
+            "playerId": 30,
+            "place": 2,
+            "newRank": "Bronze",
+            "oldPoints": 3,
+            "oldRank": "Bronze",
+            "newPoints": 3.5,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": false
+          },
+          {
+            "oldRank": "Unranked",
+            "oldPoints": 0.5,
+            "newRank": "Unranked",
+            "playerId": 31,
+            "place": 3,
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 0.5,
+            "rankDown": false,
+            "name": "Thore"
+          },
+          {
+            "place": 4,
+            "playerId": 29,
+            "oldPoints": 3.5,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "rankDown": false,
+            "newPoints": 3.5,
+            "delta": 0,
+            "rankUp": false,
+            "name": "Leif"
+          },
+          {
+            "name": "Joris",
+            "playerId": 33,
+            "place": 5,
+            "oldPoints": 4,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "newPoints": 4,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 13,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Nico",
+            "delta": 1,
+            "rankUp": true,
+            "newPoints": 7.5,
+            "rankDown": false,
+            "oldPoints": 6.5,
+            "newRank": "Gold",
+            "oldRank": "Silber",
+            "playerId": 32,
+            "place": 1
+          },
+          {
+            "name": "Leif",
+            "rankUp": true,
+            "delta": 0.5,
+            "rankDown": false,
+            "newPoints": 4,
+            "oldRank": "Bronze",
+            "newRank": "Silber",
+            "oldPoints": 3.5,
+            "playerId": 29,
+            "place": 2
+          },
+          {
+            "name": "Erik",
+            "playerId": 30,
+            "place": 3,
+            "oldPoints": 3.5,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "rankDown": false,
+            "newPoints": 3.5,
+            "rankUp": false,
+            "delta": 0
+          },
+          {
+            "name": "Joris",
+            "rankDown": false,
+            "newPoints": 4,
+            "delta": 0,
+            "rankUp": false,
+            "playerId": 33,
+            "place": 4,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "oldPoints": 4
+          },
+          {
+            "name": "Thore",
+            "playerId": 31,
+            "place": 5,
+            "newRank": "Unranked",
+            "oldRank": "Unranked",
+            "oldPoints": 0.5,
+            "rankDown": false,
+            "newPoints": 0.5,
+            "rankUp": false,
+            "delta": 0
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 14,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Nico",
+            "playerId": 32,
+            "place": 1,
+            "oldRank": "Gold",
+            "oldPoints": 7.5,
+            "newRank": "Gold",
+            "newPoints": 8.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 1
+          },
+          {
+            "oldRank": "Bronze",
+            "oldPoints": 3.5,
+            "newRank": "Silber",
+            "place": 2,
+            "playerId": 30,
+            "delta": 0.5,
+            "rankUp": true,
+            "newPoints": 4,
+            "rankDown": false,
+            "name": "Erik"
+          },
+          {
+            "playerId": 33,
+            "place": 3,
+            "newRank": "Silber",
+            "oldPoints": 4,
+            "oldRank": "Silber",
+            "rankDown": false,
+            "newPoints": 4,
+            "delta": 0,
+            "rankUp": false,
+            "name": "Joris"
+          },
+          {
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "oldPoints": 4,
+            "playerId": 29,
+            "place": 4,
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 4,
+            "rankDown": false,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 15,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik",
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 5,
+            "newRank": "Silber",
+            "oldPoints": 4,
+            "oldRank": "Silber",
+            "playerId": 30,
+            "place": 1
+          },
+          {
+            "newPoints": 9,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0.5,
+            "playerId": 32,
+            "place": 2,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8.5,
+            "name": "Nico"
+          },
+          {
+            "oldPoints": 4,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "place": 3,
+            "playerId": 29,
+            "rankUp": false,
+            "delta": 0,
+            "newPoints": 4,
+            "rankDown": false,
+            "name": "Leif"
+          },
+          {
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 4,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "oldPoints": 4,
+            "place": 4,
+            "playerId": 33,
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 16,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldRank": "Gold",
+            "newRank": "Rubin",
+            "oldPoints": 9,
+            "playerId": 32,
+            "place": 1,
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 10,
+            "name": "Nico"
+          },
+          {
+            "delta": 0.5,
+            "rankUp": false,
+            "newPoints": 4.5,
+            "rankDown": false,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "oldPoints": 4,
+            "playerId": 29,
+            "place": 2,
+            "name": "Leif"
+          },
+          {
+            "oldRank": "Silber",
+            "oldPoints": 4,
+            "newRank": "Silber",
+            "playerId": 33,
+            "place": 3,
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 4,
+            "name": "Joris"
+          },
+          {
+            "oldRank": "Silber",
+            "oldPoints": 5,
+            "newRank": "Silber",
+            "place": 4,
+            "playerId": 30,
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 5,
+            "name": "Erik"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 17,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 5.5,
+            "rankDown": false,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "oldPoints": 4.5,
+            "playerId": 29,
+            "place": 1,
+            "name": "Leif"
+          },
+          {
+            "name": "Erik",
+            "rankDown": false,
+            "newPoints": 5.5,
+            "rankUp": false,
+            "delta": 0.5,
+            "playerId": 30,
+            "place": 2,
+            "newRank": "Silber",
+            "oldPoints": 5,
+            "oldRank": "Silber"
+          },
+          {
+            "newRank": "Gold",
+            "oldRank": "Rubin",
+            "oldPoints": 10,
+            "playerId": 32,
+            "place": 3,
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 9,
+            "rankDown": true,
+            "name": "Nico"
+          },
+          {
+            "newPoints": 4,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "place": 4,
+            "playerId": 33,
+            "oldPoints": 4,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 18,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldPoints": 9,
+            "oldRank": "Gold",
+            "newRank": "Rubin",
+            "playerId": 32,
+            "place": 1,
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 10,
+            "name": "Nico"
+          },
+          {
+            "newPoints": 4.5,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": false,
+            "playerId": 33,
+            "place": 2,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "oldPoints": 4,
+            "name": "Joris"
+          },
+          {
+            "oldRank": "Silber",
+            "oldPoints": 5.5,
+            "newRank": "Silber",
+            "playerId": 30,
+            "place": 3,
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 5.5,
+            "name": "Erik"
+          },
+          {
+            "place": 4,
+            "playerId": 29,
+            "oldPoints": 5.5,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "rankDown": false,
+            "newPoints": 5.5,
+            "delta": 0,
+            "rankUp": false,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 19,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 11,
+            "rankUp": false,
+            "delta": 1,
+            "place": 1,
+            "playerId": 32,
+            "oldPoints": 10,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "name": "Nico"
+          },
+          {
+            "name": "Joris",
+            "playerId": 33,
+            "place": 2,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "oldPoints": 4.5,
+            "rankDown": false,
+            "newPoints": 5,
+            "delta": 0.5,
+            "rankUp": false
+          },
+          {
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 5.5,
+            "oldPoints": 5.5,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "place": 3,
+            "playerId": 29,
+            "name": "Leif"
+          },
+          {
+            "name": "Erik",
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 5.5,
+            "rankDown": false,
+            "oldRank": "Silber",
+            "oldPoints": 5.5,
+            "newRank": "Silber",
+            "place": 4,
+            "playerId": 30
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 20,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik",
+            "newPoints": 6.5,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false,
+            "place": 1,
+            "playerId": 30,
+            "oldPoints": 5.5,
+            "oldRank": "Silber",
+            "newRank": "Silber"
+          },
+          {
+            "name": "Nico",
+            "delta": 0.5,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 11.5,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "oldPoints": 11,
+            "place": 2,
+            "playerId": 32
+          },
+          {
+            "name": "Joris",
+            "place": 3,
+            "playerId": 33,
+            "oldRank": "Silber",
+            "oldPoints": 5,
+            "newRank": "Silber",
+            "rankDown": false,
+            "newPoints": 5,
+            "delta": 0,
+            "rankUp": false
+          },
+          {
+            "name": "Leif",
+            "playerId": 29,
+            "place": 4,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "oldPoints": 5.5,
+            "newPoints": 5.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 21,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": true,
+            "delta": 1,
+            "newPoints": 7.5,
+            "rankDown": false,
+            "oldPoints": 6.5,
+            "newRank": "Gold",
+            "oldRank": "Silber",
+            "place": 1,
+            "playerId": 30,
+            "name": "Erik"
+          },
+          {
+            "oldPoints": 5,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "place": 2,
+            "playerId": 33,
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 5,
+            "rankDown": false,
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 22,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "place": 1,
+            "playerId": 29,
+            "oldRank": "Silber",
+            "oldPoints": 5.5,
+            "newRank": "Silber",
+            "newPoints": 6.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 1,
+            "name": "Leif"
+          },
+          {
+            "name": "Joris",
+            "rankDown": false,
+            "newPoints": 5.5,
+            "delta": 0.5,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 33,
+            "oldPoints": 5,
+            "oldRank": "Silber",
+            "newRank": "Silber"
+          },
+          {
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 7.5,
+            "playerId": 30,
+            "place": 3,
+            "rankUp": false,
+            "delta": -0.5,
+            "rankDown": false,
+            "newPoints": 7,
+            "name": "Erik"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 23,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "place": 1,
+            "playerId": 29,
+            "oldPoints": 6.5,
+            "newRank": "Gold",
+            "oldRank": "Silber",
+            "newPoints": 7.5,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": true
+          },
+          {
+            "place": 2,
+            "playerId": 30,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "newPoints": 7.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0.5,
+            "name": "Erik"
+          },
+          {
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 5.5,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "oldPoints": 5.5,
+            "place": 3,
+            "playerId": 33,
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 24,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 8.5,
+            "rankDown": false,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7.5,
+            "playerId": 29,
+            "place": 1,
+            "name": "Leif"
+          },
+          {
+            "name": "Erik",
+            "place": 2,
+            "playerId": 30,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7.5,
+            "rankDown": false,
+            "newPoints": 8,
+            "delta": 0.5,
+            "rankUp": false
+          },
+          {
+            "name": "Joris",
+            "place": 3,
+            "playerId": 33,
+            "oldPoints": 5.5,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "newPoints": 5.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 25,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8.5,
+            "playerId": 29,
+            "place": 1,
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 9.5,
+            "rankDown": false,
+            "name": "Leif"
+          },
+          {
+            "name": "Joris",
+            "rankUp": false,
+            "delta": 0.5,
+            "newPoints": 6,
+            "rankDown": false,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "oldPoints": 5.5,
+            "playerId": 33,
+            "place": 2
+          },
+          {
+            "rankDown": false,
+            "newPoints": 7,
+            "delta": -1,
+            "rankUp": false,
+            "place": 3,
+            "playerId": 30,
+            "newRank": "Gold",
+            "oldPoints": 8,
+            "oldRank": "Gold",
+            "name": "Erik"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 26,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik",
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "playerId": 30,
+            "place": 1,
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 8
+          },
+          {
+            "name": "Joris",
+            "newRank": "Silber",
+            "oldPoints": 6,
+            "oldRank": "Silber",
+            "place": 2,
+            "playerId": 33,
+            "rankUp": false,
+            "delta": 0.5,
+            "rankDown": false,
+            "newPoints": 6.5
+          },
+          {
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 8.5,
+            "rankDown": false,
+            "oldRank": "Gold",
+            "oldPoints": 9.5,
+            "newRank": "Gold",
+            "place": 3,
+            "playerId": 29,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 27,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "newRank": "Gold",
+            "oldPoints": 8.5,
+            "oldRank": "Gold",
+            "playerId": 29,
+            "place": 1,
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 9.5
+          },
+          {
+            "rankDown": false,
+            "newPoints": 7,
+            "rankUp": true,
+            "delta": 0.5,
+            "playerId": 33,
+            "place": 2,
+            "newRank": "Gold",
+            "oldRank": "Silber",
+            "oldPoints": 6.5,
+            "name": "Joris"
+          },
+          {
+            "name": "Erik",
+            "place": 3,
+            "playerId": 30,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8,
+            "newPoints": 7,
+            "rankDown": false,
+            "delta": -1,
+            "rankUp": false
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 28,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris",
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 8,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "playerId": 33,
+            "place": 1
+          },
+          {
+            "newPoints": 7.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0.5,
+            "playerId": 30,
+            "place": 2,
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "name": "Erik"
+          },
+          {
+            "name": "Leif",
+            "oldPoints": 9.5,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "playerId": 29,
+            "place": 3,
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 8.5,
+            "rankDown": false
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 29,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris",
+            "rankDown": false,
+            "newPoints": 9,
+            "rankUp": false,
+            "delta": 1,
+            "place": 1,
+            "playerId": 33,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8
+          },
+          {
+            "rankDown": false,
+            "newPoints": 8,
+            "delta": 0.5,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 30,
+            "newRank": "Gold",
+            "oldPoints": 7.5,
+            "oldRank": "Gold",
+            "name": "Erik"
+          },
+          {
+            "name": "Leif",
+            "delta": -1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 7.5,
+            "oldRank": "Gold",
+            "oldPoints": 8.5,
+            "newRank": "Gold",
+            "playerId": 29,
+            "place": 3
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 30,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "newPoints": 8.5,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false,
+            "playerId": 29,
+            "place": 1,
+            "oldPoints": 7.5,
+            "oldRank": "Gold",
+            "newRank": "Gold"
+          },
+          {
+            "newPoints": 9.5,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 33,
+            "oldRank": "Gold",
+            "oldPoints": 9,
+            "newRank": "Gold",
+            "name": "Joris"
+          },
+          {
+            "name": "Erik",
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": false,
+            "newPoints": 7,
+            "newRank": "Gold",
+            "oldPoints": 8,
+            "oldRank": "Gold",
+            "place": 3,
+            "playerId": 30
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 31,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik",
+            "playerId": 30,
+            "place": 1,
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "rankDown": false,
+            "newPoints": 8,
+            "delta": 1,
+            "rankUp": false
+          },
+          {
+            "name": "Joris",
+            "place": 2,
+            "playerId": 33,
+            "newRank": "Rubin",
+            "oldRank": "Gold",
+            "oldPoints": 9.5,
+            "newPoints": 10,
+            "rankDown": false,
+            "rankUp": true,
+            "delta": 0.5
+          },
+          {
+            "name": "Leif",
+            "place": 3,
+            "playerId": 29,
+            "oldPoints": 8.5,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "newPoints": 7.5,
+            "rankDown": false,
+            "delta": -1,
+            "rankUp": false
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 32,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 8.5,
+            "rankUp": false,
+            "delta": 1,
+            "place": 1,
+            "playerId": 29,
+            "oldRank": "Gold",
+            "oldPoints": 7.5,
+            "newRank": "Gold",
+            "name": "Leif"
+          },
+          {
+            "newRank": "Rubin",
+            "oldPoints": 10,
+            "oldRank": "Rubin",
+            "playerId": 33,
+            "place": 2,
+            "rankUp": false,
+            "delta": 0.5,
+            "newPoints": 10.5,
+            "rankDown": false,
+            "name": "Joris"
+          },
+          {
+            "name": "Erik",
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": false,
+            "newPoints": 7,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8,
+            "playerId": 30,
+            "place": 3
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 33,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "place": 1,
+            "playerId": 30,
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 8,
+            "name": "Erik"
+          },
+          {
+            "place": 2,
+            "playerId": 29,
+            "oldPoints": 8.5,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "rankDown": false,
+            "newPoints": 9,
+            "delta": 0.5,
+            "rankUp": false,
+            "name": "Leif"
+          },
+          {
+            "name": "Joris",
+            "rankDown": true,
+            "newPoints": 9.5,
+            "delta": -1,
+            "rankUp": false,
+            "place": 3,
+            "playerId": 33,
+            "newRank": "Gold",
+            "oldRank": "Rubin",
+            "oldPoints": 10.5
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 34,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldRank": "Gold",
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "place": 1,
+            "playerId": 30,
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 9,
+            "rankDown": false,
+            "name": "Erik"
+          },
+          {
+            "name": "Joris",
+            "place": 2,
+            "playerId": 33,
+            "oldPoints": 9.5,
+            "oldRank": "Gold",
+            "newRank": "Rubin",
+            "newPoints": 10,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": true
+          },
+          {
+            "delta": -1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 8,
+            "oldRank": "Gold",
+            "oldPoints": 9,
+            "newRank": "Gold",
+            "place": 3,
+            "playerId": 29,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 35,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 9,
+            "rankDown": false,
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "playerId": 29,
+            "place": 1
+          },
+          {
+            "name": "Joris",
+            "rankDown": false,
+            "newPoints": 10.5,
+            "delta": 0.5,
+            "rankUp": false,
+            "playerId": 33,
+            "place": 2,
+            "oldPoints": 10,
+            "newRank": "Rubin",
+            "oldRank": "Rubin"
+          },
+          {
+            "name": "Erik",
+            "delta": -1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 8,
+            "oldPoints": 9,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "place": 3,
+            "playerId": 30
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 36,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "rankDown": false,
+            "newPoints": 10,
+            "delta": 1,
+            "rankUp": true,
+            "playerId": 29,
+            "place": 1,
+            "oldPoints": 9,
+            "oldRank": "Gold",
+            "newRank": "Rubin"
+          },
+          {
+            "rankDown": false,
+            "newPoints": 8.5,
+            "rankUp": false,
+            "delta": 0.5,
+            "place": 2,
+            "playerId": 30,
+            "oldRank": "Gold",
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "name": "Erik"
+          },
+          {
+            "name": "Joris",
+            "oldRank": "Rubin",
+            "oldPoints": 10.5,
+            "newRank": "Gold",
+            "playerId": 33,
+            "place": 3,
+            "delta": -1,
+            "rankUp": false,
+            "newPoints": 9.5,
+            "rankDown": true
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 37,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newPoints": 11,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false,
+            "place": 1,
+            "playerId": 29,
+            "oldPoints": 10,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "name": "Leif"
+          },
+          {
+            "name": "Joris",
+            "delta": 0.5,
+            "rankUp": true,
+            "newPoints": 10,
+            "rankDown": false,
+            "newRank": "Rubin",
+            "oldPoints": 9.5,
+            "oldRank": "Gold",
+            "playerId": 33,
+            "place": 2
+          },
+          {
+            "name": "Erik",
+            "playerId": 30,
+            "place": 3,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8.5,
+            "rankDown": false,
+            "newPoints": 7.5,
+            "rankUp": false,
+            "delta": -1
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 38,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik",
+            "newPoints": 8.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 1,
+            "playerId": 30,
+            "place": 1,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7.5
+          },
+          {
+            "playerId": 29,
+            "place": 2,
+            "oldPoints": 11,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "newPoints": 11.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0.5,
+            "name": "Leif"
+          },
+          {
+            "rankDown": true,
+            "newPoints": 9,
+            "rankUp": false,
+            "delta": -1,
+            "playerId": 33,
+            "place": 3,
+            "oldPoints": 10,
+            "newRank": "Gold",
+            "oldRank": "Rubin",
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 39,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 10,
+            "rankUp": true,
+            "delta": 1,
+            "place": 1,
+            "playerId": 33,
+            "oldRank": "Gold",
+            "newRank": "Rubin",
+            "oldPoints": 9,
+            "name": "Joris"
+          },
+          {
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8.5,
+            "place": 2,
+            "playerId": 30,
+            "rankUp": false,
+            "delta": 0.5,
+            "newPoints": 9,
+            "rankDown": false,
+            "name": "Erik"
+          },
+          {
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 10.5,
+            "rankDown": false,
+            "newRank": "Rubin",
+            "oldPoints": 11.5,
+            "oldRank": "Rubin",
+            "place": 3,
+            "playerId": 29,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 40,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 11,
+            "rankDown": false,
+            "oldPoints": 10,
+            "newRank": "Rubin",
+            "oldRank": "Rubin",
+            "place": 1,
+            "playerId": 33,
+            "name": "Joris"
+          },
+          {
+            "delta": 0.5,
+            "rankUp": false,
+            "newPoints": 9.5,
+            "rankDown": false,
+            "oldRank": "Gold",
+            "oldPoints": 9,
+            "newRank": "Gold",
+            "place": 2,
+            "playerId": 30,
+            "name": "Erik"
+          },
+          {
+            "name": "Leif",
+            "place": 3,
+            "playerId": 29,
+            "oldPoints": 10.5,
+            "oldRank": "Rubin",
+            "newRank": "Gold",
+            "rankDown": true,
+            "newPoints": 9.5,
+            "delta": -1,
+            "rankUp": false
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 41,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "newRank": "Rubin",
+            "oldRank": "Gold",
+            "oldPoints": 9.5,
+            "place": 1,
+            "playerId": 29,
+            "delta": 1,
+            "rankUp": true,
+            "rankDown": false,
+            "newPoints": 10.5
+          },
+          {
+            "place": 2,
+            "playerId": 30,
+            "oldRank": "Gold",
+            "oldPoints": 9.5,
+            "newRank": "Rubin",
+            "rankDown": false,
+            "newPoints": 10,
+            "rankUp": true,
+            "delta": 0.5,
+            "name": "Erik"
+          },
+          {
+            "rankDown": false,
+            "newPoints": 10,
+            "delta": -1,
+            "rankUp": false,
+            "playerId": 33,
+            "place": 3,
+            "oldPoints": 11,
+            "newRank": "Rubin",
+            "oldRank": "Rubin",
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 42,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newRank": "Rubin",
+            "oldPoints": 10,
+            "oldRank": "Rubin",
+            "playerId": 30,
+            "place": 1,
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 11,
+            "name": "Erik"
+          },
+          {
+            "rankDown": false,
+            "newPoints": 11,
+            "delta": 0.5,
+            "rankUp": false,
+            "playerId": 29,
+            "place": 2,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "oldPoints": 10.5,
+            "name": "Leif"
+          },
+          {
+            "name": "Joris",
+            "oldPoints": 10,
+            "newRank": "Gold",
+            "oldRank": "Rubin",
+            "place": 3,
+            "playerId": 33,
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": true,
+            "newPoints": 9
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 43,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "playerId": 30,
+            "place": 1,
+            "newRank": "Rubin",
+            "oldRank": "Rubin",
+            "oldPoints": 11,
+            "rankDown": false,
+            "newPoints": 12,
+            "rankUp": false,
+            "delta": 1,
+            "name": "Erik"
+          },
+          {
+            "name": "Leif",
+            "rankDown": false,
+            "newPoints": 11.5,
+            "delta": 0.5,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 29,
+            "newRank": "Rubin",
+            "oldPoints": 11,
+            "oldRank": "Rubin"
+          },
+          {
+            "name": "Joris",
+            "rankDown": false,
+            "newPoints": 8,
+            "rankUp": false,
+            "delta": -1,
+            "playerId": 33,
+            "place": 3,
+            "oldPoints": 9,
+            "oldRank": "Gold",
+            "newRank": "Gold"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 44,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldRank": "Rubin",
+            "oldPoints": 11.5,
+            "newRank": "Rubin",
+            "place": 1,
+            "playerId": 29,
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 12.5,
+            "name": "Leif"
+          },
+          {
+            "place": 2,
+            "playerId": 30,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "oldPoints": 12,
+            "rankDown": false,
+            "newPoints": 12.5,
+            "rankUp": false,
+            "delta": 0.5,
+            "name": "Erik"
+          },
+          {
+            "name": "Joris",
+            "place": 3,
+            "playerId": 33,
+            "oldPoints": 8,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "rankDown": false,
+            "newPoints": 7,
+            "rankUp": false,
+            "delta": -1
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 45,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris",
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 8,
+            "rankDown": false,
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "playerId": 33,
+            "place": 1
+          },
+          {
+            "oldRank": "Rubin",
+            "oldPoints": 12.5,
+            "newRank": "Rubin",
+            "playerId": 29,
+            "place": 2,
+            "delta": -1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 11.5,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 46,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 47,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "place": 1,
+            "playerId": 33,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8,
+            "rankDown": false,
+            "newPoints": 9,
+            "delta": 1,
+            "rankUp": false,
+            "name": "Joris"
+          },
+          {
+            "name": "Leif",
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": false,
+            "newPoints": 10.5,
+            "oldPoints": 11.5,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "playerId": 29,
+            "place": 2
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 48,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 49,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 11.5,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "oldPoints": 10.5,
+            "playerId": 29,
+            "place": 1,
+            "name": "Leif"
+          },
+          {
+            "name": "Joris",
+            "place": 2,
+            "playerId": 33,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 9,
+            "rankDown": false,
+            "newPoints": 8,
+            "rankUp": false,
+            "delta": -1
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 50,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 51,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik",
+            "place": 1,
+            "playerId": 30,
+            "oldPoints": 12.5,
+            "oldRank": "Rubin",
+            "newRank": "Smaragd",
+            "rankDown": false,
+            "newPoints": 13.5,
+            "delta": 1,
+            "rankUp": true
+          },
+          {
+            "name": "Joris",
+            "rankUp": false,
+            "delta": 0.5,
+            "newPoints": 8.5,
+            "rankDown": false,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8,
+            "place": 2,
+            "playerId": 33
+          },
+          {
+            "playerId": 29,
+            "place": 3,
+            "oldRank": "Rubin",
+            "oldPoints": 11.5,
+            "newRank": "Rubin",
+            "rankDown": false,
+            "newPoints": 10.5,
+            "rankUp": false,
+            "delta": -1,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 52,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 14.5,
+            "rankDown": false,
+            "oldPoints": 13.5,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "playerId": 30,
+            "place": 1,
+            "name": "Erik"
+          },
+          {
+            "name": "Joris",
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 8.5,
+            "place": 2,
+            "playerId": 33,
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": false,
+            "newPoints": 7.5
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 53,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris",
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 8.5,
+            "rankDown": false,
+            "newRank": "Gold",
+            "oldPoints": 7.5,
+            "oldRank": "Gold",
+            "playerId": 33,
+            "place": 1
+          },
+          {
+            "name": "Erik",
+            "newRank": "Smaragd",
+            "oldPoints": 14.5,
+            "oldRank": "Smaragd",
+            "playerId": 30,
+            "place": 2,
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": false,
+            "newPoints": 13.5
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 54,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 9.5,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 8.5,
+            "place": 1,
+            "playerId": 33,
+            "name": "Joris"
+          },
+          {
+            "name": "Erik",
+            "newPoints": 12.5,
+            "rankDown": true,
+            "rankUp": false,
+            "delta": -1,
+            "place": 2,
+            "playerId": 30,
+            "oldPoints": 13.5,
+            "oldRank": "Smaragd",
+            "newRank": "Rubin"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 55,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": true,
+            "newPoints": 13.5,
+            "rankDown": false,
+            "oldPoints": 12.5,
+            "newRank": "Smaragd",
+            "oldRank": "Rubin",
+            "place": 1,
+            "playerId": 30,
+            "name": "Erik"
+          },
+          {
+            "name": "Joris",
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 9.5,
+            "playerId": 33,
+            "place": 2,
+            "delta": -1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 8.5
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 56,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "place": 1,
+            "playerId": 30,
+            "newRank": "Smaragd",
+            "oldPoints": 13.5,
+            "oldRank": "Smaragd",
+            "rankDown": false,
+            "newPoints": 14.5,
+            "rankUp": false,
+            "delta": 1,
+            "name": "Erik"
+          },
+          {
+            "name": "Joris",
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 7.5,
+            "rankDown": false,
+            "oldPoints": 8.5,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "playerId": 33,
+            "place": 2
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 57,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 15.5,
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "oldPoints": 14.5,
+            "playerId": 30,
+            "place": 1,
+            "name": "Erik"
+          },
+          {
+            "name": "Joris",
+            "rankDown": false,
+            "newPoints": 7,
+            "delta": -0.5,
+            "rankUp": false,
+            "playerId": 33,
+            "place": 2,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 7.5
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 58,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik",
+            "place": 1,
+            "playerId": 30,
+            "newRank": "Diamant",
+            "oldPoints": 15.5,
+            "oldRank": "Smaragd",
+            "newPoints": 16.5,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": true
+          },
+          {
+            "playerId": 33,
+            "place": 2,
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "newPoints": 7,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0,
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 59,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": true,
+            "rankDown": false,
+            "newPoints": 1,
+            "newRank": "Bronze",
+            "oldPoints": 0,
+            "oldRank": "Unranked",
+            "place": 1,
+            "playerId": 35,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris2",
+            "rankUp": false,
+            "delta": 0,
+            "newPoints": 0,
+            "rankDown": false,
+            "oldRank": "Unranked",
+            "newRank": "Unranked",
+            "oldPoints": 0,
+            "place": 2,
+            "playerId": 36
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 60,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newRank": "Bronze",
+            "oldPoints": 1,
+            "oldRank": "Bronze",
+            "playerId": 35,
+            "place": 1,
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 2,
+            "rankDown": false,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris2",
+            "playerId": 36,
+            "place": 2,
+            "newRank": "Unranked",
+            "oldPoints": 0,
+            "oldRank": "Unranked",
+            "rankDown": false,
+            "newPoints": 0,
+            "delta": 0,
+            "rankUp": false
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 61,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris2",
+            "playerId": 36,
+            "place": 1,
+            "oldPoints": 0,
+            "newRank": "Bronze",
+            "oldRank": "Unranked",
+            "rankDown": false,
+            "newPoints": 1,
+            "delta": 1,
+            "rankUp": true
+          },
+          {
+            "name": "Erik2",
+            "newPoints": 2,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 35,
+            "newRank": "Bronze",
+            "oldPoints": 2,
+            "oldRank": "Bronze"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 62,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 3,
+            "rankDown": false,
+            "oldRank": "Bronze",
+            "oldPoints": 2,
+            "newRank": "Bronze",
+            "place": 1,
+            "playerId": 35
+          },
+          {
+            "rankDown": false,
+            "newPoints": 1,
+            "rankUp": false,
+            "delta": 0,
+            "playerId": 36,
+            "place": 2,
+            "oldRank": "Bronze",
+            "oldPoints": 1,
+            "newRank": "Bronze",
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 63,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldRank": "Bronze",
+            "oldPoints": 3,
+            "newRank": "Silber",
+            "playerId": 35,
+            "place": 1,
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 4,
+            "name": "Erik2"
+          },
+          {
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 1,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "oldPoints": 1,
+            "place": 2,
+            "playerId": 36,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 64,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 5,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "oldPoints": 4,
+            "place": 1,
+            "playerId": 35
+          },
+          {
+            "oldRank": "Bronze",
+            "oldPoints": 1,
+            "newRank": "Bronze",
+            "place": 2,
+            "playerId": 36,
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 1,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 65,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "place": 1,
+            "playerId": 36,
+            "oldPoints": 1,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "newPoints": 2,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false,
+            "name": "Joris2"
+          },
+          {
+            "name": "Erik2",
+            "rankDown": false,
+            "newPoints": 5,
+            "delta": 0,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 35,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "oldPoints": 5
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 66,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 6,
+            "rankDown": false,
+            "oldPoints": 5,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "place": 1,
+            "playerId": 35,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris2",
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "oldPoints": 2,
+            "place": 2,
+            "playerId": 36,
+            "rankUp": false,
+            "delta": 0,
+            "newPoints": 2,
+            "rankDown": false
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 67,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris2",
+            "oldPoints": 2,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "place": 1,
+            "playerId": 36,
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 3,
+            "rankDown": false
+          },
+          {
+            "rankDown": false,
+            "newPoints": 6,
+            "delta": 0,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 35,
+            "oldRank": "Silber",
+            "oldPoints": 6,
+            "newRank": "Silber",
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 68,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "playerId": 35,
+            "place": 1,
+            "newRank": "Gold",
+            "oldRank": "Silber",
+            "oldPoints": 6,
+            "newPoints": 7,
+            "rankDown": false,
+            "rankUp": true,
+            "delta": 1
+          },
+          {
+            "name": "Joris2",
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 3,
+            "oldPoints": 3,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "playerId": 36,
+            "place": 2
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 69,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 8,
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "place": 1,
+            "playerId": 35
+          },
+          {
+            "name": "Joris2",
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 3,
+            "oldRank": "Bronze",
+            "oldPoints": 3,
+            "newRank": "Bronze",
+            "playerId": 36,
+            "place": 2
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 70,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Thore",
+            "rankDown": false,
+            "newPoints": 1.5,
+            "rankUp": true,
+            "delta": 1,
+            "playerId": 31,
+            "place": 1,
+            "oldRank": "Unranked",
+            "oldPoints": 0.5,
+            "newRank": "Bronze"
+          },
+          {
+            "newPoints": 0.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0.5,
+            "place": 2,
+            "playerId": 37,
+            "newRank": "Unranked",
+            "oldRank": "Unranked",
+            "oldPoints": 0,
+            "name": "Leif2"
+          },
+          {
+            "place": 3,
+            "playerId": 36,
+            "oldRank": "Bronze",
+            "oldPoints": 3,
+            "newRank": "Bronze",
+            "rankDown": false,
+            "newPoints": 3,
+            "rankUp": false,
+            "delta": 0,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 71,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris",
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "place": 1,
+            "playerId": 33,
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 8
+          },
+          {
+            "name": "Leif",
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "oldPoints": 10.5,
+            "place": 2,
+            "playerId": 29,
+            "delta": 0.5,
+            "rankUp": false,
+            "newPoints": 11,
+            "rankDown": false
+          },
+          {
+            "oldPoints": 8,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "playerId": 35,
+            "place": 3,
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 7,
+            "rankDown": false,
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 72,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "playerId": 35,
+            "place": 1,
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "newPoints": 8,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false
+          },
+          {
+            "playerId": 33,
+            "place": 2,
+            "newRank": "Gold",
+            "oldPoints": 8,
+            "oldRank": "Gold",
+            "newPoints": 8.5,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": false,
+            "name": "Joris"
+          },
+          {
+            "name": "Leif",
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": false,
+            "newPoints": 10,
+            "oldPoints": 11,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "playerId": 29,
+            "place": 3
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 73,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "place": 1,
+            "playerId": 33,
+            "oldPoints": 8.5,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "newPoints": 9.5,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false,
+            "name": "Joris"
+          },
+          {
+            "rankDown": false,
+            "newPoints": 10.5,
+            "delta": 0.5,
+            "rankUp": false,
+            "playerId": 29,
+            "place": 2,
+            "oldPoints": 10,
+            "newRank": "Rubin",
+            "oldRank": "Rubin",
+            "name": "Leif"
+          },
+          {
+            "name": "Erik2",
+            "place": 3,
+            "playerId": 35,
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "rankDown": false,
+            "newPoints": 7,
+            "rankUp": false,
+            "delta": -1
+          }
+        ],
+        "mmPhase": null,
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 74,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 8,
+            "rankDown": false,
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "playerId": 35,
+            "place": 1,
+            "name": "Erik2"
+          },
+          {
+            "name": "Leif",
+            "rankDown": true,
+            "newPoints": 9.5,
+            "delta": -1,
+            "rankUp": false,
+            "playerId": 29,
+            "place": 2,
+            "oldPoints": 10.5,
+            "newRank": "Gold",
+            "oldRank": "Rubin"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 75,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris",
+            "playerId": 33,
+            "place": 1,
+            "oldRank": "Gold",
+            "newRank": "Rubin",
+            "oldPoints": 9.5,
+            "newPoints": 10.5,
+            "rankDown": false,
+            "rankUp": true,
+            "delta": 1
+          },
+          {
+            "place": 2,
+            "playerId": 29,
+            "oldRank": "Gold",
+            "oldPoints": 9.5,
+            "newRank": "Gold",
+            "newPoints": 8.5,
+            "rankDown": false,
+            "delta": -1,
+            "rankUp": false,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 76,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris",
+            "newRank": "Rubin",
+            "oldRank": "Rubin",
+            "oldPoints": 10.5,
+            "playerId": 33,
+            "place": 1,
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 11.5
+          },
+          {
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "place": 2,
+            "playerId": 35,
+            "delta": -1,
+            "rankUp": false,
+            "newPoints": 7,
+            "rankDown": false,
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 77,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 9.5,
+            "delta": 1,
+            "rankUp": false,
+            "place": 1,
+            "playerId": 29,
+            "oldPoints": 8.5,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "name": "Leif"
+          },
+          {
+            "name": "Erik2",
+            "playerId": 35,
+            "place": 2,
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "newPoints": 7,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 78,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "playerId": 29,
+            "place": 1,
+            "oldPoints": 9.5,
+            "oldRank": "Gold",
+            "newRank": "Rubin",
+            "newPoints": 10.5,
+            "rankDown": false,
+            "rankUp": true,
+            "delta": 1,
+            "name": "Leif"
+          },
+          {
+            "oldRank": "Rubin",
+            "oldPoints": 11.5,
+            "newRank": "Rubin",
+            "playerId": 33,
+            "place": 2,
+            "delta": -1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 10.5,
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 79,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris",
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "oldPoints": 10.5,
+            "place": 1,
+            "playerId": 33,
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 11.5
+          },
+          {
+            "name": "Erik2",
+            "rankDown": false,
+            "newPoints": 7,
+            "delta": 0,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 35,
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "newRank": "Gold"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 80,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "oldPoints": 10.5,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "playerId": 29,
+            "place": 1,
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 11.5,
+            "rankDown": false
+          },
+          {
+            "name": "Erik2",
+            "newPoints": 7,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 35,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 81,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "playerId": 35,
+            "place": 1,
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "rankDown": false,
+            "newPoints": 8,
+            "delta": 1,
+            "rankUp": false
+          },
+          {
+            "name": "Joris2",
+            "playerId": 36,
+            "place": 2,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "oldPoints": 3,
+            "rankDown": false,
+            "newPoints": 3,
+            "rankUp": false,
+            "delta": 0
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 82,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "newRank": "Rubin",
+            "oldRank": "Rubin",
+            "oldPoints": 11.5,
+            "playerId": 29,
+            "place": 1,
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 12.5,
+            "rankDown": false
+          },
+          {
+            "name": "Erik2",
+            "playerId": 35,
+            "place": 2,
+            "oldPoints": 8,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "rankDown": false,
+            "newPoints": 7,
+            "delta": -1,
+            "rankUp": false
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 83,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris2",
+            "newPoints": 4,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": true,
+            "place": 1,
+            "playerId": 36,
+            "oldRank": "Bronze",
+            "newRank": "Silber",
+            "oldPoints": 3
+          },
+          {
+            "name": "Erik2",
+            "rankDown": false,
+            "newPoints": 7,
+            "delta": 0,
+            "rankUp": false,
+            "playerId": 35,
+            "place": 2,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 84,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "newPoints": 13.5,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": true,
+            "place": 1,
+            "playerId": 29,
+            "newRank": "Smaragd",
+            "oldRank": "Rubin",
+            "oldPoints": 12.5
+          },
+          {
+            "name": "Joris2",
+            "oldPoints": 4,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "playerId": 36,
+            "place": 2,
+            "delta": 0.5,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 4.5
+          },
+          {
+            "name": "Erik2",
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 7,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "place": 3,
+            "playerId": 35
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 85,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "place": 1,
+            "playerId": 35,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "rankDown": false,
+            "newPoints": 8,
+            "rankUp": false,
+            "delta": 1
+          },
+          {
+            "rankDown": false,
+            "newPoints": 4.5,
+            "delta": 0,
+            "rankUp": false,
+            "playerId": 36,
+            "place": 2,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "oldPoints": 4.5,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 86,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 14.5,
+            "delta": 1,
+            "rankUp": false,
+            "place": 1,
+            "playerId": 29,
+            "oldPoints": 13.5,
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "name": "Leif"
+          },
+          {
+            "name": "Erik2",
+            "playerId": 35,
+            "place": 2,
+            "oldPoints": 8,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "rankDown": false,
+            "newPoints": 7,
+            "rankUp": false,
+            "delta": -1
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 87,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "place": 1,
+            "playerId": 35,
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 8,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris2",
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 4.5,
+            "oldPoints": 4.5,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "place": 2,
+            "playerId": 36
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 88,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newPoints": 15.5,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false,
+            "playerId": 29,
+            "place": 1,
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "oldPoints": 14.5,
+            "name": "Leif"
+          },
+          {
+            "name": "Erik2",
+            "oldPoints": 8,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "place": 2,
+            "playerId": 35,
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": false,
+            "newPoints": 7
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 89,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 12.5,
+            "delta": 1,
+            "rankUp": false,
+            "playerId": 33,
+            "place": 1,
+            "oldPoints": 11.5,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "name": "Joris"
+          },
+          {
+            "oldRank": "Smaragd",
+            "oldPoints": 15.5,
+            "newRank": "Diamant",
+            "playerId": 29,
+            "place": 2,
+            "delta": 0.5,
+            "rankUp": true,
+            "rankDown": false,
+            "newPoints": 16,
+            "name": "Leif"
+          },
+          {
+            "rankDown": false,
+            "newPoints": 7,
+            "delta": 0,
+            "rankUp": false,
+            "playerId": 35,
+            "place": 3,
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 90,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris",
+            "playerId": 33,
+            "place": 1,
+            "oldPoints": 12.5,
+            "newRank": "Smaragd",
+            "oldRank": "Rubin",
+            "rankDown": false,
+            "newPoints": 13.5,
+            "rankUp": true,
+            "delta": 1
+          },
+          {
+            "rankDown": true,
+            "newPoints": 14,
+            "rankUp": false,
+            "delta": -2,
+            "place": 2,
+            "playerId": 29,
+            "oldPoints": 16,
+            "newRank": "Smaragd",
+            "oldRank": "Diamant",
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 91,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 8,
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "place": 1,
+            "playerId": 35,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris",
+            "place": 2,
+            "playerId": 33,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "oldPoints": 13.5,
+            "newPoints": 14,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": false
+          },
+          {
+            "name": "Leif",
+            "playerId": 29,
+            "place": 3,
+            "oldPoints": 14,
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "newPoints": 13,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": -1
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 92,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "oldPoints": 14,
+            "playerId": 33,
+            "place": 1,
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 15,
+            "rankDown": false,
+            "name": "Joris"
+          },
+          {
+            "place": 2,
+            "playerId": 35,
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "newPoints": 8.5,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": false,
+            "name": "Erik2"
+          },
+          {
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": true,
+            "newPoints": 12,
+            "oldPoints": 13,
+            "oldRank": "Smaragd",
+            "newRank": "Rubin",
+            "playerId": 29,
+            "place": 3,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 93,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "playerId": 29,
+            "place": 1,
+            "oldRank": "Rubin",
+            "newRank": "Smaragd",
+            "oldPoints": 12,
+            "newPoints": 13,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": true,
+            "name": "Leif"
+          },
+          {
+            "name": "Erik2",
+            "newPoints": 9,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0.5,
+            "place": 2,
+            "playerId": 35,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8.5
+          },
+          {
+            "playerId": 33,
+            "place": 3,
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "oldPoints": 15,
+            "newPoints": 14,
+            "rankDown": false,
+            "delta": -1,
+            "rankUp": false,
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 94,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "newPoints": 10,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": true,
+            "place": 1,
+            "playerId": 35,
+            "oldRank": "Gold",
+            "newRank": "Rubin",
+            "oldPoints": 9
+          },
+          {
+            "oldPoints": 14,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "playerId": 33,
+            "place": 2,
+            "delta": 0.5,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 14.5,
+            "name": "Joris"
+          },
+          {
+            "name": "Leif",
+            "newRank": "Rubin",
+            "oldRank": "Smaragd",
+            "oldPoints": 13,
+            "place": 3,
+            "playerId": 29,
+            "delta": -1,
+            "rankUp": false,
+            "newPoints": 12,
+            "rankDown": true
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 95,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 1.5,
+            "newRank": "Bronze",
+            "oldPoints": 0.5,
+            "oldRank": "Unranked",
+            "playerId": 37,
+            "place": 1,
+            "name": "Leif2"
+          },
+          {
+            "name": "Papa",
+            "oldPoints": 0,
+            "oldRank": "Unranked",
+            "newRank": "Unranked",
+            "place": 2,
+            "playerId": 38,
+            "delta": 0.5,
+            "rankUp": false,
+            "newPoints": 0.5,
+            "rankDown": false
+          },
+          {
+            "name": "Thore",
+            "newPoints": 1.5,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "place": 3,
+            "playerId": 31,
+            "oldRank": "Bronze",
+            "oldPoints": 1.5,
+            "newRank": "Bronze"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 96,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldPoints": 14.5,
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "place": 1,
+            "playerId": 33,
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 15.5,
+            "rankDown": false,
+            "name": "Joris"
+          },
+          {
+            "name": "Erik2",
+            "delta": -1,
+            "rankUp": false,
+            "rankDown": true,
+            "newPoints": 9,
+            "newRank": "Gold",
+            "oldRank": "Rubin",
+            "oldPoints": 10,
+            "playerId": 35,
+            "place": 2
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 97,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "place": 1,
+            "playerId": 37,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "oldPoints": 1.5,
+            "rankDown": false,
+            "newPoints": 2.5,
+            "delta": 1,
+            "rankUp": false,
+            "name": "Leif2"
+          },
+          {
+            "place": 2,
+            "playerId": 38,
+            "oldPoints": 0.5,
+            "newRank": "Bronze",
+            "oldRank": "Unranked",
+            "rankDown": false,
+            "newPoints": 1,
+            "delta": 0.5,
+            "rankUp": true,
+            "name": "Papa"
+          },
+          {
+            "playerId": 31,
+            "place": 3,
+            "newRank": "Bronze",
+            "oldPoints": 1.5,
+            "oldRank": "Bronze",
+            "rankDown": false,
+            "newPoints": 1.5,
+            "delta": 0,
+            "rankUp": false,
+            "name": "Thore"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 98,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "rankUp": true,
+            "delta": 1,
+            "newPoints": 10,
+            "rankDown": false,
+            "oldRank": "Gold",
+            "oldPoints": 9,
+            "newRank": "Rubin",
+            "playerId": 35,
+            "place": 1
+          },
+          {
+            "name": "Joris",
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "oldPoints": 15.5,
+            "place": 2,
+            "playerId": 33,
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 14.5,
+            "rankDown": false
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 99,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Thore",
+            "rankDown": false,
+            "newPoints": 2.5,
+            "delta": 1,
+            "rankUp": false,
+            "place": 1,
+            "playerId": 31,
+            "oldPoints": 1.5,
+            "newRank": "Bronze",
+            "oldRank": "Bronze"
+          },
+          {
+            "name": "Papa",
+            "rankUp": false,
+            "delta": 0.5,
+            "rankDown": false,
+            "newPoints": 1.5,
+            "oldPoints": 1,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "place": 2,
+            "playerId": 38
+          },
+          {
+            "name": "Joris2",
+            "newPoints": 4.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0,
+            "playerId": 36,
+            "place": 3,
+            "oldPoints": 4.5,
+            "newRank": "Silber",
+            "oldRank": "Silber"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 100,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "oldPoints": 12,
+            "oldRank": "Rubin",
+            "newRank": "Smaragd",
+            "place": 1,
+            "playerId": 29,
+            "delta": 1,
+            "rankUp": true,
+            "newPoints": 13,
+            "rankDown": false
+          },
+          {
+            "rankDown": false,
+            "newPoints": 10.5,
+            "delta": 0.5,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 35,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "oldPoints": 10,
+            "name": "Erik2"
+          },
+          {
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 4.5,
+            "newRank": "Silber",
+            "oldPoints": 4.5,
+            "oldRank": "Silber",
+            "place": 3,
+            "playerId": 36,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 101,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 5.5,
+            "oldRank": "Silber",
+            "oldPoints": 4.5,
+            "newRank": "Silber",
+            "playerId": 36,
+            "place": 1,
+            "name": "Joris2"
+          },
+          {
+            "delta": 0.5,
+            "rankUp": false,
+            "newPoints": 2,
+            "rankDown": false,
+            "oldRank": "Bronze",
+            "oldPoints": 1.5,
+            "newRank": "Bronze",
+            "playerId": 38,
+            "place": 2,
+            "name": "Papa"
+          },
+          {
+            "name": "Thore",
+            "playerId": 31,
+            "place": 3,
+            "newRank": "Bronze",
+            "oldPoints": 2.5,
+            "oldRank": "Bronze",
+            "newPoints": 2.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 102,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "oldPoints": 13,
+            "place": 1,
+            "playerId": 29,
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 14
+          },
+          {
+            "playerId": 35,
+            "place": 2,
+            "oldPoints": 10.5,
+            "newRank": "Gold",
+            "oldRank": "Rubin",
+            "rankDown": true,
+            "newPoints": 9.5,
+            "rankUp": false,
+            "delta": -1,
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 103,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Papa",
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 3,
+            "rankDown": false,
+            "oldPoints": 2,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "playerId": 38,
+            "place": 1
+          },
+          {
+            "newPoints": 6,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": false,
+            "playerId": 36,
+            "place": 2,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "oldPoints": 5.5,
+            "name": "Joris2"
+          },
+          {
+            "name": "Leif2",
+            "rankDown": false,
+            "newPoints": 2.5,
+            "delta": 0,
+            "rankUp": false,
+            "playerId": 37,
+            "place": 3,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "oldPoints": 2.5
+          },
+          {
+            "name": "Erik2",
+            "newPoints": 8.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": -1,
+            "place": 4,
+            "playerId": 35,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 9.5
+          },
+          {
+            "name": "Thore",
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 2.5,
+            "oldPoints": 2.5,
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "place": 5,
+            "playerId": 31
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 104,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": true,
+            "delta": 1,
+            "newPoints": 7,
+            "rankDown": false,
+            "oldPoints": 6,
+            "newRank": "Gold",
+            "oldRank": "Silber",
+            "place": 1,
+            "playerId": 36,
+            "name": "Joris2"
+          },
+          {
+            "delta": 0.5,
+            "rankUp": false,
+            "newPoints": 9,
+            "rankDown": false,
+            "oldPoints": 8.5,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "place": 2,
+            "playerId": 35,
+            "name": "Erik2"
+          },
+          {
+            "oldPoints": 2.5,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "place": 3,
+            "playerId": 37,
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 2.5,
+            "rankDown": false,
+            "name": "Leif2"
+          },
+          {
+            "place": 4,
+            "playerId": 38,
+            "oldPoints": 3,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "newPoints": 3,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0,
+            "name": "Papa"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 105,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "playerId": 37,
+            "place": 1,
+            "oldRank": "Bronze",
+            "oldPoints": 2.5,
+            "newRank": "Bronze",
+            "newPoints": 3.5,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false,
+            "name": "Leif2"
+          },
+          {
+            "delta": 0.5,
+            "rankUp": false,
+            "newPoints": 9.5,
+            "rankDown": false,
+            "oldPoints": 9,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "place": 2,
+            "playerId": 35,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris2",
+            "newPoints": 7,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "place": 3,
+            "playerId": 36,
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "newRank": "Gold"
+          },
+          {
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 3,
+            "rankDown": false,
+            "oldRank": "Bronze",
+            "oldPoints": 3,
+            "newRank": "Bronze",
+            "place": 4,
+            "playerId": 38,
+            "name": "Papa"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 106,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Papa",
+            "place": 1,
+            "playerId": 38,
+            "oldRank": "Bronze",
+            "newRank": "Silber",
+            "oldPoints": 3,
+            "rankDown": false,
+            "newPoints": 4,
+            "delta": 1,
+            "rankUp": true
+          },
+          {
+            "newPoints": 10,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": true,
+            "place": 2,
+            "playerId": 35,
+            "newRank": "Rubin",
+            "oldPoints": 9.5,
+            "oldRank": "Gold",
+            "name": "Erik2"
+          },
+          {
+            "rankUp": false,
+            "delta": 0,
+            "newPoints": 3.5,
+            "rankDown": false,
+            "newRank": "Bronze",
+            "oldPoints": 3.5,
+            "oldRank": "Bronze",
+            "place": 3,
+            "playerId": 37,
+            "name": "Leif2"
+          },
+          {
+            "name": "Joris2",
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 7,
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "playerId": 36,
+            "place": 4
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 107,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif2",
+            "oldRank": "Bronze",
+            "newRank": "Silber",
+            "oldPoints": 3.5,
+            "place": 1,
+            "playerId": 37,
+            "delta": 1,
+            "rankUp": true,
+            "rankDown": false,
+            "newPoints": 4.5
+          },
+          {
+            "rankDown": false,
+            "newPoints": 7.5,
+            "delta": 0.5,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 36,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "name": "Joris2"
+          },
+          {
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 4,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "oldPoints": 4,
+            "place": 3,
+            "playerId": 38,
+            "name": "Papa"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 108,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "oldPoints": 10,
+            "oldRank": "Rubin",
+            "newRank": "Rubin",
+            "place": 1,
+            "playerId": 35,
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 11,
+            "rankDown": false
+          },
+          {
+            "name": "Joris2",
+            "rankDown": false,
+            "newPoints": 8,
+            "delta": 0.5,
+            "rankUp": false,
+            "playerId": 36,
+            "place": 2,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 7.5
+          },
+          {
+            "name": "Leif",
+            "place": 3,
+            "playerId": 29,
+            "newRank": "Smaragd",
+            "oldPoints": 14,
+            "oldRank": "Smaragd",
+            "newPoints": 13,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": -1
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 109,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 5,
+            "rankDown": false,
+            "oldRank": "Silber",
+            "oldPoints": 4,
+            "newRank": "Silber",
+            "playerId": 38,
+            "place": 1,
+            "name": "Papa"
+          },
+          {
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "place": 2,
+            "playerId": 36,
+            "rankUp": false,
+            "delta": 0.5,
+            "newPoints": 8.5,
+            "rankDown": false,
+            "name": "Joris2"
+          },
+          {
+            "oldRank": "Bronze",
+            "oldPoints": 2.5,
+            "newRank": "Bronze",
+            "place": 3,
+            "playerId": 31,
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 2.5,
+            "name": "Thore"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 110,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "oldPoints": 13,
+            "place": 1,
+            "playerId": 29,
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 14,
+            "rankDown": false,
+            "name": "Leif"
+          },
+          {
+            "oldRank": "Rubin",
+            "oldPoints": 11,
+            "newRank": "Rubin",
+            "playerId": 35,
+            "place": 2,
+            "delta": 0.5,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 11.5,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris2",
+            "playerId": 36,
+            "place": 3,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 8.5,
+            "rankDown": false,
+            "newPoints": 7.5,
+            "rankUp": false,
+            "delta": -1
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 111,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Papa",
+            "place": 1,
+            "playerId": 38,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "oldPoints": 5,
+            "rankDown": false,
+            "newPoints": 6,
+            "rankUp": false,
+            "delta": 1
+          },
+          {
+            "name": "Thore",
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "oldPoints": 2.5,
+            "playerId": 31,
+            "place": 2,
+            "rankUp": false,
+            "delta": 0.5,
+            "rankDown": false,
+            "newPoints": 3
+          },
+          {
+            "name": "Joris2",
+            "playerId": 36,
+            "place": 3,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 7.5,
+            "newPoints": 7,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": -0.5
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 112,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newPoints": 8,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 1,
+            "place": 1,
+            "playerId": 36,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "name": "Joris2"
+          },
+          {
+            "playerId": 29,
+            "place": 2,
+            "newRank": "Smaragd",
+            "oldPoints": 14,
+            "oldRank": "Smaragd",
+            "newPoints": 14.5,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": false,
+            "name": "Leif"
+          },
+          {
+            "place": 3,
+            "playerId": 35,
+            "oldRank": "Rubin",
+            "oldPoints": 11.5,
+            "newRank": "Rubin",
+            "rankDown": false,
+            "newPoints": 10.5,
+            "rankUp": false,
+            "delta": -1,
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 113,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "playerId": 38,
+            "place": 1,
+            "newRank": "Gold",
+            "oldRank": "Silber",
+            "oldPoints": 6,
+            "rankDown": false,
+            "newPoints": 7,
+            "delta": 1,
+            "rankUp": true,
+            "name": "Papa"
+          },
+          {
+            "rankUp": false,
+            "delta": 0.5,
+            "newPoints": 8.5,
+            "rankDown": false,
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "playerId": 36,
+            "place": 2,
+            "name": "Joris2"
+          },
+          {
+            "name": "Thore",
+            "oldRank": "Bronze",
+            "newRank": "Bronze",
+            "oldPoints": 3,
+            "place": 3,
+            "playerId": 31,
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 3,
+            "rankDown": false
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 114,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 8.5,
+            "place": 1,
+            "playerId": 36,
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 9.5,
+            "rankDown": false,
+            "name": "Joris2"
+          },
+          {
+            "place": 2,
+            "playerId": 29,
+            "oldRank": "Smaragd",
+            "oldPoints": 14.5,
+            "newRank": "Smaragd",
+            "newPoints": 15,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0.5,
+            "name": "Leif"
+          },
+          {
+            "rankDown": false,
+            "newPoints": 7,
+            "delta": 0,
+            "rankUp": false,
+            "place": 3,
+            "playerId": 38,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "name": "Papa"
+          },
+          {
+            "name": "Thore",
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 3,
+            "newRank": "Bronze",
+            "oldPoints": 3,
+            "oldRank": "Bronze",
+            "place": 4,
+            "playerId": 31
+          },
+          {
+            "name": "Erik2",
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": true,
+            "newPoints": 9.5,
+            "newRank": "Gold",
+            "oldPoints": 10.5,
+            "oldRank": "Rubin",
+            "place": 5,
+            "playerId": 35
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 115,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newRank": "Rubin",
+            "oldRank": "Gold",
+            "oldPoints": 9.5,
+            "place": 1,
+            "playerId": 35,
+            "rankUp": true,
+            "delta": 1,
+            "newPoints": 10.5,
+            "rankDown": false,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris2",
+            "newPoints": 10,
+            "rankDown": false,
+            "delta": 0.5,
+            "rankUp": true,
+            "place": 2,
+            "playerId": 36,
+            "newRank": "Rubin",
+            "oldPoints": 9.5,
+            "oldRank": "Gold"
+          },
+          {
+            "name": "Papa",
+            "place": 3,
+            "playerId": 38,
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "rankDown": false,
+            "newPoints": 7,
+            "rankUp": false,
+            "delta": 0
+          },
+          {
+            "place": 4,
+            "playerId": 29,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "oldPoints": 15,
+            "newPoints": 15,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 116,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 8,
+            "rankUp": false,
+            "delta": 1,
+            "playerId": 38,
+            "place": 1,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "name": "Papa"
+          },
+          {
+            "delta": 0.5,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 11,
+            "oldRank": "Rubin",
+            "oldPoints": 10.5,
+            "newRank": "Rubin",
+            "playerId": 35,
+            "place": 2,
+            "name": "Erik2"
+          },
+          {
+            "rankDown": true,
+            "newPoints": 9,
+            "rankUp": false,
+            "delta": -1,
+            "playerId": 36,
+            "place": 3,
+            "oldPoints": 10,
+            "oldRank": "Rubin",
+            "newRank": "Gold",
+            "name": "Joris2"
+          },
+          {
+            "name": "Leif2",
+            "place": 4,
+            "playerId": 37,
+            "newRank": "Silber",
+            "oldPoints": 4.5,
+            "oldRank": "Silber",
+            "rankDown": false,
+            "newPoints": 4.5,
+            "rankUp": false,
+            "delta": 0
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 117,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": true,
+            "newPoints": 10,
+            "rankDown": false,
+            "oldRank": "Gold",
+            "newRank": "Rubin",
+            "oldPoints": 9,
+            "playerId": 36,
+            "place": 1,
+            "name": "Joris2"
+          },
+          {
+            "name": "Thore",
+            "delta": 0.5,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 3.5,
+            "oldPoints": 3,
+            "newRank": "Bronze",
+            "oldRank": "Bronze",
+            "playerId": 31,
+            "place": 2
+          },
+          {
+            "rankDown": false,
+            "newPoints": 4.5,
+            "delta": 0,
+            "rankUp": false,
+            "place": 3,
+            "playerId": 37,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "oldPoints": 4.5,
+            "name": "Leif2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 118,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldRank": "Rubin",
+            "oldPoints": 11,
+            "newRank": "Rubin",
+            "place": 1,
+            "playerId": 35,
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 12,
+            "name": "Erik2"
+          },
+          {
+            "name": "Leif2",
+            "oldPoints": 4.5,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "place": 2,
+            "playerId": 37,
+            "rankUp": false,
+            "delta": 0.5,
+            "newPoints": 5,
+            "rankDown": false
+          },
+          {
+            "playerId": 36,
+            "place": 3,
+            "oldRank": "Rubin",
+            "oldPoints": 10,
+            "newRank": "Gold",
+            "newPoints": 9,
+            "rankDown": true,
+            "rankUp": false,
+            "delta": -1,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 119,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 4.5,
+            "newRank": "Silber",
+            "oldRank": "Bronze",
+            "oldPoints": 3.5,
+            "playerId": 31,
+            "place": 1,
+            "name": "Thore"
+          },
+          {
+            "name": "Leif2",
+            "newRank": "Silber",
+            "oldPoints": 5,
+            "oldRank": "Silber",
+            "playerId": 37,
+            "place": 2,
+            "delta": 0.5,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 5.5
+          },
+          {
+            "place": 3,
+            "playerId": 36,
+            "oldPoints": 9,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "newPoints": 8,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": -1,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 120,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 9,
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "place": 1,
+            "playerId": 36,
+            "name": "Joris2"
+          },
+          {
+            "oldRank": "Gold",
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "playerId": 38,
+            "place": 2,
+            "delta": 0.5,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 8.5,
+            "name": "Papa"
+          },
+          {
+            "name": "Leif2",
+            "place": 3,
+            "playerId": 37,
+            "oldRank": "Silber",
+            "oldPoints": 5.5,
+            "newRank": "Silber",
+            "rankDown": false,
+            "newPoints": 5.5,
+            "delta": 0,
+            "rankUp": false
+          },
+          {
+            "rankUp": false,
+            "delta": 0,
+            "newPoints": 4.5,
+            "rankDown": false,
+            "oldPoints": 4.5,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "place": 4,
+            "playerId": 31,
+            "name": "Thore"
+          },
+          {
+            "name": "Erik2",
+            "delta": -1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 11,
+            "newRank": "Rubin",
+            "oldRank": "Rubin",
+            "oldPoints": 12,
+            "place": 5,
+            "playerId": 35
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 121,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 12,
+            "newRank": "Rubin",
+            "oldPoints": 11,
+            "oldRank": "Rubin",
+            "place": 1,
+            "playerId": 35
+          },
+          {
+            "rankUp": false,
+            "delta": 0.5,
+            "rankDown": false,
+            "newPoints": 6,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "oldPoints": 5.5,
+            "place": 2,
+            "playerId": 37,
+            "name": "Leif2"
+          },
+          {
+            "name": "Papa",
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 8.5,
+            "place": 3,
+            "playerId": 38,
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 8.5
+          },
+          {
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 4.5,
+            "oldPoints": 4.5,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "playerId": 31,
+            "place": 4,
+            "name": "Thore"
+          },
+          {
+            "rankDown": false,
+            "newPoints": 8,
+            "delta": -1,
+            "rankUp": false,
+            "playerId": 36,
+            "place": 5,
+            "oldRank": "Gold",
+            "oldPoints": 9,
+            "newRank": "Gold",
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 122,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 13,
+            "oldPoints": 12,
+            "oldRank": "Rubin",
+            "newRank": "Smaragd",
+            "playerId": 35,
+            "place": 1
+          },
+          {
+            "newPoints": 6.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 0.5,
+            "place": 2,
+            "playerId": 37,
+            "oldPoints": 6,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "name": "Leif2"
+          },
+          {
+            "name": "Thore",
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 4.5,
+            "rankDown": false,
+            "oldPoints": 4.5,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "place": 3,
+            "playerId": 31
+          },
+          {
+            "playerId": 36,
+            "place": 4,
+            "newRank": "Gold",
+            "oldPoints": 8,
+            "oldRank": "Gold",
+            "rankDown": false,
+            "newPoints": 7,
+            "delta": -1,
+            "rankUp": false,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 123,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Thore",
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 5.5,
+            "rankDown": false,
+            "newRank": "Silber",
+            "oldPoints": 4.5,
+            "oldRank": "Silber",
+            "place": 1,
+            "playerId": 31
+          },
+          {
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "playerId": 36,
+            "place": 2,
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 7,
+            "rankDown": false,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 124,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 9.5,
+            "newRank": "Gold",
+            "oldPoints": 8.5,
+            "oldRank": "Gold",
+            "playerId": 38,
+            "place": 1,
+            "name": "Papa"
+          },
+          {
+            "playerId": 33,
+            "place": 2,
+            "oldRank": "Smaragd",
+            "oldPoints": 14.5,
+            "newRank": "Smaragd",
+            "rankDown": false,
+            "newPoints": 15,
+            "rankUp": false,
+            "delta": 0.5,
+            "name": "Joris"
+          },
+          {
+            "rankDown": false,
+            "newPoints": 14,
+            "rankUp": false,
+            "delta": -1,
+            "playerId": 29,
+            "place": 3,
+            "oldPoints": 15,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "name": "Leif"
+          },
+          {
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 12,
+            "rankDown": true,
+            "oldPoints": 13,
+            "newRank": "Rubin",
+            "oldRank": "Smaragd",
+            "place": 4,
+            "playerId": 35,
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 125,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": true,
+            "delta": 1,
+            "newPoints": 10.5,
+            "rankDown": false,
+            "oldRank": "Gold",
+            "oldPoints": 9.5,
+            "newRank": "Rubin",
+            "playerId": 38,
+            "place": 1,
+            "name": "Papa"
+          },
+          {
+            "name": "Thore",
+            "rankDown": false,
+            "newPoints": 6,
+            "delta": 0.5,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 31,
+            "oldRank": "Silber",
+            "oldPoints": 5.5,
+            "newRank": "Silber"
+          },
+          {
+            "name": "Erik2",
+            "delta": -1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 11,
+            "oldRank": "Rubin",
+            "oldPoints": 12,
+            "newRank": "Rubin",
+            "place": 3,
+            "playerId": 35
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 126,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "playerId": 35,
+            "place": 1,
+            "newRank": "Rubin",
+            "oldRank": "Rubin",
+            "oldPoints": 11,
+            "newPoints": 12,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false,
+            "name": "Erik2"
+          },
+          {
+            "place": 2,
+            "playerId": 33,
+            "newRank": "Smaragd",
+            "oldPoints": 15,
+            "oldRank": "Smaragd",
+            "rankDown": false,
+            "newPoints": 15.5,
+            "rankUp": false,
+            "delta": 0.5,
+            "name": "Joris"
+          },
+          {
+            "playerId": 29,
+            "place": 3,
+            "oldPoints": 14,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "rankDown": false,
+            "newPoints": 13,
+            "rankUp": false,
+            "delta": -1,
+            "name": "Leif"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 127,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 13,
+            "newRank": "Smaragd",
+            "oldRank": "Rubin",
+            "oldPoints": 12,
+            "playerId": 35,
+            "place": 1,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris2",
+            "rankUp": false,
+            "delta": 0.5,
+            "newPoints": 7.5,
+            "rankDown": false,
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "place": 2,
+            "playerId": 36
+          },
+          {
+            "newPoints": 6,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "playerId": 31,
+            "place": 3,
+            "oldPoints": 6,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "name": "Thore"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 128,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "playerId": 35,
+            "place": 1,
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "oldPoints": 13,
+            "newPoints": 14,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": false
+          },
+          {
+            "rankDown": false,
+            "newPoints": 13.5,
+            "delta": 0.5,
+            "rankUp": false,
+            "playerId": 29,
+            "place": 2,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "oldPoints": 13,
+            "name": "Leif"
+          },
+          {
+            "rankDown": false,
+            "newPoints": 7,
+            "rankUp": false,
+            "delta": -0.5,
+            "place": 3,
+            "playerId": 36,
+            "newRank": "Gold",
+            "oldPoints": 7.5,
+            "oldRank": "Gold",
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 129,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris2",
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "place": 1,
+            "playerId": 36,
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 8,
+            "rankDown": false
+          },
+          {
+            "name": "Thore",
+            "oldPoints": 6,
+            "oldRank": "Silber",
+            "newRank": "Silber",
+            "place": 2,
+            "playerId": 31,
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 6,
+            "rankDown": false
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 130,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 14.5,
+            "rankDown": false,
+            "oldPoints": 13.5,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "playerId": 29,
+            "place": 1
+          },
+          {
+            "name": "Joris2",
+            "place": 2,
+            "playerId": 36,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 8,
+            "rankDown": false,
+            "newPoints": 8.5,
+            "rankUp": false,
+            "delta": 0.5
+          },
+          {
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "oldPoints": 14,
+            "place": 3,
+            "playerId": 35,
+            "delta": -1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 13,
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 131,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "newPoints": 9.5,
+            "rankDown": false,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8.5,
+            "playerId": 36,
+            "place": 1,
+            "name": "Joris2"
+          },
+          {
+            "newPoints": 6,
+            "rankDown": false,
+            "delta": 0,
+            "rankUp": false,
+            "playerId": 31,
+            "place": 2,
+            "oldRank": "Silber",
+            "oldPoints": 6,
+            "newRank": "Silber",
+            "name": "Thore"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 132,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "newPoints": 15.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 1,
+            "playerId": 29,
+            "place": 1,
+            "oldPoints": 14.5,
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd"
+          },
+          {
+            "name": "Erik",
+            "newPoints": 14.5,
+            "rankDown": true,
+            "delta": -2,
+            "rankUp": false,
+            "place": 2,
+            "playerId": 30,
+            "oldPoints": 16.5,
+            "newRank": "Smaragd",
+            "oldRank": "Diamant"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 133,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris2",
+            "playerId": 36,
+            "place": 1,
+            "newRank": "Rubin",
+            "oldPoints": 9.5,
+            "oldRank": "Gold",
+            "newPoints": 10.5,
+            "rankDown": false,
+            "delta": 1,
+            "rankUp": true
+          },
+          {
+            "name": "Thore",
+            "rankUp": false,
+            "delta": 0,
+            "newPoints": 6,
+            "rankDown": false,
+            "oldPoints": 6,
+            "newRank": "Silber",
+            "oldRank": "Silber",
+            "playerId": 31,
+            "place": 2
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 134,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "newPoints": 16.5,
+            "rankDown": false,
+            "rankUp": true,
+            "delta": 1,
+            "place": 1,
+            "playerId": 29,
+            "newRank": "Diamant",
+            "oldRank": "Smaragd",
+            "oldPoints": 15.5
+          },
+          {
+            "name": "Erik",
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "oldPoints": 14.5,
+            "playerId": 30,
+            "place": 2,
+            "delta": 0.5,
+            "rankUp": false,
+            "newPoints": 15,
+            "rankDown": false
+          },
+          {
+            "name": "Joris2",
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 9.5,
+            "rankDown": true,
+            "newRank": "Gold",
+            "oldRank": "Rubin",
+            "oldPoints": 10.5,
+            "playerId": 36,
+            "place": 3
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 135,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris2",
+            "rankUp": true,
+            "delta": 1,
+            "newPoints": 10.5,
+            "rankDown": false,
+            "oldPoints": 9.5,
+            "oldRank": "Gold",
+            "newRank": "Rubin",
+            "playerId": 36,
+            "place": 1
+          },
+          {
+            "place": 2,
+            "playerId": 31,
+            "oldRank": "Silber",
+            "newRank": "Gold",
+            "oldPoints": 6,
+            "newPoints": 7,
+            "rankDown": false,
+            "rankUp": true,
+            "delta": 1,
+            "name": "Thore"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 136,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Leif",
+            "place": 1,
+            "playerId": 29,
+            "oldPoints": 16.5,
+            "newRank": "Diamant",
+            "oldRank": "Diamant",
+            "newPoints": 17.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 1
+          },
+          {
+            "name": "Erik",
+            "oldPoints": 15,
+            "newRank": "Smaragd",
+            "oldRank": "Smaragd",
+            "place": 2,
+            "playerId": 30,
+            "rankUp": false,
+            "delta": 0.5,
+            "newPoints": 15.5,
+            "rankDown": false
+          },
+          {
+            "name": "Joris2",
+            "place": 3,
+            "playerId": 36,
+            "oldPoints": 10.5,
+            "newRank": "Gold",
+            "oldRank": "Rubin",
+            "newPoints": 9.5,
+            "rankDown": true,
+            "delta": -1,
+            "rankUp": false
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 137,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "round": 137,
+            "oldRank": "Gold",
+            "oldPoints": 9.5,
+            "newRank": "Gold",
+            "playerId": 36,
+            "rankUp": false,
+            "playerName": "Joris2",
+            "newPoints": 9,
+            "points": -0.5,
+            "type": "penalty"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 138,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 10,
+            "oldRank": "Gold",
+            "oldPoints": 9,
+            "newRank": "Rubin",
+            "playerId": 36,
+            "place": 1,
+            "name": "Joris2"
+          },
+          {
+            "name": "Erik2",
+            "delta": -1,
+            "rankUp": false,
+            "newPoints": 12,
+            "rankDown": true,
+            "oldPoints": 13,
+            "oldRank": "Smaragd",
+            "newRank": "Rubin",
+            "place": 2,
+            "playerId": 35
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 139,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 140,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "rankDown": false,
+            "newPoints": 13,
+            "rankUp": true,
+            "delta": 1,
+            "playerId": 35,
+            "place": 1,
+            "oldPoints": 12,
+            "newRank": "Smaragd",
+            "oldRank": "Rubin"
+          },
+          {
+            "playerId": 36,
+            "place": 2,
+            "newRank": "Gold",
+            "oldPoints": 10,
+            "oldRank": "Rubin",
+            "rankDown": true,
+            "newPoints": 9,
+            "rankUp": false,
+            "delta": -1,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 141,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "newRank": "Smaragd",
+            "oldPoints": 14,
+            "oldRank": "Smaragd",
+            "playerId": 35,
+            "place": 1,
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 15,
+            "rankDown": false,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris2",
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 8,
+            "place": 2,
+            "playerId": 36,
+            "delta": -1,
+            "rankUp": false,
+            "newPoints": 7,
+            "rankDown": false
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 142,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldPoints": 15,
+            "oldRank": "Smaragd",
+            "newRank": "Diamant",
+            "playerId": 35,
+            "place": 1,
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 16,
+            "name": "Erik2"
+          },
+          {
+            "rankUp": false,
+            "delta": 0,
+            "rankDown": false,
+            "newPoints": 7,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 7,
+            "playerId": 36,
+            "place": 2,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 143,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 144,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 145,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 146,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik",
+            "oldRank": "Smaragd",
+            "oldPoints": 15.5,
+            "newRank": "Diamant",
+            "playerId": 30,
+            "place": 1,
+            "rankUp": true,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 16.5
+          },
+          {
+            "name": "Joris2",
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "place": 2,
+            "playerId": 36,
+            "delta": 0,
+            "rankUp": false,
+            "newPoints": 7,
+            "rankDown": false
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 147,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 148,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 17.5,
+            "newRank": "Diamant",
+            "oldPoints": 16.5,
+            "oldRank": "Diamant",
+            "playerId": 30,
+            "place": 1,
+            "name": "Erik"
+          },
+          {
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 14.5,
+            "rankDown": false,
+            "newRank": "Smaragd",
+            "oldPoints": 15.5,
+            "oldRank": "Smaragd",
+            "place": 2,
+            "playerId": 33,
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 149,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik",
+            "oldPoints": 17.5,
+            "oldRank": "Diamant",
+            "newRank": "Diamant",
+            "place": 1,
+            "playerId": 30,
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 18.5
+          },
+          {
+            "newPoints": 13.5,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": -1,
+            "playerId": 33,
+            "place": 2,
+            "oldPoints": 14.5,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 150,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": true,
+            "delta": 1,
+            "newPoints": 19.5,
+            "rankDown": false,
+            "oldRank": "Diamant",
+            "oldPoints": 18.5,
+            "newRank": "Amethyst",
+            "playerId": 30,
+            "place": 1,
+            "name": "Erik"
+          },
+          {
+            "name": "Joris",
+            "newPoints": 12.5,
+            "rankDown": true,
+            "rankUp": false,
+            "delta": -1,
+            "playerId": 33,
+            "place": 2,
+            "oldRank": "Smaragd",
+            "newRank": "Rubin",
+            "oldPoints": 13.5
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 151,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "oldPoints": 12.5,
+            "oldRank": "Rubin",
+            "newRank": "Smaragd",
+            "playerId": 33,
+            "place": 1,
+            "delta": 1,
+            "rankUp": true,
+            "newPoints": 13.5,
+            "rankDown": false,
+            "name": "Joris"
+          },
+          {
+            "oldRank": "Diamant",
+            "newRank": "Smaragd",
+            "oldPoints": 16,
+            "place": 2,
+            "playerId": 35,
+            "delta": -2,
+            "rankUp": false,
+            "rankDown": true,
+            "newPoints": 14,
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 152,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Erik2",
+            "playerId": 35,
+            "place": 1,
+            "oldRank": "Smaragd",
+            "oldPoints": 14,
+            "newRank": "Smaragd",
+            "rankDown": false,
+            "newPoints": 15,
+            "delta": 1,
+            "rankUp": false
+          },
+          {
+            "playerId": 33,
+            "place": 2,
+            "oldRank": "Smaragd",
+            "newRank": "Rubin",
+            "oldPoints": 13.5,
+            "newPoints": 12.5,
+            "rankDown": true,
+            "delta": -1,
+            "rankUp": false,
+            "name": "Joris"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 153,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 13.5,
+            "delta": 1,
+            "rankUp": true,
+            "place": 1,
+            "playerId": 33,
+            "newRank": "Smaragd",
+            "oldRank": "Rubin",
+            "oldPoints": 12.5,
+            "name": "Joris"
+          },
+          {
+            "playerId": 35,
+            "place": 2,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "oldPoints": 15,
+            "rankDown": false,
+            "newPoints": 14,
+            "rankUp": false,
+            "delta": -1,
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 154,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris2",
+            "playerId": 36,
+            "place": 1,
+            "oldPoints": 7,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "newPoints": 8,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": 1
+          },
+          {
+            "name": "Erik2",
+            "oldPoints": 14,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "playerId": 35,
+            "place": 2,
+            "rankUp": false,
+            "delta": -1,
+            "newPoints": 13,
+            "rankDown": false
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 155,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 14,
+            "oldRank": "Smaragd",
+            "oldPoints": 13,
+            "newRank": "Smaragd",
+            "playerId": 35,
+            "place": 1,
+            "name": "Erik2"
+          },
+          {
+            "oldRank": "Gold",
+            "oldPoints": 8,
+            "newRank": "Gold",
+            "playerId": 36,
+            "place": 2,
+            "rankUp": false,
+            "delta": -1,
+            "rankDown": false,
+            "newPoints": 7,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 156,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "name": "Joris2",
+            "rankUp": false,
+            "delta": 1,
+            "rankDown": false,
+            "newPoints": 8,
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "playerId": 36,
+            "place": 1
+          },
+          {
+            "newPoints": 13,
+            "rankDown": false,
+            "delta": -1,
+            "rankUp": false,
+            "playerId": 35,
+            "place": 2,
+            "oldPoints": 14,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "name": "Erik2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 157,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "playerId": 36,
+            "place": 1,
+            "newRank": "Gold",
+            "oldRank": "Gold",
+            "oldPoints": 8,
+            "rankDown": false,
+            "newPoints": 9,
+            "rankUp": false,
+            "delta": 1,
+            "name": "Joris2"
+          },
+          {
+            "name": "Erik2",
+            "newRank": "Rubin",
+            "oldPoints": 13,
+            "oldRank": "Smaragd",
+            "place": 2,
+            "playerId": 35,
+            "delta": -1,
+            "rankUp": false,
+            "newPoints": 12,
+            "rankDown": true
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 158,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankDown": false,
+            "newPoints": 13,
+            "rankUp": true,
+            "delta": 1,
+            "playerId": 35,
+            "place": 1,
+            "oldRank": "Rubin",
+            "oldPoints": 12,
+            "newRank": "Smaragd",
+            "name": "Erik2"
+          },
+          {
+            "newPoints": 8,
+            "rankDown": false,
+            "rankUp": false,
+            "delta": -1,
+            "playerId": 36,
+            "place": 2,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "oldPoints": 9,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 159,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "delta": 1,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 14,
+            "newRank": "Smaragd",
+            "oldPoints": 13,
+            "oldRank": "Smaragd",
+            "place": 1,
+            "playerId": 35,
+            "name": "Erik2"
+          },
+          {
+            "name": "Joris2",
+            "place": 2,
+            "playerId": 36,
+            "oldPoints": 8,
+            "oldRank": "Gold",
+            "newRank": "Gold",
+            "newPoints": 7,
+            "rankDown": false,
+            "delta": -1,
+            "rankUp": false
+          }
+        ],
+        "mmPhase": "low",
+        "skipped": false,
+        "skippedPhase": null
+      },
+      {
+        "round": 160,
+        "profileId": "default",
+        "profileName": "Standard",
+        "timestamp": 1775808007917,
+        "results": [
+          {
+            "rankUp": false,
+            "delta": 1,
+            "newPoints": 15,
+            "rankDown": false,
+            "oldPoints": 14,
+            "oldRank": "Smaragd",
+            "newRank": "Smaragd",
+            "playerId": 35,
+            "place": 1,
+            "name": "Erik2"
+          },
+          {
+            "newRank": "Gold",
+            "oldPoints": 7,
+            "oldRank": "Gold",
+            "playerId": 36,
+            "place": 2,
+            "delta": 0,
+            "rankUp": false,
+            "rankDown": false,
+            "newPoints": 7,
+            "name": "Joris2"
+          }
+        ],
+        "mmPhase": "high",
+        "skipped": false,
+        "skippedPhase": null
+      }
+    ],
+    "totalRounds": 160
+  }
+}
