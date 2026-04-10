@@ -2400,7 +2400,7 @@
             const newRound = state.round || 0;
             if(lastShownRound >= 0 && newRound > lastShownRound && state.history && state.history.length > 0 && !isPopupShowing) {
               const latestLog = state.history[0];
-              if(latestLog && (latestLog.skipped || (latestLog.results && latestLog.results.length > 0))) {
+              if(latestLog && !latestLog.skipped && latestLog.results && latestLog.results.length > 0) {
                 showRoundEndPopup(latestLog);
               }
             }
