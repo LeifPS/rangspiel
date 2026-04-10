@@ -2768,14 +2768,16 @@ async function _flushToFirestore() {
   showSyncIndicator('saving');
   try {
     const cleanedState = _cleanUndefinedValues({
-      players:            state.players,
-      round:              state.round,
-      history:            state.history,
-      matchmakingOn:      state.matchmakingOn,
-      mmPhase:            state.mmPhase,
-      keys:               state.keys,
-      profileName:        state.profileName || null,
-      firstRankAchievers: state.firstRankAchievers || {}
+      players:             state.players,
+      round:               state.round,
+      history:             state.history,
+      matchmakingOn:       state.matchmakingOn,
+      mmPhase:             state.mmPhase,
+      keys:                state.keys,
+      profileName:         state.profileName || null,
+      firstRankAchievers:  state.firstRankAchievers || {},
+      currentRoundPIds:    state.currentRoundPIds  || null,
+      currentRoundSlots:   state.currentRoundSlots || null
     });
     
     const data = {
@@ -3417,6 +3419,8 @@ function submitRound(){
   uiActivePIds=[];
   uiSlots=[];
   uiSelectedSlot=null;
+  state.currentRoundPIds=null;
+  state.currentRoundSlots=null;
   
   renderAll();
   for(const r of log.results){
@@ -4068,6 +4072,9 @@ function slotClick(i){
   }else{
     uiSelectedSlot=uiSelectedSlot===i?null:i;
   }
+  state.currentRoundPIds=uiActivePIds.length?[...uiActivePIds]:null;
+  state.currentRoundSlots=uiSlots.some(s=>s!==null)?[...uiSlots]:null;
+  saveState();
   renderPickerUI(uiActivePIds.map(id=>state.players.find(p=>p.id===id)).filter(Boolean));
 }
 
@@ -4096,12 +4103,18 @@ function pickerClick(pid){
       }
     }
   }
+  state.currentRoundPIds=uiActivePIds.length?[...uiActivePIds]:null;
+  state.currentRoundSlots=uiSlots.some(s=>s!==null)?[...uiSlots]:null;
+  saveState();
   renderPickerUI(uiActivePIds.map(id=>state.players.find(p=>p.id===id)).filter(Boolean));
 }
 
 function clearSlot(i,e){
   e.stopPropagation();
   uiSlots[i]=null;uiSelectedSlot=i;
+  state.currentRoundPIds=uiActivePIds.length?[...uiActivePIds]:null;
+  state.currentRoundSlots=uiSlots.some(s=>s!==null)?[...uiSlots]:null;
+  saveState();
   renderPickerUI(uiActivePIds.map(id=>state.players.find(p=>p.id===id)).filter(Boolean));
 }
 

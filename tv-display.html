@@ -1303,6 +1303,21 @@
       const skippedPlayers = currentPhasePlayers.filter(p => !nextPhasePlayerIds.has(p.id));
       const skippedIds = new Set(skippedPlayers.map(p => p.id));
       
+      // Build placement map from current round data
+      const roundPIds = state.currentRoundPIds || [];
+      const roundSlots = state.currentRoundSlots || [];
+      const placementMap = {};
+      roundSlots.forEach((pid, i) => {
+        if (pid !== null) placementMap[pid] = i + 1;
+      });
+      const inRoundSet = new Set(roundPIds);
+
+      function playerLabel(p) {
+        if (!inRoundSet.has(p.id)) return p.name;
+        const pl = placementMap[p.id];
+        return pl ? `#${pl} ${p.name}` : `#? ${p.name}`;
+      }
+
       matchmakingPhases.innerHTML = `
         <div class="matchmaking-phase">
           <div class="matchmaking-phase-header">Aktuell: ${currentPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
@@ -1310,7 +1325,7 @@
             ${currentPhasePlayers.map(p => {
               let classes = 'matchmaking-phase-player';
               if (inBothIds.has(p.id)) classes += ' in-both';
-              return `<div class="${classes}">${p.name}</div>`;
+              return `<div class="${classes}">${playerLabel(p)}</div>`;
             }).join('')}
           </div>
         </div>
@@ -1320,7 +1335,7 @@
             ${nextPhasePlayers.map(p => {
               let classes = 'matchmaking-phase-player';
               if (inBothIds.has(p.id)) classes += ' in-both';
-              return `<div class="${classes}">${p.name}</div>`;
+              return `<div class="${classes}">${playerLabel(p)}</div>`;
             }).join('')}
           </div>
         </div>
@@ -1359,6 +1374,22 @@
       const ranklist = document.getElementById('ranklist');
       ranklist.innerHTML = '';
       
+      // Show inactive players above the first active player
+      if (activePlayers.length > 0) {
+        const firstActiveRank = allPlayersSorted.findIndex(p => p.id === activePlayers[0].id);
+        const playersAbove = allPlayersSorted.slice(0, firstActiveRank).filter(p => p.active === false);
+        if (playersAbove.length > 0) {
+          const aboveItem = document.createElement('div');
+          aboveItem.className = 'rank-between';
+          const playerNames = playersAbove.map(p => p.name).join(', ');
+          aboveItem.innerHTML = `
+            <div class="rank-between-count">${playersAbove.length} Spieler darüber</div>
+            <div class="rank-between-names">(${playerNames})</div>
+          `;
+          ranklist.appendChild(aboveItem);
+        }
+      }
+
       activePlayers.forEach((player, index) => {
         const absoluteRank = allPlayersSorted.findIndex(p => p.id === player.id) + 1;
         const rank = getRank(player.points);
