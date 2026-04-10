@@ -1366,7 +1366,7 @@
       
       matchmakingPhases.innerHTML = `
         <div class="matchmaking-phase">
-          <div class="matchmaking-phase-header">Aktuell: ${currentPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
+          <div class="matchmaking-phase-header">Aktuell: ${currentPhase === 'low' ? 'Niedrige Liga (1. niedrigste Punkte → letzter höchste Punkte)' : 'Hohe Liga (1. höchste Punkte → letzter niedrigste Punkte)'}</div>
           <div class="matchmaking-phase-players">
             ${currentPhasePlayers.map(p => {
               return `<div class="matchmaking-phase-player">${p.name}</div>`;
@@ -1374,7 +1374,7 @@
           </div>
         </div>
         <div class="matchmaking-phase">
-          <div class="matchmaking-phase-header">Nächste: ${nextPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
+          <div class="matchmaking-phase-header">Nächste: ${nextPhase === 'low' ? 'Niedrige Liga (1. niedrigste Punkte → letzter höchste Punkte)' : 'Hohe Liga (1. höchste Punkte → letzter niedrigste Punkte)'}</div>
           <div class="matchmaking-phase-players">
             ${nextPhasePlayers.map(p => {
               return `<div class="matchmaking-phase-player">${p.name}</div>`;
@@ -1771,7 +1771,7 @@
 
       // ── HEATMAP ───────────────────────────────────────────────
       else if (slide === 'heatmap') {
-        const rounds = [...history].filter(r=>r.results&&r.results.length>0).slice(0,10).reverse();
+        const rounds = [...history].filter(r=>r.results&&r.results.length>0).slice(-10).sort((a,b)=>a.round-b.round);
         if (rounds.length === 0) {
           body.innerHTML = '<div class="ig-empty">Noch keine Rundenhistorie</div>';
         } else {

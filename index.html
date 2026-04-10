@@ -3977,9 +3977,7 @@ function renderRoundForm(){
 function switchLeague() {
   if(state.matchmakingOn) {
     state.mmPhase = state.mmPhase === 'low' ? 'high' : 'low';
-    if(state.mmPhase === 'low') {
-      advanceMmPhase();
-    }
+    advanceMmPhase();
     saveState();
     renderRoundForm();
     showToast(`Wechsel zu ${state.mmPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}`);
@@ -7435,7 +7433,7 @@ async function performHistoryReplay(importData) {
     }
     
     // 4. HISTORY REPLAY - Runden nachspielen
-    const rounds = importData.historyData?.rounds || [];
+    const rounds = (importData.historyData?.rounds || []).sort((a,b)=>a.round-b.round);
     if (rounds.length === 0) {
       showToast('Keine Runden zum Nachspielen gefunden');
       return;
