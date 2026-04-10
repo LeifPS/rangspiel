@@ -812,6 +812,7 @@
     let previousRanks = {};
     let activeRankUpNotifications = 0;
     let lastShownRound = -1;
+    let infographicRenderTimeout = null;
     const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
     function getRankIdx(pts){let i=0;for(let j=0;j<RANKS.length;j++){if(pts>=RANKS[j].points)i=j;else break}return i}
@@ -1305,6 +1306,23 @@
       });
     }
     
+    function getMmGroup(){
+      const ps=state.players.filter(p=>p.active);
+      if(ps.length<2)return null;
+      const sorted=[...ps].sort((a,b)=>a.points-b.points);
+      if(state.mmPhase==='low'){
+        const base=sorted[0];
+        const bi=getRankIdx(base.points);
+        const g=sorted.filter(p=>getRankIdx(p.points)<=bi+2);
+        return g.length>=2?g.map(p=>p.id):null;
+      }else{
+        const base=sorted[sorted.length-1];
+        const bi=getRankIdx(base.points);
+        const g=sorted.filter(p=>getRankIdx(p.points)>=bi-2);
+        return g.length>=2?g.map(p=>p.id):null;
+      }
+    }
+
     function renderMatchmakingPhases() {
       if(!state.players || !Array.isArray(state.players)) return;
       const sortedPlayers = [...state.players].sort((a, b) => b.points - a.points || a.id - b.id);
@@ -1313,21 +1331,36 @@
       const currentPhase = state.mmPhase || 'low';
       const nextPhase = currentPhase === 'low' ? 'high' : 'low';
       
+      const currentGroup = getMmGroup();
+      const currentGroupIds = new Set(currentGroup || []);
+      
       const currentPhasePlayers = sortedPlayers.filter(p => {
-        const rank = getRank(p.points);
+        if (!p.active) return false;
+        const rankIdx = getRankIdx(p.points);
         if (currentPhase === 'low') {
-          return rank.points < PROT_PLAT;
+          // Schlechtester Spieler + alle bis 2 Rang-Stufen drüber
+          const lowest = sortedPlayers.filter(p => p.active).sort((a, b) => a.points - b.points)[0];
+          const lowestIdx = lowest ? getRankIdx(lowest.points) : 0;
+          return rankIdx <= lowestIdx + 2;
         } else {
-          return rank.points >= PROT_PLAT;
+          // Bester Spieler + alle bis 2 Rang-Stufen drunter
+          const highest = sortedPlayers.filter(p => p.active).sort((a, b) => b.points - a.points)[0];
+          const highestIdx = highest ? getRankIdx(highest.points) : 0;
+          return rankIdx >= highestIdx - 2;
         }
       });
       
       const nextPhasePlayers = sortedPlayers.filter(p => {
-        const rank = getRank(p.points);
+        if (!p.active) return false;
+        const rankIdx = getRankIdx(p.points);
         if (nextPhase === 'low') {
-          return rank.points < PROT_PLAT;
+          const lowest = sortedPlayers.filter(p => p.active).sort((a, b) => a.points - b.points)[0];
+          const lowestIdx = lowest ? getRankIdx(lowest.points) : 0;
+          return rankIdx <= lowestIdx + 2;
         } else {
-          return rank.points >= PROT_PLAT;
+          const highest = sortedPlayers.filter(p => p.active).sort((a, b) => b.points - a.points)[0];
+          const highestIdx = highest ? getRankIdx(highest.points) : 0;
+          return rankIdx >= highestIdx - 2;
         }
       });
       
@@ -1336,10 +1369,6 @@
       const nextPhasePlayerIds = new Set(nextPhasePlayers.map(p => p.id));
       const inBoth = sortedPlayers.filter(p => currentPhasePlayerIds.has(p.id) && nextPhasePlayerIds.has(p.id));
       const inBothIds = new Set(inBoth.map(p => p.id));
-      
-      // Übersprungene Spieler identifizieren (in aktueller Phase aber nicht in nächster)
-      const skippedPlayers = currentPhasePlayers.filter(p => !nextPhasePlayerIds.has(p.id));
-      const skippedIds = new Set(skippedPlayers.map(p => p.id));
       
       matchmakingPhases.innerHTML = `
         <div class="matchmaking-phase">
@@ -1415,6 +1444,23 @@
 
       activePlayers.forEach((player, index) => {
         const absoluteRank = allPlayersSorted.findIndex(p => p.id === player.id) + 1;
+        // Dense ranking für gleiche Punkte - Spieler mit gleichen Punkten haben denselben Rang
+        let displayRank = 1;
+        for (let i = 0; i < allPlayersSorted.length; i++) {
+          if (allPlayersSorted[i].id === player.id) {
+            // Finde den ersten Spieler mit denselben Punkten
+            for (let j = 0; j < i; j++) {
+              if (allPlayersSorted[j].points === player.points) {
+                displayRank = allPlayersSorted.findIndex(p => p.id === allPlayersSorted[j].id) + 1;
+                break;
+              }
+            }
+            if (displayRank === 1) {
+              displayRank = i + 1;
+            }
+            break;
+          }
+        }
         const rank = getRank(player.points);
         const maxAccounts = getMaxAccountsForSpieler(player.key);
         const accounts = state.players.filter(p => p.key === player.key).length;
@@ -1423,7 +1469,7 @@
         item.className = 'rank-item';
         const rankIconClass = 'rank-' + rank.icon.toLowerCase();
         item.innerHTML = `
-          <div class="rank-number">${absoluteRank}.</div>
+          <div class="rank-number">${displayRank}.</div>
           <div class="rl-icon-outer" style="border-color:${rank.color}">
             <div class="rank-icon ${rankIconClass}"></div>
           </div>
@@ -1514,6 +1560,16 @@
     }
 
     function renderInfographics() {
+      // Debounce - verhindert Race Conditions bei schnellen Updates
+      if (infographicRenderTimeout) {
+        clearTimeout(infographicRenderTimeout);
+      }
+      infographicRenderTimeout = setTimeout(() => {
+        renderInfographicsInternal();
+      }, 50);
+    }
+
+    function renderInfographicsInternal() {
       if(!state.players || !Array.isArray(state.players)) return;
       const infographic = document.getElementById('infographic');
       if (!infographic) return;
@@ -1568,20 +1624,12 @@
 
       el.innerHTML = `<div class="ig-label">${LABELS[slide]||''}</div><div class="ig-title">${TITLES[slide]||''}</div><div class="ig-body" id="ig-body"></div>`;
 
-      // Transition: remove old slide completely before adding new
-      const old = infographic.querySelector('.ig-slide');
-      if (old) {
-        old.classList.remove('enter');
-        old.classList.add('leave');
-        setTimeout(() => {
-          old.remove();
-          infographic.appendChild(el);
-          requestAnimationFrame(() => el.classList.add('enter'));
-        }, 350);
-      } else {
-        infographic.appendChild(el);
-        requestAnimationFrame(() => el.classList.add('enter'));
-      }
+      // Transition: remove all old slides immediately to prevent overlaps
+      const oldSlides = infographic.querySelectorAll('.ig-slide');
+      oldSlides.forEach(old => old.remove());
+      
+      infographic.appendChild(el);
+      requestAnimationFrame(() => el.classList.add('enter'));
 
       const body = el.querySelector('#ig-body');
 

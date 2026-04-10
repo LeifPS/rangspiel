@@ -7110,7 +7110,9 @@ function exportData() {
             key: p.key || null,
             active: false // Alle starten inaktiv
           })),
-          nextId: data.nextId || 1
+          nextId: data.nextId || 1,
+          // Achievements pro Profil speichern
+          firstRankAchievers: profileState.firstRankAchievers || {}
         };
         
       } catch(e) {
@@ -7358,8 +7360,12 @@ async function performHistoryReplay(importData) {
       console.log('Access Codes im Import gefunden, aber Wiederherstellung nicht implementiert');
     }
     
-    // Globale Badges zurücksetzen (nicht wiederherstellen!)
-    await saveGlobalBadges({});
+    // Globale Badges wiederherstellen
+    if (setupData.globalBadges) {
+      await saveGlobalBadges(setupData.globalBadges);
+    } else {
+      await saveGlobalBadges({});
+    }
     
     // Profile-Setup wiederherstellen
     const profiles = setupData.profiles || {};
@@ -7376,7 +7382,7 @@ async function performHistoryReplay(importData) {
           mmPhase: null,
           keys: setupData.keys || [],
           profileName: profileData.profileInfo?.name || profileId,
-          firstRankAchievers: {}
+          firstRankAchievers: profileData.firstRankAchievers || {}
         };
         
         const saveData = {
