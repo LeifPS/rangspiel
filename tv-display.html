@@ -89,7 +89,7 @@
     .right-panel{display:grid;grid-template-rows:1fr;gap:20px;overflow:hidden;min-height:0}
     
     /* MATCHMAKING PANEL */
-    .matchmaking-section{background:linear-gradient(135deg,var(--bg3) 0%,var(--bg2) 100%);border:2px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;animation:fadeIn 0.5s ease;box-shadow:0 8px 32px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.05)}
+    .matchmaking-section{background:linear-gradient(135deg,var(--bg3) 0%,var(--bg2) 100%);border:2px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;animation:fadeIn 0.5s ease;box-shadow:0 8px 32px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.05);flex-shrink:1;overflow-y:auto;min-height:0}
     .matchmaking-panel-title{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;text-shadow:0 0 15px rgba(232,184,75,0.4);display:flex;align-items:center;gap:10px}
     .matchmaking-panel-title::before{content:'🎮';font-size:1.6rem}
     .matchmaking-phases{display:flex;flex-direction:column;gap:16px}
@@ -747,9 +747,11 @@
     
     /* WIN PROBABILITY PANEL */
     #winProbs{flex-shrink:0;padding:0 2px 6px 2px}
+    #winProbs{flex-shrink:0}
     .wp-label{font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);opacity:0.65;margin-bottom:4px}
-    .wp-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
-    .wp-name{width:64px;font-size:0.78rem;font-weight:600;color:var(--text);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
+    #winProbs .wp-rows{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+    .wp-row{display:flex;align-items:center;gap:4px}
+    .wp-name{font-size:0.78rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .wp-bar-wrap{flex:1;height:14px;background:var(--bg3);border-radius:3px;overflow:hidden}
     .wp-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;width:0;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
     .wp-pct{width:38px;font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;color:var(--accent);flex-shrink:0;text-align:right}
@@ -1616,10 +1618,15 @@
       const container = document.getElementById('winProbs');
       if (!container) return;
 
-      const pIds = Array.isArray(state.currentRoundPIds) ? state.currentRoundPIds : [];
+      // Use active players (p.active === true); fall back to currentRoundPIds if set
+      const allPlayers = state.players || [];
+      let activePlayers = allPlayers.filter(p => p.active === true);
+      if (activePlayers.length === 0 && Array.isArray(state.currentRoundPIds) && state.currentRoundPIds.length > 0) {
+        activePlayers = state.currentRoundPIds.map(id => allPlayers.find(p => p.id === id)).filter(Boolean);
+      }
 
-      if (pIds.length === 0) {
-        container.innerHTML = '<div class="wp-label">GEWINNCHANCEN</div><div class="wp-empty">Keine aktive Runde</div>';
+      if (activePlayers.length === 0) {
+        container.innerHTML = '<div class="wp-label">GEWINNCHANCEN</div><div class="wp-empty">Keine aktiven Spieler</div>';
         return;
       }
 
@@ -1627,9 +1634,7 @@
 
       // Group playing accounts by Spieler (key), fall back to account name if unassigned
       const spielerMap = {};
-      pIds.forEach(id => {
-        const acc = (state.players || []).find(p => p.id === id);
-        if (!acc) return;
+      activePlayers.forEach(acc => {
         const key = acc.key || acc.name;
         if (!spielerMap[key]) spielerMap[key] = { name: key, accounts: [] };
         spielerMap[key].accounts.push(acc);
@@ -1666,14 +1671,11 @@
       }));
 
       // Render
-      let html = '<div class="wp-label">GEWINNCHANCEN</div>';
+      let html = '<div class="wp-label">GEWINNCHANCEN</div><div class="wp-rows">';
       withPct.forEach(s => {
-        html += `<div class="wp-row">
-          <div class="wp-name" title="${esc(s.name)}">${esc(s.name)}</div>
-          <div class="wp-bar-wrap"><div class="wp-bar" data-pct="${s.pct.toFixed(1)}"></div></div>
-          <div class="wp-pct">${s.pct.toFixed(1)}%</div>
-        </div>`;
+        html += `<div class="wp-row"><div class="wp-name" title="${esc(s.name)}">${esc(s.name)}</div><div class="wp-pct">${s.pct.toFixed(1)}%</div></div>`;
       });
+      html += '</div>';
       container.innerHTML = html;
 
       requestAnimationFrame(() => {
