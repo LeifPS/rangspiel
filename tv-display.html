@@ -111,122 +111,95 @@
       .right-panel{grid-template-rows:1fr;overflow:visible;min-height:auto}
     }
     
-    /* BOTTOM RIGHT - INFOGRAPHICS */
-    .info-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:0 8px 8px 8px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:opacity 0.5s ease}
-    .info-indicator{display:flex;gap:8px;padding:8px 0;margin-bottom:8px}
-    .info-dot{width:12px;height:12px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);transition:var(--transition)}
-    .info-dot.active{background:var(--accent);border-color:var(--accent);box-shadow:0 0 8px rgba(232,184,75,0.5)}
-    .info-dot.next{border-color:var(--accent);border-style:dashed}
-    .info-tabs{display:flex;gap:8px;margin-bottom:16px}
-    .info-tab{flex:1;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);font-size:0.9rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;transition:var(--transition)}
-    .info-tab.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
-    .info-content{flex:1;display:flex;flex-direction:column;overflow:hidden;transition:opacity 0.4s ease,transform 0.4s ease}
-    .info-view{display:none;flex:1;animation:fadeIn 0.4s ease}
-    .info-view.active{display:flex;flex-direction:column}
-    
-    /* POINTS CHART */
-    .chart-container{flex:1;display:flex;align-items:flex-end;gap:12px;padding:20px 10px 30px 10px;overflow-x:auto;position:relative}
-    .chart-bar{flex:1;min-width:50px;background:linear-gradient(180deg,var(--accent) 0%,var(--accent2) 50%,rgba(201,122,47,0.6) 100%);border-radius:8px 8px 0 0;transition:all 0.4s cubic-bezier(0.4,0,0.2,1);position:relative;box-shadow:0 4px 16px rgba(232,184,75,0.3);cursor:pointer}
-    .chart-bar:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(232,184,75,0.5)}
-    .chart-bar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.2) 100%);border-radius:8px 8px 0 0}
-    .chart-bar-label{position:absolute;bottom:-25px;left:50%;transform:translateX(-50%);font-size:0.85rem;color:var(--text2);font-weight:600;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,0.5)}
-    .chart-bar-value{position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-size:1rem;color:var(--accent);font-weight:700;text-shadow:0 2px 8px rgba(232,184,75,0.5);background:var(--bg3);padding:4px 10px;border-radius:12px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.3)}
-    .chart-bar-rank{position:absolute;top:-55px;left:50%;transform:translateX(-50%);font-size:0.75rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:1px}
-    
-    /* STREAK VIEW */
-    .streak-list{flex:1;overflow-y:auto}
-    .streak-item{display:flex;align-items:center;padding:12px;margin-bottom:8px;background:var(--bg3);border-radius:var(--radius-sm);transition:var(--transition)}
-    .streak-item:hover{background:var(--border)}
-    .streak-icon{font-size:1.5rem;margin-right:12px}
-    .streak-name{flex:1;font-weight:600}
-    .streak-value{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;color:var(--accent)}
-    
-    /* MATCHES LIST */
-    .matches-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:10px}
-    .match-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);animation:fadeIn 0.3s ease}
-    .match-winner{font-size:1rem;color:var(--success);font-weight:600}
-    .match-loser{font-size:1rem;color:var(--danger);font-weight:600}
-    .match-date{font-size:0.85rem;color:var(--text3)}
-    .match-score{font-size:1.1rem;font-weight:700;color:var(--text)}
-    .match-divider{color:var(--text3);margin:0 8px}
-    
-    /* RANKS DISTRIBUTION */
-    .ranks-distribution{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px;padding-right:10px}
-    .rank-dist-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;text-align:center;animation:fadeIn 0.3s ease}
-    .rank-dist-count{font-size:1.5rem;font-weight:700;color:var(--accent)}
-    .rank-dist-name{font-size:0.75rem;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:0.5px}
-    
-    /* ACTIVITY STATS */
-    .activity-stats{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:10px}
-    .activity-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);animation:fadeIn 0.3s ease}
-    .activity-name{font-size:0.95rem;color:var(--text);font-weight:600}
-    .activity-count{font-size:1.1rem;color:var(--accent);font-weight:700}
-    
-    /* POINTS DISTRIBUTION */
-    .points-distribution{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-right:10px}
-    .points-dist-bar{height:24px;background:var(--bg2);border-radius:12px;overflow:hidden;position:relative;border:1px solid var(--border)}
-    .points-dist-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.5s ease}
-    .points-dist-label{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:0.8rem;color:var(--text);font-weight:600}
-    .points-dist-count{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:0.8rem;color:var(--text2);font-weight:600}
-    .points-dist-range{position:absolute;left:50%;top:-20px;transform:translateX(-50%);font-size:0.7rem;color:var(--accent);font-weight:700}
-    
-    /* TOP PERFORMERS */
-    .top-performers{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:10px}
-    .top-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);animation:fadeIn 0.3s ease}
-    .top-name{font-size:1rem;color:var(--text);font-weight:600}
-    .top-value{font-size:1.2rem;color:var(--accent);font-weight:700}
-    
-    /* MATCHMAKING STATS */
-    .matchmaking-stats{flex:1;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-right:10px}
-    .mm-stat-box{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;animation:fadeIn 0.3s ease}
-    .mm-stat-value{font-size:2rem;font-weight:700;color:var(--accent)}
-    .mm-stat-label{font-size:0.8rem;color:var(--text2);margin-top:6px;text-transform:uppercase;letter-spacing:0.5px}
-    
-    /* MATCH PHASE VIEW */
-    .phase-list{flex:1;overflow-y:auto}
-    .phase-item{padding:14px;margin-bottom:8px;background:var(--bg3);border-radius:var(--radius-sm);transition:var(--transition)}
-    .phase-item:hover{background:var(--border)}
-    .phase-label{font-size:0.9rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-    .phase-value{font-size:1.2rem;font-weight:600;color:var(--accent)}
-    
-    /* PLACEMENT DISTRIBUTION */
-    .plac-dist-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:9px}
-    .plac-dist-row{display:flex;align-items:center;gap:10px}
-    .plac-dist-name{width:62px;font-size:0.78rem;font-weight:600;text-align:right;color:var(--text2);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .plac-dist-bar-wrap{flex:1;height:26px;display:flex;border-radius:5px;overflow:hidden;background:var(--bg2)}
-    .pd-seg{display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:rgba(0,0,0,0.75);overflow:hidden;transition:width 0.5s ease;min-width:0}
-    .pd-1{background:#f1c40f}
-    .pd-2{background:#95a5a6}
-    .pd-3{background:#cd7f32}
-    .pd-4{background:#4a4a6a;color:rgba(255,255,255,0.75)}
-    .plac-dist-total{width:28px;font-size:0.7rem;color:var(--text3);flex-shrink:0;text-align:right}
+    /* INFOGRAPHIC PANEL */
+    .info-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px 10px 10px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+    .info-progress-wrap{height:2px;background:var(--bg3);border-radius:2px;margin-bottom:8px;overflow:hidden;flex-shrink:0}
+    .info-progress-bar{height:100%;background:var(--accent);border-radius:2px;width:0}
+    .info-progress-bar.running{animation:igProgress 10s linear forwards}
+    @keyframes igProgress{0%{width:0}100%{width:100%}}
+    #infographic{flex:1;position:relative;overflow:hidden;min-height:0}
+    .ig-slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:2px 2px 0 2px;pointer-events:none}
+    .ig-slide.enter{animation:igIn 0.45s cubic-bezier(0.22,1,0.36,1) forwards}
+    .ig-slide.leave{animation:igOut 0.35s ease forwards}
+    @keyframes igIn{from{opacity:0;transform:translateY(16px) scale(0.97)}to{opacity:1;transform:none}}
+    @keyframes igOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-10px) scale(0.97)}}
+    .ig-label{font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);opacity:0.65;margin-bottom:2px;flex-shrink:0}
+    .ig-title{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:10px;letter-spacing:1px;flex-shrink:0}
+    .ig-body{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:6px;min-height:0}
+    .ig-empty{color:var(--text3);font-size:0.85rem;opacity:0.6;padding:16px 0}
 
-    /* DELTA CHART */
-    .delta-avg-chart{flex:1;display:flex;align-items:flex-end;justify-content:space-around;gap:6px;padding:36px 8px 28px}
-    .delta-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0}
-    .delta-bar-pos{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#2ecc71,rgba(39,174,96,0.45));min-height:2px}
-    .delta-bar-neg{width:100%;border-radius:0 0 4px 4px;background:linear-gradient(0deg,#e74c3c,rgba(231,76,60,0.45));min-height:2px}
-    .delta-bar-zero{width:100%;height:2px;background:var(--border)}
-    .delta-val{font-size:0.72rem;color:var(--accent);font-weight:700}
-    .delta-name{font-size:0.68rem;color:var(--text2);font-weight:600;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
+    /* SLIDE: RANGLISTE */
+    .ldb-row{display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .ldb-pos{font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;width:22px;text-align:right;flex-shrink:0;color:var(--text3)}
+    .ldb-pos.r1{color:#f1c40f}.ldb-pos.r2{color:#95a5a6}.ldb-pos.r3{color:#cd7f32}
+    .ldb-name{width:68px;font-size:0.82rem;font-weight:600;color:var(--text);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .ldb-bar-wrap{flex:1;height:16px;background:var(--bg2);border-radius:3px;overflow:hidden}
+    .ldb-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width 0.9s cubic-bezier(0.4,0,0.2,1)}
+    .ldb-pts{width:38px;font-size:0.78rem;font-weight:700;color:var(--accent);flex-shrink:0;text-align:right}
 
-    /* RANG-BILANZ */
-    .rang-bilanz-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
-    .rang-bilanz-row{display:flex;align-items:center;gap:8px}
-    .rang-bilanz-name{width:62px;font-size:0.78rem;font-weight:600;text-align:right;color:var(--text2);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .rang-bilanz-bars{flex:1;display:flex;flex-direction:column;gap:3px}
-    .rang-bilanz-up{height:11px;background:linear-gradient(90deg,#2ecc71,rgba(46,204,113,0.25));border-radius:0 4px 4px 0;display:flex;align-items:center;padding-left:5px;font-size:0.6rem;color:rgba(255,255,255,0.9);min-width:6px;transition:width 0.5s ease}
-    .rang-bilanz-down{height:11px;background:linear-gradient(90deg,#e74c3c,rgba(231,76,60,0.25));border-radius:0 4px 4px 0;display:flex;align-items:center;padding-left:5px;font-size:0.6rem;color:rgba(255,255,255,0.9);min-width:6px;transition:width 0.5s ease}
-    .rang-bilanz-score{width:36px;font-size:0.7rem;color:var(--text3);flex-shrink:0;text-align:left}
+    /* SLIDE: LETZTE RUNDE */
+    .lr-row{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:7px;flex-shrink:0}
+    .lr-p1{background:rgba(241,196,15,0.10);border:1px solid rgba(241,196,15,0.22)}
+    .lr-p2{background:rgba(149,165,166,0.06);border:1px solid rgba(149,165,166,0.14)}
+    .lr-p3{background:rgba(205,127,50,0.06);border:1px solid rgba(205,127,50,0.14)}
+    .lr-pn{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)}
+    .lr-medal{font-size:1.1rem;width:24px;text-align:center;flex-shrink:0}
+    .lr-name{flex:1;font-size:0.9rem;font-weight:600;color:var(--text)}
+    .lr-delta{font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;flex-shrink:0}
+    .lr-pos{color:#2ecc71}.lr-neg{color:#e74c3c}.lr-zero{color:var(--text3)}
 
-    /* CURRENT ROUND */
-    .current-round-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
-    .cr-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);animation:fadeIn 0.3s ease}
-    .cr-placed{background:var(--bg3)}
-    .cr-pending{background:var(--bg2);opacity:0.6}
-    .cr-place{width:36px;font-size:1.3rem;text-align:center;flex-shrink:0;font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent)}
-    .cr-name{flex:1;font-size:1rem;font-weight:600;color:var(--text)}
-    .cr-pts{font-size:0.85rem;color:var(--text3);flex-shrink:0}
+    /* SLIDE: STREAKS */
+    .sk-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:rgba(232,184,75,0.05);border:1px solid rgba(232,184,75,0.12);flex-shrink:0}
+    .sk-icon{font-size:1.4rem;flex-shrink:0}
+    .sk-name{flex:1;font-size:0.95rem;font-weight:600;color:var(--text)}
+    .sk-num{font-family:'Rajdhani',sans-serif;font-size:1.55rem;font-weight:700;color:var(--accent);flex-shrink:0}
+    .sk-lbl{font-size:0.65rem;color:var(--text3);margin-left:3px}
+
+    /* SLIDE: PLATZIERUNGSVERTEILUNG */
+    .pd-row{display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .pd-name{width:58px;font-size:0.74rem;font-weight:600;text-align:right;color:var(--text2);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .pd-bar-wrap{flex:1;height:20px;display:flex;border-radius:4px;overflow:hidden;background:var(--bg2)}
+    .pd-seg{display:flex;align-items:center;justify-content:center;font-size:0.63rem;font-weight:700;color:rgba(0,0,0,0.8);min-width:0;overflow:hidden}
+    .pd-1{background:#f1c40f}.pd-2{background:#95a5a6}.pd-3{background:#cd7f32}.pd-4{background:#4a4a6a;color:rgba(255,255,255,0.8)}
+    .pd-total{width:22px;font-size:0.65rem;color:var(--text3);flex-shrink:0;text-align:right}
+    .pd-legend{display:flex;gap:8px;font-size:0.6rem;flex-shrink:0;padding-top:2px}
+    .pd-legend span{opacity:0.8}
+
+    /* SLIDE: Ø DELTA */
+    .dlt-chart{flex:1;display:flex;align-items:flex-end;gap:4px;padding:24px 4px 18px;min-height:0}
+    .dlt-col{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;min-width:0}
+    .dlt-bar-pos{width:100%;border-radius:3px 3px 0 0;background:linear-gradient(180deg,#2ecc71,rgba(39,174,96,0.35));min-height:0}
+    .dlt-bar-neg{width:100%;border-radius:0 0 3px 3px;background:linear-gradient(0deg,#e74c3c,rgba(231,76,60,0.35));min-height:0}
+    .dlt-zero{width:100%;height:1px;background:var(--border);flex-shrink:0}
+    .dlt-val{font-size:0.62rem;color:var(--accent);font-weight:700;text-align:center;white-space:nowrap}
+    .dlt-name{font-size:0.6rem;color:var(--text3);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
+
+    /* SLIDE: RANG-BILANZ */
+    .rb-row{display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .rb-name{width:58px;font-size:0.74rem;font-weight:600;text-align:right;color:var(--text2);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .rb-bars{flex:1;display:flex;flex-direction:column;gap:2px}
+    .rb-up{height:9px;background:linear-gradient(90deg,#2ecc71,rgba(46,204,113,0.15));border-radius:0 3px 3px 0;display:flex;align-items:center;padding-left:3px;font-size:0.55rem;color:rgba(255,255,255,0.85);min-width:5px}
+    .rb-down{height:9px;background:linear-gradient(90deg,#e74c3c,rgba(231,76,60,0.15));border-radius:0 3px 3px 0;display:flex;align-items:center;padding-left:3px;font-size:0.55rem;color:rgba(255,255,255,0.85);min-width:5px}
+    .rb-score{width:30px;font-size:0.68rem;font-weight:700;flex-shrink:0;text-align:left}
+
+    /* SLIDE: HEATMAP */
+    .hm-outer{flex:1;overflow:auto;min-height:0}
+    .hm-head{display:flex;gap:2px;padding-left:60px;margin-bottom:2px}
+    .hm-hlbl{width:22px;font-size:0.56rem;color:var(--text3);text-align:center;flex-shrink:0}
+    .hm-row{display:flex;gap:2px;align-items:center;margin-bottom:2px}
+    .hm-lbl{width:56px;font-size:0.68rem;color:var(--text2);font-weight:600;text-align:right;padding-right:5px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .hm-cell{width:22px;height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:700;flex-shrink:0}
+    .hmc-1{background:#27ae60;color:rgba(0,0,0,0.75)}.hmc-2{background:#f1c40f;color:rgba(0,0,0,0.75)}
+    .hmc-3{background:#e67e22;color:rgba(0,0,0,0.75)}.hmc-4{background:#e74c3c;color:rgba(255,255,255,0.9)}
+    .hmc-empty{background:var(--bg2)}
+
+    /* SLIDE: AKTIVE RUNDE */
+    .ar-row{display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);flex-shrink:0}
+    .ar-idx{font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text3);width:18px;flex-shrink:0;text-align:right}
+    .ar-name{flex:1;font-size:0.9rem;font-weight:600;color:var(--text)}
+    .ar-pts{font-size:0.78rem;color:var(--text3);flex-shrink:0}
+    .ar-pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent);animation:arPulse 1.2s ease-in-out infinite;margin-right:4px}
+    @keyframes arPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
 
     /* HEATMAP */
     .heatmap-outer{flex:1;overflow:auto}
@@ -772,8 +745,8 @@
           <div class="matchmaking-phases" id="matchmakingPhases"></div>
         </div>
         <div class="panel-title">📈 Infografiken</div>
-        <div class="info-indicator" id="infoIndicator"></div>
-        <div class="info-content" id="infographic"></div>
+        <div class="info-progress-wrap"><div class="info-progress-bar" id="infoProgressBar"></div></div>
+        <div id="infographic"></div>
       </div>
     </div>
   </div>
@@ -1409,7 +1382,7 @@
         infographicInterval = setInterval(() => {
           currentInfographicIndex++;
           renderInfographics();
-        }, 8000);
+        }, 10000);
       }
       
       // Header elements removed
@@ -1542,472 +1515,267 @@
 
     function renderInfographics() {
       if(!state.players || !Array.isArray(state.players)) return;
-      const sortedPlayers = [...state.players].sort((a, b) => b.points - a.points);
-      const infographicContainer = document.getElementById('infographic');
-      const infoIndicator = document.getElementById('infoIndicator');
-      
-      const hasActiveRound = Array.isArray(state.currentRoundPIds) && state.currentRoundPIds.length > 0;
-      const tabs = ['points', 'streaks', 'matches', 'inactive', 'ranks', 'activity', 'distribution', 'top', 'matchmaking', 'plac-dist', 'delta-avg', 'rang-bilanz', 'heatmap', ...(hasActiveRound ? ['current-round'] : [])];
-      const currentIndex = currentInfographicIndex % tabs.length;
-      const currentTab = tabs[currentIndex];
-      const nextIndex = (currentIndex + 1) % tabs.length;
-      const nextTab = tabs[nextIndex];
+      const infographic = document.getElementById('infographic');
+      if (!infographic) return;
 
-      // Update indicator dots
-      const tabNames = { points: 'Punkte', streaks: 'Streaks', matches: 'Spiele', inactive: 'Inaktiv', ranks: 'Ränge', activity: 'Aktivität', distribution: 'Verteilung', top: 'Top', matchmaking: 'Matchmaking', 'plac-dist': 'Platzierungen', 'delta-avg': 'Ø Delta', 'rang-bilanz': 'Rang-Bilanz', heatmap: 'Heatmap', 'current-round': 'Runde läuft' };
-      let indicatorHTML = '';
-      tabs.forEach((tab, index) => {
-        let dotClass = 'info-dot';
-        if (index === currentIndex) dotClass += ' active';
-        if (index === nextIndex) dotClass += ' next';
-        indicatorHTML += `<div class="${dotClass}" title="${tabNames[tab]}"></div>`;
-      });
-      infoIndicator.innerHTML = indicatorHTML;
-      
-      let html = '';
-      if (currentTab === 'points') {
-        html = '<h3>Punkteverlauf</h3><div class="chart-container" id="pointsChart"></div>';
-      } else if (currentTab === 'streaks') {
-        html = '<h3>Aktuelle Streaks</h3><div class="streaks-list" id="streaksList"></div>';
-      } else if (currentTab === 'matches') {
-        html = '<h3>Letzte Spiele</h3><div class="matches-list" id="matchesList"></div>';
-      } else if (currentTab === 'inactive') {
-        html = '<h3>Inaktive Spieler</h3><div class="inactive-list" id="inactiveList"></div>';
-      } else if (currentTab === 'ranks') {
-        html = '<h3>Rang-Verteilung</h3><div class="ranks-distribution" id="ranksDistribution"></div>';
-      } else if (currentTab === 'activity') {
-        html = '<h3>Aktivitäts-Statistiken</h3><div class="activity-stats" id="activityStats"></div>';
-      } else if (currentTab === 'distribution') {
-        html = '<h3>Punkte-Verteilung</h3><div class="points-distribution" id="pointsDistribution"></div>';
-      } else if (currentTab === 'top') {
-        html = '<h3>Top-Performer</h3><div class="top-performers" id="topPerformers"></div>';
-      } else if (currentTab === 'matchmaking') {
-        html = '<h3>Matchmaking-Statistiken</h3><div class="matchmaking-stats" id="matchmakingStats"></div>';
-      } else if (currentTab === 'plac-dist') {
-        html = '<h3>Platzierungsverteilung</h3><div class="plac-dist-list" id="placDistList"></div>';
-      } else if (currentTab === 'delta-avg') {
-        html = '<h3>Ø Punkte-Delta</h3><div class="delta-avg-chart" id="deltaAvgChart"></div>';
-      } else if (currentTab === 'rang-bilanz') {
-        html = '<h3>Rang-Auf/Abstieg</h3><div class="rang-bilanz-list" id="rangBilanzList"></div>';
-      } else if (currentTab === 'heatmap') {
-        html = '<h3>Platzierungs-Heatmap</h3><div class="heatmap-outer" id="heatmapOuter"></div>';
-      } else if (currentTab === 'current-round') {
-        html = '<h3>🎮 Runde läuft</h3><div class="current-round-list" id="currentRoundList"></div>';
+      const allSorted = [...state.players].sort((a, b) => b.points - a.points);
+      const active = allSorted.filter(p => p.active !== false);
+      const history = state.history || [];
+      const hasRound = Array.isArray(state.currentRoundPIds) && state.currentRoundPIds.length > 0;
+
+      // Build slide list dynamically — skip history-based slides when no history
+      const slides = ['leaderboard', 'streaks'];
+      if (history.length > 0) slides.push('last-round');
+      slides.push('plac-dist');
+      if (history.length > 0) slides.push('delta', 'rang-bilanz', 'heatmap');
+      if (hasRound) slides.push('active-round');
+
+      const idx = currentInfographicIndex % slides.length;
+      const slide = slides[idx];
+
+      // Progress bar restart
+      const bar = document.getElementById('infoProgressBar');
+      if (bar) {
+        bar.classList.remove('running');
+        void bar.offsetWidth; // force reflow
+        bar.classList.add('running');
       }
-      
-      infographicContainer.style.opacity = '0';
-      infographicContainer.style.transform = 'translateY(-10px)';
 
-      setTimeout(() => {
-        infographicContainer.innerHTML = html;
-        infographicContainer.style.opacity = '1';
-        infographicContainer.style.transform = 'translateY(0)';
+      // Build slide HTML & data
+      const el = document.createElement('div');
+      el.className = 'ig-slide';
 
-      if (currentTab === 'points') {
-        const pointsChart = document.getElementById('pointsChart');
-        const allPlayersSorted = [...state.players].sort((a, b) => b.points - a.points);
-        sortedPlayers.slice(0, 5).forEach((player, index) => {
-          const bar = document.createElement('div');
-          bar.className = 'chart-bar';
-          const maxPoints = Math.max(...sortedPlayers.map(p => p.points));
-          const percentage = (player.points / maxPoints) * 100;
-          const absoluteRank = allPlayersSorted.findIndex(p => p.id === player.id) + 1;
-          bar.style.cssText = `height:${percentage}%`;
-          bar.innerHTML = `
-            <span class="chart-bar-rank">#${absoluteRank}</span>
-            <span class="chart-bar-value">${player.points}</span>
-            <span class="chart-bar-label">${player.name.substring(0, 8)}</span>
-          `;
-          pointsChart.appendChild(bar);
+      const LABELS = {
+        leaderboard: 'RANGLISTE',
+        'last-round': 'LETZTE RUNDE',
+        streaks:      'STREAK-FEUER',
+        'plac-dist':  'PLATZIERUNGEN',
+        delta:        'Ø PUNKTE-DELTA',
+        'rang-bilanz':'RANG-BILANZ',
+        heatmap:      'HEATMAP',
+        'active-round':'AKTIVE RUNDE',
+      };
+      const TITLES = {
+        leaderboard:  'Aktuelle Rangliste',
+        'last-round': 'Runde ' + (history[0]?.round || ''),
+        streaks:      'Streak-Könige 🔥',
+        'plac-dist':  'Platzierungsverteilung',
+        delta:        'Ø Punkte pro Runde',
+        'rang-bilanz':'Rang Auf / Abstieg',
+        heatmap:      'Platzierungs-Heatmap',
+        'active-round':'Runde läuft gerade',
+      };
+
+      el.innerHTML = `<div class="ig-label">${LABELS[slide]||''}</div><div class="ig-title">${TITLES[slide]||''}</div><div class="ig-body" id="ig-body"></div>`;
+
+      // Transition: remove old slide
+      const old = infographic.querySelector('.ig-slide');
+      if (old) {
+        old.classList.remove('enter');
+        old.classList.add('leave');
+        setTimeout(() => old.remove(), 400);
+      }
+      infographic.appendChild(el);
+      requestAnimationFrame(() => el.classList.add('enter'));
+
+      const body = el.querySelector('#ig-body');
+
+      // ── LEADERBOARD ──────────────────────────────────────────
+      if (slide === 'leaderboard') {
+        const maxPts = Math.max(...active.map(p => p.points), 1);
+        active.slice(0, 10).forEach((p, i) => {
+          const pct = Math.max(4, (p.pts || p.points) / maxPts * 100);
+          const row = document.createElement('div');
+          row.className = 'ldb-row';
+          const posClass = i===0?'r1':i===1?'r2':i===2?'r3':'';
+          row.innerHTML = `<div class="ldb-pos ${posClass}">${i+1}</div><div class="ldb-name" title="${p.name}">${p.name}</div><div class="ldb-bar-wrap"><div class="ldb-bar" data-pct="${pct}"></div></div><div class="ldb-pts">${p.points}</div>`;
+          body.appendChild(row);
         });
-      } else if (currentTab === 'streaks') {
-        const streaksList = document.getElementById('streaksList');
-        const playersWithStreaks = sortedPlayers.filter(p => p.streak > 0).sort((a, b) => b.streak - a.streak);
-        playersWithStreaks.slice(0, 5).forEach(player => {
-          const item = document.createElement('div');
-          item.className = 'streak-item';
-          item.innerHTML = `
-            <span class="streak-name">${player.name}</span>
-            <span class="streak-value">🔥 ${player.streak}</span>
-          `;
-          streaksList.appendChild(item);
+        // Animate bars after paint
+        requestAnimationFrame(() => {
+          body.querySelectorAll('.ldb-bar').forEach(b => { b.style.width = b.dataset.pct + '%'; });
         });
-        if (playersWithStreaks.length === 0) {
-          streaksList.innerHTML = '<div class="no-data">Keine Streaks</div>';
-        }
-      } else if (currentTab === 'matches') {
-        const matchesList = document.getElementById('matchesList');
-        const matches = state.recentMatches || [];
-        
-        if (matches.length === 0) {
-          matchesList.innerHTML = '<div class="no-data">Keine Spiele</div>';
+      }
+
+      // ── LETZTE RUNDE ─────────────────────────────────────────
+      else if (slide === 'last-round') {
+        const log = history[0];
+        if (!log || !log.results || log.results.length === 0) {
+          body.innerHTML = '<div class="ig-empty">Noch keine Runden gespielt</div>';
         } else {
-          matches.slice(0, 5).forEach(match => {
-            const item = document.createElement('div');
-            item.className = 'match-item';
-            item.innerHTML = `
-              <div>
-                <span class="match-winner">${match.winner}</span>
-                <span class="match-divider">vs</span>
-                <span class="match-loser">${match.loser}</span>
-              </div>
-              <div class="match-score">${match.winnerScore} - ${match.loserScore}</div>
-            `;
-            matchesList.appendChild(item);
-          });
-        }
-      } else if (currentTab === 'inactive') {
-        const inactiveList = document.getElementById('inactiveList');
-        const inactivePlayers = sortedPlayers.filter(p => p.active === false);
-        
-        inactiveList.innerHTML = '';
-        inactivePlayers.forEach(player => {
-          const item = document.createElement('div');
-          item.className = 'inactive-item';
-          item.innerHTML = `
-            <span class="inactive-name">${player.name}</span>
-            <span class="inactive-points">${player.points} Pkt</span>
-          `;
-          inactiveList.appendChild(item);
-        });
-        if (inactivePlayers.length === 0) {
-          inactiveList.innerHTML = '<div class="no-data">Keine inaktiven Spieler</div>';
-        }
-        
-        // Auto-scroll für inaktive Spieler
-        if (!window.inactiveScrollInterval) {
-          window.inactiveScrollIndex = 0;
-          window.inactiveScrollInterval = setInterval(() => {
-            const inactiveList = document.getElementById('inactiveList');
-            if (!inactiveList) {
-              clearInterval(window.inactiveScrollInterval);
-              window.inactiveScrollInterval = null;
-              return;
-            }
-            const items = inactiveList.querySelectorAll('.inactive-item');
-            if (items.length === 0) {
-              window.inactiveScrollIndex = 0;
-              return;
-            }
-            if (window.inactiveScrollIndex >= items.length) {
-              window.inactiveScrollIndex = 0;
-              inactiveList.scrollTop = 0;
-            } else {
-              const currentItem = items[window.inactiveScrollIndex];
-              if (currentItem) {
-                currentItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }
-              window.inactiveScrollIndex++;
-            }
-          }, 2000);
-        }
-      } else if (currentTab === 'ranks') {
-        const ranksDistribution = document.getElementById('ranksDistribution');
-        const rankCounts = {};
-        sortedPlayers.forEach(player => {
-          const rank = getRank(player.points);
-          rankCounts[rank.name] = (rankCounts[rank.name] || 0) + 1;
-        });
-        
-        ranksDistribution.innerHTML = '';
-        Object.entries(rankCounts).forEach(([rankName, count]) => {
-          const item = document.createElement('div');
-          item.className = 'rank-dist-item';
-          item.innerHTML = `
-            <div class="rank-dist-count">${count}</div>
-            <div class="rank-dist-name">${rankName}</div>
-          `;
-          ranksDistribution.appendChild(item);
-        });
-      } else if (currentTab === 'activity') {
-        const activityStats = document.getElementById('activityStats');
-        const playerActivity = {};
-        sortedPlayers.forEach(player => {
-          const gamesPlayed = player.gamesPlayed || 0;
-          playerActivity[player.name] = gamesPlayed;
-        });
-        
-        const sortedActivity = Object.entries(playerActivity).sort((a, b) => b[1] - a[1]).slice(0, 8);
-        
-        activityStats.innerHTML = '';
-        sortedActivity.forEach(([name, count]) => {
-          const item = document.createElement('div');
-          item.className = 'activity-item';
-          item.innerHTML = `
-            <span class="activity-name">${name}</span>
-            <span class="activity-count">${count} Spiele</span>
-          `;
-          activityStats.appendChild(item);
-        });
-      } else if (currentTab === 'distribution') {
-        const pointsDistribution = document.getElementById('pointsDistribution');
-        const pointRanges = [
-          { label: '0-5 Pkt', min: 0, max: 5 },
-          { label: '6-10 Pkt', min: 6, max: 10 },
-          { label: '11-15 Pkt', min: 11, max: 15 },
-          { label: '16-20 Pkt', min: 16, max: 20 },
-          { label: '21-30 Pkt', min: 21, max: 30 },
-          { label: '31-50 Pkt', min: 31, max: 50 },
-          { label: '50+ Pkt', min: 51, max: Infinity }
-        ];
-        
-        const distribution = pointRanges.map(range => ({
-          ...range,
-          count: sortedPlayers.filter(p => p.points >= range.min && p.points <= range.max).length
-        }));
-        
-        const maxCount = Math.max(...distribution.map(d => d.count));
-        
-        pointsDistribution.innerHTML = '';
-        distribution.forEach(range => {
-          const percentage = maxCount > 0 ? (range.count / maxCount) * 100 : 0;
-          const bar = document.createElement('div');
-          bar.className = 'points-dist-bar';
-          bar.innerHTML = `
-            <div class="points-dist-fill" style="width:${percentage}%"></div>
-            <span class="points-dist-label">${range.label}</span>
-            <span class="points-dist-count">${range.count}</span>
-            <span class="points-dist-range">${range.min}-${range.max === Infinity ? '∞' : range.max} Pkt</span>
-          `;
-          pointsDistribution.appendChild(bar);
-        });
-      } else if (currentTab === 'top') {
-        const topPerformers = document.getElementById('topPerformers');
-        const topGainers = sortedPlayers.slice(0, 5);
-        
-        topPerformers.innerHTML = '';
-        topGainers.forEach((player, index) => {
-          const item = document.createElement('div');
-          item.className = 'top-item';
-          item.innerHTML = `
-            <span class="top-name">#${index + 1} ${player.name}</span>
-            <span class="top-value">${player.points} Pkt</span>
-          `;
-          topPerformers.appendChild(item);
-        });
-      } else if (currentTab === 'matchmaking') {
-        const matchmakingStats = document.getElementById('matchmakingStats');
-        const activePlayers = sortedPlayers.filter(p => p.active !== false);
-        const lowPhasePlayers = activePlayers.filter(p => p.points < PROT_PLAT);
-        const highPhasePlayers = activePlayers.filter(p => p.points >= PROT_PLAT);
-        
-        matchmakingStats.innerHTML = `
-          <div class="mm-stat-box">
-            <div class="mm-stat-value">${activePlayers.length}</div>
-            <div class="mm-stat-label">Aktive Spieler</div>
-          </div>
-          <div class="mm-stat-box">
-            <div class="mm-stat-value">${lowPhasePlayers.length}</div>
-            <div class="mm-stat-label">Niedrige Liga</div>
-          </div>
-          <div class="mm-stat-box">
-            <div class="mm-stat-value">${highPhasePlayers.length}</div>
-            <div class="mm-stat-label">Hohe Liga</div>
-          </div>
-          <div class="mm-stat-box">
-            <div class="mm-stat-value">${state.round || 0}</div>
-            <div class="mm-stat-label">Aktuelle Runde</div>
-          </div>
-        `;
-      } else if (currentTab === 'plac-dist') {
-        const history = state.history || [];
-        const placDistList = document.getElementById('placDistList');
-        // Count placements per player from history
-        const placMap = {};
-        sortedPlayers.forEach(p => { placMap[p.id] = {name: p.name, c1:0, c2:0, c3:0, c4:0, total:0}; });
-        history.forEach(rnd => {
-          (rnd.results || []).forEach(r => {
-            const p = state.players.find(pl => pl.name === r.name);
-            if (!p || !placMap[p.id]) return;
-            placMap[p.id].total++;
-            if (r.place === 1) placMap[p.id].c1++;
-            else if (r.place === 2) placMap[p.id].c2++;
-            else if (r.place === 3) placMap[p.id].c3++;
-            else placMap[p.id].c4++;
-          });
-        });
-        const placRows = Object.values(placMap).filter(r => r.total > 0).sort((a,b) => b.c1 - a.c1 || b.total - a.total);
-        if (placRows.length === 0) {
-          placDistList.innerHTML = '<div class="no-data">Noch keine Rundenhistorie</div>';
-        } else {
-          placRows.forEach(r => {
-            const w1 = r.total ? (r.c1/r.total*100).toFixed(1) : 0;
-            const w2 = r.total ? (r.c2/r.total*100).toFixed(1) : 0;
-            const w3 = r.total ? (r.c3/r.total*100).toFixed(1) : 0;
-            const w4 = r.total ? (r.c4/r.total*100).toFixed(1) : 0;
+          const medals = ['🥇','🥈','🥉'];
+          [...log.results].sort((a,b)=>a.place-b.place).forEach(r => {
+            const d = r.delta || 0;
+            const dc = d>0?'lr-pos':d<0?'lr-neg':'lr-zero';
+            const cls = r.place===1?'lr-p1':r.place===2?'lr-p2':r.place===3?'lr-p3':'lr-pn';
             const row = document.createElement('div');
-            row.className = 'plac-dist-row';
-            row.innerHTML = `
-              <div class="plac-dist-name" title="${r.name}">${r.name.substring(0,8)}</div>
-              <div class="plac-dist-bar-wrap">
-                ${r.c1 > 0 ? `<div class="pd-seg pd-1" style="width:${w1}%">${r.c1}</div>` : ''}
-                ${r.c2 > 0 ? `<div class="pd-seg pd-2" style="width:${w2}%">${r.c2}</div>` : ''}
-                ${r.c3 > 0 ? `<div class="pd-seg pd-3" style="width:${w3}%">${r.c3}</div>` : ''}
-                ${r.c4 > 0 ? `<div class="pd-seg pd-4" style="width:${w4}%">${r.c4}</div>` : ''}
-              </div>
-              <div class="plac-dist-total">${r.total}</div>
-            `;
-            placDistList.appendChild(row);
-          });
-          // Legend
-          const legend = document.createElement('div');
-          legend.style.cssText = 'display:flex;gap:10px;margin-top:8px;font-size:0.65rem;flex-shrink:0';
-          legend.innerHTML = '<span style="color:#f1c40f">■ Platz 1</span><span style="color:#95a5a6">■ Platz 2</span><span style="color:#cd7f32">■ Platz 3</span><span style="color:#8888aa">■ Platz 4+</span>';
-          placDistList.appendChild(legend);
-        }
-
-      } else if (currentTab === 'delta-avg') {
-        const history = state.history || [];
-        const deltaAvgChart = document.getElementById('deltaAvgChart');
-        // Avg delta per player from history
-        const deltaMap = {};
-        sortedPlayers.forEach(p => { deltaMap[p.id] = {name: p.name, sum: 0, count: 0}; });
-        history.forEach(rnd => {
-          (rnd.results || []).forEach(r => {
-            const p = state.players.find(pl => pl.name === r.name);
-            if (!p || !deltaMap[p.id]) return;
-            deltaMap[p.id].sum += (r.delta || 0);
-            deltaMap[p.id].count++;
-          });
-        });
-        const deltaRows = Object.values(deltaMap).filter(r => r.count > 0)
-          .map(r => ({...r, avg: r.sum / r.count}))
-          .sort((a,b) => b.avg - a.avg);
-        if (deltaRows.length === 0) {
-          deltaAvgChart.innerHTML = '<div class="no-data">Noch keine Rundenhistorie</div>';
-        } else {
-          const maxAbs = Math.max(...deltaRows.map(r => Math.abs(r.avg)), 0.1);
-          const CHART_H = 120; // px for 100%
-          deltaRows.slice(0, 10).forEach(r => {
-            const posH = r.avg > 0 ? Math.round((r.avg / maxAbs) * CHART_H) : 0;
-            const negH = r.avg < 0 ? Math.round((Math.abs(r.avg) / maxAbs) * CHART_H) : 0;
-            const wrap = document.createElement('div');
-            wrap.className = 'delta-bar-wrap';
-            wrap.innerHTML = `
-              <div class="delta-val">${r.avg >= 0 ? '+' : ''}${r.avg.toFixed(2)}</div>
-              <div class="delta-bar-pos" style="height:${posH}px"></div>
-              <div class="delta-bar-zero"></div>
-              <div class="delta-bar-neg" style="height:${negH}px"></div>
-              <div class="delta-name" title="${r.name}">${r.name.substring(0,7)}</div>
-            `;
-            deltaAvgChart.appendChild(wrap);
+            row.className = `lr-row ${cls}`;
+            row.innerHTML = `<div class="lr-medal">${medals[r.place-1]||''}</div><div class="lr-name">${esc(r.name)}</div><div class="lr-delta ${dc}">${d>0?'+':''}${d} Pkt</div>`;
+            body.appendChild(row);
           });
         }
+      }
 
-      } else if (currentTab === 'rang-bilanz') {
-        const history = state.history || [];
-        const rangBilanzList = document.getElementById('rangBilanzList');
-        const bilanzMap = {};
-        sortedPlayers.forEach(p => { bilanzMap[p.id] = {name: p.name, up: 0, down: 0}; });
+      // ── STREAKS ───────────────────────────────────────────────
+      else if (slide === 'streaks') {
+        const withStreak = active.filter(p => p.streak > 0).sort((a,b) => b.streak - a.streak);
+        if (withStreak.length === 0) {
+          body.innerHTML = '<div class="ig-empty">Noch keine aktiven Streaks</div>';
+        } else {
+          withStreak.slice(0, 5).forEach(p => {
+            const row = document.createElement('div');
+            row.className = 'sk-row';
+            row.innerHTML = `<div class="sk-icon">🔥</div><div class="sk-name">${esc(p.name)}</div><div class="sk-num">${p.streak}<span class="sk-lbl">Wins</span></div>`;
+            body.appendChild(row);
+          });
+        }
+      }
+
+      // ── PLATZIERUNGSVERTEILUNG ────────────────────────────────
+      else if (slide === 'plac-dist') {
+        const pmap = {};
+        active.forEach(p => { pmap[p.id] = {name:p.name, c1:0, c2:0, c3:0, c4:0, total:0}; });
         history.forEach(rnd => {
-          (rnd.results || []).forEach(r => {
-            const p = state.players.find(pl => pl.name === r.name);
-            if (!p || !bilanzMap[p.id]) return;
-            if (r.rankUp)   bilanzMap[p.id].up++;
-            if (r.rankDown) bilanzMap[p.id].down++;
+          (rnd.results||[]).forEach(r => {
+            const p = state.players.find(pl => pl.name===r.name);
+            if (!p || !pmap[p.id]) return;
+            pmap[p.id].total++;
+            if(r.place===1) pmap[p.id].c1++;
+            else if(r.place===2) pmap[p.id].c2++;
+            else if(r.place===3) pmap[p.id].c3++;
+            else pmap[p.id].c4++;
           });
         });
-        const bilanzRows = Object.values(bilanzMap)
-          .filter(r => r.up > 0 || r.down > 0)
-          .sort((a,b) => (b.up - b.down) - (a.up - a.down));
-        if (bilanzRows.length === 0) {
-          rangBilanzList.innerHTML = '<div class="no-data">Noch keine Rang-Änderungen</div>';
+        const rows = Object.values(pmap).filter(r=>r.total>0).sort((a,b)=>b.c1-a.c1||b.total-a.total);
+        if (rows.length === 0) {
+          body.innerHTML = '<div class="ig-empty">Noch keine Rundenhistorie</div>';
         } else {
-          const maxVal = Math.max(...bilanzRows.map(r => Math.max(r.up, r.down)), 1);
-          bilanzRows.forEach(r => {
-            const upW = Math.round((r.up / maxVal) * 100);
-            const downW = Math.round((r.down / maxVal) * 100);
+          rows.forEach(r => {
+            const t = r.total;
+            const w1=(r.c1/t*100).toFixed(0), w2=(r.c2/t*100).toFixed(0), w3=(r.c3/t*100).toFixed(0), w4=(r.c4/t*100).toFixed(0);
+            const row = document.createElement('div');
+            row.className = 'pd-row';
+            row.innerHTML = `<div class="pd-name" title="${r.name}">${r.name.substring(0,8)}</div><div class="pd-bar-wrap">${r.c1>0?`<div class="pd-seg pd-1" style="width:${w1}%">${r.c1}</div>`:''  }${r.c2>0?`<div class="pd-seg pd-2" style="width:${w2}%">${r.c2}</div>`:''  }${r.c3>0?`<div class="pd-seg pd-3" style="width:${w3}%">${r.c3}</div>`:''  }${r.c4>0?`<div class="pd-seg pd-4" style="width:${w4}%">${r.c4}</div>`:''  }</div><div class="pd-total">${t}</div>`;
+            body.appendChild(row);
+          });
+          const leg = document.createElement('div');
+          leg.className = 'pd-legend';
+          leg.innerHTML = '<span style="color:#f1c40f">■ 1.</span><span style="color:#95a5a6">■ 2.</span><span style="color:#cd7f32">■ 3.</span><span style="color:#8888aa">■ 4+</span>';
+          body.appendChild(leg);
+        }
+      }
+
+      // ── Ø DELTA ───────────────────────────────────────────────
+      else if (slide === 'delta') {
+        const dmap = {};
+        active.forEach(p => { dmap[p.id] = {name:p.name, sum:0, count:0}; });
+        history.forEach(rnd => {
+          (rnd.results||[]).forEach(r => {
+            const p = state.players.find(pl => pl.name===r.name);
+            if(!p || !dmap[p.id]) return;
+            dmap[p.id].sum += (r.delta||0);
+            dmap[p.id].count++;
+          });
+        });
+        const rows = Object.values(dmap).filter(r=>r.count>0).map(r=>({...r, avg:r.sum/r.count})).sort((a,b)=>b.avg-a.avg);
+        if (rows.length === 0) {
+          body.innerHTML = '<div class="ig-empty">Noch keine Rundenhistorie</div>';
+        } else {
+          const chart = document.createElement('div');
+          chart.className = 'dlt-chart';
+          const maxAbs = Math.max(...rows.map(r=>Math.abs(r.avg)), 0.01);
+          const H = 90;
+          rows.slice(0,10).forEach(r => {
+            const ph = r.avg>0 ? Math.round(r.avg/maxAbs*H) : 0;
+            const nh = r.avg<0 ? Math.round(Math.abs(r.avg)/maxAbs*H) : 0;
+            const col = document.createElement('div');
+            col.className = 'dlt-col';
+            col.innerHTML = `<div class="dlt-val">${r.avg>=0?'+':''}${r.avg.toFixed(1)}</div><div class="dlt-bar-pos" style="height:${ph}px"></div><div class="dlt-zero"></div><div class="dlt-bar-neg" style="height:${nh}px"></div><div class="dlt-name" title="${r.name}">${r.name.substring(0,6)}</div>`;
+            chart.appendChild(col);
+          });
+          body.appendChild(chart);
+        }
+      }
+
+      // ── RANG-BILANZ ───────────────────────────────────────────
+      else if (slide === 'rang-bilanz') {
+        const bmap = {};
+        active.forEach(p => { bmap[p.id] = {name:p.name, up:0, down:0}; });
+        history.forEach(rnd => {
+          (rnd.results||[]).forEach(r => {
+            const p = state.players.find(pl=>pl.name===r.name);
+            if(!p||!bmap[p.id]) return;
+            if(r.rankUp) bmap[p.id].up++;
+            if(r.rankDown) bmap[p.id].down++;
+          });
+        });
+        const rows = Object.values(bmap).filter(r=>r.up>0||r.down>0).sort((a,b)=>(b.up-b.down)-(a.up-a.down));
+        if (rows.length === 0) {
+          body.innerHTML = '<div class="ig-empty">Noch keine Rang-Änderungen</div>';
+        } else {
+          const maxV = Math.max(...rows.map(r=>Math.max(r.up,r.down)), 1);
+          rows.forEach(r => {
+            const uw = Math.max(Math.round(r.up/maxV*100), 4);
+            const dw = Math.max(Math.round(r.down/maxV*100), 4);
             const net = r.up - r.down;
             const row = document.createElement('div');
-            row.className = 'rang-bilanz-row';
-            row.innerHTML = `
-              <div class="rang-bilanz-name" title="${r.name}">${r.name.substring(0,8)}</div>
-              <div class="rang-bilanz-bars">
-                <div class="rang-bilanz-up" style="width:${Math.max(upW, 4)}%">${r.up > 0 ? '▲ '+r.up : ''}</div>
-                <div class="rang-bilanz-down" style="width:${Math.max(downW, 4)}%">${r.down > 0 ? '▼ '+r.down : ''}</div>
-              </div>
-              <div class="rang-bilanz-score" style="color:${net>0?'#2ecc71':net<0?'#e74c3c':'var(--text3)'}">${net>0?'+':''}${net}</div>
-            `;
-            rangBilanzList.appendChild(row);
-          });
-        }
-
-      } else if (currentTab === 'current-round') {
-        const crList = document.getElementById('currentRoundList');
-        const crPIds = state.currentRoundPIds || [];
-        const crSlots = state.currentRoundSlots || [];
-        const placMap = {};
-        crSlots.forEach((pid, i) => { if (pid !== null) placMap[pid] = i + 1; });
-        // Build rows: placed first (sorted by place), then unplaced
-        const placed = crPIds.filter(id => placMap[id] !== undefined).sort((a,b) => placMap[a] - placMap[b]);
-        const unplaced = crPIds.filter(id => placMap[id] === undefined);
-        const medals = ['🥇','🥈','🥉'];
-        [...placed, ...unplaced].forEach(id => {
-          const player = state.players.find(p => p.id === id);
-          if (!player) return;
-          const place = placMap[id];
-          const rank = getRank(player.points);
-          const item = document.createElement('div');
-          item.className = 'cr-item' + (place ? ' cr-placed' : ' cr-pending');
-          item.innerHTML = `
-            <div class="cr-place">${place ? (medals[place-1] || '#'+place) : '?'}</div>
-            <div class="cr-name">${player.name}</div>
-            <div class="cr-pts">${player.points} Pkt</div>
-          `;
-          crList.appendChild(item);
-        });
-
-      } else if (currentTab === 'heatmap') {
-        const history = state.history || [];
-        const heatmapOuter = document.getElementById('heatmapOuter');
-        const MAX_ROUNDS = 10;
-        // Get last N rounds that have results
-        const rounds = [...history].filter(r => r.results && r.results.length > 0).slice(0, MAX_ROUNDS).reverse();
-        if (rounds.length === 0) {
-          heatmapOuter.innerHTML = '<div class="no-data">Noch keine Rundenhistorie</div>';
-        } else {
-          // Header row
-          const header = document.createElement('div');
-          header.className = 'heatmap-rnd-header';
-          rounds.forEach(r => {
-            const lbl = document.createElement('div');
-            lbl.className = 'heatmap-rnd-lbl';
-            lbl.textContent = 'R' + r.round;
-            header.appendChild(lbl);
-          });
-          heatmapOuter.appendChild(header);
-          // Player rows (only players who appear in these rounds)
-          const seenIds = new Set();
-          rounds.forEach(r => r.results.forEach(res => {
-            const p = state.players.find(pl => pl.name === res.name);
-            if (p) seenIds.add(p.id);
-          }));
-          const hmPlayers = sortedPlayers.filter(p => seenIds.has(p.id));
-          hmPlayers.forEach(player => {
-            const row = document.createElement('div');
-            row.className = 'heatmap-row';
-            const lbl = document.createElement('div');
-            lbl.className = 'heatmap-label';
-            lbl.title = player.name;
-            lbl.textContent = player.name.substring(0, 8);
-            row.appendChild(lbl);
-            rounds.forEach(rnd => {
-              const res = rnd.results.find(r => r.name === player.name);
-              const cell = document.createElement('div');
-              if (res) {
-                const pl = res.place;
-                cell.className = 'hm-cell ' + (pl === 1 ? 'hm-1' : pl === 2 ? 'hm-2' : pl === 3 ? 'hm-3' : 'hm-4plus');
-                cell.textContent = pl;
-              } else {
-                cell.className = 'hm-cell hm-empty';
-              }
-              row.appendChild(cell);
-            });
-            heatmapOuter.appendChild(row);
+            row.className = 'rb-row';
+            row.innerHTML = `<div class="rb-name" title="${r.name}">${r.name.substring(0,8)}</div><div class="rb-bars"><div class="rb-up" style="width:${uw}%">${r.up>0?'▲ '+r.up:''}</div><div class="rb-down" style="width:${dw}%">${r.down>0?'▼ '+r.down:''}</div></div><div class="rb-score" style="color:${net>0?'#2ecc71':net<0?'#e74c3c':'var(--text3)'}">${net>0?'+':''}${net}</div>`;
+            body.appendChild(row);
           });
         }
       }
-      }, 300);
+
+      // ── HEATMAP ───────────────────────────────────────────────
+      else if (slide === 'heatmap') {
+        const rounds = [...history].filter(r=>r.results&&r.results.length>0).slice(0,10).reverse();
+        if (rounds.length === 0) {
+          body.innerHTML = '<div class="ig-empty">Noch keine Rundenhistorie</div>';
+        } else {
+          const outer = document.createElement('div');
+          outer.className = 'hm-outer';
+          const head = document.createElement('div');
+          head.className = 'hm-head';
+          rounds.forEach(r => { const l=document.createElement('div');l.className='hm-hlbl';l.textContent='R'+r.round;head.appendChild(l); });
+          outer.appendChild(head);
+          const seen = new Set();
+          rounds.forEach(r=>r.results.forEach(res=>{const p=state.players.find(pl=>pl.name===res.name);if(p)seen.add(p.id);}));
+          allSorted.filter(p=>seen.has(p.id)).forEach(player => {
+            const row = document.createElement('div');
+            row.className = 'hm-row';
+            const lbl = document.createElement('div');
+            lbl.className = 'hm-lbl'; lbl.title = player.name; lbl.textContent = player.name.substring(0,7);
+            row.appendChild(lbl);
+            rounds.forEach(rnd => {
+              const res = rnd.results.find(r=>r.name===player.name);
+              const cell = document.createElement('div');
+              if (res) { const pl=res.place; cell.className='hm-cell '+(pl===1?'hmc-1':pl===2?'hmc-2':pl===3?'hmc-3':'hmc-4'); cell.textContent=pl; }
+              else { cell.className='hm-cell hmc-empty'; }
+              row.appendChild(cell);
+            });
+            outer.appendChild(row);
+          });
+          body.appendChild(outer);
+        }
+      }
+
+      // ── AKTIVE RUNDE ──────────────────────────────────────────
+      else if (slide === 'active-round') {
+        const pIds = state.currentRoundPIds || [];
+        pIds.forEach((id, i) => {
+          const p = state.players.find(pl=>pl.id===id);
+          if (!p) return;
+          const row = document.createElement('div');
+          row.className = 'ar-row';
+          row.innerHTML = `<div class="ar-idx">${i+1}</div><div class="ar-name">${esc(p.name)}</div><div class="ar-pts">${p.points} Pkt</div>`;
+          body.appendChild(row);
+        });
+        // Pulsing indicator at top
+        const pulse = document.createElement('div');
+        pulse.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--accent);margin-bottom:4px;flex-shrink:0;order:-1';
+        pulse.innerHTML = '<div class="ar-pulse"></div>Live — Runde läuft';
+        body.prepend(pulse);
+      }
     }
 
 

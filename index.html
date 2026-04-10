@@ -2777,7 +2777,6 @@ async function _flushToFirestore() {
       profileName:         state.profileName || null,
       firstRankAchievers:  state.firstRankAchievers || {},
       currentRoundPIds:    state.currentRoundPIds  || null,
-      currentRoundSlots:   state.currentRoundSlots || null
     });
     
     const data = {
@@ -3420,7 +3419,6 @@ function submitRound(){
   uiSlots=[];
   uiSelectedSlot=null;
   state.currentRoundPIds=null;
-  state.currentRoundSlots=null;
   
   renderAll();
   for(const r of log.results){
@@ -4072,8 +4070,6 @@ function slotClick(i){
   }else{
     uiSelectedSlot=uiSelectedSlot===i?null:i;
   }
-  state.currentRoundPIds=uiActivePIds.length?[...uiActivePIds]:null;
-  state.currentRoundSlots=uiSlots.some(s=>s!==null)?[...uiSlots]:null;
   saveState();
   renderPickerUI(uiActivePIds.map(id=>state.players.find(p=>p.id===id)).filter(Boolean));
 }
@@ -4103,8 +4099,6 @@ function pickerClick(pid){
       }
     }
   }
-  state.currentRoundPIds=uiActivePIds.length?[...uiActivePIds]:null;
-  state.currentRoundSlots=uiSlots.some(s=>s!==null)?[...uiSlots]:null;
   saveState();
   renderPickerUI(uiActivePIds.map(id=>state.players.find(p=>p.id===id)).filter(Boolean));
 }
@@ -4112,8 +4106,6 @@ function pickerClick(pid){
 function clearSlot(i,e){
   e.stopPropagation();
   uiSlots[i]=null;uiSelectedSlot=i;
-  state.currentRoundPIds=uiActivePIds.length?[...uiActivePIds]:null;
-  state.currentRoundSlots=uiSlots.some(s=>s!==null)?[...uiSlots]:null;
   saveState();
   renderPickerUI(uiActivePIds.map(id=>state.players.find(p=>p.id===id)).filter(Boolean));
 }
@@ -4406,17 +4398,23 @@ function renderHistory(){
     
     // Runden-Ergebnisse anzeigen
     const roundLines = roundResults.sort((a,b)=>a.place-b.place).map(res=>{
+      if (!res.name || res.name === 'null' || res.name === 'undefined') return null; // Null/undefined Namen ignorieren
       const rc=res.rankUp?` ↑ <span style="color:var(--success)">${res.newRank}</span>`:res.rankDown?` ↓ <span style="color:var(--danger)">${res.newRank}</span>`:'';
       const ds=res.delta>0?`+${fmt(res.delta)}`:fmt(res.delta);
       const dc=res.delta>0?'var(--success)':res.delta<0?'var(--danger)':'var(--text3)';
+      const playerExists = state.players.find(p => p.id === res.playerId);
+      if (!playerExists) return null; // Gelöschte Spieler ignorieren
       return `${res.place}. ${esc(res.name)}: <span style="color:${dc}">${ds}</span> → ${fmt(res.newPoints)} Pkt${rc}`;
-    }).join('<br>');
+    }).filter(line => line !== null).join('<br>');
     
     // Bonus- und Straf-Aktionen: pro Spieler zusammenfassen
     // Gruppiere nach playerName, summiere Punkte
     const bpByPlayer = {};
     bonusPenalties.forEach(res => {
+      if (!res.playerName || res.playerName === 'null' || res.playerName === 'undefined') return; // Null/undefined Namen ignorieren
       const key = res.playerName;
+      const playerExists = state.players.find(p => p.name === res.playerName);
+      if (!playerExists) return; // Gelöschte Spieler ignorieren
       if(!bpByPlayer[key]) bpByPlayer[key] = {playerName: res.playerName, total: 0, newPoints: res.newPoints, rankUp: false, newRank: res.newRank};
       bpByPlayer[key].total += (res.points || 0);
       bpByPlayer[key].newPoints = res.newPoints; // letzter Stand
@@ -5594,23 +5592,23 @@ function getGlobalBadges() {
   catch(e) { return {}; }
 }
 
-/* Async in Firestore + Cache schreiben */
-async function saveGlobalBadges(gb) {
+/* Sync in Cache schreiben + Async in Firestore */
+function saveGlobalBadges(gb) {
   firestoreBadgesCache = gb;
   localStorage.setItem(GLOBAL_BADGES_KEY, JSON.stringify(gb));
-  if(!enableOnlineSave) return; // Online-Speichern deaktiviert
-  showSyncIndicator('saving');
-  try {
-    const cleanedBadges = _cleanUndefinedValues(gb);
-    await db.collection('global_badges').doc('badges').set({
-      data: cleanedBadges,
+  // Async Firestore-Speichern (non-blocking)
+  if(enableOnlineSave) {
+    showSyncIndicator('saving');
+    db.collection('global_badges').doc('badges').set({
+      data: _cleanUndefinedValues(gb),
       lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+      showSyncIndicator('saved');
+      console.log('Badges in Firestore gespeichert');
+    }).catch(e => {
+      console.error('Firestore Badge-Save Error:', e);
+      showSyncIndicator('saved'); // localStorage hat es schon
     });
-    showSyncIndicator('saved');
-    console.log('Badges in Firestore gespeichert');
-  } catch(e) {
-    console.error('Firestore Badge-Save Error:', e);
-    showSyncIndicator('saved'); // localStorage hat es schon
   }
 }
 
@@ -6621,7 +6619,7 @@ function showToast(msg){
 
 /* HELPERS */
 function fmt(n){return (n !== undefined && n !== null && !isNaN(n)) ? n.toFixed(1) : '0.0'}
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function esc(s){if(!s || typeof s !== 'string') return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function getRankIcon(iconClass, small=false){
   return `<span class="rank-icon ${small ? 'small' : ''} rank-${iconClass}"></span>`;
 }
@@ -7124,24 +7122,36 @@ function exportData() {
         
         const data = JSON.parse(rawStorage);
         const profileState = data.state || {};
-        const history = profileState.history || [];
+        const currentPlayers = profileState.players || [];
+        const currentPlayerIds = new Set(currentPlayers.map(p => p.id));
         
-        // Runden mit Profil-Kennzeichnung
-        history.forEach(round => {
-          allRounds.push({
-            ...round,
-            profileId: profile.id,
-            profileName: profileState.profileName || profile.name || profile.id
+        // Alle Runden dieses Profils sammeln
+        if (profileState.history && Array.isArray(profileState.history)) {
+          profileState.history.forEach(round => {
+            // Gelöschte Spieler aus results filtern
+            const filteredResults = (round.results || []).filter(res => {
+              return currentPlayerIds.has(res.playerId);
+            });
+            
+            allRounds.push({
+              round: round.round,
+              profileId: profile.id,
+              profileName: profileState.profileName || profile.name || profile.id,
+              timestamp: round.timestamp || Date.now(),
+              results: filteredResults,
+              mmPhase: round.mmPhase || null,
+              skipped: round.skipped || false,
+              skippedPhase: round.skippedPhase || null
+            });
           });
-        });
-        
+        }
       } catch(e) {
-        console.warn('Historie für Profil nicht gefunden:', profile.id, e);
+        console.warn('History-Daten für Profil nicht gefunden:', profile.id, e);
       }
     });
     
     // Runden chronologisch sortieren (älteste zuerst für korrekten Replay)
-    allRounds.sort((a, b) => {
+    exportData.historyData.rounds.sort((a, b) => {
       // Zuerst nach Rundennummer aufsteigend (älteste zuerst), dann nach Profil-ID für Konsistenz
       if (a.round !== b.round) return a.round - b.round;
       return a.profileId.localeCompare(b.profileId);
