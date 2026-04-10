@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
- ()      --bg:#0a0c12; --bg2:#111420; --bg3:#181c2a; --border:#2a3048;
+       --bg:#0a0c12; --bg2:#111420; --bg3:#181c2a; --border:#2a3048;
       --accent:#e8b84b; --accent2:#c97a2f; --text:#e8eaf0; --text2:#7c839f; --text3:#4a5070;
       --success:#4ce87a; --danger:#e84c4c;
       --radius:12px; --radius-sm:8px; --transition:0.3s ease;
@@ -56,9 +56,11 @@
     .rank-item{display:flex;align-items:center;padding:14px 16px;margin-bottom:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);transition:var(--transition);animation:fadeIn 0.3s ease;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
     .rank-item:hover{border-color:rgba(232,184,75,.5);transform:translateX(4px);box-shadow:0 4px 16px rgba(232,184,75,.15)}
     .rank-number{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;color:var(--accent);width:40px;text-align:center}
-    .rank-between{padding:8px 12px;margin:8px 0;background:rgba(232,184,75,0.05);border-left:3px solid var(--accent);border-radius:var(--radius-sm);animation:fadeIn 0.3s ease}
-    .rank-between-count{font-size:0.85rem;color:var(--accent);font-weight:600;margin-bottom:4px}
-    .rank-between-names{font-size:0.75rem;color:var(--text3)}
+    .rank-between{padding:10px 14px;margin:10px 0;background:linear-gradient(135deg,rgba(232,184,75,0.08) 0%,rgba(232,184,75,0.02) 100%);border:1px solid rgba(232,184,75,0.2);border-radius:var(--radius);animation:fadeIn 0.4s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
+    .rank-between::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.6}
+    .rank-between-count{font-size:0.9rem;color:var(--accent);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;font-family:'Rajdhani',sans-serif;letter-spacing:0.5px;text-transform:uppercase}
+    .rank-between-count::before{content:'⚡';font-size:1rem}
+    .rank-between-names{font-size:0.78rem;color:var(--text2);line-height:1.4;background:rgba(0,0,0,0.15);padding:8px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.05)}
     
     /* INACTIVE LIST */
     .inactive-list{flex:1;overflow-y:auto;max-height:200px;padding-right:8px}
@@ -120,10 +122,10 @@
     @keyframes igProgress{0%{width:0}100%{width:100%}}
     #infographic{flex:1;position:relative;overflow:hidden;min-height:0}
     .ig-slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:2px 2px 0 2px;pointer-events:none}
-    .ig-slide.enter{animation:igIn 0.45s cubic-bezier(0.22,1,0.36,1) forwards}
-    .ig-slide.leave{animation:igOut 0.35s ease forwards}
-    @keyframes igIn{from{opacity:0;transform:translateY(16px) scale(0.97)}to{opacity:1;transform:none}}
-    @keyframes igOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-10px) scale(0.97)}}
+    .ig-slide.enter{animation:igIn 0.5s cubic-bezier(0.4,0,0.2,1) forwards}
+    .ig-slide.leave{animation:igOut 0.4s cubic-bezier(0.4,0,0.2,1) forwards}
+    @keyframes igIn{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:none}}
+    @keyframes igOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-15px) scale(0.95)}}
     .ig-label{font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);opacity:0.65;margin-bottom:2px;flex-shrink:0}
     .ig-title{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:10px;letter-spacing:1px;flex-shrink:0}
     .ig-body{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:6px;min-height:0}
@@ -176,12 +178,14 @@
     .dlt-name{font-size:0.6rem;color:var(--text3);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}
 
     /* SLIDE: RANG-BILANZ */
-    .rb-row{display:flex;align-items:center;gap:8px;flex-shrink:0}
-    .rb-name{width:58px;font-size:0.74rem;font-weight:600;text-align:right;color:var(--text2);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .rb-bars{flex:1;display:flex;flex-direction:column;gap:2px}
-    .rb-up{height:9px;background:linear-gradient(90deg,#2ecc71,rgba(46,204,113,0.15));border-radius:0 3px 3px 0;display:flex;align-items:center;padding-left:3px;font-size:0.55rem;color:rgba(255,255,255,0.85);min-width:5px}
-    .rb-down{height:9px;background:linear-gradient(90deg,#e74c3c,rgba(231,76,60,0.15));border-radius:0 3px 3px 0;display:flex;align-items:center;padding-left:3px;font-size:0.55rem;color:rgba(255,255,255,0.85);min-width:5px}
-    .rb-score{width:30px;font-size:0.68rem;font-weight:700;flex-shrink:0;text-align:left}
+    .rb-chart-outer{flex:1;overflow:auto;min-height:0}
+    .rb-chart-head{display:flex;gap:2px;padding-left:60px;margin-bottom:2px}
+    .rb-chart-hlbl{width:22px;font-size:0.56rem;color:var(--text3);text-align:center;flex-shrink:0}
+    .rb-chart-row{display:flex;gap:2px;align-items:center;margin-bottom:2px}
+    .rb-chart-lbl{width:56px;font-size:0.68rem;color:var(--text2);font-weight:600;text-align:right;padding-right:5px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .rb-chart-line{flex:1;height:40px;background:var(--bg2);border-radius:3px;overflow:hidden;position:relative}
+    .rb-chart-line svg{width:100%;height:100%}
+    .rb-chart-net{width:30px;font-size:0.68rem;font-weight:700;flex-shrink:0;text-align:right}
 
     /* SLIDE: HEATMAP */
     .hm-outer{flex:1;overflow:auto;min-height:0}
@@ -195,13 +199,14 @@
     .hmc-empty{background:var(--bg2)}
 
     /* SLIDE: PUNKTEVERLAUF */
-    .pv-outer{flex:1;overflow:auto;min-height:0}
-    .pv-head{display:flex;gap:2px;padding-left:60px;margin-bottom:2px}
-    .pv-hlbl{width:22px;font-size:0.56rem;color:var(--text3);text-align:center;flex-shrink:0}
-    .pv-row{display:flex;gap:2px;align-items:center;margin-bottom:2px}
-    .pv-lbl{width:56px;font-size:0.68rem;color:var(--text2);font-weight:600;text-align:right;padding-right:5px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .pv-cell{width:22px;height:22px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.58rem;font-weight:700;flex-shrink:0;background:var(--bg2)}
-    .pv-empty{background:var(--bg2);opacity:0.3}
+    .pv-chart-outer{flex:1;overflow:auto;min-height:0}
+    .pv-chart-head{display:flex;gap:2px;padding-left:60px;margin-bottom:2px}
+    .pv-chart-hlbl{width:22px;font-size:0.56rem;color:var(--text3);text-align:center;flex-shrink:0}
+    .pv-chart-row{display:flex;gap:2px;align-items:center;margin-bottom:2px}
+    .pv-chart-lbl{width:56px;font-size:0.68rem;color:var(--text2);font-weight:600;text-align:right;padding-right:5px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .pv-chart-line{flex:1;height:40px;background:var(--bg2);border-radius:3px;overflow:hidden;position:relative}
+    .pv-chart-line svg{width:100%;height:100%}
+    .pv-chart-final{width:30px;font-size:0.68rem;font-weight:700;flex-shrink:0;text-align:right;color:var(--accent)}
 
     /* SLIDE: AKTIVE RUNDE */
     .ar-row{display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);flex-shrink:0}
@@ -713,22 +718,49 @@
     #loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000}
     #error{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:1000}
     #loading *, #error *{background:transparent}
-    .loading-spinner{width:50px;height:50px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
-    .loading-text{margin-top:20px;font-size:1.2rem;color:var(--text2);background:transparent}
-    @keyframes spin{to{transform:rotate(360deg)}}
+    .loading-spinner{width:60px;height:60px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s cubic-bezier(0.4,0,0.2,1) infinite;box-shadow:0 0 20px rgba(232,184,75,0.2)}
+    .loading-text{margin-top:24px;font-size:1.3rem;color:var(--text2);background:transparent;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px}
+    @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
     
     /* ERROR */
     .error{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000}
     .error-icon{font-size:4rem;color:var(--danger);margin-bottom:20px}
     .error-text{font-size:1.4rem;color:var(--text2);text-align:center;padding:0 40px;background:transparent}
-    .loading-spinner{width:50px;height:50px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
-    .loading-text{margin-top:20px;font-size:1.2rem;color:var(--text2)}
-    @keyframes spin{to{transform:rotate(360deg)}}
     
-    /* ERROR */
-    .error{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000}
-    .error-icon{font-size:4rem;color:var(--danger);margin-bottom:20px}
-    .error-text{font-size:1.4rem;color:var(--text2);text-align:center;padding:0 40px}
+    /* BADGE TOAST */
+    .badge-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,rgba(232,184,75,.15),rgba(201,122,47,.15));border:2px solid rgba(232,184,75,.5);border-radius:24px;padding:16px 32px;font-size:1.2rem;font-weight:700;color:var(--accent);z-index:400;transition:transform .4s ease,opacity .4s ease;opacity:0;white-space:nowrap;pointer-events:none;box-shadow:0 8px 32px rgba(232,184,75,.3)}
+    .badge-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+    
+    /* IDLE MODE */
+    .idle-mode{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:50;padding:40px}
+    .idle-content{width:100%;max-width:1200px;text-align:center;animation:idleFadeIn 0.6s cubic-bezier(0.4,0,0.2,1)}
+    @keyframes idleFadeIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+    .idle-slide{padding:60px;background:linear-gradient(135deg,rgba(232,184,75,0.08),rgba(201,122,47,0.03));border:2px solid rgba(232,184,75,0.3);border-radius:24px;box-shadow:0 8px 48px rgba(0,0,0,0.4)}
+    .idle-title{font-family:'Rajdhani',sans-serif;font-size:2.5rem;font-weight:700;color:var(--accent);margin-bottom:30px;letter-spacing:2px;text-transform:uppercase}
+    .idle-subtitle{font-size:1.3rem;color:var(--text2);margin-bottom:40px;line-height:1.6}
+    .idle-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:30px;margin-top:40px}
+    .idle-stat-item{padding:30px;background:rgba(0,0,0,0.3);border:1px solid rgba(232,184,75,0.2);border-radius:16px;text-align:center}
+    .idle-stat-value{font-family:'Rajdhani',sans-serif;font-size:3rem;font-weight:700;color:var(--accent);margin-bottom:8px}
+    .idle-stat-label{font-size:0.9rem;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+    .idle-fact{font-size:1.5rem;color:var(--text);line-height:1.6;margin-top:30px;padding:30px;background:rgba(232,184,75,0.05);border-radius:16px;border:1px solid rgba(232,184,75,0.15)}
+    .idle-progress{position:absolute;bottom:0;left:0;height:4px;background:linear-gradient(90deg,var(--accent),rgba(232,184,75,0.5));width:0%;transition:width 8s linear}
+    
+    /* PREDICTION SYSTEM */
+    .prediction-container{padding:20px}
+    .prediction-bar-row{display:flex;align-items:center;margin-bottom:16px;gap:12px}
+    .prediction-name{width:120px;font-size:0.9rem;font-weight:600;color:var(--text);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .prediction-bar{flex:1;height:28px;background:rgba(0,0,0,0.3);border-radius:12px;overflow:hidden;position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,0.3)}
+    .prediction-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),rgba(232,184,75,0.6));border-radius:12px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);position:relative}
+    .prediction-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.15),transparent)}
+    .prediction-percent{width:60px;font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:var(--accent);text-align:center}
+    .prediction-assessment{margin-top:24px;padding:16px 20px;background:rgba(232,184,75,0.08);border:1px solid rgba(232,184,75,0.25);border-radius:12px;text-align:center;font-size:1.1rem;font-weight:600;color:var(--accent);letter-spacing:1px;text-transform:uppercase}
+    .prediction-assessment.favorit{background:linear-gradient(135deg,rgba(76,232,122,0.1),rgba(76,232,122,0.03));border-color:rgba(76,232,122,0.3);color:#4ce87a}
+    .prediction-assessment.eng{background:linear-gradient(135deg,rgba(255,193,7,0.1),rgba(255,193,7,0.03));border-color:rgba(255,193,7,0.3);color:#ffc107}
+    .prediction-assessment.offen{background:linear-gradient(135deg,rgba(100,181,246,0.1),rgba(100,181,246,0.03));border-color:rgba(100,181,246,0.3);color:#64b5f6}
+    
+    /* MATCHMAKING OVERLAY */
+    .matchmaking-overlay{position:fixed;bottom:20px;right:20px;width:400px;z-index:100;animation:matchmakingFadeIn 0.5s cubic-bezier(0.4,0,0.2,1)}
+    @keyframes matchmakingFadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
   </style>
 </head>
 <body>
@@ -740,6 +772,12 @@
   <div class="error" id="error" style="display:none;">
     <div class="error-icon">⚠️</div>
     <div class="error-text" id="errorText"></div>
+  </div>
+  
+  <div class="badge-toast" id="badgeToast"></div>
+  
+  <div class="idle-mode" id="idleMode" style="display:none;">
+    <div class="idle-content" id="idleContent"></div>
   </div>
   
   <div class="app" id="app" style="display:none;">
@@ -754,10 +792,17 @@
           <div class="matchmaking-panel-title">Matchmaking-Phasen</div>
           <div class="matchmaking-phases" id="matchmakingPhases"></div>
         </div>
-        <div class="panel-title">📈 Infografiken</div>
+        <div class="panel-title">📈 Informationen</div>
         <div class="info-progress-wrap"><div class="info-progress-bar" id="infoProgressBar"></div></div>
         <div id="infographic"></div>
       </div>
+    </div>
+  </div>
+  
+  <div class="matchmaking-overlay" id="matchmakingOverlay" style="display:none;">
+    <div class="matchmaking-section">
+      <div class="matchmaking-panel-title">Matchmaking-Phasen</div>
+      <div class="matchmaking-phases" id="matchmakingPhases"></div>
     </div>
   </div>
   
@@ -823,9 +868,244 @@
     let activeRankUpNotifications = 0;
     let lastShownRound = -1;
     let infographicRenderTimeout = null;
+    let isPopupShowing = false;
+    let badgeToastTimer = null;
+    let idleModeTimer = null;
+    let idleModeActive = false;
+    let idleSlideIndex = 0;
+    let idleSlideInterval = null;
+    let lastActivityTime = Date.now();
+    const IDLE_TIMEOUT = 60000; // 60 Sekunden ohne Aktivität
+    const IDLE_SLIDE_DURATION = 8000; // 8 Sekunden pro Slide
     const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
     function getRankIdx(pts){let i=0;for(let j=0;j<RANKS.length;j++){if(pts>=RANKS[j].points)i=j;else break}return i}
+    function showBadgeToast(msg){
+      const el=document.getElementById('badgeToast');el.textContent=msg;el.classList.add('show');
+      clearTimeout(badgeToastTimer);badgeToastTimer=setTimeout(()=>el.classList.remove('show'),4000);
+    }
+
+    /* IDLE MODE */
+    function resetIdleTimer(){
+      lastActivityTime = Date.now();
+      if(idleModeActive){
+        exitIdleMode();
+      }
+    }
+
+    function enterIdleMode(){
+      if(idleModeActive) return;
+      idleModeActive = true;
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('idleMode').style.display = 'flex';
+      document.getElementById('matchmakingOverlay').style.display = 'block';
+      idleSlideIndex = 0;
+      renderIdleSlide();
+      startIdleSlideRotation();
+    }
+
+    function exitIdleMode(){
+      if(!idleModeActive) return;
+      idleModeActive = false;
+      document.getElementById('idleMode').style.display = 'none';
+      document.getElementById('app').style.display = 'grid';
+      document.getElementById('matchmakingOverlay').style.display = 'none';
+      stopIdleSlideRotation();
+      if(idleModeTimer){
+        clearTimeout(idleModeTimer);
+        idleModeTimer = null;
+      }
+    }
+
+    function startIdleSlideRotation(){
+      stopIdleSlideRotation();
+      idleSlideInterval = setInterval(() => {
+        idleSlideIndex++;
+        renderIdleSlide();
+      }, IDLE_SLIDE_DURATION);
+    }
+
+    function stopIdleSlideRotation(){
+      if(idleSlideInterval){
+        clearInterval(idleSlideInterval);
+        idleSlideInterval = null;
+      }
+    }
+
+    function renderIdleSlide(){
+      const content = document.getElementById('idleContent');
+      const slides = [
+        renderIdleStats,
+        renderIdleWeeklyWinner,
+        renderIdleFunFact
+      ];
+      const slideIndex = idleSlideIndex % slides.length;
+      content.innerHTML = slides[slideIndex]();
+      
+      // Progress bar animation
+      const progressBar = content.querySelector('.idle-progress');
+      if(progressBar){
+        progressBar.style.width = '0%';
+        setTimeout(() => progressBar.style.width = '100%', 50);
+      }
+    }
+
+    function renderIdleStats(){
+      const totalRounds = state.round || 0;
+      const totalPlayers = state.players?.length || 0;
+      const activePlayers = state.players?.filter(p => p.active !== false).length || 0;
+      const totalPoints = state.players?.reduce((sum, p) => sum + (p.points || 0), 0) || 0;
+      const highestPoints = state.players?.reduce((max, p) => Math.max(max, p.points || 0), 0) || 0;
+      
+      return `
+        <div class="idle-slide">
+          <div class="idle-progress"></div>
+          <div class="idle-title">📊 Statistiken</div>
+          <div class="idle-subtitle">Aktuelle Spielstatistiken</div>
+          <div class="idle-stats">
+            <div class="idle-stat-item">
+              <div class="idle-stat-value">${totalRounds}</div>
+              <div class="idle-stat-label">Gesamtrunden</div>
+            </div>
+            <div class="idle-stat-item">
+              <div class="idle-stat-value">${totalPlayers}</div>
+              <div class="idle-stat-label">Spieler</div>
+            </div>
+            <div class="idle-stat-item">
+              <div class="idle-stat-value">${activePlayers}</div>
+              <div class="idle-stat-label">Aktiv</div>
+            </div>
+            <div class="idle-stat-item">
+              <div class="idle-stat-value">${totalPoints.toFixed(0)}</div>
+              <div class="idle-stat-label">Gesamtpunkte</div>
+            </div>
+            <div class="idle-stat-item">
+              <div class="idle-stat-value">${highestPoints.toFixed(0)}</div>
+              <div class="idle-stat-label">Höchste Punktzahl</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderIdleWeeklyWinner(){
+      const history = state.history || [];
+      const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+      
+      // Spieler-Statistiken für die letzte Woche berechnen
+      const playerStats = {};
+      history.forEach(log => {
+        if(log.timestamp && log.timestamp > oneWeekAgo && log.results){
+          log.results.forEach(result => {
+            if(!playerStats[result.playerId]){
+              playerStats[result.playerId] = {wins: 0, totalDelta: 0, name: result.name};
+            }
+            if(result.place === 1) playerStats[result.playerId].wins++;
+            playerStats[result.playerId].totalDelta += result.delta || 0;
+          });
+        }
+      });
+
+      // Spieler nach Siegen sortieren
+      const sortedPlayers = Object.values(playerStats).sort((a, b) => b.wins - a.wins || b.totalDelta - a.totalDelta);
+      const winner = sortedPlayers[0];
+      
+      if(!winner){
+        return `
+          <div class="idle-slide">
+            <div class="idle-progress"></div>
+            <div class="idle-title">🏆 Gewinner der Woche</div>
+            <div class="idle-subtitle">Noch keine Runden in dieser Woche gespielt</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="idle-slide">
+          <div class="idle-progress"></div>
+          <div class="idle-title">🏆 Gewinner der Woche</div>
+          <div class="idle-subtitle">Beste Leistung der letzten 7 Tage</div>
+          <div class="idle-stats">
+            <div class="idle-stat-item">
+              <div class="idle-stat-value">${winner.name}</div>
+              <div class="idle-stat-label">Name</div>
+            </div>
+            <div class="idle-stat-item">
+              <div class="idle-stat-value">${winner.wins}</div>
+              <div class="idle-stat-label">Siege</div>
+            </div>
+            <div class="idle-stat-item">
+              <div class="idle-stat-value">+${winner.totalDelta.toFixed(1)}</div>
+              <div class="idle-stat-label">Gesamtdelta</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderIdleFunFact(){
+      const facts = [];
+      const players = state.players || [];
+      const history = state.history || [];
+      
+      // Höchste Streak
+      const maxStreakPlayer = players.reduce((max, p) => (p.maxStreak || 0) > (max.maxStreak || 0) ? p : max, players[0]);
+      if(maxStreakPlayer && maxStreakPlayer.maxStreak > 0){
+        facts.push(`🔥 ${maxStreakPlayer.name} hat die längste Streak mit ${maxStreakPlayer.maxStreak} Siegen in Folge!`);
+      }
+      
+      // Meiste Siege
+      const totalWins = {};
+      history.forEach(log => {
+        if(log.results){
+          log.results.forEach(result => {
+            if(result.place === 1){
+              totalWins[result.playerId] = (totalWins[result.playerId] || 0) + 1;
+            }
+          });
+        }
+      });
+      const topWinner = Object.entries(totalWins).sort((a, b) => b[1] - a[1])[0];
+      if(topWinner){
+        const winner = players.find(p => p.id === topWinner[0]);
+        if(winner){
+          facts.push(`🥇 ${winner.name} hat insgesamt ${topWinner[1]} Siege errungen!`);
+        }
+      }
+      
+      // Höchste Punktzahl
+      const highestPointsPlayer = players.reduce((max, p) => p.points > max.points ? p : max, players[0]);
+      if(highestPointsPlayer && highestPointsPlayer.points > 0){
+        facts.push(`💎 ${highestPointsPlayer.name} führt mit ${highestPointsPlayer.points.toFixed(1)} Punkten!`);
+      }
+      
+      // Durchschnittliche Punkte pro Runde
+      if(players.length > 0 && history.length > 0){
+        const avgPoints = players.reduce((sum, p) => sum + p.points, 0) / players.length;
+        facts.push(`📊 Durchschnittlich ${avgPoints.toFixed(1)} Punkte pro Spieler!`);
+      }
+      
+      // Zufälliger Fact auswählen
+      const randomFact = facts[Math.floor(Math.random() * facts.length)] || '🎮 Viel Spaß beim Spielen!';
+      
+      return `
+        <div class="idle-slide">
+          <div class="idle-progress"></div>
+          <div class="idle-title">✨ Wusstest du schon?</div>
+          <div class="idle-fact">${randomFact}</div>
+        </div>
+      `;
+    }
+
+    function startIdleMonitoring(){
+      // Alle 5 Sekunden prüfen, ob Idle-Mode aktiviert werden soll
+      setInterval(() => {
+        const now = Date.now();
+        if(!idleModeActive && now - lastActivityTime > IDLE_TIMEOUT){
+          enterIdleMode();
+        }
+      }, 5000);
+    }
     function getMinPts(p){const mx=RANKS[getRankIdx(p.maxPoints)].points;if(mx>=PROT_ULTIMA)return PROT_ULTIMA;if(mx>=PROT_EWIGKEIT)return PROT_EWIGKEIT;if(mx>=PROT_GOD)return PROT_GOD;if(mx>=PROT_PLAT)return PROT_PLAT;if(mx>=PROT_GOLD)return PROT_GOLD;return 0}
     function getLoss(p){return getRank(p.points).loss}
     function getRank(pts){let r=RANKS[0];for(const x of RANKS){if(pts>=x.points)r=x;else break}
@@ -1303,15 +1583,14 @@
     function checkRankUps() {
       if(!state.players || !Array.isArray(state.players)) return;
       
+      // previousRanks nicht aktualisieren, während Popup angezeigt wird
+      if (isPopupShowing) return;
+      
+      // Rank-Up-Effekte werden jetzt erst nach dem Rundenende-Popup ausgelöst
+      // Hier werden nur die previousRanks aktualisiert
       state.players.forEach(player => {
         if(!player.active) return;
         const currentRank = getRank(player.points);
-        const previousRank = previousRanks[player.id];
-        
-        if(previousRank && previousRank.points < currentRank.points) {
-          animateRankUp(player.id);
-        }
-        
         previousRanks[player.id] = currentRank;
       });
     }
@@ -1403,6 +1682,7 @@
         return;
       }
       
+      resetIdleTimer(); // Aktivität bei Daten-Update zurücksetzen
       document.getElementById('loading').style.display = 'none';
       document.getElementById('app').style.display = 'grid';
       
@@ -1480,7 +1760,7 @@
             </div>
             <div>
               <span class="rank-points">${player.points}</span>
-              <span class="rank-max">(${player.maxPoints})</span>
+              <span class="rank-max">(${player.maxPoints || player.points || 0})</span>
               <span class="rank-streak">🔥 ${player.streak || 0}</span>
               <span class="rank-accounts">${accounts}/${maxAccounts}</span>
             </div>
@@ -1522,10 +1802,12 @@
         }
       });
       
-      // Auto-scroll für Rangliste wenn zu viele Spieler
-      if (activePlayers.length > 5) {
+      // Auto-scroll für Rangliste wenn zu viele Elemente (inklusive rank-between)
+      const totalItems = ranklist ? ranklist.querySelectorAll('.rank-item, .rank-between').length : 0;
+      if (totalItems > 5) {
         if (!window.ranklistScrollInterval) {
           window.ranklistScrollIndex = 0;
+          window.ranklistScrollDirection = 1; // 1 = runter, -1 = hoch
           window.ranklistScrollInterval = setInterval(() => {
             const ranklist = document.getElementById('ranklist');
             if (!ranklist) {
@@ -1538,16 +1820,20 @@
               window.ranklistScrollIndex = 0;
               return;
             }
-            if (window.ranklistScrollIndex >= items.length) {
-              window.ranklistScrollIndex = 0;
-              ranklist.scrollTop = 0;
-            } else {
-              const currentItem = items[window.ranklistScrollIndex];
-              if (currentItem) {
-                currentItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }
-              window.ranklistScrollIndex++;
+            
+            const currentItem = items[window.ranklistScrollIndex];
+            if (currentItem) {
+              currentItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
+            
+            // Richtung umkehren wenn am Ende oder am Anfang
+            if (window.ranklistScrollDirection === 1 && window.ranklistScrollIndex >= items.length - 1) {
+              window.ranklistScrollDirection = -1;
+            } else if (window.ranklistScrollDirection === -1 && window.ranklistScrollIndex <= 0) {
+              window.ranklistScrollDirection = 1;
+            }
+            
+            window.ranklistScrollIndex += window.ranklistScrollDirection;
           }, 3000);
         }
       }
@@ -1580,7 +1866,7 @@
       const hasRound = Array.isArray(state.currentRoundPIds) && state.currentRoundPIds.length > 0;
 
       // Build slide list dynamically — skip history-based slides when no history
-      const slides = ['leaderboard', 'streaks'];
+      const slides = ['leaderboard', 'streaks', 'prediction'];
       if (history.length > 0) slides.push('last-round');
       slides.push('plac-dist');
       if (history.length > 0) slides.push('delta', 'rang-bilanz', 'punkte-verlauf', 'heatmap');
@@ -1611,6 +1897,7 @@
         'punkte-verlauf': 'PUNKTEVERLAUF',
         heatmap:      'HEATMAP',
         'active-round':'AKTIVE RUNDE',
+        prediction:   'WIN-PROGNOSE',
       };
       const TITLES = {
         leaderboard:  'Aktuelle Rangliste',
@@ -1622,6 +1909,7 @@
         'punkte-verlauf': 'Kumulierter Punkteverlauf',
         heatmap:      'Platzierungs-Heatmap',
         'active-round':'Runde läuft gerade',
+        prediction:   'Gewinnchance Prognose',
       };
 
       el.innerHTML = `<div class="ig-label">${LABELS[slide]||''}</div><div class="ig-title">${TITLES[slide]||''}</div><div class="ig-body" id="ig-body"></div>`;
@@ -1754,30 +2042,67 @@
 
       // ── RANG-BILANZ ───────────────────────────────────────────
       else if (slide === 'rang-bilanz') {
-        const bmap = {};
-        active.forEach(p => { bmap[p.id] = {name:p.name, up:0, down:0}; });
-        history.forEach(rnd => {
-          (rnd.results||[]).forEach(r => {
-            const p = state.players.find(pl=>pl.name===r.name);
-            if(!p||!bmap[p.id]) return;
-            if(r.rankUp) bmap[p.id].up++;
-            if(r.rankDown) bmap[p.id].down++;
-          });
-        });
-        const rows = Object.values(bmap).filter(r=>r.up>0||r.down>0).sort((a,b)=>(b.up-b.down)-(a.up-a.down));
-        if (rows.length === 0) {
+        const rounds = [...history].filter(r=>r.results&&r.results.length>0).slice(-10).sort((a,b)=>a.round-b.round);
+        if (rounds.length === 0) {
           body.innerHTML = '<div class="ig-empty">Noch keine Rang-Änderungen</div>';
         } else {
-          const maxV = Math.max(...rows.map(r=>Math.max(r.up,r.down)), 1);
-          rows.forEach(r => {
-            const uw = Math.max(Math.round(r.up/maxV*100), 4);
-            const dw = Math.max(Math.round(r.down/maxV*100), 4);
-            const net = r.up - r.down;
+          const outer = document.createElement('div');
+          outer.className = 'rb-chart-outer';
+          const head = document.createElement('div');
+          head.className = 'rb-chart-head';
+          rounds.forEach(r => { const l=document.createElement('div');l.className='rb-chart-hlbl';l.textContent='R'+r.round;head.appendChild(l); });
+          outer.appendChild(head);
+          const seen = new Set();
+          rounds.forEach(r=>r.results.forEach(res=>{const p=state.players.find(pl=>pl.name===res.name);if(p)seen.add(p.id);}));
+          allSorted.filter(p=>seen.has(p.id)).forEach(player => {
             const row = document.createElement('div');
-            row.className = 'rb-row';
-            row.innerHTML = `<div class="rb-name" title="${r.name}">${r.name.substring(0,8)}</div><div class="rb-bars"><div class="rb-up" style="width:${uw}%">${r.up>0?'▲ '+r.up:''}</div><div class="rb-down" style="width:${dw}%">${r.down>0?'▼ '+r.down:''}</div></div><div class="rb-score" style="color:${net>0?'#2ecc71':net<0?'#e74c3c':'var(--text3)'}">${net>0?'+':''}${net}</div>`;
-            body.appendChild(row);
+            row.className = 'rb-chart-row';
+            const lbl = document.createElement('div');
+            lbl.className = 'rb-chart-lbl'; lbl.title = player.name; lbl.textContent = player.name.substring(0,7);
+            row.appendChild(lbl);
+            let netChange = 0;
+            const points = [];
+            rounds.forEach(rnd => {
+              const res = rnd.results.find(r=>r.name===player.name);
+              if (res) {
+                const change = (res.rankUp ? 1 : 0) - (res.rankDown ? 1 : 0);
+                netChange += change;
+                points.push(netChange);
+              } else {
+                points.push(netChange);
+              }
+            });
+            const minP = Math.min(...points);
+            const maxP = Math.max(...points);
+            const range = maxP - minP || 1;
+            const chart = document.createElement('div');
+            chart.className = 'rb-chart-line';
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', `0 0 ${points.length} 40`);
+            svg.setAttribute('preserveAspectRatio', 'none');
+            const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+            const linePoints = points.map((p, i) => {
+              const x = (i / (points.length - 1 || 1)) * 100;
+              const y = 40 - ((p - minP) / range) * 40;
+              return `${x},${y}`;
+            }).join(' ');
+            polyline.setAttribute('points', linePoints);
+            polyline.setAttribute('fill', 'none');
+            polyline.setAttribute('stroke', netChange >= 0 ? '#2ecc71' : '#e74c3c');
+            polyline.setAttribute('stroke-width', '2');
+            polyline.setAttribute('stroke-linecap', 'round');
+            polyline.setAttribute('stroke-linejoin', 'round');
+            svg.appendChild(polyline);
+            chart.appendChild(svg);
+            const netLabel = document.createElement('div');
+            netLabel.className = 'rb-chart-net';
+            netLabel.textContent = netChange > 0 ? `+${netChange}` : netChange;
+            netLabel.style.color = netChange >= 0 ? '#2ecc71' : '#e74c3c';
+            row.appendChild(chart);
+            row.appendChild(netLabel);
+            outer.appendChild(row);
           });
+          body.appendChild(outer);
         }
       }
 
@@ -1788,34 +2113,62 @@
           body.innerHTML = '<div class="ig-empty">Noch keine Rundenhistorie</div>';
         } else {
           const outer = document.createElement('div');
-          outer.className = 'pv-outer';
+          outer.className = 'pv-chart-outer';
           const head = document.createElement('div');
-          head.className = 'pv-head';
-          rounds.forEach(r => { const l=document.createElement('div');l.className='pv-hlbl';l.textContent='R'+r.round;head.appendChild(l); });
+          head.className = 'pv-chart-head';
+          rounds.forEach(r => { const l=document.createElement('div');l.className='pv-chart-hlbl';l.textContent='R'+r.round;head.appendChild(l); });
           outer.appendChild(head);
           const seen = new Set();
           rounds.forEach(r=>r.results.forEach(res=>{const p=state.players.find(pl=>pl.name===res.name);if(p)seen.add(p.id);}));
+          const playerData = [];
           allSorted.filter(p=>seen.has(p.id)).forEach(player => {
-            const row = document.createElement('div');
-            row.className = 'pv-row';
-            const lbl = document.createElement('div');
-            lbl.className = 'pv-lbl'; lbl.title = player.name; lbl.textContent = player.name.substring(0,7);
-            row.appendChild(lbl);
             let cumPoints = 0;
+            const points = [];
             rounds.forEach(rnd => {
               const res = rnd.results.find(r=>r.name===player.name);
-              const cell = document.createElement('div');
               if (res) {
                 cumPoints += (res.delta || 0);
-                cell.className = 'pv-cell';
-                cell.textContent = cumPoints.toFixed(1);
-                const delta = res.delta || 0;
-                cell.style.color = delta > 0 ? '#2ecc71' : delta < 0 ? '#e74c3c' : 'var(--text)';
+                points.push(cumPoints);
               } else {
-                cell.className = 'pv-cell pv-empty';
+                points.push(cumPoints);
               }
-              row.appendChild(cell);
             });
+            playerData.push({ player, points });
+          });
+          const allPoints = playerData.flatMap(p => p.points);
+          const minP = Math.min(...allPoints, 0);
+          const maxP = Math.max(...allPoints, 0);
+          const range = maxP - minP || 1;
+          playerData.forEach(({ player, points }) => {
+            const row = document.createElement('div');
+            row.className = 'pv-chart-row';
+            const lbl = document.createElement('div');
+            lbl.className = 'pv-chart-lbl'; lbl.title = player.name; lbl.textContent = player.name.substring(0,7);
+            row.appendChild(lbl);
+            const chart = document.createElement('div');
+            chart.className = 'pv-chart-line';
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', `0 0 ${points.length} 40`);
+            svg.setAttribute('preserveAspectRatio', 'none');
+            const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+            const linePoints = points.map((p, i) => {
+              const x = (i / (points.length - 1 || 1)) * 100;
+              const y = 40 - ((p - minP) / range) * 40;
+              return `${x},${y}`;
+            }).join(' ');
+            polyline.setAttribute('points', linePoints);
+            polyline.setAttribute('fill', 'none');
+            polyline.setAttribute('stroke', 'var(--accent)');
+            polyline.setAttribute('stroke-width', '2');
+            polyline.setAttribute('stroke-linecap', 'round');
+            polyline.setAttribute('stroke-linejoin', 'round');
+            svg.appendChild(polyline);
+            chart.appendChild(svg);
+            const finalLabel = document.createElement('div');
+            finalLabel.className = 'pv-chart-final';
+            finalLabel.textContent = points[points.length - 1].toFixed(1);
+            row.appendChild(chart);
+            row.appendChild(finalLabel);
             outer.appendChild(row);
           });
           body.appendChild(outer);
@@ -1872,6 +2225,102 @@
         pulse.innerHTML = '<div class="ar-pulse"></div>Live — Runde läuft';
         body.prepend(pulse);
       }
+
+      // ── WIN PROGNOSE (PREDICTION) ──────────────────────────────
+      else if (slide === 'prediction') {
+        const container = document.createElement('div');
+        container.className = 'prediction-container';
+        
+        // Calculate recent performance (average delta of last 5 rounds)
+        const recentPerf = {};
+        active.forEach(p => { recentPerf[p.id] = 0; });
+        history.slice(0, 5).forEach(log => {
+          (log.results || []).forEach(r => {
+            const p = active.find(pl => pl.name === r.name);
+            if (p) {
+              recentPerf[p.id] += (r.delta || 0);
+            }
+          });
+        });
+        active.forEach(p => {
+          recentPerf[p.id] = recentPerf[p.id] / Math.min(history.length, 5);
+        });
+
+        // Calculate win probability score: points + streak*2 + recent*0.5
+        const predictions = active.map(p => {
+          const score = (p.points || 0) + (p.streak || 0) * 2 + (recentPerf[p.id] || 0) * 0.5;
+          return {
+            player: p,
+            score: score,
+            recent: recentPerf[p.id] || 0
+          };
+        });
+
+        // Sort by score (highest first)
+        predictions.sort((a, b) => b.score - a.score);
+
+        // Convert to percentages
+        const totalScore = predictions.reduce((sum, p) => sum + Math.max(0, p.score), 0);
+        const predictionsWithPct = predictions.map(p => ({
+          ...p,
+          percentage: totalScore > 0 ? (Math.max(0, p.score) / totalScore * 100) : (100 / predictions.length)
+        }));
+
+        // Generate assessment
+        const topPct = predictionsWithPct[0]?.percentage || 0;
+        const secondPct = predictionsWithPct[1]?.percentage || 0;
+        let assessment = '';
+        let assessmentClass = '';
+        
+        if (predictionsWithPct.length === 0) {
+          assessment = 'Keine Spieler verfügbar';
+          assessmentClass = 'offen';
+        } else if (predictionsWithPct.length === 1) {
+          assessment = '👑 Einziger Spieler';
+          assessmentClass = 'favorit';
+        } else if (topPct > 50) {
+          assessment = '👑 Klarer Favorit';
+          assessmentClass = 'favorit';
+        } else if (topPct - secondPct > 15) {
+          assessment = '⭐ Favorit mit Vorsprung';
+          assessmentClass = 'favorit';
+        } else if (topPct - secondPct > 5) {
+          assessment = '🎯 Favorit';
+          assessmentClass = 'eng';
+        } else {
+          assessment = '⚔️ Enges Rennen';
+          assessmentClass = 'eng';
+        }
+
+        // Render bars
+        predictionsWithPct.forEach(pred => {
+          const row = document.createElement('div');
+          row.className = 'prediction-bar-row';
+          row.innerHTML = `
+            <div class="prediction-name" title="${pred.player.name}">${esc(pred.player.name)}</div>
+            <div class="prediction-bar">
+              <div class="prediction-bar-fill" style="width: 0%" data-width="${pred.percentage.toFixed(1)}%"></div>
+            </div>
+            <div class="prediction-percent">${pred.percentage.toFixed(1)}%</div>
+          `;
+          container.appendChild(row);
+        });
+
+        // Render assessment
+        const assessmentEl = document.createElement('div');
+        assessmentEl.className = `prediction-assessment ${assessmentClass}`;
+        assessmentEl.textContent = assessment;
+        container.appendChild(assessmentEl);
+
+        body.appendChild(container);
+
+        // Animate bars
+        requestAnimationFrame(() => {
+          container.querySelectorAll('.prediction-bar-fill').forEach(bar => {
+            bar.style.width = bar.dataset.width;
+          });
+        });
+      }
     }
 
 
@@ -1879,6 +2328,18 @@
     function showRoundEndPopup(log) {
       const results = (log.results || []).slice().sort((a,b) => a.place - b.place);
       if(results.length === 0) return;
+
+      // previousRanks mit Rängen vor dieser Runde initialisieren
+      state.players.forEach(player => {
+        if (!player.active) return;
+        const res = results.find(r => r.name === player.name);
+        if (res) {
+          const oldPoints = res.oldPoints || 0;
+          previousRanks[player.id] = getRank(oldPoints);
+        }
+      });
+
+      isPopupShowing = true;
 
       const overlay = document.createElement('div');
       overlay.className = 'round-end-overlay';
@@ -1925,7 +2386,20 @@
       const TOTAL = 8000;
       setTimeout(() => {
         card.classList.add('out');
-        setTimeout(() => overlay.remove(), 700);
+        setTimeout(() => {
+          overlay.remove();
+          isPopupShowing = false;
+          // Rank-Up-Effekte nach Popup-Dismiss auslösen
+          state.players.forEach(player => {
+            if (!player.active) return;
+            const currentRank = getRank(player.points);
+            const previousRank = previousRanks[player.id];
+            if (previousRank && previousRank.points < currentRank.points) {
+              animateRankUp(player.id);
+            }
+            previousRanks[player.id] = currentRank;
+          });
+        }, 700);
       }, TOTAL);
     }
 
@@ -1974,6 +2448,7 @@
     });
 
     loadState();
+    startIdleMonitoring();
   </script>
 </body>
 </html>

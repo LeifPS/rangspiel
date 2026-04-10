@@ -68,8 +68,8 @@
   .tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--accent);border-radius:2px 2px 0 0}
 
   /* VIEWS */
-  .view{display:none;padding:16px}
-  .view.active{display:block}
+  .view{display:none;padding:16px;opacity:0;transform:translateY(10px);transition:opacity 0.3s ease,transform 0.3s ease}
+  .view.active{display:block;opacity:1;transform:translateY(0)}
 
   /* RANK SYMBOLE - Rounded Design */
   .rank-icon{display:inline-block;width:24px;height:24px;border-radius:50%;position:relative;background-size:contain;background-repeat:no-repeat;background-position:center}
@@ -1712,8 +1712,6 @@
   /* TOAST */
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:10px 20px;font-size:.88rem;font-weight:600;color:var(--text);z-index:300;transition:transform .3s ease,opacity .3s ease;opacity:0;white-space:nowrap;pointer-events:none;box-shadow:0 4px 24px rgba(0,0,0,.5)}
   .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-  .badge-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,rgba(232,184,75,.15),rgba(201,122,47,.15));border:2px solid rgba(232,184,75,.5);border-radius:24px;padding:16px 32px;font-size:1.2rem;font-weight:700;color:var(--accent);z-index:400;transition:transform .4s ease,opacity .4s ease;opacity:0;white-space:nowrap;pointer-events:none;box-shadow:0 8px 32px rgba(232,184,75,.3)}
-  .badge-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
   /* MISC */
   .shield-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(232,184,75,.1);border:1px solid rgba(232,184,75,.2);border-radius:4px;padding:1px 5px;font-size:.65rem;font-weight:700;color:var(--accent);letter-spacing:.5px;text-transform:uppercase}
@@ -2569,7 +2567,6 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<div class="badge-toast" id="badgeToast"></div>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -3911,25 +3908,26 @@ function renderRoundForm(){
     hint.innerHTML='';ui.innerHTML='';btn.disabled=true;return;
   }
 
-  let activePIds;
-  if(state.matchmakingOn && activeSpecialRound !== 'freie_wahl'){
-    const activePlayers=state.players.filter(p=>p.active);
-    if(activePlayers.length<2){mmBox.innerHTML='';infoBox.innerHTML='⚠ Mindestens <strong>2 aktive Spieler</strong> nötig.';hint.innerHTML='';ui.innerHTML='';btn.disabled=true;return;}
-    activePIds=getMmGroup();
-    if(!activePIds){
-      const skippedPhase=state.mmPhase==='low'?'Niedrige Liga':'Hohe Liga';
-      mmBox.innerHTML=`<div class="mm-info-box">⚡ Runde wird <strong>übersprungen</strong> – ${skippedPhase} übersprungen – zu wenig passende Spieler.</div>`;
-      
-      // Liga-Wechsel Knopf auch bei übersprungenen Runden anzeigen
-      if(state.matchmakingOn) {
-        const leagueSwitchBtn = `<button class="league-switch-btn" onclick="switchLeague()">` + 
-          (state.mmPhase === 'low' ? '🔺 Hohe Liga' : '🔻 Niedrige Liga') + 
-          `</button>`;
-        mmBox.innerHTML += leagueSwitchBtn;
+    let activePIds;
+    if(state.matchmakingOn && activeSpecialRound !== 'freie_wahl'){
+      const activePlayers=state.players.filter(p=>p.active);
+      if(activePlayers.length<2){mmBox.innerHTML='';infoBox.innerHTML='⚠ Mindestens <strong>2 aktive Spieler</strong> nötig.';hint.innerHTML='';ui.innerHTML='';btn.disabled=true;return;}
+      activePIds=getMmGroup();
+      if(!activePIds){
+        const skippedPhase=state.mmPhase==='low'?'Niedrige Liga':'Hohe Liga';
+        mmBox.innerHTML=`<div class="mm-info-box">⚡ <strong>Warnung:</strong> ${skippedPhase} übersprungen – zu wenig passende Spieler. Runde kann trotzdem bestätigt werden.</div>`;
+        
+        // Liga-Wechsel Knopf auch bei übersprungenen Runden anzeigen
+        if(state.matchmakingOn) {
+          const leagueSwitchBtn = `<button class="league-switch-btn" onclick="switchLeague()">` + 
+            (state.mmPhase === 'low' ? '🔺 Hohe Liga' : '🔻 Niedrige Liga') + 
+            `</button>`;
+          mmBox.innerHTML += leagueSwitchBtn;
+        }
+        
+        // Runde trotzdem erlauben, aber Warnung anzeigen
+        activePIds = activePlayers.map(p => p.id);
       }
-      
-      infoBox.innerHTML='';hint.innerHTML='';ui.innerHTML='';btn.disabled=true;return;
-    }
     const label=state.mmPhase==='low'?'🔻 Aufsteiger-Runde':'🔺 Abstiegs-Runde';
     const tip=state.mmPhase==='low'?'Schlechtester + bis 2 Ränge höher':'Bester + bis 2 Ränge tiefer';
     mmBox.innerHTML=`<div class="mm-info-box"><div class="mm-phase-badge">${label}</div><br>${tip} — <strong>${activePIds.length} Spieler</strong></div>`;
@@ -4293,12 +4291,12 @@ function renderStreakRanking(){
   const list=document.getElementById('streakRankingList');
   if(!state.players.length){list.innerHTML=`<div class="empty-state"><div class="icon">🔥</div><p>Noch keine Spieler.</p></div>`;return}
 
-  // Nur Spieler mit Streak > 0, sortiert nach Streak desc, dann Punkte desc
-  const withStreak=[...state.players].filter(p=>(p.streak||0)>0).sort((a,b)=>b.streak-a.streak||b.points-a.points);
-  const noStreak=[...state.players].filter(p=>!(p.streak||0));
+  // Nur Spieler mit maxStreak > 0, sortiert nach maxStreak desc, dann Punkte desc
+  const withStreak=[...state.players].filter(p=>(p.maxStreak||0)>0).sort((a,b)=>b.maxStreak-a.maxStreak||b.points-a.points);
+  const noStreak=[...state.players].filter(p=>!(p.maxStreak||0));
 
   if(!withStreak.length){
-    list.innerHTML=`<div class="empty-state"><div class="icon">🔥</div><p>Noch keine aktiven Streaks.<br>Gewinne Runden um eine Streak aufzubauen!</p></div>`;
+    list.innerHTML=`<div class="empty-state"><div class="icon">🔥</div><p>Noch keine Streaks.<br>Gewinne Runden um eine Streak aufzubauen!</p></div>`;
     return;
   }
 
@@ -4323,16 +4321,16 @@ function renderStreakRanking(){
   }
 
   list.innerHTML=withStreak.map((p,i)=>{
-    if(lastStreak!==null && p.streak<lastStreak){actualPos=i+1;displayPos=actualPos;}
-    else if(lastStreak!==null && p.streak===lastStreak){}
+    if(lastStreak!==null && p.maxStreak<lastStreak){actualPos=i+1;displayPos=actualPos;}
+    else if(lastStreak!==null && p.maxStreak===lastStreak){}
     else{displayPos=actualPos;}
-    lastStreak=p.streak;
+    lastStreak=p.maxStreak;
 
     const rank=getRank(p.points);
     const pos=displayPos;
-    const sc=streakColor(p.streak);
-    const sl=streakLabel(p.streak);
-    const flameSize=Math.min(1+p.streak*0.04,1.6);
+    const sc=streakColor(p.maxStreak);
+    const sl=streakLabel(p.maxStreak);
+    const flameSize=Math.min(1+p.maxStreak*0.04,1.6);
 
     const animData=RANK_ANIM_MAP[rank.icon];
     const isHighRank=!!animData;
@@ -4364,8 +4362,8 @@ function renderStreakRanking(){
       </div>
       <div class="rl-pts-block streak-pts-block" style="--streak-color:${sc}">
         <div class="streak-flame-big" style="font-size:${flameSize}rem;filter:drop-shadow(0 0 8px ${sc})">🔥</div>
-        <div class="rl-pts" style="color:${sc};text-shadow:0 0 12px ${sc}88">${p.streak}</div>
-        <div class="rl-pts-sub">SERIE</div>
+        <div class="rl-pts" style="color:${sc};text-shadow:0 0 12px ${sc}88">${p.maxStreak}</div>
+        <div class="rl-pts-sub">MAX SERIE</div>
       </div>
     </div>`;
   }).join('');
@@ -6625,8 +6623,7 @@ function showToast(msg){
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2400);
 }
 function showBadgeToast(msg){
-  const el=document.getElementById('badgeToast');el.textContent=msg;el.classList.add('show');
-  clearTimeout(badgeToastTimer);badgeToastTimer=setTimeout(()=>el.classList.remove('show'),4000);
+  // Badge-Notifications werden jetzt in tv-display.html angezeigt
 }
 
 /* HELPERS */
