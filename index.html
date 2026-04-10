@@ -7446,7 +7446,7 @@ async function performHistoryReplay(importData) {
     // UI aktualisieren vor dem Replay
     renderAll();
     
-    // Runden mit Verzögerung nachspielen für bessere User Experience
+    // Runden ohne Verzögerung nachspielen für schnellen Import
     let currentRoundIndex = 0;
     let renderCounter = 0;
     
@@ -7509,8 +7509,8 @@ async function performHistoryReplay(importData) {
           nextId = 1;
         }
         
-        // Kurze Verzögerung für Profil-Wechsel
-        setTimeout(() => playNextRound(), 100);
+        // Direkter Aufruf ohne Verzögerung für schnellen Import
+        playNextRound();
         return;
       }
       
@@ -7519,24 +7519,23 @@ async function performHistoryReplay(importData) {
         await replayRound(replayRoundData);
         currentRoundIndex++;
         
-        // UI aktualisieren (Performance-optimiert)
-        renderCounter++;
-        if (renderCounter % 10 === 0 || currentRoundIndex >= rounds.length) {
+        // UI aktualisieren nur am Ende für maximale Geschwindigkeit
+        if (currentRoundIndex >= rounds.length) {
           renderAll();
         }
         
-        // Nächste Runde mit kurzer Verzögerung
-        setTimeout(() => playNextRound(), 50);
+        // Nächste Runde direkt ohne Verzögerung
+        playNextRound();
         
       } catch(error) {
         console.error('Fehler beim Nachspielen der Runde', state.round, error);
         currentRoundIndex++;
-        setTimeout(() => playNextRound(), 50);
+        playNextRound();
       }
     }
     
     // Replay starten
-    setTimeout(() => playNextRound(), 500);
+    playNextRound();
     
   } catch(error) {
     console.error('Kritischer Fehler beim History-Replay:', error);

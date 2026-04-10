@@ -1364,20 +1364,12 @@
         }
       });
       
-      // Spieler identifizieren, die in beiden Phasen vorkommen
-      const currentPhasePlayerIds = new Set(currentPhasePlayers.map(p => p.id));
-      const nextPhasePlayerIds = new Set(nextPhasePlayers.map(p => p.id));
-      const inBoth = sortedPlayers.filter(p => currentPhasePlayerIds.has(p.id) && nextPhasePlayerIds.has(p.id));
-      const inBothIds = new Set(inBoth.map(p => p.id));
-      
       matchmakingPhases.innerHTML = `
         <div class="matchmaking-phase">
           <div class="matchmaking-phase-header">Aktuell: ${currentPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
           <div class="matchmaking-phase-players">
             ${currentPhasePlayers.map(p => {
-              let classes = 'matchmaking-phase-player';
-              if (inBothIds.has(p.id)) classes += ' in-both';
-              return `<div class="${classes}">${p.name}</div>`;
+              return `<div class="matchmaking-phase-player">${p.name}</div>`;
             }).join('')}
           </div>
         </div>
@@ -1385,9 +1377,7 @@
           <div class="matchmaking-phase-header">Nächste: ${nextPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
           <div class="matchmaking-phase-players">
             ${nextPhasePlayers.map(p => {
-              let classes = 'matchmaking-phase-player';
-              if (inBothIds.has(p.id)) classes += ' in-both';
-              return `<div class="${classes}">${p.name}</div>`;
+              return `<div class="matchmaking-phase-player">${p.name}</div>`;
             }).join('')}
           </div>
         </div>
