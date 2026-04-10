@@ -1405,33 +1405,51 @@
             `;
             ranklist.appendChild(betweenItem);
           }
+        } else {
+          // Last active player — show inactive players below
+          const lastActiveRank = allPlayersSorted.findIndex(p => p.id === player.id);
+          const playersBelowLast = allPlayersSorted.slice(lastActiveRank + 1).filter(p => p.active === false);
+          if (playersBelowLast.length > 0) {
+            const belowItem = document.createElement('div');
+            belowItem.className = 'rank-between';
+            const playerNames = playersBelowLast.map(p => p.name).join(', ');
+            belowItem.innerHTML = `
+              <div class="rank-between-count">${playersBelowLast.length} Spieler dadrunter</div>
+              <div class="rank-between-names">(${playerNames})</div>
+            `;
+            ranklist.appendChild(belowItem);
+          }
         }
       });
       
       // Auto-scroll für Rangliste wenn zu viele Spieler
       if (activePlayers.length > 5) {
-        let scrollIndex = 0;
-        const scrollInterval = setInterval(() => {
-          if (!document.getElementById('ranklist')) {
-            clearInterval(scrollInterval);
-            return;
-          }
-          const items = ranklist.querySelectorAll('.rank-item');
-          if (items.length === 0) {
-            clearInterval(scrollInterval);
-            return;
-          }
-          if (scrollIndex >= items.length) {
-            scrollIndex = 0;
-            ranklist.scrollTop = 0;
-          } else {
-            const currentItem = items[scrollIndex];
-            if (currentItem) {
-              currentItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (!window.ranklistScrollInterval) {
+          window.ranklistScrollIndex = 0;
+          window.ranklistScrollInterval = setInterval(() => {
+            const ranklist = document.getElementById('ranklist');
+            if (!ranklist) {
+              clearInterval(window.ranklistScrollInterval);
+              window.ranklistScrollInterval = null;
+              return;
             }
-            scrollIndex++;
-          }
-        }, 3000);
+            const items = ranklist.querySelectorAll('.rank-item, .rank-between');
+            if (items.length === 0) {
+              window.ranklistScrollIndex = 0;
+              return;
+            }
+            if (window.ranklistScrollIndex >= items.length) {
+              window.ranklistScrollIndex = 0;
+              ranklist.scrollTop = 0;
+            } else {
+              const currentItem = items[window.ranklistScrollIndex];
+              if (currentItem) {
+                currentItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+              window.ranklistScrollIndex++;
+            }
+          }, 3000);
+        }
       }
       
       // Infographics
@@ -1487,13 +1505,12 @@
       
       infographicContainer.style.opacity = '0';
       infographicContainer.style.transform = 'translateY(-10px)';
-      
+
       setTimeout(() => {
         infographicContainer.innerHTML = html;
         infographicContainer.style.opacity = '1';
         infographicContainer.style.transform = 'translateY(0)';
-      }, 300);
-      
+
       if (currentTab === 'points') {
         const pointsChart = document.getElementById('pointsChart');
         const allPlayersSorted = [...state.players].sort((a, b) => b.points - a.points);
@@ -1701,6 +1718,7 @@
           </div>
         `;
       }
+      }, 300);
     }
 
 
