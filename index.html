@@ -3424,9 +3424,15 @@ function submitRound(){
   for(const r of log.results){
     if(r.delta>0){animateCard(r.playerId,'up');showDelta(r.playerId,r.delta)}
     else if(r.delta<0){animateCard(r.playerId,'down');showDelta(r.playerId,r.delta)}
-    if(r.rankUp){animateRankUp(r.playerId)}
   }
   showToast(`Runde ${state.round} abgeschlossen!`);
+  
+  // Rank-Up-Effekte verzögern - warten bis winnerBanner Animation abgeschlossen ist (2.5s)
+  setTimeout(() => {
+    for(const r of log.results){
+      if(r.rankUp){animateRankUp(r.playerId)}
+    }
+  }, 2500);
 }
 
 function switchRankingTab(name){

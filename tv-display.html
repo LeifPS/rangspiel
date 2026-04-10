@@ -1307,7 +1307,7 @@
     
     function renderMatchmakingPhases() {
       if(!state.players || !Array.isArray(state.players)) return;
-      const sortedPlayers = [...state.players].filter(p => p.active !== false).sort((a, b) => b.points - a.points);
+      const sortedPlayers = [...state.players].sort((a, b) => b.points - a.points || a.id - b.id);
       const matchmakingPhases = document.getElementById('matchmakingPhases');
       
       const currentPhase = state.mmPhase || 'low';
@@ -1391,7 +1391,7 @@
       renderMatchmakingPhases();
       
       // Ranklist
-      const allPlayersSorted = [...state.players].sort((a, b) => b.points - a.points);
+      const allPlayersSorted = [...state.players].sort((a, b) => b.points - a.points || a.id - b.id);
       const activePlayers = allPlayersSorted.filter(p => p.active !== false);
       const inactivePlayers = allPlayersSorted.filter(p => p.active === false);
       const ranklist = document.getElementById('ranklist');
@@ -1518,7 +1518,7 @@
       const infographic = document.getElementById('infographic');
       if (!infographic) return;
 
-      const allSorted = [...state.players].sort((a, b) => b.points - a.points);
+      const allSorted = [...state.players].sort((a, b) => b.points - a.points || a.id - b.id);
       const active = allSorted.filter(p => p.active !== false);
       const history = state.history || [];
       const hasRound = Array.isArray(state.currentRoundPIds) && state.currentRoundPIds.length > 0;
@@ -1568,15 +1568,20 @@
 
       el.innerHTML = `<div class="ig-label">${LABELS[slide]||''}</div><div class="ig-title">${TITLES[slide]||''}</div><div class="ig-body" id="ig-body"></div>`;
 
-      // Transition: remove old slide
+      // Transition: remove old slide completely before adding new
       const old = infographic.querySelector('.ig-slide');
       if (old) {
         old.classList.remove('enter');
         old.classList.add('leave');
-        setTimeout(() => old.remove(), 400);
+        setTimeout(() => {
+          old.remove();
+          infographic.appendChild(el);
+          requestAnimationFrame(() => el.classList.add('enter'));
+        }, 350);
+      } else {
+        infographic.appendChild(el);
+        requestAnimationFrame(() => el.classList.add('enter'));
       }
-      infographic.appendChild(el);
-      requestAnimationFrame(() => el.classList.add('enter'));
 
       const body = el.querySelector('#ig-body');
 
