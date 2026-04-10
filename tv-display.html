@@ -745,18 +745,16 @@
     .idle-fact{font-size:1.5rem;color:var(--text);line-height:1.6;margin-top:30px;padding:30px;background:rgba(232,184,75,0.05);border-radius:16px;border:1px solid rgba(232,184,75,0.15)}
     .idle-progress{position:absolute;bottom:0;left:0;height:4px;background:linear-gradient(90deg,var(--accent),rgba(232,184,75,0.5));width:0%;transition:width 8s linear}
     
-    /* PREDICTION SYSTEM */
-    .prediction-container{padding:20px}
-    .prediction-bar-row{display:flex;align-items:center;margin-bottom:16px;gap:12px}
-    .prediction-name{width:120px;font-size:0.9rem;font-weight:600;color:var(--text);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .prediction-bar{flex:1;height:28px;background:rgba(0,0,0,0.3);border-radius:12px;overflow:hidden;position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,0.3)}
-    .prediction-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),rgba(232,184,75,0.6));border-radius:12px;transition:width 0.6s cubic-bezier(0.4,0,0.2,1);position:relative}
-    .prediction-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.15),transparent)}
-    .prediction-percent{width:60px;font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:var(--accent);text-align:center}
-    .prediction-assessment{margin-top:24px;padding:16px 20px;background:rgba(232,184,75,0.08);border:1px solid rgba(232,184,75,0.25);border-radius:12px;text-align:center;font-size:1.1rem;font-weight:600;color:var(--accent);letter-spacing:1px;text-transform:uppercase}
-    .prediction-assessment.favorit{background:linear-gradient(135deg,rgba(76,232,122,0.1),rgba(76,232,122,0.03));border-color:rgba(76,232,122,0.3);color:#4ce87a}
-    .prediction-assessment.eng{background:linear-gradient(135deg,rgba(255,193,7,0.1),rgba(255,193,7,0.03));border-color:rgba(255,193,7,0.3);color:#ffc107}
-    .prediction-assessment.offen{background:linear-gradient(135deg,rgba(100,181,246,0.1),rgba(100,181,246,0.03));border-color:rgba(100,181,246,0.3);color:#64b5f6}
+    /* WIN PROBABILITY PANEL */
+    #winProbs{flex-shrink:0;padding:0 2px 6px 2px}
+    .wp-label{font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);opacity:0.65;margin-bottom:4px}
+    .wp-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+    .wp-name{width:64px;font-size:0.78rem;font-weight:600;color:var(--text);flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
+    .wp-bar-wrap{flex:1;height:14px;background:var(--bg3);border-radius:3px;overflow:hidden}
+    .wp-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;width:0;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
+    .wp-pct{width:38px;font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;color:var(--accent);flex-shrink:0;text-align:right}
+    .wp-empty{font-size:0.72rem;color:var(--text3);opacity:0.5;padding:2px 0}
+    .wp-divider{height:1px;background:var(--border);margin:6px 0;flex-shrink:0}
     
     /* MATCHMAKING OVERLAY */
     .matchmaking-overlay{position:fixed;bottom:20px;right:20px;width:400px;z-index:100;animation:matchmakingFadeIn 0.5s cubic-bezier(0.4,0,0.2,1)}
@@ -792,7 +790,9 @@
           <div class="matchmaking-panel-title">Matchmaking-Phasen</div>
           <div class="matchmaking-phases" id="matchmakingPhases"></div>
         </div>
-        <div class="panel-title">📈 Informationen</div>
+        <div id="winProbs"></div>
+        <div class="wp-divider"></div>
+        <div class="panel-title">📈 Infografiken</div>
         <div class="info-progress-wrap"><div class="info-progress-bar" id="infoProgressBar"></div></div>
         <div id="infographic"></div>
       </div>
@@ -1612,6 +1612,75 @@
       }
     }
 
+    function renderWinProbs() {
+      const container = document.getElementById('winProbs');
+      if (!container) return;
+
+      const pIds = Array.isArray(state.currentRoundPIds) ? state.currentRoundPIds : [];
+
+      if (pIds.length === 0) {
+        container.innerHTML = '<div class="wp-label">GEWINNCHANCEN</div><div class="wp-empty">Keine aktive Runde</div>';
+        return;
+      }
+
+      const history = state.history || [];
+
+      // Group playing accounts by Spieler (key), fall back to account name if unassigned
+      const spielerMap = {};
+      pIds.forEach(id => {
+        const acc = (state.players || []).find(p => p.id === id);
+        if (!acc) return;
+        const key = acc.key || acc.name;
+        if (!spielerMap[key]) spielerMap[key] = { name: key, accounts: [] };
+        spielerMap[key].accounts.push(acc);
+      });
+
+      // For each Spieler: sum ALL their accounts' points (not just the playing one)
+      Object.keys(spielerMap).forEach(key => {
+        const allAccs = (state.players || []).filter(p => (p.key || p.name) === key);
+        spielerMap[key].totalPoints = allAccs.reduce((s, p) => s + (p.points || 0), 0);
+        spielerMap[key].maxStreak   = Math.max(...spielerMap[key].accounts.map(a => a.streak || 0), 0);
+
+        // Recent performance: average delta of last 5 rounds across all accounts of this Spieler
+        const accNames = new Set(allAccs.map(a => a.name));
+        let deltaSum = 0, deltaCount = 0;
+        history.slice(0, 5).forEach(log => {
+          if (log.skipped) return;
+          (log.results || []).forEach(r => {
+            if (accNames.has(r.name)) { deltaSum += (r.delta || 0); deltaCount++; }
+          });
+        });
+        spielerMap[key].recentPerf = deltaCount > 0 ? deltaSum / deltaCount : 0;
+      });
+
+      // Score & percentages
+      const spieler = Object.values(spielerMap).map(s => ({
+        ...s,
+        score: s.totalPoints + s.maxStreak * 2 + s.recentPerf * 0.5
+      })).sort((a, b) => b.score - a.score);
+
+      const totalScore = spieler.reduce((s, x) => s + Math.max(0, x.score), 0);
+      const withPct = spieler.map(s => ({
+        ...s,
+        pct: totalScore > 0 ? Math.max(0, s.score) / totalScore * 100 : 100 / spieler.length
+      }));
+
+      // Render
+      let html = '<div class="wp-label">GEWINNCHANCEN</div>';
+      withPct.forEach(s => {
+        html += `<div class="wp-row">
+          <div class="wp-name" title="${esc(s.name)}">${esc(s.name)}</div>
+          <div class="wp-bar-wrap"><div class="wp-bar" data-pct="${s.pct.toFixed(1)}"></div></div>
+          <div class="wp-pct">${s.pct.toFixed(1)}%</div>
+        </div>`;
+      });
+      container.innerHTML = html;
+
+      requestAnimationFrame(() => {
+        container.querySelectorAll('.wp-bar').forEach(b => { b.style.width = b.dataset.pct + '%'; });
+      });
+    }
+
     function renderMatchmakingPhases() {
       if(!state.players || !Array.isArray(state.players)) return;
       const sortedPlayers = [...state.players].sort((a, b) => b.points - a.points || a.id - b.id);
@@ -1698,6 +1767,9 @@
       
       // Matchmaking Phases
       renderMatchmakingPhases();
+
+      // Win probabilities (always visible, per Spieler)
+      renderWinProbs();
       
       // Ranklist
       const allPlayersSorted = [...state.players].sort((a, b) => b.points - a.points || a.id - b.id);
@@ -1866,7 +1938,7 @@
       const hasRound = Array.isArray(state.currentRoundPIds) && state.currentRoundPIds.length > 0;
 
       // Build slide list dynamically — skip history-based slides when no history
-      const slides = ['leaderboard', 'streaks', 'prediction'];
+      const slides = ['leaderboard', 'streaks'];
       if (history.length > 0) slides.push('last-round');
       slides.push('plac-dist');
       if (history.length > 0) slides.push('delta', 'rang-bilanz', 'punkte-verlauf', 'heatmap');
@@ -1897,7 +1969,6 @@
         'punkte-verlauf': 'PUNKTEVERLAUF',
         heatmap:      'HEATMAP',
         'active-round':'AKTIVE RUNDE',
-        prediction:   'WIN-PROGNOSE',
       };
       const TITLES = {
         leaderboard:  'Aktuelle Rangliste',
@@ -1909,7 +1980,6 @@
         'punkte-verlauf': 'Kumulierter Punkteverlauf',
         heatmap:      'Platzierungs-Heatmap',
         'active-round':'Runde läuft gerade',
-        prediction:   'Gewinnchance Prognose',
       };
 
       el.innerHTML = `<div class="ig-label">${LABELS[slide]||''}</div><div class="ig-title">${TITLES[slide]||''}</div><div class="ig-body" id="ig-body"></div>`;
@@ -2225,109 +2295,13 @@
         pulse.innerHTML = '<div class="ar-pulse"></div>Live — Runde läuft';
         body.prepend(pulse);
       }
-
-      // ── WIN PROGNOSE (PREDICTION) ──────────────────────────────
-      else if (slide === 'prediction') {
-        const container = document.createElement('div');
-        container.className = 'prediction-container';
-        
-        // Calculate recent performance (average delta of last 5 rounds)
-        const recentPerf = {};
-        active.forEach(p => { recentPerf[p.id] = 0; });
-        history.slice(0, 5).forEach(log => {
-          (log.results || []).forEach(r => {
-            const p = active.find(pl => pl.name === r.name);
-            if (p) {
-              recentPerf[p.id] += (r.delta || 0);
-            }
-          });
-        });
-        active.forEach(p => {
-          recentPerf[p.id] = recentPerf[p.id] / Math.min(history.length, 5);
-        });
-
-        // Calculate win probability score: points + streak*2 + recent*0.5
-        const predictions = active.map(p => {
-          const score = (p.points || 0) + (p.streak || 0) * 2 + (recentPerf[p.id] || 0) * 0.5;
-          return {
-            player: p,
-            score: score,
-            recent: recentPerf[p.id] || 0
-          };
-        });
-
-        // Sort by score (highest first)
-        predictions.sort((a, b) => b.score - a.score);
-
-        // Convert to percentages
-        const totalScore = predictions.reduce((sum, p) => sum + Math.max(0, p.score), 0);
-        const predictionsWithPct = predictions.map(p => ({
-          ...p,
-          percentage: totalScore > 0 ? (Math.max(0, p.score) / totalScore * 100) : (100 / predictions.length)
-        }));
-
-        // Generate assessment
-        const topPct = predictionsWithPct[0]?.percentage || 0;
-        const secondPct = predictionsWithPct[1]?.percentage || 0;
-        let assessment = '';
-        let assessmentClass = '';
-        
-        if (predictionsWithPct.length === 0) {
-          assessment = 'Keine Spieler verfügbar';
-          assessmentClass = 'offen';
-        } else if (predictionsWithPct.length === 1) {
-          assessment = '👑 Einziger Spieler';
-          assessmentClass = 'favorit';
-        } else if (topPct > 50) {
-          assessment = '👑 Klarer Favorit';
-          assessmentClass = 'favorit';
-        } else if (topPct - secondPct > 15) {
-          assessment = '⭐ Favorit mit Vorsprung';
-          assessmentClass = 'favorit';
-        } else if (topPct - secondPct > 5) {
-          assessment = '🎯 Favorit';
-          assessmentClass = 'eng';
-        } else {
-          assessment = '⚔️ Enges Rennen';
-          assessmentClass = 'eng';
-        }
-
-        // Render bars
-        predictionsWithPct.forEach(pred => {
-          const row = document.createElement('div');
-          row.className = 'prediction-bar-row';
-          row.innerHTML = `
-            <div class="prediction-name" title="${pred.player.name}">${esc(pred.player.name)}</div>
-            <div class="prediction-bar">
-              <div class="prediction-bar-fill" style="width: 0%" data-width="${pred.percentage.toFixed(1)}%"></div>
-            </div>
-            <div class="prediction-percent">${pred.percentage.toFixed(1)}%</div>
-          `;
-          container.appendChild(row);
-        });
-
-        // Render assessment
-        const assessmentEl = document.createElement('div');
-        assessmentEl.className = `prediction-assessment ${assessmentClass}`;
-        assessmentEl.textContent = assessment;
-        container.appendChild(assessmentEl);
-
-        body.appendChild(container);
-
-        // Animate bars
-        requestAnimationFrame(() => {
-          container.querySelectorAll('.prediction-bar-fill').forEach(bar => {
-            bar.style.width = bar.dataset.width;
-          });
-        });
-      }
     }
 
 
 
     function showRoundEndPopup(log) {
       const results = (log.results || []).slice().sort((a,b) => a.place - b.place);
-      if(results.length === 0) return;
+      if(results.length === 0 && !log.skipped) return;
 
       // previousRanks mit Rängen vor dieser Runde initialisieren
       state.players.forEach(player => {
@@ -2349,13 +2323,24 @@
 
       const titleEl = document.createElement('div');
       titleEl.className = 'round-end-title';
-      titleEl.textContent = 'RUNDE ABGESCHLOSSEN';
+      titleEl.textContent = log.skipped ? 'RUNDE ÜBERSPRUNGEN' : 'RUNDE ABGESCHLOSSEN';
       card.appendChild(titleEl);
 
       const roundEl = document.createElement('div');
       roundEl.className = 'round-end-round';
       roundEl.textContent = 'Runde ' + log.round;
       card.appendChild(roundEl);
+
+      if(log.skipped) {
+        const skipMsg = document.createElement('div');
+        skipMsg.style.cssText = 'text-align:center;color:var(--text3);font-size:1rem;margin-top:8px;padding:16px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,0.03)';
+        skipMsg.innerHTML = `⚡ ${esc(log.skippedPhase || 'Liga')} übersprungen<br><span style="font-size:0.8rem;opacity:0.6">Zu wenig passende Spieler in Rangreichweite</span>`;
+        card.appendChild(skipMsg);
+        overlay.appendChild(card);
+        document.body.appendChild(overlay);
+        setTimeout(() => { card.classList.add('out'); setTimeout(() => { overlay.remove(); isPopupShowing = false; }, 700); }, 4000);
+        return;
+      }
 
       const medals = ['🥇','🥈','🥉'];
       results.forEach((r, i) => {
@@ -2411,17 +2396,13 @@
             state = data.state || data; // Firebase data is nested in 'state' property
             // Round-end popup
             const newRound = state.round || 0;
-            if(lastShownRound >= 0 && newRound > lastShownRound && state.history && state.history.length > 0) {
+            if(lastShownRound >= 0 && newRound > lastShownRound && state.history && state.history.length > 0 && !isPopupShowing) {
               const latestLog = state.history[0];
-              if(latestLog && latestLog.results && latestLog.results.length > 0) {
+              if(latestLog && (latestLog.skipped || (latestLog.results && latestLog.results.length > 0))) {
                 showRoundEndPopup(latestLog);
               }
             }
             lastShownRound = newRound;
-            console.log('State loaded from Firebase:', state);
-            console.log('Players:', state.players);
-            console.log('Players type:', typeof state.players);
-            console.log('Players is array:', Array.isArray(state.players));
             render();
           } else {
             document.getElementById('loading').style.display = 'none';

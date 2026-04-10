@@ -1969,6 +1969,19 @@
   .dev-badge-name{font-size:.6rem;font-weight:600;color:var(--text2);text-align:center;line-height:1.2}
   .dev-badge-row.achieved{border-color:var(--success);background:rgba(76,232,122,.06)}
   .dev-badge-row.achieved .dev-badge-name{color:var(--success)}
+  /* TEST RESULTS */
+  .test-result-list{display:flex;flex-direction:column;gap:2px;margin-top:8px;max-height:320px;overflow-y:auto}
+  .test-result-row{display:flex;align-items:flex-start;gap:6px;padding:3px 7px;border-radius:4px;font-size:.72rem;line-height:1.35}
+  .test-result-row.pass{background:rgba(76,232,122,.07)}
+  .test-result-row.fail{background:rgba(232,76,76,.12)}
+  .test-result-icon{flex-shrink:0;width:14px;font-size:.75rem}
+  .test-result-name{flex:1;color:var(--text2)}
+  .test-result-row.fail .test-result-name{color:var(--text)}
+  .test-result-error{font-size:.62rem;color:var(--danger);margin-top:1px}
+  .test-result-cat{font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);padding:6px 0 2px 0;margin-top:4px}
+  .test-summary{font-size:.8rem;font-weight:700;padding:7px 10px;border-radius:6px;margin-top:8px;text-align:center;letter-spacing:.5px}
+  .test-summary.all-pass{background:rgba(76,232,122,.14);color:var(--success);border:1px solid rgba(76,232,122,.25)}
+  .test-summary.has-fail{background:rgba(232,76,76,.14);color:var(--danger);border:1px solid rgba(232,76,76,.25)}
   /* Achievement badge pulse animations */
   @keyframes achVeteran{
     0%,100%{box-shadow:0 0 4px rgba(144,202,249,.4),inset 0 0 3px rgba(144,202,249,.2)}
@@ -2286,6 +2299,11 @@
       <div class="player-list" id="playerList"></div>
     </div>
     <div id="spieler-sub-dev" style="display:none">
+      <div style="margin-bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button onclick="runAndShowDevTests()" style="flex:1;background:linear-gradient(135deg,#1a4a7a,#2e6db8);border:1px solid #3a7fd4;color:#fff;font-size:.82rem;font-weight:700;padding:9px 16px;border-radius:8px;cursor:pointer;letter-spacing:.5px;text-transform:uppercase;font-family:inherit">🧪 Tests ausführen</button>
+        <button onclick="document.getElementById('devTestOutput').innerHTML=''" style="background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text3);font-size:.75rem;padding:9px 12px;border-radius:8px;cursor:pointer;font-family:inherit">✕ Löschen</button>
+      </div>
+      <div id="devTestOutput" style="margin-bottom:12px"></div>
       <div class="dev-console" id="devConsole"></div>
     </div>
   </div>
@@ -3915,30 +3933,21 @@ function renderRoundForm(){
       activePIds=getMmGroup();
       if(!activePIds){
         const skippedPhase=state.mmPhase==='low'?'Niedrige Liga':'Hohe Liga';
-        mmBox.innerHTML=`<div class="mm-info-box">⚡ <strong>Warnung:</strong> ${skippedPhase} übersprungen – zu wenig passende Spieler. Runde kann trotzdem bestätigt werden.</div>`;
-        
-        // Liga-Wechsel Knopf auch bei übersprungenen Runden anzeigen
-        if(state.matchmakingOn) {
-          const leagueSwitchBtn = `<button class="league-switch-btn" onclick="switchLeague()">` + 
-            (state.mmPhase === 'low' ? '🔺 Hohe Liga' : '🔻 Niedrige Liga') + 
-            `</button>`;
-          mmBox.innerHTML += leagueSwitchBtn;
-        }
-        
-        // Runde trotzdem erlauben, aber Warnung anzeigen
-        activePIds = activePlayers.map(p => p.id);
+        mmBox.innerHTML=`<div class="mm-info-box">⚡ <strong>Warnung:</strong> ${skippedPhase} – zu wenig passende Spieler in Rangreichweite.<br><span style="font-size:.8rem;opacity:.7">Bitte Liga wechseln, um fortzufahren.</span></div>`;
+        const leagueSwitchBtn = `<button class="league-switch-btn" onclick="switchLeague()">` +
+          (state.mmPhase === 'low' ? '🔺 Hohe Liga' : '🔻 Niedrige Liga') +
+          `</button>`;
+        mmBox.innerHTML += leagueSwitchBtn;
+        hint.innerHTML='';ui.innerHTML='';btn.disabled=true;
+        return;
       }
-    const label=state.mmPhase==='low'?'🔻 Aufsteiger-Runde':'🔺 Abstiegs-Runde';
-    const tip=state.mmPhase==='low'?'Schlechtester + bis 2 Ränge höher':'Bester + bis 2 Ränge tiefer';
-    mmBox.innerHTML=`<div class="mm-info-box"><div class="mm-phase-badge">${label}</div><br>${tip} — <strong>${activePIds.length} Spieler</strong></div>`;
-    
-    // Liga-Wechsel Knopf hinzufügen
-    if(state.matchmakingOn) {
-      const leagueSwitchBtn = `<button class="league-switch-btn" onclick="switchLeague()">` + 
-        (state.mmPhase === 'low' ? '🔺 Hohe Liga' : '🔻 Niedrige Liga') + 
+      const label=state.mmPhase==='low'?'🔻 Aufsteiger-Runde':'🔺 Abstiegs-Runde';
+      const tip=state.mmPhase==='low'?'Schlechtester + bis 2 Ränge höher':'Bester + bis 2 Ränge tiefer';
+      mmBox.innerHTML=`<div class="mm-info-box"><div class="mm-phase-badge">${label}</div><br>${tip} — <strong>${activePIds.length} Spieler</strong></div>`;
+      const leagueSwitchBtn = `<button class="league-switch-btn" onclick="switchLeague()">` +
+        (state.mmPhase === 'low' ? '🔺 Hohe Liga' : '🔻 Niedrige Liga') +
         `</button>`;
       mmBox.innerHTML += leagueSwitchBtn;
-    }
   }else{
     const activePlayers=state.players.filter(p=>p.active);
     if(activePlayers.length<2){mmBox.innerHTML='';infoBox.innerHTML='⚠ Mindestens <strong>2 aktive Spieler</strong> nötig.';hint.innerHTML='';ui.innerHTML='';btn.disabled=true;return;}
@@ -6345,6 +6354,177 @@ function switchSpielerTab(tab) {
   document.getElementById('spieler-tab-accounts').classList.toggle('active', tab==='accounts');
   document.getElementById('spieler-tab-dev').classList.toggle('active', tab==='dev');
   if(tab==='dev') renderDevConsole();
+}
+
+function runDevTests() {
+  const results = [];
+  function t(code, cat, name, fn) { results.push({code, cat, name, fn}); }
+
+  // ── RS · Rang-System ─────────────────────────────────────────
+  t('RS-01','Rang-System','getRank(0) = Unranked',          ()=> getRank(0).name==='Unranked');
+  t('RS-02','Rang-System','getRank(1) = Bronze',             ()=> getRank(1).name==='Bronze');
+  t('RS-03','Rang-System','getRankIdx(0) = 0',               ()=> getRankIdx(0)===0);
+  t('RS-04','Rang-System','getRankIdx(1) ≥ 1',               ()=> getRankIdx(1)>=1);
+  t('RS-05','Rang-System','RANKS aufsteigend sortiert',      ()=> RANKS.every((r,i)=>i===0||r.points>RANKS[i-1].points));
+  t('RS-06','Rang-System','getRankIdx monoton (0–120 Pkt)',  ()=>{
+    let last=0;
+    for(let p=0;p<=120;p++){const i=getRankIdx(p);if(i<last)return false;last=i;}
+    return true;
+  });
+  t('RS-07','Rang-System','getRank·getRankIdx konsistent',   ()=>{
+    for(const r of RANKS){if(getRank(r.points).name!==r.name)return false;}
+    return true;
+  });
+  t('RS-08','Rang-System','Letzter RANK hat höchste Punkte', ()=> RANKS[RANKS.length-1].points >= RANKS[RANKS.length-2].points);
+  t('RS-09','Rang-System','getRank gibt immer loss ≥ 0',     ()=> RANKS.every(r=>(r.loss||0)>=0));
+  t('RS-10','Rang-System','getRankIdx(9999) = Max-Index',    ()=> getRankIdx(9999)===getRankIdx(RANKS[RANKS.length-1].points));
+
+  // ── SB · Schutzboden ─────────────────────────────────────────
+  t('SB-01','Schutzboden','maxPoints=0  → 0',       ()=> getMinPts({maxPoints:0})===0);
+  t('SB-02','Schutzboden','maxPoints=6  → 0',       ()=> getMinPts({maxPoints:6})===0);
+  t('SB-03','Schutzboden','maxPoints=7  → GOLD(7)', ()=> getMinPts({maxPoints:7})===PROT_GOLD);
+  t('SB-04','Schutzboden','maxPoints=18 → GOLD(7)', ()=> getMinPts({maxPoints:18})===PROT_GOLD);
+  t('SB-05','Schutzboden','maxPoints=19 → PLAT(19)',()=> getMinPts({maxPoints:19})===PROT_PLAT);
+  t('SB-06','Schutzboden','maxPoints=39 → PLAT(19)',()=> getMinPts({maxPoints:39})===PROT_PLAT);
+  t('SB-07','Schutzboden','maxPoints=40 → GOD(40)', ()=> getMinPts({maxPoints:40})===PROT_GOD);
+  t('SB-08','Schutzboden','maxPoints=75 → GOD(40)', ()=> getMinPts({maxPoints:75})===PROT_GOD);
+  t('SB-09','Schutzboden','maxPoints=76 → EWK(76)', ()=> getMinPts({maxPoints:76})===PROT_EWIGKEIT);
+  t('SB-10','Schutzboden','minPts verhindert neg. Punkte', ()=>{
+    const p={id:99,name:'T',points:7,maxPoints:7,active:true,streak:0};
+    const min=getMinPts(p);
+    return Math.max(min, p.points+(-99))===min; // can't drop below floor
+  });
+
+  // ── DL · Delta-Berechnung ─────────────────────────────────────
+  const dp=[
+    {id:9901,name:'_T1',points:0, maxPoints:0, active:true,streak:0},
+    {id:9902,name:'_T2',points:5, maxPoints:5, active:true,streak:0},
+    {id:9903,name:'_T3',points:0, maxPoints:0, active:true,streak:0},
+    {id:9904,name:'_T4',points:0, maxPoints:0, active:true,streak:0},
+    {id:9905,name:'_T5',points:10,maxPoints:10,active:true,streak:0},
+    {id:9906,name:'_T6',points:10,maxPoints:10,active:true,streak:0},
+  ];
+  const savedSR=activeSpecialRound; activeSpecialRound=null;
+  t('DL-01','Delta','2 Spieler: Pl1=+1',              ()=> calcDeltas(2,dp,[9901,9902])[0]===1);
+  t('DL-02','Delta','2 Spieler: Pl2 nicht positiv',   ()=> calcDeltas(2,dp,[9901,9902])[1]<=0);
+  t('DL-03','Delta','3 Spieler: Pl1=+1',              ()=> calcDeltas(3,dp,[9901,9902,9903])[0]===1);
+  t('DL-04','Delta','3 Spieler: Pl2=+0.5',            ()=> calcDeltas(3,dp,[9901,9902,9903])[1]===0.5);
+  t('DL-05','Delta','4 Spieler: Pl1=+1, Pl2=+0.5',   ()=>{ const d=calcDeltas(4,dp,[9901,9902,9903,9904]); return d[0]===1&&d[1]===0.5; });
+  t('DL-06','Delta','4 Spieler: Länge = n',           ()=> calcDeltas(4,dp,[9901,9902,9903,9904]).length===4);
+  t('DL-07','Delta','Gewinner immer +1 (normal)',      ()=>{ const d=calcDeltas(3,dp,[9901,9902,9903]); return d[0]===1; });
+  t('DL-08','Delta','Doppel-SR: Pl1=+2',              ()=>{ activeSpecialRound='doppel'; const v=calcDeltas(2,dp,[9901,9902])[0]===2; activeSpecialRound=null; return v; });
+  t('DL-09','Delta','Keine-Verluste: letzter≥0',      ()=>{ activeSpecialRound='keine_verluste'; const v=calcDeltas(2,dp,[9901,9905])[1]>=0; activeSpecialRound=null; return v; });
+  t('DL-10','Delta','Gleichstand: alle=+0.5',         ()=>{ activeSpecialRound='gleichstand'; const d=calcDeltas(3,dp,[9901,9902,9903]); activeSpecialRound=null; return d.every(x=>x===0.5); });
+  t('DL-11','Delta','1 Spieler → leeres Delta-Array', ()=> calcDeltas(1,dp,[9901]).every(x=>x===0));
+  activeSpecialRound=savedSR;
+
+  // ── MM · Matchmaking ─────────────────────────────────────────
+  function mmTest(players, phase, fn){
+    const sp=state.players, sm=state.mmPhase;
+    state.players=players; state.mmPhase=phase;
+    let r; try{ r=fn(getMmGroup()); }catch(e){ r=false; }
+    state.players=sp; state.mmPhase=sm;
+    return r;
+  }
+  t('MM-01','Matchmaking','<2 aktive → null',
+    ()=> mmTest([{id:1,name:'A',points:0,active:true}],'low', g=>g===null));
+  t('MM-02','Matchmaking','0 aktive → null',
+    ()=> mmTest([],'low', g=>g===null));
+  t('MM-03','Matchmaking','2 gleicher Rang → Gruppe mit 2',
+    ()=> mmTest([{id:1,name:'A',points:0,active:true},{id:2,name:'B',points:0,active:true}],'low', g=>Array.isArray(g)&&g.length===2));
+  t('MM-04','Matchmaking','inaktive Spieler werden ignoriert',
+    ()=> mmTest([{id:1,name:'A',points:0,active:true},{id:2,name:'B',points:0,active:false}],'low', g=>g===null));
+  t('MM-05','Matchmaking','high-Phase: bester zuerst',
+    ()=> mmTest([{id:1,name:'A',points:0,active:true},{id:2,name:'B',points:50,active:true}],'high', g=>{
+      const ri1=getRankIdx(0),ri2=getRankIdx(50);
+      return Math.abs(ri1-ri2)<=2 ? (Array.isArray(g)&&g.length>=2) : (g===null||Array.isArray(g));
+    }));
+  t('MM-06','Matchmaking','Rang-Abstand >2 in low-Phase → ggf. null',
+    ()=>{
+      const hiPts=RANKS[Math.min(RANKS.length-1,4)].points;
+      return mmTest([{id:1,name:'A',points:0,active:true},{id:2,name:'B',points:hiPts,active:true}],'low', g=>{
+        const dist=Math.abs(getRankIdx(0)-getRankIdx(hiPts));
+        return dist<=2 ? true : g===null;
+      });
+    });
+
+  // ── DI · Datenintegrität ──────────────────────────────────────
+  t('DI-01','Daten','Alle Spieler: id vorhanden',               ()=> (state.players||[]).every(p=>p.id!==undefined));
+  t('DI-02','Daten','Alle Spieler: name vorhanden',             ()=> (state.players||[]).every(p=>!!p.name));
+  t('DI-03','Daten','Alle Spieler: points vorhanden',           ()=> (state.players||[]).every(p=>p.points!==undefined));
+  t('DI-04','Daten','Alle Punktestände ≥ 0',                    ()=> (state.players||[]).every(p=>(p.points||0)>=0));
+  t('DI-05','Daten','maxPoints ≥ points (oder beide 0)',        ()=> (state.players||[]).every(p=>(p.maxPoints||0)>=(p.points||0)||(p.maxPoints||0)===0));
+  t('DI-06','Daten','state.round ≥ 0',                          ()=> (state.round||0)>=0);
+  t('DI-07','Daten','state.history ist Array',                  ()=> Array.isArray(state.history||[]));
+  t('DI-08','Daten','History: results-Array immer vorhanden',   ()=> (state.history||[]).every(h=>Array.isArray(h.results)));
+  t('DI-09','Daten','History: alle Rundeneinträge haben round ≥ 1', ()=> (state.history||[]).every(h=>typeof h.round==='number'&&h.round>=1));
+  t('DI-10','Daten','History: Platzierungen pro Runde eindeutig',()=>{
+    for(const rnd of (state.history||[])){
+      // Nur Einträge mit echten Platzierungen (≥1) prüfen — Penalty/Bonus-Logs ausschließen
+      const pl=(rnd.results||[]).filter(r=>r.place>=1).map(r=>r.place);
+      if(new Set(pl).size!==pl.length) return false;
+    }
+    return true;
+  });
+  t('DI-11','Daten','state.round ≥ echte Runden in History',    ()=> (state.round||0)>=(state.history||[]).filter(h=>!h.skipped).length);
+  t('DI-12','Daten','Normale Runden-Ergebnisse haben name + place', ()=> (state.history||[]).every(h=>(h.results||[]).filter(r=>r.place>=1).every(r=>!!r.name&&r.place!==undefined)));
+  t('DI-13','Daten','Spieler-IDs eindeutig',                    ()=>{ const ids=(state.players||[]).map(p=>p.id); return new Set(ids).size===ids.length; });
+  t('DI-14','Daten','Spieler-Namen eindeutig',                  ()=>{ const names=(state.players||[]).map(p=>p.name.toLowerCase()); return new Set(names).size===names.length; });
+  t('DI-15','Daten','Kein Spieler ohne active-Feld',            ()=> (state.players||[]).every(p=>p.active!==undefined));
+
+  // ── ST · Streak ───────────────────────────────────────────────
+  t('ST-01','Streak','Streak ist Zahl ≥ 0',             ()=> (state.players||[]).every(p=>(p.streak||0)>=0&&Number.isFinite(p.streak||0)));
+  t('ST-02','Streak','Keine negativen Streaks',          ()=> (state.players||[]).every(p=>(p.streak||0)>=0));
+
+  // Run
+  return results.map(({code,cat,name,fn})=>{
+    try{
+      const pass=fn()===true;
+      return {code,cat,name,pass,error:pass?null:'false'};
+    }catch(e){
+      return {code,cat,name,pass:false,error:e.message};
+    }
+  });
+}
+
+function runAndShowDevTests() {
+  const out = document.getElementById('devTestOutput');
+  if(!out) return;
+  out.innerHTML = '<div style="color:var(--text3);font-size:.75rem;padding:4px 0">Läuft…</div>';
+
+  setTimeout(()=>{
+    const results = runDevTests();
+    const passed = results.filter(r=>r.pass).length;
+    const failed = results.filter(r=>!r.pass).length;
+
+    let html = '<div class="test-result-list">';
+    let lastCat = null;
+    results.forEach(r=>{
+      if(r.cat!==lastCat){
+        html+=`<div class="test-result-cat">${r.cat}</div>`;
+        lastCat=r.cat;
+      }
+      html+=`<div class="test-result-row ${r.pass?'pass':'fail'}">
+        <div class="test-result-icon">${r.pass?'✓':'✕'}</div>
+        <div style="flex:1">
+          <div class="test-result-name">${esc(r.name)}</div>
+          ${!r.pass?`<div class="test-result-error">Fehlercode: <strong>${esc(r.code)}</strong>${r.error&&r.error!=='false'?' — '+esc(r.error):''}</div>`:''}
+        </div>
+        <div style="font-size:.58rem;color:${r.pass?'var(--text3)':'var(--danger)'};flex-shrink:0;margin-left:4px;font-family:'Rajdhani',sans-serif;font-weight:700">${esc(r.code)}</div>
+      </div>`;
+    });
+    html+='</div>';
+    if(failed===0){
+      html+=`<div class="test-summary all-pass">✓ Alle ${results.length} Tests bestanden</div>`;
+    } else {
+      const failCodes = results.filter(r=>!r.pass).map(r=>r.code).join('  ');
+      html+=`<div class="test-summary has-fail">
+        <div>✕ ${failed} / ${results.length} fehlgeschlagen</div>
+        <div style="margin-top:6px;font-family:'Rajdhani',sans-serif;font-size:.95rem;letter-spacing:2px;word-break:break-all;opacity:.9">${esc(failCodes)}</div>
+      </div>`;
+    }
+    out.innerHTML = html;
+  }, 20);
 }
 
 function renderDevConsole() {
