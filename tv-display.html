@@ -1662,7 +1662,7 @@
 
       const history = (state.history || []).filter(r => !r.skipped);
       const n = activePlayers.length;
-      const MAX_ROUNDS = 15;
+      const MAX_ROUNDS = 30;
 
       // Spieler zusammenfassen (ein Spieler kann mehrere Accounts haben)
       const spielerMap = {};
@@ -1694,25 +1694,27 @@
         const avgPlace   = participated > 0 ? placementSum / participated : (n + 1) / 2;
         const placeScore = Math.max(0, 1 - (avgPlace - 1) / Math.max(n - 1, 1));
 
-        // Recency-Gewichtung: letzte 3 Runden stärker gewichten
-        let recentWins = 0, recentTotal = 0;
-        history.slice(0, 3).forEach(log => {
+        // Stabilere Recency-Gewichtung: gleitender Durchschnitt über mehr Runden
+        let recentWeighted = 0, recentWeight = 0;
+        history.slice(0, 10).forEach((log, idx) => {
           const res = (log.results || []).find(r => accNames.has(r.name));
           if (!res) return;
-          recentTotal++;
-          if (res.place === 1) recentWins++;
+          const weight = 1 - (idx / 10); // Abnehmende Gewichtung: 1.0, 0.9, 0.8, ..., 0.1
+          recentWeighted += (res.place === 1 ? 1 : res.place <= 3 ? 0.5 : 0) * weight;
+          recentWeight += weight;
         });
-        const recentBoost = recentTotal > 0 ? (recentWins / recentTotal - winRate) * 0.3 : 0;
+        const recentPerformance = recentWeight > 0 ? recentWeighted / recentWeight : winRate;
 
-        // Streak-Bonus (max +8%)
-        const streakBonus = Math.min(maxStreak * 0.016, 0.08);
+        // Streak-Bonus (max +5%, reduziert für mehr Stabilität)
+        const streakBonus = Math.min(maxStreak * 0.01, 0.05);
 
-        // Kombinierter Score
+        // Kombinierter Score mit stabilerer Gewichtung
         spielerMap[key].rawScore = Math.max(0.01,
-          winRate    * 0.45 +
-          placeScore * 0.30 +
-          top3Rate   * 0.15 +
-          recentBoost +
+          winRate           * 0.50 +
+          placeScore        * 0.35 +
+          top3Rate          * 0.10 +
+          recentPerformance * 0.05 -  // Leichte Recency-Berücksichtigung
+          (1 - recentPerformance) * 0.05 + // Kleiner Ausgleich
           streakBonus
         );
         spielerMap[key].participated = participated;
@@ -2423,8 +2425,9 @@
           const tick = (now) => {
             const p = Math.min((now - start) / dur, 1);
             const eased = 1 - Math.pow(1 - p, 3);
-            const cur = Math.round(eased * delta);
-            deltaEl.textContent = (cur >= 0 ? '+' : '') + cur + ' Pkt';
+            const cur = eased * delta;
+            const isDecimal = delta % 1 !== 0;
+            deltaEl.textContent = (cur >= 0 ? '+' : '') + (isDecimal ? cur.toFixed(1) : Math.round(cur)) + ' Pkt';
             if (p < 1) requestAnimationFrame(tick);
           };
           requestAnimationFrame(tick);

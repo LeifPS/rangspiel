@@ -2758,7 +2758,7 @@ function saveState() {
   localStorage.setItem(key, JSON.stringify({state, nextId}));
   if(!enableOnlineSave) return; // Online-Speichern deaktiviert
   clearTimeout(_saveDebounceTimer);
-  _saveDebounceTimer = setTimeout(_flushToFirestore, 300);
+  _saveDebounceTimer = setTimeout(_flushToFirestore, 100);
 }
 
 function _cleanUndefinedValues(obj) {
@@ -2798,18 +2798,28 @@ async function _flushToFirestore() {
       firstRankAchievers:  state.firstRankAchievers || {},
       currentRoundPIds:    state.currentRoundPIds  || null,
     });
-    
+
     const data = {
       state: cleanedState,
       nextId,
       lastWrittenBy:   SESSION_ID,
       timestamp:       firebase.firestore.FieldValue.serverTimestamp()
     };
-    await db.collection(FIRESTORE_COLLECTION).doc(FIRESTORE_DOC).set(data);
+
+    const startTime = performance.now();
+    await Promise.race([
+      db.collection(FIRESTORE_COLLECTION).doc(FIRESTORE_DOC).set(data),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Save timeout after 8s')), 8000))
+    ]);
+    const duration = performance.now() - startTime;
+    console.log(`Firestore save completed in ${duration.toFixed(0)}ms`);
     showSyncIndicator('saved');
   } catch(e) {
     console.error('Firestore Save Error:', e);
     showSyncIndicator('error');
+    if(e.message === 'Save timeout after 8s') {
+      showToast('⏱️ Speichern zu langsam - Netzwerk prüfen');
+    }
   }
 }
 
