@@ -2614,6 +2614,7 @@
   </div>
 </div>
 
+
 <script>
 /* ================================================================
    GLOBALE ZUSTANDSVARIABLEN
@@ -2621,7 +2622,8 @@
 let state = {
   players: [], round: 0, history: [],
   matchmakingOn: false, mmPhase: 'low',
-  keys: [], firstRankAchievers: {}, profileName: null
+  keys: [], firstRankAchievers: {}, profileName: null,
+  roundActive: false, uiSlots: [], uiActivePIds: []
 };
 let nextId        = 1;
 let uiSlots       = [];
@@ -2999,7 +3001,7 @@ function createProfile() {
 function switchProfile(pid) {
   if(!requirePerm(3)) return;
   localStorage.setItem(ACTIVE_PROFILE_KEY, pid);
-  state = {players:[],round:0,history:[],matchmakingOn:false,mmPhase:'low',keys:[]};
+  state = {players:[],round:0,history:[],matchmakingOn:false,mmPhase:'low',keys:[],roundActive:false,uiSlots:[],uiActivePIds:[]};
   nextId = 1;
   uiSlots = []; uiActivePIds = []; uiSelectedSlot = null;
   activeSpecialRound = null;
@@ -3434,17 +3436,20 @@ function submitRound(){
   
   // Reset UI slots nach Rundenabschluss
   uiActivePIds=[];
+  state.uiActivePIds = [];
   uiSlots=[];
+  state.uiSlots = [];
   uiSelectedSlot=null;
   state.currentRoundPIds=null;
-  
+  state.roundActive = false;
+
   renderAll();
   for(const r of log.results){
     if(r.delta>0){animateCard(r.playerId,'up');showDelta(r.playerId,r.delta)}
     else if(r.delta<0){animateCard(r.playerId,'down');showDelta(r.playerId,r.delta)}
   }
   showToast(`Runde ${state.round} abgeschlossen!`);
-  
+
   // Rank-Up-Effekte verzögern - warten bis winnerBanner Animation abgeschlossen ist (2.5s)
   setTimeout(() => {
     for(const r of log.results){
@@ -3975,11 +3980,19 @@ function renderRoundForm(){
   const oldKey=uiActivePIds.slice().sort().join(',');
   if(newKey!==oldKey){
     uiActivePIds=[...activePIds];
+    state.uiActivePIds = [...uiActivePIds];
     uiSlots=new Array(n).fill(null);
+    state.uiSlots = [...uiSlots];
     uiSelectedSlot=null;
   }
   // Sicherstellen korrekte Länge
-  if(uiSlots.length!==n){uiSlots=new Array(n).fill(null);uiSelectedSlot=null;}
+  if(uiSlots.length!==n){uiSlots=new Array(n).fill(null);state.uiSlots = [...uiSlots];uiSelectedSlot=null;}
+
+  // Runde automatisch als aktiv markieren (kein manueller Start mehr nötig)
+  if(!state.roundActive){
+    state.roundActive=true;
+    saveState();
+  }
 
   renderPickerUI(active);
 }
@@ -4080,7 +4093,7 @@ function renderPickerUI(active){
 function slotClick(i){
   if(uiSlots[i]!==null){
     // Slot belegt: Spieler zurücksetzen, Slot aktivieren
-    uiSlots[i]=null;uiSelectedSlot=i;
+    uiSlots[i]=null;state.uiSlots = [...uiSlots];uiSelectedSlot=i;
   }else{
     uiSelectedSlot=uiSelectedSlot===i?null:i;
   }
@@ -4113,13 +4126,14 @@ function pickerClick(pid){
       }
     }
   }
+  state.uiSlots = [...uiSlots];
   saveState();
   renderPickerUI(uiActivePIds.map(id=>state.players.find(p=>p.id===id)).filter(Boolean));
 }
 
 function clearSlot(i,e){
   e.stopPropagation();
-  uiSlots[i]=null;uiSelectedSlot=i;
+  uiSlots[i]=null;state.uiSlots = [...uiSlots];uiSelectedSlot=i;
   saveState();
   renderPickerUI(uiActivePIds.map(id=>state.players.find(p=>p.id===id)).filter(Boolean));
 }
@@ -7919,7 +7933,8 @@ async function replayRound(roundData) {
     round: roundData.round,
     results: roundData.results || [],
     mmPhase: roundData.mmPhase,
-    actor: roundData.actor
+    actor: roundData.actor,
+    timestamp: Date.now()
   });
   
   // Achievements prüfen (automatisch)

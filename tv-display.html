@@ -56,6 +56,12 @@
     .rank-item{display:flex;align-items:center;padding:14px 16px;margin-bottom:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);transition:var(--transition);animation:fadeIn 0.3s ease;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
     .rank-item:hover{border-color:rgba(232,184,75,.5);transform:translateX(4px);box-shadow:0 4px 16px rgba(232,184,75,.15)}
     .rank-number{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;color:var(--accent);width:40px;text-align:center}
+    .rank-next-rank{width:100px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);margin-left:auto;transition:var(--transition);box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+    .rank-next-rank:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.25)}
+    .rank-next-rank.rank-max{border-color:var(--border);background:var(--bg3)}
+    .rank-next-rank-content{display:flex;flex-direction:column;align-items:center;gap:4px}
+    .rank-next-rank-name{font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+    .rank-points-needed{font-size:1rem;font-weight:700;font-family:'Rajdhani',sans-serif}
     .rank-between{padding:10px 14px;margin:10px 0;background:linear-gradient(135deg,rgba(232,184,75,0.08) 0%,rgba(232,184,75,0.02) 100%);border:1px solid rgba(232,184,75,0.2);border-radius:var(--radius);animation:fadeIn 0.4s cubic-bezier(0.4,0,0.2,1);position:relative;overflow:hidden}
     .rank-between::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.6}
     .rank-between-count{font-size:0.9rem;color:var(--accent);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;font-family:'Rajdhani',sans-serif;letter-spacing:0.5px;text-transform:uppercase}
@@ -139,6 +145,8 @@
     .ldb-bar-wrap{flex:1;height:16px;background:var(--bg2);border-radius:3px;overflow:hidden}
     .ldb-bar{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width 0.9s cubic-bezier(0.4,0,0.2,1)}
     .ldb-pts{width:38px;font-size:0.78rem;font-weight:700;color:var(--accent);flex-shrink:0;text-align:right}
+    .ldb-next-rank{width:75px;font-size:0.68rem;font-weight:600;color:var(--text3);flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+    .ldb-points-needed{font-size:0.62rem;color:var(--accent);font-weight:700}
 
     /* SLIDE: LETZTE RUNDE */
     .lr-row{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:7px;flex-shrink:0}
@@ -233,23 +241,44 @@
     @keyframes roundEndIn{0%{opacity:0;transform:translateY(60px) scale(0.95)}100%{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes roundEndOut{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.04)}}
     @keyframes rowReveal{0%{opacity:0;transform:translateX(-20px)}100%{opacity:1;transform:translateX(0)}}
-    .round-end-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.82);display:flex;align-items:center;justify-content:center;pointer-events:none}
-    .round-end-card{background:linear-gradient(160deg,#1a1a2e,#12121c);border:1px solid rgba(232,184,75,0.3);border-radius:20px;padding:36px 48px;min-width:420px;max-width:640px;width:90%;box-shadow:0 0 80px rgba(0,0,0,0.6),0 0 30px rgba(232,184,75,0.1);animation:roundEndIn 0.5s cubic-bezier(0.34,1.4,0.64,1) forwards}
+    @keyframes shineSwipe{0%{transform:translateX(-120%)}100%{transform:translateX(220%)}}
+    @keyframes winnerPulse{0%,100%{box-shadow:0 0 24px rgba(241,196,15,0.25),inset 0 1px 0 rgba(255,255,255,0.08)}50%{box-shadow:0 0 40px rgba(241,196,15,0.45),inset 0 1px 0 rgba(255,255,255,0.12)}}
+    .round-end-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.82);display:flex;align-items:center;justify-content:center;pointer-events:none;backdrop-filter:blur(4px)}
+    .round-end-card{background:linear-gradient(160deg,#1a1a2e,#12121c);border:1px solid rgba(232,184,75,0.3);border-radius:20px;padding:36px 48px;min-width:420px;max-width:min(860px,82vw);width:90%;box-shadow:0 0 80px rgba(0,0,0,0.6),0 0 30px rgba(232,184,75,0.1);animation:roundEndIn 0.5s cubic-bezier(0.34,1.4,0.64,1) forwards}
     .round-end-card.out{animation:roundEndOut 0.6s ease forwards}
     .round-end-title{font-family:'Rajdhani',sans-serif;font-size:1rem;letter-spacing:5px;text-transform:uppercase;color:var(--accent);opacity:0.7;margin-bottom:6px;text-align:center}
     .round-end-round{font-family:'Rajdhani',sans-serif;font-size:3rem;font-weight:800;letter-spacing:3px;color:#fff;text-align:center;margin-bottom:28px;text-shadow:0 0 30px rgba(232,184,75,0.4)}
     .round-end-row{display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:10px;margin-bottom:8px;opacity:0;animation:rowReveal 0.4s ease forwards}
-    .round-end-row.p1{background:rgba(241,196,15,0.12);border:1px solid rgba(241,196,15,0.25)}
+    .round-end-row.p1{position:relative;overflow:hidden;padding:18px 22px;background:linear-gradient(135deg,rgba(241,196,15,0.18),rgba(241,196,15,0.08));border:1px solid rgba(241,196,15,0.45);animation:rowReveal 0.4s ease forwards,winnerPulse 2.5s ease 0.6s infinite}
+    .round-end-row.p1::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,0.12) 50%,transparent 65%);transform:translateX(-120%);animation:shineSwipe 2.2s ease 0.9s infinite}
     .round-end-row.p2{background:rgba(149,165,166,0.08);border:1px solid rgba(149,165,166,0.2)}
     .round-end-row.p3{background:rgba(205,127,50,0.08);border:1px solid rgba(205,127,50,0.2)}
     .round-end-row.pn{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07)}
     .re-medal{font-size:1.6rem;width:36px;text-align:center;flex-shrink:0}
+    .round-end-row.p1 .re-medal{font-size:2.4rem;width:44px}
     .re-place{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text3);width:28px;flex-shrink:0}
     .re-name{flex:1;font-size:1.1rem;font-weight:600;color:var(--text)}
+    .round-end-row.p1 .re-name{font-size:1.6rem;font-weight:700;color:#fff;text-shadow:0 0 16px rgba(241,196,15,0.5)}
     .re-delta{font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;flex-shrink:0}
+    .round-end-row.p1 .re-delta{font-size:1.7rem}
     .re-delta.pos{color:#2ecc71}
     .re-delta.neg{color:#e74c3c}
     .re-delta.zero{color:var(--text3)}
+    /* STREAK SLIDE BARS */
+    .sk-name-col{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0}
+    .sk-bar-wrap{height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden}
+    .sk-bar{height:100%;border-radius:3px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
+    /* WIN PROB PANEL */
+    #winProbs{flex-shrink:0;padding:0 2px 4px}
+    .wp-label{font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);opacity:0.65;margin-bottom:5px}
+    .wp-empty{font-size:0.72rem;color:var(--text3);opacity:0.5;padding:2px 0}
+    #winProbs .wp-rows{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px}
+    .wp-row{display:flex;flex-direction:column;gap:2px}
+    .wp-row-top{display:flex;align-items:center;justify-content:space-between;gap:4px}
+    .wp-name{font-size:0.72rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+    .wp-pct{font-family:'Rajdhani',sans-serif;font-size:0.72rem;font-weight:700;color:var(--accent);flex-shrink:0}
+    .wp-bar-wrap{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+    .wp-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;width:0;transition:width 0.9s cubic-bezier(0.4,0,0.2,1)}
 
     /* ANIMATIONS */
     @keyframes fadeIn{0%{opacity:0;transform:translateY(10px)}30%{opacity:0.5}100%{opacity:1;transform:translateY(0)}}
@@ -477,19 +506,19 @@
     }
     @keyframes globalRankUpUltima{
       0%{opacity:0;transform:translate(-50%,-50%) scale(0) rotate(0deg);filter:hue-rotate(0deg) brightness(0) saturate(0)}
-      4%{opacity:1;transform:translate(-50%,-50%) scale(6) rotate(900deg);filter:hue-rotate(180deg) brightness(20) saturate(0)}
-      12%{transform:translate(-50%,-50%) scale(0.15) rotate(-540deg);filter:hue-rotate(360deg) brightness(6) saturate(4)}
-      22%{transform:translate(-50%,-50%) scale(4) rotate(360deg);filter:hue-rotate(540deg) brightness(3.5) saturate(3)}
-      33%{transform:translate(-50%,-50%) scale(0.5) rotate(-180deg);filter:hue-rotate(720deg) brightness(2.5) saturate(2)}
-      44%{transform:translate(-50%,-50%) scale(2.2) rotate(90deg);filter:hue-rotate(270deg) brightness(2) saturate(1.5)}
-      54%{transform:translate(-50%,-50%) scale(0.78) rotate(-30deg);filter:hue-rotate(180deg) brightness(1.7)}
-      63%{transform:translate(-50%,-50%) scale(1.5) rotate(12deg);filter:hue-rotate(90deg) brightness(1.4)}
-      72%{transform:translate(-50%,-50%) scale(0.9) rotate(-4deg);filter:hue-rotate(30deg) brightness(1.2)}
-      80%{transform:translate(-50%,-50%) scale(1.12) rotate(1.5deg)}
-      88%{transform:translate(-50%,-50%) scale(0.97) rotate(-0.3deg)}
-      94%{opacity:1;transform:translate(-50%,-50%) scale(1.02) rotate(0deg)}
+      5%{opacity:1;transform:translate(-50%,-50%) scale(1.5) rotate(180deg);filter:hue-rotate(90deg) brightness(1.5) saturate(0.5)}
+      15%{transform:translate(-50%,-50%) scale(1.3) rotate(-90deg);filter:hue-rotate(180deg) brightness(1.3) saturate(1.5)}
+      25%{transform:translate(-50%,-50%) scale(1.4) rotate(60deg);filter:hue-rotate(270deg) brightness(1.2) saturate(1.2)}
+      35%{transform:translate(-50%,-50%) scale(1.2) rotate(-30deg);filter:hue-rotate(180deg) brightness(1.15) saturate(1)}
+      45%{transform:translate(-50%,-50%) scale(1.3) rotate(15deg);filter:hue-rotate(90deg) brightness(1.1) saturate(0.8)}
+      55%{transform:translate(-50%,-50%) scale(1.15) rotate(-8deg);filter:hue-rotate(45deg) brightness(1.05)}
+      65%{transform:translate(-50%,-50%) scale(1.25) rotate(4deg);filter:hue-rotate(22deg) brightness(1.02)}
+      75%{transform:translate(-50%,-50%) scale(1.1) rotate(-2deg);filter:hue-rotate(11deg) brightness(1)}
+      85%{transform:translate(-50%,-50%) scale(1.18) rotate(1deg)}
+      92%{transform:translate(-50%,-50%) scale(1.05) rotate(-0.5deg)}
+      96%{opacity:1;transform:translate(-50%,-50%) scale(1.02) rotate(0deg)}
       98%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
-      100%{opacity:0;transform:translate(-50%,-1200%) scale(0) rotate(720deg);filter:hue-rotate(720deg) brightness(15) saturate(0)}
+      100%{opacity:0;transform:translate(-50%,-200%) scale(0.8) rotate(45deg);filter:hue-rotate(90deg) brightness(1.5) saturate(0)}
     }
     
     /* RANK SYMBOLE - Rounded Design */
@@ -704,14 +733,14 @@
       100%{box-shadow:0 0 40px rgba(255,69,0,0.95),0 0 80px rgba(255,100,0,0.6),0 0 120px rgba(255,50,0,0.4),inset 0 0 20px rgba(255,80,0,0.7);transform:scale(1);filter:brightness(1.2)}
     }
     @keyframes rankGlowUltima{
-      0%{box-shadow:0 0 45px rgba(255,215,0,0.95),0 0 90px rgba(255,255,200,0.6),0 0 140px rgba(255,200,0,0.4),inset 0 0 22px rgba(255,240,150,0.8);transform:scale(1);filter:brightness(1.3)}
-      12%{box-shadow:0 0 90px rgba(255,255,200,1),0 0 170px rgba(255,240,100,0.85),0 0 260px rgba(255,200,0,0.5),inset 0 0 45px rgba(255,255,255,1);transform:scale(1.2);filter:brightness(2.0) saturate(0.4)}
-      25%{box-shadow:0 0 55px rgba(255,220,180,0.9),0 0 110px rgba(255,255,150,0.62),inset 0 0 28px rgba(255,250,200,0.75);transform:scale(1.08);filter:brightness(1.4)}
-      40%{box-shadow:0 0 115px rgba(255,255,255,1),0 0 220px rgba(255,255,255,0.95),0 0 340px rgba(255,240,150,0.5),inset 0 0 65px rgba(255,255,255,1);transform:scale(1.28);filter:brightness(2.5) saturate(0.3)}
-      55%{box-shadow:0 0 65px rgba(255,240,220,0.9),0 0 125px rgba(255,255,200,0.65),inset 0 0 32px rgba(255,250,230,0.78);transform:scale(1.12);filter:brightness(1.6)}
-      70%{box-shadow:0 0 105px rgba(255,255,255,1),0 0 200px rgba(255,255,220,0.9),0 0 310px rgba(255,230,100,0.45),inset 0 0 55px rgba(255,255,255,1);transform:scale(1.25);filter:brightness(2.3) saturate(0.35)}
-      85%{box-shadow:0 0 80px rgba(255,255,200,0.95),0 0 155px rgba(255,255,150,0.72),inset 0 0 40px rgba(255,255,255,0.85);transform:scale(1.18);filter:brightness(1.9) saturate(0.4)}
-      100%{box-shadow:0 0 45px rgba(255,215,0,0.95),0 0 90px rgba(255,255,200,0.6),0 0 140px rgba(255,200,0,0.4),inset 0 0 22px rgba(255,240,150,0.8);transform:scale(1);filter:brightness(1.3)}
+      0%{box-shadow:0 0 60px rgba(255,215,0,0.95),0 0 120px rgba(255,255,200,0.7),0 0 180px rgba(255,200,0,0.5),0 0 240px rgba(255,180,0,0.3),inset 0 0 30px rgba(255,240,150,0.9);transform:scale(1);filter:brightness(1.4)}
+      15%{box-shadow:0 0 120px rgba(255,255,200,1),0 0 200px rgba(255,240,100,0.9),0 0 300px rgba(255,200,0,0.6),0 0 400px rgba(255,180,0,0.4),inset 0 0 60px rgba(255,255,255,1);transform:scale(1.25);filter:brightness(2.2) saturate(0.5)}
+      30%{box-shadow:0 0 80px rgba(255,220,180,0.95),0 0 140px rgba(255,255,150,0.75),0 0 200px rgba(255,200,0,0.55),inset 0 0 40px rgba(255,250,200,0.85);transform:scale(1.12);filter:brightness(1.6)}
+      45%{box-shadow:0 0 150px rgba(255,255,255,1),0 0 280px rgba(255,255,255,0.98),0 0 400px rgba(255,240,150,0.6),0 0 520px rgba(255,220,100,0.4),inset 0 0 80px rgba(255,255,255,1);transform:scale(1.35);filter:brightness(2.8) saturate(0.4)}
+      60%{box-shadow:0 0 90px rgba(255,240,220,0.95),0 0 160px rgba(255,255,200,0.75),0 0 230px rgba(255,200,0,0.5),inset 0 0 45px rgba(255,250,230,0.85);transform:scale(1.18);filter:brightness(1.8)}
+      75%{box-shadow:0 0 130px rgba(255,255,255,1),0 0 250px rgba(255,255,220,0.95),0 0 370px rgba(255,230,100,0.55),0 0 480px rgba(255,200,80,0.35),inset 0 0 70px rgba(255,255,255,1);transform:scale(1.3);filter:brightness(2.5) saturate(0.45)}
+      90%{box-shadow:0 0 100px rgba(255,255,200,0.98),0 0 180px rgba(255,255,150,0.8),0 0 260px rgba(255,200,0,0.5),inset 0 0 50px rgba(255,255,255,0.9);transform:scale(1.22);filter:brightness(2.0) saturate(0.5)}
+      100%{box-shadow:0 0 60px rgba(255,215,0,0.95),0 0 120px rgba(255,255,200,0.7),0 0 180px rgba(255,200,0,0.5),0 0 240px rgba(255,180,0,0.3),inset 0 0 30px rgba(255,240,150,0.9);transform:scale(1);filter:brightness(1.4)}
     }
     
     /* LOADING & ERROR */
@@ -745,17 +774,6 @@
     .idle-fact{font-size:1.5rem;color:var(--text);line-height:1.6;margin-top:30px;padding:30px;background:rgba(232,184,75,0.05);border-radius:16px;border:1px solid rgba(232,184,75,0.15)}
     .idle-progress{position:absolute;bottom:0;left:0;height:4px;background:linear-gradient(90deg,var(--accent),rgba(232,184,75,0.5));width:0%;transition:width 8s linear}
     
-    /* WIN PROBABILITY PANEL */
-    #winProbs{flex-shrink:0;padding:0 2px 6px 2px}
-    #winProbs{flex-shrink:0}
-    .wp-label{font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);opacity:0.65;margin-bottom:4px}
-    #winProbs .wp-rows{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
-    .wp-row{display:flex;align-items:center;gap:4px}
-    .wp-name{font-size:0.78rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .wp-bar-wrap{flex:1;height:14px;background:var(--bg3);border-radius:3px;overflow:hidden}
-    .wp-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;width:0;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
-    .wp-pct{width:38px;font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;color:var(--accent);flex-shrink:0;text-align:right}
-    .wp-empty{font-size:0.72rem;color:var(--text3);opacity:0.5;padding:2px 0}
     .wp-divider{height:1px;background:var(--border);margin:6px 0;flex-shrink:0}
     
     /* MATCHMAKING OVERLAY */
@@ -870,6 +888,10 @@
     let activeRankUpNotifications = 0;
     let lastShownRound = -1;
     let infographicRenderTimeout = null;
+    let renderDebounceTimer = null;
+    let lastRanklistHTML = '';
+    let lastMatchmakingHTML = '';
+    let lastWinProbsHTML = '';
     let isPopupShowing = false;
     let badgeToastTimer = null;
     let idleModeTimer = null;
@@ -877,7 +899,7 @@
     let idleSlideIndex = 0;
     let idleSlideInterval = null;
     let lastActivityTime = Date.now();
-    const IDLE_TIMEOUT = 60000; // 60 Sekunden ohne Aktivität
+    const IDLE_TIMEOUT = 300000; // 5 Minuten ohne Aktivität
     const IDLE_SLIDE_DURATION = 8000; // 8 Sekunden pro Slide
     const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
@@ -900,7 +922,10 @@
       idleModeActive = true;
       document.getElementById('app').style.display = 'none';
       document.getElementById('idleMode').style.display = 'flex';
-      document.getElementById('matchmakingOverlay').style.display = 'block';
+      // Matchmaking-Overlay nur anzeigen, wenn Matchmaking aktiv ist
+      if(state.matchmakingOn) {
+        document.getElementById('matchmakingOverlay').style.display = 'block';
+      }
       idleSlideIndex = 0;
       renderIdleSlide();
       startIdleSlideRotation();
@@ -997,7 +1022,10 @@
       // Spieler-Statistiken für die letzte Woche berechnen
       const playerStats = {};
       history.forEach(log => {
-        if(log.timestamp && log.timestamp > oneWeekAgo && log.results){
+        // Wenn timestamp vorhanden, prüfe ob innerhalb der letzten Woche
+        // Wenn kein timestamp vorhanden, nimm alle Runden (Fallback für ältere Daten)
+        const withinWeek = log.timestamp ? (log.timestamp > oneWeekAgo) : true;
+        if(withinWeek && log.results){
           log.results.forEach(result => {
             if(!playerStats[result.playerId]){
               playerStats[result.playerId] = {wins: 0, totalDelta: 0, name: result.name};
@@ -1017,7 +1045,7 @@
           <div class="idle-slide">
             <div class="idle-progress"></div>
             <div class="idle-title">🏆 Gewinner der Woche</div>
-            <div class="idle-subtitle">Noch keine Runden in dieser Woche gespielt</div>
+            <div class="idle-subtitle">Noch keine Runden gespielt</div>
           </div>
         `;
       }
@@ -1404,14 +1432,14 @@
         },
         'Ultima':{
           bg:'linear-gradient(135deg,#ffd700,#ffffff,#ff00ff,#00ffff,#ffd700)',color:'#000',
-          fontSize:'4rem',padding:'60px 70px',borderRadius:'70px',
-          animation:'globalRankUpUltima',duration:11,
-          shadow:'0 64px 260px rgba(255,215,0,1),0 0 650px rgba(255,255,255,0.85),0 0 450px rgba(255,0,220,0.55),0 0 350px rgba(0,200,255,0.45)',
-          border:'5px solid rgba(255,255,255,1)',
-          particles:'ultima',particleCount:110,
-          flash:'radial-gradient(circle,rgba(255,255,255,1),transparent 55%)',flashDur:1.3,
-          vignette:'radial-gradient(ellipse at center,rgba(255,215,0,0.18),rgba(255,0,200,0.32) 55%,rgba(0,200,255,0.22) 100%)',
-          extraWave:6,shake:1.3,
+          fontSize:'5rem',padding:'70px 80px',borderRadius:'80px',
+          animation:'globalRankUpUltima',duration:4,
+          shadow:'0 80px 300px rgba(255,215,0,1),0 0 800px rgba(255,255,255,0.9),0 0 600px rgba(255,0,220,0.6),0 0 500px rgba(0,200,255,0.5),0 0 400px rgba(255,255,0,0.4)',
+          border:'6px solid rgba(255,255,255,1)',
+          particles:'ultima',particleCount:200,
+          flash:'radial-gradient(circle,rgba(255,255,255,1),transparent 50%)',flashDur:1.5,
+          vignette:'radial-gradient(ellipse at center,rgba(255,215,0,0.25),rgba(255,0,200,0.35) 50%,rgba(0,200,255,0.25) 100%)',
+          extraWave:8,shake:1.5,
         },
       };
       
@@ -1618,21 +1646,25 @@
       const container = document.getElementById('winProbs');
       if (!container) return;
 
-      // Use active players (p.active === true); fall back to currentRoundPIds if set
       const allPlayers = state.players || [];
-      let activePlayers = allPlayers.filter(p => p.active === true);
-      if (activePlayers.length === 0 && Array.isArray(state.currentRoundPIds) && state.currentRoundPIds.length > 0) {
-        activePlayers = state.currentRoundPIds.map(id => allPlayers.find(p => p.id === id)).filter(Boolean);
+      const currentGroup = getMmGroup();
+      let activePlayers;
+      if (currentGroup && currentGroup.length > 0) {
+        activePlayers = currentGroup.map(id => allPlayers.find(p => p.id === id)).filter(Boolean);
+      } else {
+        activePlayers = allPlayers.filter(p => p.active === true);
       }
 
       if (activePlayers.length === 0) {
-        container.innerHTML = '<div class="wp-label">GEWINNCHANCEN</div><div class="wp-empty">Keine aktiven Spieler</div>';
+        container.innerHTML = '<div class="wp-label">GEWINNCHANCEN</div><div class="wp-empty">Keine Spieler in dieser Liga</div>';
         return;
       }
 
-      const history = state.history || [];
+      const history = (state.history || []).filter(r => !r.skipped);
+      const n = activePlayers.length;
+      const MAX_ROUNDS = 15;
 
-      // Group playing accounts by Spieler (key), fall back to account name if unassigned
+      // Spieler zusammenfassen (ein Spieler kann mehrere Accounts haben)
       const spielerMap = {};
       activePlayers.forEach(acc => {
         const key = acc.key || acc.name;
@@ -1640,47 +1672,78 @@
         spielerMap[key].accounts.push(acc);
       });
 
-      // For each Spieler: sum ALL their accounts' points (not just the playing one)
       Object.keys(spielerMap).forEach(key => {
-        const allAccs = (state.players || []).filter(p => (p.key || p.name) === key);
-        spielerMap[key].totalPoints = allAccs.reduce((s, p) => s + (p.points || 0), 0);
-        spielerMap[key].maxStreak   = Math.max(...spielerMap[key].accounts.map(a => a.streak || 0), 0);
-
-        // Recent performance: average delta of last 5 rounds across all accounts of this Spieler
+        const allAccs = allPlayers.filter(p => (p.key || p.name) === key);
         const accNames = new Set(allAccs.map(a => a.name));
-        let deltaSum = 0, deltaCount = 0;
-        history.slice(0, 5).forEach(log => {
-          if (log.skipped) return;
-          (log.results || []).forEach(r => {
-            if (accNames.has(r.name)) { deltaSum += (r.delta || 0); deltaCount++; }
-          });
+        const maxStreak = Math.max(...spielerMap[key].accounts.map(a => a.streak || 0), 0);
+
+        // Aus der Rundenhistorie: Siege, Top-3, Platzierungen der letzten MAX_ROUNDS Runden
+        let wins = 0, top3 = 0, placementSum = 0, participated = 0;
+        history.slice(0, MAX_ROUNDS).forEach(log => {
+          const res = (log.results || []).find(r => accNames.has(r.name));
+          if (!res) return;
+          participated++;
+          if (res.place === 1) wins++;
+          if (res.place <= 3) top3++;
+          placementSum += res.place;
         });
-        spielerMap[key].recentPerf = deltaCount > 0 ? deltaSum / deltaCount : 0;
+
+        // Gewinn-Rate und Platzierungs-Score (normiert: 1.0 = immer Platz 1)
+        const winRate    = participated > 0 ? wins / participated       : 1 / n;
+        const top3Rate   = participated > 0 ? top3 / participated       : 3 / Math.max(n, 3);
+        const avgPlace   = participated > 0 ? placementSum / participated : (n + 1) / 2;
+        const placeScore = Math.max(0, 1 - (avgPlace - 1) / Math.max(n - 1, 1));
+
+        // Recency-Gewichtung: letzte 3 Runden stärker gewichten
+        let recentWins = 0, recentTotal = 0;
+        history.slice(0, 3).forEach(log => {
+          const res = (log.results || []).find(r => accNames.has(r.name));
+          if (!res) return;
+          recentTotal++;
+          if (res.place === 1) recentWins++;
+        });
+        const recentBoost = recentTotal > 0 ? (recentWins / recentTotal - winRate) * 0.3 : 0;
+
+        // Streak-Bonus (max +8%)
+        const streakBonus = Math.min(maxStreak * 0.016, 0.08);
+
+        // Kombinierter Score
+        spielerMap[key].rawScore = Math.max(0.01,
+          winRate    * 0.45 +
+          placeScore * 0.30 +
+          top3Rate   * 0.15 +
+          recentBoost +
+          streakBonus
+        );
+        spielerMap[key].participated = participated;
       });
 
-      // Score & percentages
-      const spieler = Object.values(spielerMap).map(s => ({
+      const spieler = Object.values(spielerMap).sort((a, b) => b.rawScore - a.rawScore);
+      const totalRaw = spieler.reduce((s, x) => s + x.rawScore, 0);
+      const withPct  = spieler.map(s => ({
         ...s,
-        score: s.totalPoints + s.maxStreak * 2 + s.recentPerf * 0.5
-      })).sort((a, b) => b.score - a.score);
-
-      const totalScore = spieler.reduce((s, x) => s + Math.max(0, x.score), 0);
-      const withPct = spieler.map(s => ({
-        ...s,
-        pct: totalScore > 0 ? Math.max(0, s.score) / totalScore * 100 : 100 / spieler.length
+        pct: totalRaw > 0 ? s.rawScore / totalRaw * 100 : 100 / spieler.length
       }));
+      const maxPct = withPct[0]?.pct || 1;
 
-      // Render
+      // Render mit Balken
       let html = '<div class="wp-label">GEWINNCHANCEN</div><div class="wp-rows">';
       withPct.forEach(s => {
-        html += `<div class="wp-row"><div class="wp-name" title="${esc(s.name)}">${esc(s.name)}</div><div class="wp-pct">${s.pct.toFixed(1)}%</div></div>`;
+        const barPct = Math.round(s.pct / maxPct * 100);
+        html += `<div class="wp-row">
+          <div class="wp-row-top"><div class="wp-name" title="${esc(s.name)}">${esc(s.name)}</div><div class="wp-pct">${s.pct.toFixed(1)}%</div></div>
+          <div class="wp-bar-wrap"><div class="wp-bar" style="width:0%" data-pct="${barPct}"></div></div>
+        </div>`;
       });
       html += '</div>';
-      container.innerHTML = html;
 
-      requestAnimationFrame(() => {
-        container.querySelectorAll('.wp-bar').forEach(b => { b.style.width = b.dataset.pct + '%'; });
-      });
+      if (html !== lastWinProbsHTML) {
+        lastWinProbsHTML = html;
+        container.innerHTML = html;
+        requestAnimationFrame(() => {
+          container.querySelectorAll('.wp-bar').forEach(b => { b.style.width = b.dataset.pct + '%'; });
+        });
+      }
     }
 
     function renderMatchmakingPhases() {
@@ -1724,24 +1787,23 @@
         }
       }).sort((a, b) => a.points - b.points);
       
-      matchmakingPhases.innerHTML = `
+      const newMMHTML = `
         <div class="matchmaking-phase">
           <div class="matchmaking-phase-header">Aktuell: ${currentPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
           <div class="matchmaking-phase-players">
-            ${currentPhasePlayers.map((p, i) => {
-              return `<div class="matchmaking-phase-player"><span class="mm-num">${i + 1}</span> ${p.name}</div>`;
-            }).join('')}
+            ${currentPhasePlayers.map((p, i) => `<div class="matchmaking-phase-player"><span class="mm-num">${i + 1}</span> ${p.name}</div>`).join('')}
           </div>
         </div>
         <div class="matchmaking-phase">
           <div class="matchmaking-phase-header">Nächste: ${nextPhase === 'low' ? 'Niedrige Liga' : 'Hohe Liga'}</div>
           <div class="matchmaking-phase-players">
-            ${nextPhasePlayers.map((p, i) => {
-              return `<div class="matchmaking-phase-player"><span class="mm-num">${i + 1}</span> ${p.name}</div>`;
-            }).join('')}
+            ${nextPhasePlayers.map((p, i) => `<div class="matchmaking-phase-player"><span class="mm-num">${i + 1}</span> ${p.name}</div>`).join('')}
           </div>
-        </div>
-      `;
+        </div>`;
+      if (newMMHTML !== lastMatchmakingHTML) {
+        lastMatchmakingHTML = newMMHTML;
+        matchmakingPhases.innerHTML = newMMHTML;
+      }
     }
 
     function render() {
@@ -1773,108 +1835,75 @@
       // Win probabilities (always visible, per Spieler)
       renderWinProbs();
       
-      // Ranklist
+      // Ranklist — nur neu rendern wenn sich der Inhalt geändert hat
       const allPlayersSorted = [...state.players].sort((a, b) => b.points - a.points || a.id - b.id);
       const activePlayers = allPlayersSorted.filter(p => p.active !== false);
-      const inactivePlayers = allPlayersSorted.filter(p => p.active === false);
       const ranklist = document.getElementById('ranklist');
-      ranklist.innerHTML = '';
-      
-      // Show inactive players above the first active player
+
+      let newRanklistHTML = '';
+
+      // Inaktive Spieler über dem ersten aktiven
       if (activePlayers.length > 0) {
         const firstActiveRank = allPlayersSorted.findIndex(p => p.id === activePlayers[0].id);
         const playersAbove = allPlayersSorted.slice(0, firstActiveRank).filter(p => p.active === false);
         if (playersAbove.length > 0) {
-          const aboveItem = document.createElement('div');
-          aboveItem.className = 'rank-between';
-          const playerNames = playersAbove.map(p => p.name).join(', ');
-          aboveItem.innerHTML = `
-            <div class="rank-between-count">${playersAbove.length} Spieler darüber</div>
-            <div class="rank-between-names">(${playerNames})</div>
-          `;
-          ranklist.appendChild(aboveItem);
+          newRanklistHTML += `<div class="rank-between"><div class="rank-between-count">${playersAbove.length} Spieler darüber</div><div class="rank-between-names">(${playersAbove.map(p=>p.name).join(', ')})</div></div>`;
         }
       }
 
       activePlayers.forEach((player, index) => {
-        const absoluteRank = allPlayersSorted.findIndex(p => p.id === player.id) + 1;
-        // Dense ranking für gleiche Punkte - Spieler mit gleichen Punkten haben denselben Rang
         let displayRank = 1;
         for (let i = 0; i < allPlayersSorted.length; i++) {
           if (allPlayersSorted[i].id === player.id) {
-            // Finde den ersten Spieler mit denselben Punkten
             for (let j = 0; j < i; j++) {
               if (allPlayersSorted[j].points === player.points) {
                 displayRank = allPlayersSorted.findIndex(p => p.id === allPlayersSorted[j].id) + 1;
                 break;
               }
             }
-            if (displayRank === 1) {
-              displayRank = i + 1;
-            }
+            if (displayRank === 1) displayRank = i + 1;
             break;
           }
         }
         const rank = getRank(player.points);
         const maxAccounts = getMaxAccountsForSpieler(player.key);
         const accounts = state.players.filter(p => p.key === player.key).length;
-        
-        const item = document.createElement('div');
-        item.className = 'rank-item';
         const rankIconClass = 'rank-' + rank.icon.toLowerCase();
-        item.innerHTML = `
-          <div class="rank-number">${displayRank}.</div>
-          <div class="rl-icon-outer" style="border-color:${rank.color}">
-            <div class="rank-icon ${rankIconClass}"></div>
-          </div>
-          <div class="rank-info">
-            <div class="rank-name">
-              ${player.name}
-              <span class="rank-badge" style="background:${rank.color};color:${rank.color === '#0a0a0a' || rank.color.includes('gradient') ? '#fff' : '#000'}">${rank.name}</span>
-            </div>
-            <div>
-              <span class="rank-points">${player.points}</span>
-              <span class="rank-max">(${player.maxPoints || player.points || 0})</span>
-              <span class="rank-streak">🔥 ${player.streak || 0}</span>
-              <span class="rank-accounts">${accounts}/${maxAccounts}</span>
-            </div>
-          </div>
-        `;
-        ranklist.appendChild(item);
-        
-        // Inaktive Spieler zwischen aktiven Spielern anzeigen
+        const currentRankIdx = getRankIdx(player.points);
+        const nextRankIdx = currentRankIdx + 1;
+        let nextRankInfo = '';
+        if (nextRankIdx < RANKS.length) {
+          const nextRank = RANKS[nextRankIdx];
+          const pointsNeeded = nextRank.points - player.points;
+          const c = nextRank.color;
+          nextRankInfo = `<div class="rank-next-rank" style="border-color:${c};background:linear-gradient(135deg,${c}15,${c}05)"><div class="rank-next-rank-content"><div class="rank-next-rank-name" style="color:${c}">${nextRank.name}</div><div class="rank-points-needed" style="color:${c}">+${pointsNeeded}</div></div></div>`;
+        } else {
+          nextRankInfo = '<div class="rank-next-rank rank-max"><div class="rank-next-rank-name">Max</div></div>';
+        }
+        newRanklistHTML += `<div class="rank-item"><div class="rank-number">${displayRank}.</div><div class="rl-icon-outer" style="border-color:${rank.color}"><div class="rank-icon ${rankIconClass}"></div></div><div class="rank-info"><div class="rank-name">${player.name}<span class="rank-badge" style="background:${rank.color};color:${rank.color==='#0a0a0a'||rank.color.includes('gradient')?'#fff':'#000'}">${rank.name}</span></div><div><span class="rank-points">${player.points}</span><span class="rank-max">(${player.maxPoints||player.points||0})</span><span class="rank-streak">🔥 ${player.streak||0}</span><span class="rank-accounts">${accounts}/${maxAccounts}</span></div></div>${nextRankInfo}</div>`;
+
+        // Inaktive Spieler dazwischen
         const nextActivePlayer = activePlayers[index + 1];
         if (nextActivePlayer) {
-          const currentRank = allPlayersSorted.findIndex(p => p.id === player.id);
-          const nextRank = allPlayersSorted.findIndex(p => p.id === nextActivePlayer.id);
-          const playersBetween = allPlayersSorted.slice(currentRank + 1, nextRank).filter(p => p.active === false);
-          
-          if (playersBetween.length > 0) {
-            const betweenItem = document.createElement('div');
-            betweenItem.className = 'rank-between';
-            const playerNames = playersBetween.map(p => p.name).join(', ');
-            betweenItem.innerHTML = `
-              <div class="rank-between-count">${playersBetween.length} Spieler dazwischen</div>
-              <div class="rank-between-names">(${playerNames})</div>
-            `;
-            ranklist.appendChild(betweenItem);
+          const ci = allPlayersSorted.findIndex(p => p.id === player.id);
+          const ni = allPlayersSorted.findIndex(p => p.id === nextActivePlayer.id);
+          const between = allPlayersSorted.slice(ci + 1, ni).filter(p => p.active === false);
+          if (between.length > 0) {
+            newRanklistHTML += `<div class="rank-between"><div class="rank-between-count">${between.length} Spieler dazwischen</div><div class="rank-between-names">(${between.map(p=>p.name).join(', ')})</div></div>`;
           }
         } else {
-          // Last active player — show inactive players below
-          const lastActiveRank = allPlayersSorted.findIndex(p => p.id === player.id);
-          const playersBelowLast = allPlayersSorted.slice(lastActiveRank + 1).filter(p => p.active === false);
-          if (playersBelowLast.length > 0) {
-            const belowItem = document.createElement('div');
-            belowItem.className = 'rank-between';
-            const playerNames = playersBelowLast.map(p => p.name).join(', ');
-            belowItem.innerHTML = `
-              <div class="rank-between-count">${playersBelowLast.length} Spieler dadrunter</div>
-              <div class="rank-between-names">(${playerNames})</div>
-            `;
-            ranklist.appendChild(belowItem);
+          const li = allPlayersSorted.findIndex(p => p.id === player.id);
+          const below = allPlayersSorted.slice(li + 1).filter(p => p.active === false);
+          if (below.length > 0) {
+            newRanklistHTML += `<div class="rank-between"><div class="rank-between-count">${below.length} Spieler dadrunter</div><div class="rank-between-names">(${below.map(p=>p.name).join(', ')})</div></div>`;
           }
         }
       });
+
+      if (newRanklistHTML !== lastRanklistHTML) {
+        lastRanklistHTML = newRanklistHTML;
+        ranklist.innerHTML = newRanklistHTML;
+      }
       
       // Auto-scroll für Rangliste wenn zu viele Elemente (inklusive rank-between)
       const totalItems = ranklist ? ranklist.querySelectorAll('.rank-item, .rank-between').length : 0;
@@ -1937,13 +1966,13 @@
       const allSorted = [...state.players].sort((a, b) => b.points - a.points || a.id - b.id);
       const active = allSorted.filter(p => p.active !== false);
       const history = state.history || [];
-      const hasRound = Array.isArray(state.currentRoundPIds) && state.currentRoundPIds.length > 0;
+      const hasRound = state.roundActive && Array.isArray(state.currentRoundPIds) && state.currentRoundPIds.length > 0;
 
       // Build slide list dynamically — skip history-based slides when no history
       const slides = ['leaderboard', 'streaks'];
       if (history.length > 0) slides.push('last-round');
       slides.push('plac-dist');
-      if (history.length > 0) slides.push('delta', 'rang-bilanz', 'punkte-verlauf', 'heatmap');
+      if (history.length > 0) slides.push('delta', 'heatmap', 'rang-bilanz');
       if (hasRound) slides.push('active-round');
 
       const idx = currentInfographicIndex % slides.length;
@@ -1962,14 +1991,13 @@
       el.className = 'ig-slide';
 
       const LABELS = {
-        leaderboard: 'RANGLISTE',
+        leaderboard:  'RANGLISTE',
         'last-round': 'LETZTE RUNDE',
         streaks:      'STREAK-FEUER',
         'plac-dist':  'PLATZIERUNGEN',
         delta:        'Ø PUNKTE-DELTA',
-        'rang-bilanz':'RANG-BILANZ',
-        'punkte-verlauf': 'PUNKTEVERLAUF',
         heatmap:      'HEATMAP',
+        'rang-bilanz':'RANG-VERLAUF',
         'active-round':'AKTIVE RUNDE',
       };
       const TITLES = {
@@ -1978,9 +2006,8 @@
         streaks:      'Streak-Könige 🔥',
         'plac-dist':  'Platzierungsverteilung',
         delta:        'Ø Punkte pro Runde',
-        'rang-bilanz':'Rang Auf / Abstieg',
-        'punkte-verlauf': 'Kumulierter Punkteverlauf',
         heatmap:      'Platzierungs-Heatmap',
+        'rang-bilanz':'Rang-Entwicklung',
         'active-round':'Runde läuft gerade',
       };
 
@@ -2037,11 +2064,25 @@
         if (withStreak.length === 0) {
           body.innerHTML = '<div class="ig-empty">Noch keine aktiven Streaks</div>';
         } else {
-          withStreak.slice(0, 5).forEach(p => {
+          const maxStreak = withStreak[0].streak;
+          withStreak.slice(0, 6).forEach(p => {
+            const fires = p.streak >= 6 ? '🔥🔥🔥' : p.streak >= 3 ? '🔥🔥' : '🔥';
+            const barPct = Math.round(p.streak / maxStreak * 100);
+            const barColor = p.streak >= 6 ? '#ff3d3d' : p.streak >= 3 ? '#ff8c00' : '#e8b84b';
             const row = document.createElement('div');
             row.className = 'sk-row';
-            row.innerHTML = `<div class="sk-icon">🔥</div><div class="sk-name">${esc(p.name)}</div><div class="sk-num">${p.streak}<span class="sk-lbl">Wins</span></div>`;
+            row.innerHTML = `
+              <div class="sk-icon">${fires}</div>
+              <div class="sk-name-col">
+                <div class="sk-name">${esc(p.name)}</div>
+                <div class="sk-bar-wrap"><div class="sk-bar" style="width:0%;background:${barColor}" data-pct="${barPct}"></div></div>
+              </div>
+              <div class="sk-num">${p.streak}<span class="sk-lbl"> Wins</span></div>`;
             body.appendChild(row);
+          });
+          // Balken animieren
+          requestAnimationFrame(() => {
+            body.querySelectorAll('.sk-bar').forEach(b => { b.style.width = b.dataset.pct + '%'; });
           });
         }
       }
@@ -2282,19 +2323,30 @@
 
       // ── AKTIVE RUNDE ──────────────────────────────────────────
       else if (slide === 'active-round') {
-        const pIds = state.currentRoundPIds || [];
-        pIds.forEach((id, i) => {
-          const p = state.players.find(pl=>pl.id===id);
-          if (!p) return;
+        const slots = state.uiSlots || [];
+        const activePIds = state.uiActivePIds || [];
+        const activePlayers = activePIds.map(id => state.players.find(p => p.id === id)).filter(Boolean);
+
+        // Zeige alle Spieler der aktuellen Runde, markiere die bereits eingetragenen
+        activePlayers.forEach((p, i) => {
+          const slotIdx = slots.indexOf(p.id);
+          const isEliminated = slotIdx !== -1;
           const row = document.createElement('div');
           row.className = 'ar-row';
-          row.innerHTML = `<div class="ar-idx">${i+1}</div><div class="ar-name">${esc(p.name)}</div><div class="ar-pts">${p.points} Pkt</div>`;
+          if (isEliminated) {
+            row.style.background = 'rgba(232, 184, 75, 0.1)';
+            row.style.borderColor = 'rgba(232, 184, 75, 0.3)';
+          }
+          const rankLabel = isEliminated ? `#${slotIdx + 1}` : '-';
+          row.innerHTML = `<div class="ar-idx">${rankLabel}</div><div class="ar-name">${esc(p.name)}</div><div class="ar-pts">${p.points} Pkt</div>`;
           body.appendChild(row);
         });
+
         // Pulsing indicator at top
         const pulse = document.createElement('div');
         pulse.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:0.72rem;color:var(--accent);margin-bottom:4px;flex-shrink:0;order:-1';
-        pulse.innerHTML = '<div class="ar-pulse"></div>Live — Runde läuft';
+        const eliminatedCount = slots.filter(s => s !== null).length;
+        pulse.innerHTML = '<div class="ar-pulse"></div>Live — Runde läuft (' + eliminatedCount + '/' + activePlayers.length + ' eingetragen)';
         body.prepend(pulse);
       }
     }
@@ -2349,17 +2401,34 @@
         const row = document.createElement('div');
         const cls = r.place===1?'p1':r.place===2?'p2':r.place===3?'p3':'pn';
         row.className = `round-end-row ${cls}`;
-        row.style.animationDelay = (0.1 + i * 0.1) + 's';
+        const animDelay = 0.1 + i * 0.15;
+        row.style.animationDelay = animDelay + 's';
         const delta = r.delta || 0;
         const deltaClass = delta > 0 ? 'pos' : delta < 0 ? 'neg' : 'zero';
-        const deltaStr = delta > 0 ? '+' + delta : String(delta);
         row.innerHTML = `
           <div class="re-medal">${medals[r.place-1] || ''}</div>
           <div class="re-place">#${r.place}</div>
           <div class="re-name">${esc(r.name)}</div>
-          <div class="re-delta ${deltaClass}">${deltaStr} Pkt</div>
+          <div class="re-delta ${deltaClass}">0 Pkt</div>
         `;
         card.appendChild(row);
+
+        // Delta count-up — startet nachdem die Zeile eingeblendet ist
+        const countDelay = (animDelay + 0.45) * 1000;
+        setTimeout(() => {
+          const deltaEl = row.querySelector('.re-delta');
+          if (!deltaEl || delta === 0) { if(deltaEl) deltaEl.textContent = '0 Pkt'; return; }
+          const dur = 750;
+          const start = performance.now();
+          const tick = (now) => {
+            const p = Math.min((now - start) / dur, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            const cur = Math.round(eased * delta);
+            deltaEl.textContent = (cur >= 0 ? '+' : '') + cur + ' Pkt';
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }, countDelay);
       });
 
       overlay.appendChild(card);
@@ -2405,7 +2474,8 @@
               }
             }
             lastShownRound = newRound;
-            render();
+            if (renderDebounceTimer) clearTimeout(renderDebounceTimer);
+            renderDebounceTimer = setTimeout(() => render(), 120);
           } else {
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error').style.display = 'flex';
@@ -2432,6 +2502,119 @@
 
     loadState();
     startIdleMonitoring();
+
+    /* ================================================================
+       DEBUG PANEL — Shift+D zum Öffnen/Schließen
+       ================================================================ */
+    const DEBUG_RANKS = [
+      {name:'Unranked',     pts:0},
+      {name:'Bronze',       pts:1},
+      {name:'Silber',       pts:4},
+      {name:'Gold',         pts:7},
+      {name:'Rubin',        pts:10},
+      {name:'Smaragd',      pts:13},
+      {name:'Diamant',      pts:16},
+      {name:'Amethyst',     pts:19},
+      {name:'Saphir',       pts:22},
+      {name:'Platin',       pts:25},
+      {name:'Elite',        pts:28},
+      {name:'König',        pts:31},
+      {name:'Meister',      pts:34},
+      {name:'Champion',     pts:37},
+      {name:'Gott',         pts:40},
+      {name:'Titan',        pts:46},
+      {name:'Olymp',        pts:52},
+      {name:'Kosmos',       pts:58},
+      {name:'Galaxis',      pts:64},
+      {name:'Universum',    pts:70},
+      {name:'Ewigkeit',     pts:76},
+      {name:'Unendlichkeit',pts:82},
+      {name:'Transzendenz', pts:88},
+      {name:'Apex',         pts:94},
+      {name:'Ultima',       pts:100},
+      {name:'Gott P1',      pts:110},
+      {name:'Gott P2',      pts:120},
+      {name:'Gott P3',      pts:130},
+      {name:'Gott P4',      pts:140},
+    ];
+
+    function debugRankUp(rankName, pts) {
+      const TEMP_ID = -9001;
+      state.players = (state.players||[]).filter(p => p.id !== TEMP_ID);
+      state.players.push({ id:TEMP_ID, name:'['+rankName+']', points:pts, active:true, maxPoints:pts });
+      animateRankUp(TEMP_ID);
+      setTimeout(() => { state.players = state.players.filter(p => p.id !== TEMP_ID); }, 15000);
+    }
+
+    // Auch per Konsole aufrufbar: testRankUp('Gold')
+    window.testRankUp = (rankName) => {
+      const r = DEBUG_RANKS.find(x => x.name.toLowerCase() === rankName.toLowerCase());
+      if (!r) { console.warn('Rang nicht gefunden. Verfügbar:', DEBUG_RANKS.map(x=>x.name).join(', ')); return; }
+      debugRankUp(r.name, r.pts);
+    };
+
+    function buildDebugPanel() {
+      if (document.getElementById('debugPanel')) return;
+      const panel = document.createElement('div');
+      panel.id = 'debugPanel';
+      panel.style.cssText = `
+        position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+        background:#0d0f1a;border:1px solid rgba(232,184,75,0.4);border-radius:16px;
+        padding:20px 24px;z-index:9999;display:none;
+        box-shadow:0 0 60px rgba(0,0,0,0.8);min-width:360px;max-width:90vw;
+        font-family:'Barlow Condensed',sans-serif;
+      `;
+      const header = document.createElement('div');
+      header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:14px';
+      header.innerHTML = `
+        <div style="font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#e8b84b">⚙ RANKUP DEBUG</div>
+        <button onclick="document.getElementById('debugPanel').style.display='none'" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#7c839f;font-size:0.85rem;padding:3px 10px;cursor:pointer">✕ Schließen</button>
+      `;
+      panel.appendChild(header);
+
+      const hint = document.createElement('div');
+      hint.style.cssText = 'font-size:0.68rem;color:#4a5070;margin-bottom:12px;letter-spacing:0.5px';
+      hint.textContent = 'Shift+D zum Öffnen/Schließen · window.testRankUp("Gold") in Konsole';
+      panel.appendChild(hint);
+
+      const grid = document.createElement('div');
+      grid.style.cssText = 'display:grid;grid-template-columns:repeat(4,1fr);gap:6px';
+
+      DEBUG_RANKS.forEach(r => {
+        const rank = getRank(r.pts);
+        const rawColor = rank.color.includes('gradient') ? '#9b59b6' : rank.color;
+        const btn = document.createElement('button');
+        btn.style.cssText = `
+          padding:7px 6px;border-radius:8px;cursor:pointer;font-size:0.72rem;font-weight:700;
+          letter-spacing:0.3px;border:1px solid ${rawColor}55;
+          background:${rawColor}18;color:${rawColor === '#0a0a0a' ? '#888' : rawColor};
+          transition:background 0.15s,transform 0.1s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+        `;
+        btn.textContent = r.name;
+        btn.title = `${r.name} (${r.pts} Pkt)`;
+        btn.onmouseenter = () => btn.style.background = rawColor + '35';
+        btn.onmouseleave = () => btn.style.background = rawColor + '18';
+        btn.onmousedown  = () => btn.style.transform = 'scale(0.94)';
+        btn.onmouseup    = () => btn.style.transform = 'scale(1)';
+        btn.onclick = () => debugRankUp(r.name, r.pts);
+        grid.appendChild(btn);
+      });
+
+      panel.appendChild(grid);
+      document.body.appendChild(panel);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.shiftKey && e.key === 'D') {
+        buildDebugPanel();
+        const p = document.getElementById('debugPanel');
+        p.style.display = p.style.display === 'none' ? 'block' : 'none';
+      }
+      if (e.key === 'Escape') {
+        const p = document.getElementById('debugPanel');
+        if (p) p.style.display = 'none';
+      }
+    });
   </script>
 </body>
 </html>
