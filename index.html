@@ -907,7 +907,7 @@
                     <div class="stat-label">Mondstaub</div>
                     <div class="stat-value">✨ <span id="mondstaub">0</span></div>
                 </div>
-                <button onclick="toggleDarkMode()" id="dark-mode-btn" style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)'">🌙 Dunkel</button>
+                <button onclick="openProfileModal()" id="profile-btn" style="background: linear-gradient(135deg, #7b1fa2 0%, #4a148c 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)'">👤 Profil</button>
                 <button onclick="addTestHour()" style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)'">⏩ +1h Test</button>
             </div>
         </header>
@@ -943,21 +943,9 @@
 
             <!-- Buildings & Upgrades -->
             <div class="section">
-                <div class="tab-container">
-                    <button class="tab-btn active" onclick="switchTab('buildings')" id="tab-buildings">🏗️ Gebäude</button>
-                    <button class="tab-btn" onclick="switchTab('upgrades')" id="tab-upgrades">⬆️ Verbesserungen</button>
-                </div>
-                
-                <div class="tab-content" id="tab-content-buildings">
-                    <div class="building-list" id="building-list">
-                        <div style="text-align: center; color: #666; padding: 20px;">Laden...</div>
-                    </div>
-                </div>
-                
-                <div class="tab-content" id="tab-content-upgrades" style="display: none;">
-                    <div class="upgrade-list" id="upgrade-list">
-                        <div style="text-align: center; color: #666; padding: 20px;">Laden...</div>
-                    </div>
+                <h2 class="section-title">🏗️ Gebäude & Verbesserungen</h2>
+                <div class="building-list" id="building-list">
+                    <div style="text-align: center; color: #666; padding: 20px;">Laden...</div>
                 </div>
             </div>
         </div>
@@ -1019,7 +1007,6 @@
             buildings: {
                 brunnen: false,
                 kompost: false,
-                scheune: false,
                 gewaechshaus: 0,
                 marktstand: false
             },
@@ -1044,34 +1031,44 @@
             salat: { name: 'Salat', emoji: '🥬', rarity: 'gewöhnlich', price: 2, growTime: 1, sellValue: 1, harvestType: 'multi' },
             blume: { name: 'Blume', emoji: '🌸', rarity: 'gewöhnlich', price: 2, growTime: 1, sellValue: 2, harvestType: 'multi' },
             erdbeere: { name: 'Erdbeere', emoji: '🍓', rarity: 'gewöhnlich', price: 3, growTime: 2, sellValue: 2, harvestType: 'multi' },
+            moosblatt: { name: 'Moosblatt', emoji: '🍀', rarity: 'gewöhnlich', price: 2, growTime: 1, sellValue: 3, harvestType: 'multi' },
             // Ungewöhnlich
             zwiebel: { name: 'Zwiebel', emoji: '🧅', rarity: 'ungewöhnlich', price: 3, growTime: 2, sellValue: 8, harvestType: 'single' },
             kuerbis: { name: 'Kürbis', emoji: '🎃', rarity: 'ungewöhnlich', price: 4, growTime: 4, sellValue: 12, harvestType: 'single' },
             tomate: { name: 'Tomate', emoji: '🍅', rarity: 'ungewöhnlich', price: 3, growTime: 2, sellValue: 6, harvestType: 'multi' },
             paprika: { name: 'Paprika', emoji: '🫑', rarity: 'ungewöhnlich', price: 4, growTime: 3, sellValue: 9, harvestType: 'multi' },
             blaubeere: { name: 'Blaubeere', emoji: '🫐', rarity: 'ungewöhnlich', price: 5, growTime: 3, sellValue: 10, harvestType: 'multi' },
+            zitronengras: { name: 'Zitronengras', emoji: '🌾', rarity: 'ungewöhnlich', price: 4, growTime: 3, sellValue: 11, harvestType: 'multi' },
+            lavendel: { name: 'Lavendel', emoji: '💜', rarity: 'ungewöhnlich', price: 5, growTime: 3, sellValue: 13, harvestType: 'single' },
             // Selten
             wassermelone: { name: 'Wassermelone', emoji: '🍉', rarity: 'selten', price: 8, growTime: 5, sellValue: 20, harvestType: 'single' },
             kokosnuss: { name: 'Kokosnuss', emoji: '🥥', rarity: 'selten', price: 10, growTime: 6, sellValue: 25, harvestType: 'single' },
             bambus: { name: 'Bambus', emoji: '🎋', rarity: 'selten', price: 7, growTime: 4, sellValue: 15, harvestType: 'multi' },
             sonnenblume: { name: 'Sonnenblume', emoji: '🌻', rarity: 'selten', price: 6, growTime: 3, sellValue: 12, harvestType: 'multi' },
             kaktus: { name: 'Kaktus', emoji: '🌵', rarity: 'selten', price: 8, growTime: 5, sellValue: 18, harvestType: 'multi' },
+            pilz: { name: 'Pilz', emoji: '🍄', rarity: 'selten', price: 9, growTime: 5, sellValue: 22, harvestType: 'single' },
+            edelweiss: { name: 'Edelweiß', emoji: '🌼', rarity: 'selten', price: 10, growTime: 6, sellValue: 24, harvestType: 'multi' },
             // Legendär
             drachenfrucht: { name: 'Drachenfrucht', emoji: '🐉', rarity: 'legendär', price: 15, growTime: 8, sellValue: 40, harvestType: 'single' },
             mandragora: { name: 'Mandragora', emoji: '🌿', rarity: 'legendär', price: 20, growTime: 10, sellValue: 50, harvestType: 'single' },
             feuerrose: { name: 'Feuerrose', emoji: '🌹', rarity: 'legendär', price: 18, growTime: 7, sellValue: 45, harvestType: 'multi' },
             mondblüte: { name: 'Mondblüte', emoji: '🌙', rarity: 'legendär', price: 25, growTime: 12, sellValue: 60, harvestType: 'multi' },
+            eisblume: { name: 'Eisblume', emoji: '❄️', rarity: 'legendär', price: 22, growTime: 10, sellValue: 52, harvestType: 'single' },
+            glanzkraut: { name: 'Glanzkraut', emoji: '✨', rarity: 'legendär', price: 28, growTime: 12, sellValue: 60, harvestType: 'multi' },
             // Mythisch
             kristallrose: { name: 'Kristallrose', emoji: '💎', rarity: 'mythisch', price: 30, growTime: 15, sellValue: 80, harvestType: 'single' },
             himmelstraube: { name: 'Himmels-Traube', emoji: '🍇', rarity: 'mythisch', price: 35, growTime: 18, sellValue: 100, harvestType: 'single' },
             sternenkuerbis: { name: 'Sternenkürbis', emoji: '⭐', rarity: 'mythisch', price: 40, growTime: 20, sellValue: 120, harvestType: 'multi' },
+            traumwinde: { name: 'Traumwinde', emoji: '🌙', rarity: 'mythisch', price: 45, growTime: 22, sellValue: 130, harvestType: 'multi' },
             // Göttlich
             weltbaum: { name: 'Weltbaum', emoji: '🌳', rarity: 'göttlich', price: 100, growTime: 30, sellValue: 300, harvestType: 'single' },
             ewigeLotus: { name: 'Ewige Lotusblüte', emoji: '🪷', rarity: 'göttlich', price: 150, growTime: 40, sellValue: 500, harvestType: 'multi' },
+            sonnenfeder: { name: 'Sonnenfeder', emoji: '🪶', rarity: 'göttlich', price: 120, growTime: 35, sellValue: 340, harvestType: 'single' },
             // Prismatic
             prismatic: { name: 'Prismatische Blume', emoji: '🌈', rarity: 'prismatisch', price: 200, growTime: 50, sellValue: 1000, harvestType: 'multi' },
             // Transzendent
             voidBlume: { name: 'Void-Blume', emoji: '🌌', rarity: 'transzendent', price: 500, growTime: 100, sellValue: 5000, harvestType: 'multi' },
+            sternenflamme: { name: 'Sternenflamme', emoji: '🔥', rarity: 'transzendent', price: 520, growTime: 110, sellValue: 5100, harvestType: 'multi' },
             // Himmlisch
             sonnenkern: { name: 'Sonnenkern', emoji: '☀️', rarity: 'himmlisch', price: 1000, growTime: 200, sellValue: 20000, harvestType: 'multi' }
         };
@@ -1088,7 +1085,6 @@
         const buildings = {
             brunnen: { name: 'Brunnen', cost: 8, effect: 'Alle Pflanzen wachsen 1 Stunde schneller', emoji: '💧' },
             kompost: { name: 'Kompost', cost: 6, effect: '40% des Kaufpreises beim Löschen zurück', emoji: '🗑️' },
-            scheune: { name: 'Scheune', cost: 12, effect: 'Ernte lagern für später', emoji: '🏠' },
             gewaechshaus: { name: 'Gewächshaus', cost: 20, effect: '+1 Feld, Pflanzen wachsen 3h schneller (Max 4)', emoji: '🏡' },
             marktstand: { name: 'Marktstand', cost: 30, effect: 'Zeigt 5 Karten statt 4', emoji: '🏪' }
         };
@@ -1190,7 +1186,12 @@
                 } else if (loaded.buildings && loaded.buildings.gewaechshaus === false) {
                     gameState.buildings.gewaechshaus = 0;
                 }
-                
+
+                // Migrate old saves with fewer than 16 tiles to 4x4
+                while (gameState.tiles.length < 16) {
+                    gameState.tiles.push(null);
+                }
+
                 // Calculate elapsed time in hours
                 const now = Date.now();
                 const elapsedHours = (now - gameState.lastSaveTime) / (1000 * 60 * 60);
@@ -1440,119 +1441,74 @@
             });
         }
 
-        // Render buildings
+        // Render buildings and upgrades (combined)
         function renderBuildings() {
             const list = document.getElementById('building-list');
             list.innerHTML = '';
-            
+
+            // Buildings
             Object.entries(buildings).forEach(([id, building]) => {
                 const el = document.createElement('div');
-                
-                // Special handling for Gewächshaus (level-based)
+
                 if (id === 'gewaechshaus') {
                     const level = gameState.buildings.gewaechshaus;
                     const maxLevel = 4;
                     const cost = 20 * Math.pow(2, level);
-                    
                     el.className = `building ${level >= maxLevel ? 'owned' : ''}`;
-                    
                     if (level >= maxLevel) {
                         el.innerHTML = `
-                            <div class="building-info">
-                                <h3>${building.emoji} ${building.name}</h3>
-                                <p>${building.effect}</p>
-                            </div>
-                            <span>✅ Maximum (${level}/${maxLevel})</span>
-                        `;
+                            <div class="building-info"><h3>${building.emoji} ${building.name}</h3><p>${building.effect}</p></div>
+                            <span>✅ Maximum (${level}/${maxLevel})</span>`;
                     } else {
                         el.innerHTML = `
-                            <div class="building-info">
-                                <h3>${building.emoji} ${building.name}</h3>
-                                <p>${building.effect}</p>
-                            </div>
-                            <button class="building-btn" onclick="buyBuilding('${id}')" ${gameState.money < cost ? 'disabled' : ''}>${cost}€ (${level}/${maxLevel})</button>
-                        `;
+                            <div class="building-info"><h3>${building.emoji} ${building.name}</h3><p>${building.effect}</p></div>
+                            <button class="building-btn" onclick="buyBuilding('${id}')" ${gameState.money < cost ? 'disabled' : ''}>${cost}€ (${level}/${maxLevel})</button>`;
                     }
                 } else {
-                    // Normal buildings
                     const owned = gameState.buildings[id];
                     el.className = `building ${owned ? 'owned' : ''}`;
-                    
                     el.innerHTML = `
-                        <div class="building-info">
-                            <h3>${building.emoji} ${building.name}</h3>
-                            <p>${building.effect}</p>
-                        </div>
-                        ${owned ? '<span>✅ Besitzt</span>' : `<button class="building-btn" onclick="buyBuilding('${id}')" ${gameState.money < building.cost ? 'disabled' : ''}>${building.cost}€</button>`}
-                    `;
+                        <div class="building-info"><h3>${building.emoji} ${building.name}</h3><p>${building.effect}</p></div>
+                        ${owned ? '<span>✅ Besitzt</span>' : `<button class="building-btn" onclick="buyBuilding('${id}')" ${gameState.money < building.cost ? 'disabled' : ''}>${building.cost}€</button>`}`;
                 }
-                
                 list.appendChild(el);
             });
-        }
 
-        // Render upgrades
-        function renderUpgrades() {
-            const list = document.getElementById('upgrade-list');
-            list.innerHTML = '';
-            
-            // Render shop upgrade (tiered)
-            const level = gameState.upgrades.shopUpgradeLevel;
-            const maxLevel = 5;
+            // Upgrades
+            const shopLevel = gameState.upgrades.shopUpgradeLevel;
+            const maxShopLevel = 5;
             const shopUpgrade = upgrades.shopUpgrade;
-            
             const shopEl = document.createElement('div');
-            shopEl.className = `upgrade ${level >= maxLevel ? 'owned' : ''}`;
-            
-            if (level >= maxLevel) {
+            shopEl.className = `upgrade ${shopLevel >= maxShopLevel ? 'owned' : ''}`;
+            if (shopLevel >= maxShopLevel) {
                 shopEl.innerHTML = `
-                    <div class="upgrade-info">
-                        <h3>${shopUpgrade.emoji} ${shopUpgrade.name}</h3>
-                        <p>Stufe ${level}/5 - Alle Seltenheiten freigeschaltet</p>
-                    </div>
-                    <span>✅ Maximum</span>
-                `;
+                    <div class="upgrade-info"><h3>${shopUpgrade.emoji} ${shopUpgrade.name}</h3><p>Stufe ${shopLevel}/5 – Alle Seltenheiten freigeschaltet</p></div>
+                    <span>✅ Maximum</span>`;
             } else {
-                const cost = shopUpgradeCosts[level];
-                const nextUnlock = shopUpgradeUnlocks[level];
+                const cost = shopUpgradeCosts[shopLevel];
                 shopEl.innerHTML = `
-                    <div class="upgrade-info">
-                        <h3>${shopUpgrade.emoji} ${shopUpgrade.name}</h3>
-                        <p>Stufe ${level}/5 - Freischaltet: ${nextUnlock}</p>
-                    </div>
-                    <button class="upgrade-btn" onclick="buyUpgrade('shopUpgrade')" ${gameState.money < cost ? 'disabled' : ''}>${cost}€</button>
-                `;
+                    <div class="upgrade-info"><h3>${shopUpgrade.emoji} ${shopUpgrade.name}</h3><p>Stufe ${shopLevel}/5 – Freischaltet: ${shopUpgradeUnlocks[shopLevel]}</p></div>
+                    <button class="upgrade-btn" onclick="buyUpgrade('shopUpgrade')" ${gameState.money < cost ? 'disabled' : ''}>${cost}€</button>`;
             }
-            
             list.appendChild(shopEl);
-            
-            // Render Gute Erde upgrade
+
             const guteErde = upgrades.guteErde;
             const guteErdeOwned = gameState.upgrades.guteErde;
-            
             const guteErdeEl = document.createElement('div');
             guteErdeEl.className = `upgrade ${guteErdeOwned ? 'owned' : ''}`;
-            
             if (guteErdeOwned) {
                 guteErdeEl.innerHTML = `
-                    <div class="upgrade-info">
-                        <h3>${guteErde.emoji} ${guteErde.name}</h3>
-                        <p>${guteErde.effect}</p>
-                    </div>
-                    <span>✅ Besitzt</span>
-                `;
+                    <div class="upgrade-info"><h3>${guteErde.emoji} ${guteErde.name}</h3><p>${guteErde.effect}</p></div>
+                    <span>✅ Besitzt</span>`;
             } else {
                 guteErdeEl.innerHTML = `
-                    <div class="upgrade-info">
-                        <h3>${guteErde.emoji} ${guteErde.name}</h3>
-                        <p>${guteErde.effect}</p>
-                    </div>
-                    <button class="upgrade-btn" onclick="buyUpgrade('guteErde')" ${gameState.money < guteErde.cost ? 'disabled' : ''}>${guteErde.cost}€</button>
-                `;
+                    <div class="upgrade-info"><h3>${guteErde.emoji} ${guteErde.name}</h3><p>${guteErde.effect}</p></div>
+                    <button class="upgrade-btn" onclick="buyUpgrade('guteErde')" ${gameState.money < guteErde.cost ? 'disabled' : ''}>${guteErde.cost}€</button>`;
             }
-            
             list.appendChild(guteErdeEl);
         }
+
+        function renderUpgrades() { renderBuildings(); }
 
         // Render event shop
         function renderEventShop() {
@@ -1899,24 +1855,11 @@
         // Toggle event
         function toggleEvent() {
             gameState.eventActive = !gameState.eventActive;
-            const toggle = document.getElementById('event-toggle');
-            const content = document.getElementById('event-content');
-            const stat = document.getElementById('mondstaub-stat');
-            
             if (gameState.eventActive) {
-                toggle.textContent = 'Event beenden';
-                toggle.style.background = '#f44336';
-                content.style.display = 'block';
-                stat.style.display = 'block';
-                gameState.eventTime = 24; // Reset to 24 hours
+                gameState.eventTime = 24;
                 renderEventShop();
-            } else {
-                toggle.textContent = 'Event starten';
-                toggle.style.background = '';
-                content.style.display = 'none';
-                stat.style.display = 'none';
             }
-            
+            syncEventUI();
             updateUI();
             saveGame();
         }
@@ -1927,18 +1870,34 @@
             document.getElementById('round').textContent = gameState.round;
             document.getElementById('mondstaub').textContent = gameState.mondstaub;
             document.getElementById('event-mondstaub').textContent = gameState.mondstaub;
-            document.getElementById('event-timer').textContent = gameState.eventTime;
-            
-            // Re-render upgrades to update button states
-            renderUpgrades();
+            document.getElementById('event-timer').textContent = Math.ceil(gameState.eventTime);
+
+            // Re-render buildings/upgrades to update button states (renderUpgrades is an alias, call once)
             renderBuildings();
-            
+
             // Calculate time until next hour (next round)
             const now = new Date();
             const minutesUntilNextHour = 59 - now.getMinutes();
             const secondsUntilNextMinute = 59 - now.getSeconds();
-            document.getElementById('next-round').textContent = 
+            document.getElementById('next-round').textContent =
                 `${minutesUntilNextHour}:${secondsUntilNextMinute.toString().padStart(2, '0')}`;
+        }
+
+        function syncEventUI() {
+            const toggle = document.getElementById('event-toggle');
+            const content = document.getElementById('event-content');
+            const stat = document.getElementById('mondstaub-stat');
+            if (gameState.eventActive) {
+                toggle.textContent = 'Event beenden';
+                toggle.style.background = '#f44336';
+                content.style.display = 'block';
+                stat.style.display = 'block';
+            } else {
+                toggle.textContent = 'Event starten';
+                toggle.style.background = '';
+                content.style.display = 'none';
+                stat.style.display = 'none';
+            }
         }
 
         // Show notification
@@ -2175,37 +2134,176 @@
             }, 1000); // Update every second instead of 100ms
         }
 
-        // Toggle dark mode
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            const btn = document.getElementById('dark-mode-btn');
-            if (document.body.classList.contains('dark-mode')) {
-                btn.textContent = '☀️ Hell';
-                localStorage.setItem('darkMode', 'true');
-            } else {
-                btn.textContent = '🌙 Dunkel';
-                localStorage.setItem('darkMode', 'false');
+        // ── Profile system ──────────────────────────────────────────────
+
+        const PROFILE_COUNT = 3;
+        const PROFILE_EMOJIS = ['🧑‍🌾', '👩‍🌾', '🧑‍🌾'];
+
+        function getActiveProfile() {
+            return parseInt(localStorage.getItem('ernteZeitActiveProfile') || '1');
+        }
+
+        function getSaveKey(profileNum) {
+            return profileNum === 1 ? 'ernteZeitSave' : `ernteZeitSave_profile${profileNum}`;
+        }
+
+        function getProfileName(profileNum) {
+            const names = JSON.parse(localStorage.getItem('ernteZeitProfileNames') || '{}');
+            return names[profileNum] || `Profil ${profileNum}`;
+        }
+
+        function setProfileName(profileNum, name) {
+            const names = JSON.parse(localStorage.getItem('ernteZeitProfileNames') || '{}');
+            names[profileNum] = name;
+            localStorage.setItem('ernteZeitProfileNames', JSON.stringify(names));
+        }
+
+        function openProfileModal() {
+            renderProfileModal();
+            document.getElementById('profile-modal-overlay').style.display = 'flex';
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profile-modal-overlay').style.display = 'none';
+        }
+
+        function renderProfileModal() {
+            const active = getActiveProfile();
+            const container = document.getElementById('profile-modal-list');
+            container.innerHTML = '';
+            for (let i = 1; i <= PROFILE_COUNT; i++) {
+                const isActive = i === active;
+                const hasSave = !!localStorage.getItem(getSaveKey(i));
+                const name = getProfileName(i);
+                const div = document.createElement('div');
+                div.style.cssText = `
+                    display: flex; align-items: center; gap: 12px;
+                    padding: 14px 18px; border-radius: 12px; margin-bottom: 10px;
+                    background: ${isActive ? 'linear-gradient(135deg, #7b1fa2 0%, #4a148c 100%)' : 'var(--card-bg)'};
+                    color: ${isActive ? 'white' : 'var(--text-color)'};
+                    border: 2px solid ${isActive ? '#ce93d8' : 'transparent'};
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                `;
+                div.innerHTML = `
+                    <span style="font-size:1.8em">${PROFILE_EMOJIS[i-1]}</span>
+                    <div style="flex:1">
+                        <div style="font-weight:bold; font-size:1em">${name}</div>
+                        <div style="font-size:0.78em; opacity:0.75">${hasSave ? 'Spielstand vorhanden' : 'Neu starten'}</div>
+                    </div>
+                    ${isActive
+                        ? `<span style="font-size:0.8em; background:rgba(255,255,255,0.2); padding:4px 10px; border-radius:20px;">Aktiv</span>`
+                        : `<button onclick="switchProfile(${i})" style="background:linear-gradient(135deg,#7b1fa2,#4a148c);color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:0.85em;">Wechseln</button>`
+                    }
+                    <button onclick="renameProfile(${i})" style="background:rgba(128,128,128,0.2);color:inherit;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.85em;" title="Umbenennen">✏️</button>
+                    ${!isActive && hasSave ? `<button onclick="deleteProfile(${i})" style="background:rgba(244,67,54,0.15);color:#f44336;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.85em;" title="Löschen">🗑️</button>` : ''}
+                `;
+                container.appendChild(div);
             }
         }
 
-        // Load dark mode preference
-        function loadDarkMode() {
-            const darkMode = localStorage.getItem('darkMode');
-            if (darkMode === 'true') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('dark-mode-btn').textContent = '☀️ Hell';
+        function switchProfile(profileNum) {
+            saveGame();
+            localStorage.setItem('ernteZeitActiveProfile', profileNum);
+            Object.assign(gameState, defaultGameState());
+            loadGame();
+            closeProfileModal();
+            renderFarm();
+            renderShop();
+            renderBuildings();
+            renderEventShop();
+            syncEventUI();
+            updateUI();
+        }
+
+        function renameProfile(profileNum) {
+            const current = getProfileName(profileNum);
+            const name = prompt('Profilname:', current);
+            if (name && name.trim()) {
+                setProfileName(profileNum, name.trim());
+                renderProfileModal();
             }
         }
 
-        // Start game
+        function deleteProfile(profileNum) {
+            if (!confirm(`Spielstand von "${getProfileName(profileNum)}" wirklich löschen?`)) return;
+            localStorage.removeItem(getSaveKey(profileNum));
+            renderProfileModal();
+        }
+
+        function defaultGameState() {
+            return {
+                money: 10, round: 1, roundTime: 0, selectedSeed: null,
+                tiles: Array(16).fill(null),
+                inventory: {}, shopSeeds: [],
+                buildings: { brunnen: false, kompost: false, gewaechshaus: 0, marktstand: false },
+                upgrades: { shopUpgradeLevel: 0, guteErde: false },
+                discoveredPlants: [], mondstaub: 0,
+                eventActive: false, eventTime: 48,
+                lastSaveTime: Date.now()
+            };
+        }
+
+        // Patch saveGame to use active profile key
+        const _origSaveGame = saveGame;
+        saveGame = function() {
+            gameState.lastSaveTime = Date.now();
+            localStorage.setItem(getSaveKey(getActiveProfile()), JSON.stringify(gameState));
+        };
+
+        // Patch loadGame to use active profile key
+        const _origLoadGame = loadGame;
+        loadGame = function() {
+            const saved = localStorage.getItem(getSaveKey(getActiveProfile()));
+            if (saved) {
+                const loaded = JSON.parse(saved);
+                Object.assign(gameState, loaded);
+                if (loaded.upgrades && loaded.upgrades.shopUpgrade !== undefined && loaded.upgrades.shopUpgradeLevel === undefined) {
+                    gameState.upgrades.shopUpgradeLevel = loaded.upgrades.shopUpgrade ? 3 : 0;
+                    delete gameState.upgrades.shopUpgrade;
+                }
+                if (!gameState.upgrades) gameState.upgrades = { shopUpgradeLevel: 0, guteErde: false };
+                if (!gameState.discoveredPlants) gameState.discoveredPlants = [];
+                if (loaded.buildings && loaded.buildings.gewaechshaus === true) gameState.buildings.gewaechshaus = 1;
+                else if (loaded.buildings && loaded.buildings.gewaechshaus === false) gameState.buildings.gewaechshaus = 0;
+                while (gameState.tiles.length < 16) gameState.tiles.push(null);
+                const now = Date.now();
+                const elapsedHours = (now - gameState.lastSaveTime) / (1000 * 60 * 60);
+                gameState.tiles.forEach(tile => {
+                    if (tile && tile.progress < tile.totalTime) {
+                        tile.progress = Math.min(tile.progress + elapsedHours, tile.totalTime);
+                    }
+                });
+                gameState.roundTime += elapsedHours;
+                let roundsPassed = 0;
+                while (gameState.roundTime >= 1) { gameState.round++; gameState.roundTime -= 1; gameState.selectedSeed = null; roundsPassed++; }
+                if (roundsPassed > 0) gameState.shopSeeds = [];
+                if (gameState.eventActive) {
+                    gameState.eventTime -= elapsedHours;
+                    if (gameState.eventTime <= 0) { gameState.eventActive = false; gameState.eventTime = 24; }
+                }
+                gameState.lastSaveTime = now;
+            }
+        };
+
+        // ── Start game ───────────────────────────────────────────────────
         init();
-        loadDarkMode();
 
-        // Save before closing/refreshing
+        // Save before closing/refreshing (uses patched saveGame)
         window.addEventListener('beforeunload', () => {
             gameState.lastSaveTime = Date.now();
             saveGame();
         });
     </script>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal-overlay" onclick="if(event.target===this)closeProfileModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:var(--modal-bg); color:var(--text-color); border-radius:16px; padding:28px; width:min(420px,92vw); box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="font-size:1.3em;">👤 Profile wechseln</h2>
+                <button onclick="closeProfileModal()" style="background:none; border:none; font-size:1.5em; cursor:pointer; color:var(--text-color); line-height:1;">×</button>
+            </div>
+            <div id="profile-modal-list"></div>
+        </div>
+    </div>
 </body>
 </html>
