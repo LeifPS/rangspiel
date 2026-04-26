@@ -610,6 +610,7 @@
             font-size: 0.8em;
             text-align: center;
             margin-top: 3px;
+            text-transform: capitalize;
         }
 
         /* Shop Cards */
@@ -681,7 +682,7 @@
             background: linear-gradient(135deg, #f44336 0%, #ff9800 50%, #ffeb3b 100%);
             color: white;
         }
-        .card-admin {
+        .card-geheim {
             border: 2px solid transparent;
             background: linear-gradient(135deg, #1a1a1a 0%, #555 50%, #e0e0e0 100%) padding-box,
                         linear-gradient(135deg, #000 0%, #fff 100%) border-box;
@@ -1401,12 +1402,12 @@
             sternenkern:    { name: 'Sternenkern',       emoji: '💫', rarity: 'himmlisch',    price: 2400, growTime: 200, sellValue: 6720,   harvestType: 'multi'  }, // ×2.80
 
             // ─── Admin-exklusiv ───────────────────────────
-            broetchenbaum:  { name: 'Brötchenbaum',     emoji: '🥐', rarity: 'admin',        price: 5,    growTime: 3,   sellValue: 25,     harvestType: 'multi',   adminOnly: true },
+            broetchenbaum:  { name: 'Brötchenbaum',     emoji: '🥐', rarity: 'geheim',        price: 5,    growTime: 3,   sellValue: 25,     harvestType: 'multi',   adminOnly: true },
             // ─── Admin only ───────────────────────────────
             gottesfunken:  { name: 'Gottesfunken',    emoji: '⚡', rarity: 'göttlich',     price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'single', adminOnly: true },
-            ursamenkorn:   { name: 'Ursamenkorn',     emoji: '🌱', rarity: 'admin',        price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'multi',  adminOnly: true },
-            schattenkern:  { name: 'Schattenkern',    emoji: '🌑', rarity: 'admin',        price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'single', adminOnly: true },
-            ewigkeitsblume:{ name: 'Ewigkeitsblume',  emoji: '🌀', rarity: 'admin',        price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'multi',  adminOnly: true },
+            ursamenkorn:   { name: 'Ursamenkorn',     emoji: '🌱', rarity: 'geheim',        price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'multi',  adminOnly: true },
+            schattenkern:  { name: 'Schattenkern',    emoji: '🌑', rarity: 'geheim',        price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'single', adminOnly: true },
+            ewigkeitsblume:{ name: 'Ewigkeitsblume',  emoji: '🌀', rarity: 'geheim',        price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'multi',  adminOnly: true },
         };  
 
         // Event Plants
@@ -1443,10 +1444,10 @@
             legendär: '#ffeb3b',
             mythisch: '#9c27b0',
             göttlich: '#212121',
-            prismatisch: '#e91e63',
+            prismatisch: 'linear-gradient(135deg, #ff9800 0%, #e91e63 25%, #9c27b0 50%, #2196f3 75%, #4caf50 100%)',
             transzendent: 'linear-gradient(135deg, #9c27b0 0%, #2196f3 50%, #87ceeb 100%)',
             himmlisch: 'linear-gradient(135deg, #f44336 0%, #ff9800 50%, #ffeb3b 100%)',
-            admin: 'linear-gradient(135deg, #000000 0%, #888888 50%, #ffffff 100%)'
+            geheim: 'linear-gradient(135deg, #000000 0%, #888888 50%, #ffffff 100%)'
         };
 
         // Rarity weights (probability weights)
@@ -2331,7 +2332,7 @@
             grid.innerHTML = '';
 
             // Discovery stats
-            const raritiesInOrder = ['gewöhnlich','ungewöhnlich','selten','legendär','mythisch','göttlich','prismatisch','transzendent','himmlisch','admin'];
+            const raritiesInOrder = ['gewöhnlich','ungewöhnlich','selten','legendär','mythisch','göttlich','prismatisch','transzendent','himmlisch','geheim'];
             const rarityStats = {};
             raritiesInOrder.forEach(r => { rarityStats[r] = { total: 0, discovered: 0 }; });
             Object.entries(plants).forEach(([id, plant]) => {
@@ -2359,7 +2360,7 @@
             }).join('');
 
             // Populate plant index (sorted by rarity)
-            const rarityOrder = ['gewöhnlich','ungewöhnlich','selten','legendär','mythisch','göttlich','prismatisch','transzendent','himmlisch','admin'];
+            const rarityOrder = ['gewöhnlich','ungewöhnlich','selten','legendär','mythisch','göttlich','prismatisch','transzendent','himmlisch','geheim'];
             const sortedPlants = Object.entries(plants).sort((a, b) =>
                 rarityOrder.indexOf(a[1].rarity) - rarityOrder.indexOf(b[1].rarity)
             );
@@ -2369,8 +2370,9 @@
                 item.className = 'plant-index-item';
                 const rc = rarityColors[plant.rarity];
                 if (rc && rc.startsWith('linear-gradient')) {
+                    const bg = document.body.classList.contains('dark-mode') ? '#2a2a3e' : '#f9f9f9';
                     item.style.border = '2px solid transparent';
-                    item.style.background = `#f9f9f9 padding-box, ${rc} border-box`;
+                    item.style.background = `linear-gradient(${bg}, ${bg}) padding-box, ${rc} border-box`;
                 } else {
                     item.style.borderColor = rc;
                 }
@@ -2435,7 +2437,7 @@
             const rarityNames = {
                 gewöhnlich: 'Gewöhnlich', ungewöhnlich: 'Ungewöhnlich', selten: 'Selten',
                 legendär: 'Legendär', mythisch: 'Mythisch', göttlich: 'Göttlich',
-                prismatisch: 'Prismatisch', transzendent: 'Transzendent', himmlisch: 'Himmlisch', admin: 'Admin'
+                prismatisch: 'Prismatisch', transzendent: 'Transzendent', himmlisch: 'Himmlisch', geheim: 'Geheim'
             };
 
             const profitColor = profitFirst >= 0 ? '#388e3c' : '#e53935';
@@ -2522,7 +2524,7 @@
                 // Populate plant dropdown
                 const sel = document.getElementById('admin-plant-select');
                 sel.innerHTML = '';
-                const rarityOrder = ['gewöhnlich','ungewöhnlich','selten','legendär','mythisch','göttlich','prismatisch','transzendent','himmlisch','admin'];
+                const rarityOrder = ['gewöhnlich','ungewöhnlich','selten','legendär','mythisch','göttlich','prismatisch','transzendent','himmlisch','geheim'];
                 const sorted = Object.entries(plants).sort((a, b) => {
                     return rarityOrder.indexOf(a[1].rarity) - rarityOrder.indexOf(b[1].rarity);
                 });
