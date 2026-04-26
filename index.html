@@ -682,6 +682,24 @@
             background: linear-gradient(135deg, #f44336 0%, #ff9800 50%, #ffeb3b 100%);
             color: white;
         }
+        .card-kosmisch {
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #000428 0%, #004e92 35%, #00c9ff 65%, #92effd 100%) padding-box,
+                        linear-gradient(135deg, #000428, #00c9ff, #92effd) border-box;
+            color: white;
+        }
+        .card-uralt {
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #3d1a00 0%, #8b4500 30%, #d4a000 60%, #fff5b0 100%) padding-box,
+                        linear-gradient(135deg, #3d1a00, #d4a000, #fff5b0) border-box;
+            color: white;
+        }
+        .card-absolut {
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #888 0%, #fff 30%, #ccc 50%, #fff 70%, #aaa 100%) padding-box,
+                        linear-gradient(135deg, #e0e0e0, #ffffff, #c0c0c0) border-box;
+            color: #222;
+        }
         .card-geheim {
             border: 2px solid transparent;
             background: linear-gradient(135deg, #1a1a1a 0%, #555 50%, #e0e0e0 100%) padding-box,
@@ -1328,54 +1346,54 @@
         // Plant Database
         const plants = {
             // ─── Gewöhnlich ───────────────────────────────
-            karotte:        { name: 'Karotte',           emoji: '🥕', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 3,      harvestType: 'single' }, // ×1.58
-            kartoffel:      { name: 'Kartoffel',         emoji: '🥔', rarity: 'gewöhnlich',   price: 3,    growTime: 3,   sellValue: 5,      harvestType: 'single' }, // ×1.74
-            salat:          { name: 'Salat',             emoji: '🥬', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 1,      harvestType: 'multi'  },
-            blume:          { name: 'Blume',             emoji: '🌸', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 2,      harvestType: 'multi'  },
-            erdbeere:       { name: 'Erdbeere',          emoji: '🍓', rarity: 'gewöhnlich',   price: 3,    growTime: 2,   sellValue: 1,      harvestType: 'multi'  },
-            moosblatt:      { name: 'Moosblatt',         emoji: '🍀', rarity: 'gewöhnlich',   price: 3,    growTime: 1,   sellValue: 1,      harvestType: 'multi'  },
-            ruebe:          { name: 'Rübe',              emoji: '🫚', rarity: 'gewöhnlich',   price: 2,    growTime: 2,   sellValue: 3,      harvestType: 'single' }, // ×1.66
-            mais:           { name: 'Mais',              emoji: '🌽', rarity: 'gewöhnlich',   price: 2,    growTime: 2,   sellValue: 1,      harvestType: 'multi'  }, // ×0.33
+            karotte:        { name: 'Karotte',           emoji: '🥕', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 6,      harvestType: 'single' },
+            kartoffel:      { name: 'Kartoffel',         emoji: '🥔', rarity: 'gewöhnlich',   price: 3,    growTime: 3,   sellValue: 9,      harvestType: 'single' },
+            salat:          { name: 'Salat',             emoji: '🥬', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 2,      harvestType: 'multi'  },
+            blume:          { name: 'Blume',             emoji: '🌸', rarity: 'gewöhnlich',   price: 3,    growTime: 1,   sellValue: 4,      harvestType: 'multi'  },
+            erdbeere:       { name: 'Erdbeere',          emoji: '🍓', rarity: 'gewöhnlich',   price: 4,    growTime: 2,   sellValue: 2,      harvestType: 'multi'  },
+            moosblatt:      { name: 'Moosblatt',         emoji: '🍀', rarity: 'gewöhnlich',   price: 4,    growTime: 1,   sellValue: 2,      harvestType: 'multi'  },
+            ruebe:          { name: 'Rübe',              emoji: '🫚', rarity: 'gewöhnlich',   price: 3,    growTime: 2,   sellValue: 5,      harvestType: 'single' },
+            mais:           { name: 'Mais',              emoji: '🌽', rarity: 'gewöhnlich',   price: 3,    growTime: 2,   sellValue: 2,      harvestType: 'multi'  },
 
             // ─── Ungewöhnlich ─────────────────────────────
-            zwiebel:        { name: 'Zwiebel',           emoji: '🧅', rarity: 'ungewöhnlich', price: 5,    growTime: 2,   sellValue: 8,      harvestType: 'single' },
-            kuerbis:        { name: 'Kürbis',            emoji: '🎃', rarity: 'ungewöhnlich', price: 8,    growTime: 4,   sellValue: 15,     harvestType: 'single' }, // ×1.82
-            tomate:         { name: 'Tomate',            emoji: '🍅', rarity: 'ungewöhnlich', price: 5,    growTime: 2,   sellValue: 2,      harvestType: 'multi'  }, // ×0.33
-            paprika:        { name: 'Paprika',           emoji: '🫑', rarity: 'ungewöhnlich', price: 6,    growTime: 3,   sellValue: 2,      harvestType: 'multi'  },
-            blaubeere:      { name: 'Blaubeere',         emoji: '🫐', rarity: 'ungewöhnlich', price: 7,    growTime: 3,   sellValue: 3,      harvestType: 'multi'  },
-            zitronengras:   { name: 'Zitronengras',      emoji: '🌾', rarity: 'ungewöhnlich', price: 5,    growTime: 3,   sellValue: 2,      harvestType: 'multi'  },
-            lavendel:       { name: 'Lavendel',          emoji: '💜', rarity: 'ungewöhnlich', price: 7,    growTime: 3,   sellValue: 13,     harvestType: 'single' },
-            aubergine:      { name: 'Aubergine',         emoji: '🍆', rarity: 'ungewöhnlich', price: 6,    growTime: 3,   sellValue: 3,      harvestType: 'multi'  },
-            knoblauch:      { name: 'Knoblauch',         emoji: '🧄', rarity: 'ungewöhnlich', price: 4,    growTime: 2,   sellValue: 7,      harvestType: 'single' },
+            zwiebel:        { name: 'Zwiebel',           emoji: '🧅', rarity: 'ungewöhnlich', price: 5,    growTime: 2,   sellValue: 14,     harvestType: 'single' },
+            kuerbis:        { name: 'Kürbis',            emoji: '🎃', rarity: 'ungewöhnlich', price: 9,    growTime: 4,   sellValue: 27,     harvestType: 'single' },
+            tomate:         { name: 'Tomate',            emoji: '🍅', rarity: 'ungewöhnlich', price: 5,    growTime: 2,   sellValue: 4,      harvestType: 'multi'  },
+            paprika:        { name: 'Paprika',           emoji: '🫑', rarity: 'ungewöhnlich', price: 8,    growTime: 3,   sellValue: 4,      harvestType: 'multi'  },
+            blaubeere:      { name: 'Blaubeere',         emoji: '🫐', rarity: 'ungewöhnlich', price: 9,    growTime: 3,   sellValue: 6,      harvestType: 'multi'  },
+            zitronengras:   { name: 'Zitronengras',      emoji: '🌾', rarity: 'ungewöhnlich', price: 7,    growTime: 3,   sellValue: 4,      harvestType: 'multi'  },
+            lavendel:       { name: 'Lavendel',          emoji: '💜', rarity: 'ungewöhnlich', price: 10,   growTime: 3,   sellValue: 23,     harvestType: 'single' },
+            aubergine:      { name: 'Aubergine',         emoji: '🍆', rarity: 'ungewöhnlich', price: 8,    growTime: 3,   sellValue: 6,      harvestType: 'multi'  },
+            knoblauch:      { name: 'Knoblauch',         emoji: '🧄', rarity: 'ungewöhnlich', price: 6,    growTime: 2,   sellValue: 12,     harvestType: 'single' },
 
             // ─── Selten ───────────────────────────────────
-            wassermelone:   { name: 'Wassermelone',      emoji: '🍉', rarity: 'selten',       price: 15,   growTime: 5,   sellValue: 29,     harvestType: 'single' }, // ×1.90
-            kokosnuss:      { name: 'Kokosnuss',         emoji: '🥥', rarity: 'selten',       price: 18,   growTime: 6,   sellValue: 36,     harvestType: 'single' }, // ×1.98
-            bambus:         { name: 'Bambus',            emoji: '🎋', rarity: 'selten',       price: 12,   growTime: 4,   sellValue: 5,      harvestType: 'multi'  }, // ×0.36
-            sonnenblume:    { name: 'Sonnenblume',       emoji: '🌻', rarity: 'selten',       price: 11,   growTime: 4,   sellValue: 4,      harvestType: 'multi'  }, // ×0.36
-            kaktus:         { name: 'Kaktus',            emoji: '🌵', rarity: 'selten',       price: 14,   growTime: 5,   sellValue: 7,      harvestType: 'multi'  }, // ×0.38
-            pilz:           { name: 'Pilz',              emoji: '🍄', rarity: 'selten',       price: 16,   growTime: 5,   sellValue: 30,     harvestType: 'single' },
-            edelweiss:      { name: 'Edelweiß',          emoji: '🌼', rarity: 'selten',       price: 18,   growTime: 6,   sellValue: 9,      harvestType: 'multi'  }, // ×0.39
-            mango:          { name: 'Mango',             emoji: '🥭', rarity: 'selten',       price: 13,   growTime: 4,   sellValue: 5,      harvestType: 'multi'  }, // ×0.36
-            ingwer:         { name: 'Ingwer',            emoji: '🫚', rarity: 'selten',       price: 15,   growTime: 5,   sellValue: 28,     harvestType: 'single' },
+            wassermelone:   { name: 'Wassermelone',      emoji: '🍉', rarity: 'selten',       price: 16,   growTime: 5,   sellValue: 55,     harvestType: 'single' },
+            kokosnuss:      { name: 'Kokosnuss',         emoji: '🥥', rarity: 'selten',       price: 20,   growTime: 6,   sellValue: 69,     harvestType: 'single' },
+            bambus:         { name: 'Bambus',            emoji: '🎋', rarity: 'selten',       price: 13,   growTime: 4,   sellValue: 9,      harvestType: 'multi'  },
+            sonnenblume:    { name: 'Sonnenblume',       emoji: '🌻', rarity: 'selten',       price: 15,   growTime: 4,   sellValue: 7,      harvestType: 'multi'  },
+            kaktus:         { name: 'Kaktus',            emoji: '🌵', rarity: 'selten',       price: 19,   growTime: 5,   sellValue: 13,     harvestType: 'multi'  },
+            pilz:           { name: 'Pilz',              emoji: '🍄', rarity: 'selten',       price: 21,   growTime: 5,   sellValue: 57,     harvestType: 'single' },
+            edelweiss:      { name: 'Edelweiß',          emoji: '🌼', rarity: 'selten',       price: 24,   growTime: 6,   sellValue: 17,     harvestType: 'multi'  },
+            mango:          { name: 'Mango',             emoji: '🥭', rarity: 'selten',       price: 17,   growTime: 4,   sellValue: 9,      harvestType: 'multi'  },
+            ingwer:         { name: 'Ingwer',            emoji: '🫚', rarity: 'selten',       price: 20,   growTime: 5,   sellValue: 53,     harvestType: 'single' },
 
             // ─── Legendär ─────────────────────────────────
-            drachenfrucht:  { name: 'Drachenfrucht',     emoji: '🐉', rarity: 'legendär',     price: 30,   growTime: 8,   sellValue: 64,     harvestType: 'single' }, // ×2.14
-            mandragora:     { name: 'Mandragora',        emoji: '🌿', rarity: 'legendär',     price: 40,   growTime: 10,  sellValue: 92,     harvestType: 'single' }, // ×2.30
-            feuerrose:      { name: 'Feuerrose',         emoji: '🌹', rarity: 'legendär',     price: 33,   growTime: 8,   sellValue: 14,     harvestType: 'multi'  }, // ×0.42
-            mondblüte:      { name: 'Mondblüte',         emoji: '🌙', rarity: 'legendär',     price: 45,   growTime: 12,  sellValue: 22,     harvestType: 'multi'  }, // ×0.48
-            eisblume:       { name: 'Eisblume',          emoji: '❄️', rarity: 'legendär',     price: 42,   growTime: 10,  sellValue: 96,     harvestType: 'single' },
-            glanzkraut:     { name: 'Glanzkraut',        emoji: '✨', rarity: 'legendär',     price: 47,   growTime: 12,  sellValue: 25,     harvestType: 'multi'  },
-            geisterkraut:   { name: 'Geisterkraut',      emoji: '👻', rarity: 'legendär',     price: 35,   growTime: 9,   sellValue: 16,     harvestType: 'multi'  }, // ×0.44
-            donnerdistel:   { name: 'Donnerdistel',      emoji: '⚡', rarity: 'legendär',     price: 38,   growTime: 10,  sellValue: 87,     harvestType: 'single' }, // ×2.30
+            drachenfrucht:  { name: 'Drachenfrucht',     emoji: '🐉', rarity: 'legendär',     price: 35,   growTime: 8,   sellValue: 120,    harvestType: 'single' },
+            mandragora:     { name: 'Mandragora',        emoji: '🌿', rarity: 'legendär',     price: 45,   growTime: 10,  sellValue: 173,    harvestType: 'single' },
+            feuerrose:      { name: 'Feuerrose',         emoji: '🌹', rarity: 'legendär',     price: 38,   growTime: 8,   sellValue: 27,     harvestType: 'multi'  },
+            mondblüte:      { name: 'Mondblüte',         emoji: '🌙', rarity: 'legendär',     price: 60,   growTime: 12,  sellValue: 42,     harvestType: 'multi'  },
+            eisblume:       { name: 'Eisblume',          emoji: '❄️', rarity: 'legendär',     price: 56,   growTime: 10,  sellValue: 182,    harvestType: 'single' },
+            glanzkraut:     { name: 'Glanzkraut',        emoji: '✨', rarity: 'legendär',     price: 63,   growTime: 12,  sellValue: 47,     harvestType: 'multi'  },
+            geisterkraut:   { name: 'Geisterkraut',      emoji: '👻', rarity: 'legendär',     price: 48,   growTime: 9,   sellValue: 30,     harvestType: 'multi'  },
+            donnerdistel:   { name: 'Donnerdistel',      emoji: '⚡', rarity: 'legendär',     price: 51,   growTime: 10,  sellValue: 165,    harvestType: 'single' },
 
             // ─── Mythisch ─────────────────────────────────
-            kristallrose:   { name: 'Kristallrose',      emoji: '💎', rarity: 'mythisch',     price: 70,   growTime: 15,  sellValue: 189,    harvestType: 'single' }, // ×2.70
-            himmelstraube:  { name: 'Himmels-Traube',    emoji: '🍇', rarity: 'mythisch',     price: 85,   growTime: 18,  sellValue: 243,    harvestType: 'single' }, // ×2.86
-            sternenkuerbis: { name: 'Sternenkürbis',     emoji: '⭐', rarity: 'mythisch',     price: 90,   growTime: 20,  sellValue: 54,     harvestType: 'multi'  }, // ×0.60
-            traumwinde:     { name: 'Traumwinde',        emoji: '🌙', rarity: 'mythisch',     price: 95,   growTime: 22,  sellValue: 58,     harvestType: 'multi'  }, // ×0.63
-            nebelrose:      { name: 'Nebelrose',         emoji: '🌫️', rarity: 'mythisch',     price: 75,   growTime: 16,  sellValue: 45,     harvestType: 'multi'  }, // ×0.54
-            schattenblatt:  { name: 'Schattenblatt',     emoji: '🖤', rarity: 'mythisch',     price: 80,   growTime: 17,  sellValue: 218,    harvestType: 'single' }, // ×2.72
+            kristallrose:   { name: 'Kristallrose',      emoji: '💎', rarity: 'mythisch',     price: 80,   growTime: 15,  sellValue: 357,    harvestType: 'single' },
+            himmelstraube:  { name: 'Himmels-Traube',    emoji: '🍇', rarity: 'mythisch',     price: 95,   growTime: 18,  sellValue: 458,    harvestType: 'single' },
+            sternenkuerbis: { name: 'Sternenkürbis',     emoji: '⭐', rarity: 'mythisch',     price: 100,  growTime: 20,  sellValue: 102,    harvestType: 'multi'  },
+            traumwinde:     { name: 'Traumwinde',        emoji: '🌙', rarity: 'mythisch',     price: 128,  growTime: 22,  sellValue: 110,    harvestType: 'multi'  },
+            nebelrose:      { name: 'Nebelrose',         emoji: '🌫️', rarity: 'mythisch',     price: 100,  growTime: 16,  sellValue: 85,     harvestType: 'multi'  },
+            schattenblatt:  { name: 'Schattenblatt',     emoji: '🖤', rarity: 'mythisch',     price: 107,  growTime: 17,  sellValue: 413,    harvestType: 'single' },
 
             // ─── Göttlich ─────────────────────────────────
             weltbaum:       { name: 'Weltbaum',          emoji: '🌳', rarity: 'göttlich',     price: 200,  growTime: 30,  sellValue: 620,    harvestType: 'single' }, // ×3.10
@@ -1396,9 +1414,18 @@
             zeitkraut:      { name: 'Zeitkraut',         emoji: '⏳', rarity: 'transzendent', price: 1300, growTime: 100, sellValue: 6500,   harvestType: 'single' }, // ×5.00
 
             // ─── Himmlisch ────────────────────────────────
-            sonnenkern:     { name: 'Sonnenkern',        emoji: '☀️', rarity: 'himmlisch',    price: 2200, growTime: 180, sellValue: 5940,   harvestType: 'multi'  }, // ×2.70
-            mondkern:       { name: 'Mondkern',          emoji: '🌕', rarity: 'himmlisch',    price: 2000, growTime: 160, sellValue: 10800,  harvestType: 'single' }, // ×5.40
-            sternenkern:    { name: 'Sternenkern',       emoji: '💫', rarity: 'himmlisch',    price: 2400, growTime: 200, sellValue: 6720,   harvestType: 'multi'  }, // ×2.80
+            sonnenkern:     { name: 'Sonnenkern',        emoji: '☀️', rarity: 'himmlisch',    price: 2200, growTime: 180, sellValue: 5940,   harvestType: 'multi'  },
+            mondkern:       { name: 'Mondkern',          emoji: '🌕', rarity: 'himmlisch',    price: 2000, growTime: 160, sellValue: 10800,  harvestType: 'single' },
+            sternenkern:    { name: 'Sternenkern',       emoji: '💫', rarity: 'himmlisch',    price: 2400, growTime: 200, sellValue: 6720,   harvestType: 'multi'  },
+
+            // ─── Kosmisch ─────────────────────────────────
+            galaxiebluete:  { name: 'Galaxieblüte',     emoji: '🌠', rarity: 'kosmisch',     price: 5000, growTime: 240, sellValue: 18000,  harvestType: 'multi'  },
+
+            // ─── Uralt ────────────────────────────────────
+            urweltfarn:     { name: 'Urweltfarn',       emoji: '🌋', rarity: 'uralt',        price: 12000, growTime: 400, sellValue: 60000, harvestType: 'single' },
+
+            // ─── Absolut ──────────────────────────────────
+            omegarose:      { name: 'Omegarose',        emoji: '🎇', rarity: 'absolut',      price: 25000, growTime: 720, sellValue: 200000,harvestType: 'single' },
 
             // ─── Geheim ───────────────────────────────────
             broetchenbaum:  { name: 'Brötchenbaum',     emoji: '🥐', rarity: 'geheim', price: 5,   growTime: 3,  sellValue: 25,    harvestType: 'multi',   adminOnly: true },
@@ -1451,6 +1478,9 @@
             prismatisch: 'linear-gradient(135deg, #ff9800 0%, #e91e63 25%, #9c27b0 50%, #2196f3 75%, #4caf50 100%)',
             transzendent: 'linear-gradient(135deg, #9c27b0 0%, #2196f3 50%, #87ceeb 100%)',
             himmlisch: 'linear-gradient(135deg, #f44336 0%, #ff9800 50%, #ffeb3b 100%)',
+            kosmisch: 'linear-gradient(135deg, #000428 0%, #004e92 35%, #00c9ff 65%, #92effd 100%)',
+            uralt: 'linear-gradient(135deg, #3d1a00 0%, #8b4500 30%, #d4a000 60%, #fff5b0 100%)',
+            absolut: 'linear-gradient(135deg, #e8e8e8 0%, #ffffff 25%, #c0c0c0 50%, #ffffff 75%, #e0e0ff 100%)',
             geheim: 'linear-gradient(135deg, #000000 0%, #888888 50%, #ffffff 100%)'
         };
 
