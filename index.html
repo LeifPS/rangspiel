@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ernte-Zeit</title>
+    <noscript>
+        <style>
+            body { background: #e8f5e9 !important; }
+            .noscript-warning {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #f44336;
+                color: white;
+                padding: 20px 40px;
+                border-radius: 10px;
+                font-size: 1.2em;
+                text-align: center;
+            }
+        </style>
+        <div class="noscript-warning">
+            ⚠️ JavaScript ist erforderlich für dieses Spiel!<br>
+            Bitte aktiviere JavaScript in deinem Browser.
+        </div>
+    </noscript>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+            font-size: 1.3em;
+        }
+
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4caf50;
+        }
+
+        /* Farm Grid */
+        .farm-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .tile {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #8d6e63 0%, #6d4c41 100%);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid transparent;
+        }
+
+        .tile:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .tile.empty {
+            background: linear-gradient(135deg, #a1887f 0%, #8d6e63 100%);
+        }
+
+        .tile.selected {
+            border-color: #ffeb3b;
+            box-shadow: 0 0 15px rgba(255,235,59,0.5);
+        }
+
+        .tile.ready {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 5px rgba(76,175,80,0.5); }
+            50% { box-shadow: 0 0 20px rgba(76,175,80,0.8); }
+        }
+
+        .tile-emoji {
+            font-size: 2.5em;
+        }
+
+        .tile-progress {
+            width: 80%;
+            height: 6px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .tile-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .tile-mutation {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.8em;
+            padding: 2px 6px;
+            border-radius: 5px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+        }
+
+        .tile-harvest-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tile.ready .tile-harvest-btn {
+            opacity: 1;
+        }
+
+        .tile-delete-btn {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tile:hover .tile-delete-btn {
+            opacity: 1;
+        }
+
+        /* Custom Tooltip */
+        .plant-tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            white-space: pre-line;
+            min-width: 220px;
+            max-width: 300px;
+            z-index: 10000;
+            pointer-events: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            line-height: 1.7;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .plant-tooltip.visible {
+            opacity: 1;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #f0f0f0;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .rarity-probabilities {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .rarity-prob {
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .plant-index-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .plant-index-item {
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .plant-index-item .emoji {
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .plant-index-item .name {
+            font-weight: bold;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .plant-index-item .rarity {
+            font-size: 0.8em;
+            text-align: center;
+            margin-top: 3px;
+        }
+
+        /* Shop Cards */
+        .shop-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 12px;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4caf50, #2196f3, #9c27b0);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card.selected {
+            border-color: #ffeb3b;
+            box-shadow: 0 0 15px rgba(255,235,59,0.5);
+        }
+
+        .card.selected::before {
+            opacity: 1;
+        }
+
+        .card-gewöhnlich { border-color: #9e9e9e; }
+        .card-ungewöhnlich { border-color: #4caf50; }
+        .card-selten { border-color: #2196f3; }
+        .card-legendär { border-color: #ffeb3b; }
+        .card-mythisch { border-color: #9c27b0; }
+        .card-göttlich { border-color: #212121; background: linear-gradient(135deg, #424242 0%, #212121 100%); color: white; }
+        .card-prismatisch { 
+            border-color: #e91e63; 
+            background: linear-gradient(135deg, #ff9800, #e91e63, #9c27b0, #2196f3, #4caf50);
+            color: white;
+        }
+        .card-transzendent {
+            border-color: #9c27b0;
+            background: linear-gradient(135deg, #9c27b0 0%, #2196f3 50%, #87ceeb 100%);
+            color: white;
+        }
+        .card-himmlisch {
+            border-color: #ff9800;
+            background: linear-gradient(135deg, #f44336 0%, #ff9800 50%, #ffeb3b 100%);
+            color: white;
+        }
+
+        .card-emoji {
+            font-size: 2.2em;
+            text-align: center;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .card-name {
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .card-rarity {
+            font-size: 0.65em;
+            text-transform: uppercase;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.05);
+        }
+
+        .card-quantity {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.75em;
+            display: inline-block;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.25);
+        }
+
+        .card-stats {
+            font-size: 0.7em;
+            line-height: 1.5;
+            background: rgba(0,0,0,0.03);
+            padding: 6px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .card-stats div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2px;
+        }
+
+        .buy-btn {
+            width: 100%;
+            margin-top: 6px;
+            padding: 6px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .buy-btn:disabled {
+            background: #bdbdbd;
+            cursor: not-allowed;
+        }
+
+        /* Buildings */
+        .building-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .building {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ff9800;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .building.owned {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left-color: #4caf50;
+        }
+
+        .building-info h3 {
+            color: #e65100;
+            margin-bottom: 5px;
+        }
+
+        .building.owned .building-info h3 {
+            color: #2e7d32;
+        }
+
+        .building-info p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .building-btn {
+            padding: 10px 20px;
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .building-btn:hover {
+            background: #f57c00;
+        }
+
+        .building-btn:disabled {
+            background: #bdbdbd;
+            cursor: not-allowed;
+        }
+
+        /* Tab System */
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95em;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: #d0d0d0;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            color: white;
+        }
+
+        .tab-content {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Upgrades */
+        .upgrade-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .upgrade {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #2196f3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .upgrade.owned {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left-color: #4caf50;
+        }
+
+        .upgrade-info h3 {
+            color: #1565c0;
+            margin-bottom: 5px;
+        }
+
+        .upgrade.owned .upgrade-info h3 {
+            color: #2e7d32;
+        }
+
+        .upgrade-info p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .upgrade-btn {
+            padding: 10px 20px;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .upgrade-btn:hover {
+            background: #1976d2;
+        }
+
+        .upgrade-btn:disabled {
+            background: #bdbdbd;
+            cursor: not-allowed;
+        }
+
+        /* Event Panel */
+        .event-panel {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .event-header h2 {
+            font-size: 1.5em;
+        }
+
+        .event-toggle {
+            background: #ff4081;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .event-toggle:hover {
+            background: #f50057;
+        }
+
+        .event-toggle.active {
+            background: #4caf50;
+        }
+
+        .event-content {
+            display: none;
+        }
+
+        .event-content.active {
+            display: block;
+        }
+
+        .event-currency {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .event-shop {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, #3f51b5 0%, #303f9f 100%);
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #7c4dff;
+            color: white;
+        }
+
+        .event-card-emoji {
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        /* Inventory */
+        .inventory {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .inventory-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mutation indicators */
+        .mutation-0 { background: rgba(158,158,158,0.8); }
+        .mutation-1 { background: rgba(33,150,243,0.8); }
+        .mutation-2 { background: rgba(255,215,0,0.8); }
+        .mutation-3 { background: rgba(244,67,54,0.8); }
+        .mutation-4 { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3); }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .shop-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .event-shop {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Tablet Support */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .farm-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .shop-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .building-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .building {
+                flex: 1 1 calc(50% - 10px);
+                min-width: 200px;
+            }
+            
+            .upgrade-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .upgrade {
+                flex: 1 1 calc(50% - 10px);
+                min-width: 200px;
+            }
+            
+            .modal-content {
+                max-width: 80%;
+            }
+            
+            .plant-index-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            /* Touch-friendly buttons */
+            button {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .tile-harvest-btn, .tile-delete-btn {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+            
+            .buy-btn {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Ernte-Zeit</h1>
+            <div class="header-stats">
+                <div class="stat">
+                    <div class="stat-label">Geld</div>
+                    <div class="stat-value">💰 <span id="money">10</span>€</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Runde</div>
+                    <div class="stat-value">⏱️ <span id="round">1</span></div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Nächste Runde</div>
+                    <div class="stat-value">🕐 <span id="next-round">--:--</span></div>
+                </div>
+                <div class="stat" id="mondstaub-stat" style="display: none;">
+                    <div class="stat-label">Mondstaub</div>
+                    <div class="stat-value">✨ <span id="mondstaub">0</span></div>
+                </div>
+                <button onclick="addTestHour()" style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)'">⏩ +1h Test</button>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <!-- Farm Section -->
+            <div class="section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 class="section-title" style="margin: 0;">🌱 Mein Hof</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="showPlantIndex()" style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)'">ℹ️ Info</button>
+                        <button onclick="harvestAll()" style="background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)'">🌾 Ernte alle</button>
+                    </div>
+                </div>
+                <div class="farm-grid" id="farm-grid">
+                    <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 20px;">Laden...</div>
+                </div>
+                <div class="inventory">
+                    <h3>📦 Lager</h3>
+                    <div id="inventory-list">
+                        <p>Leer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop Section -->
+            <div class="section">
+                <h2 class="section-title">🏪 Samen-Markt</h2>
+                <div class="shop-cards" id="shop-cards">
+                    <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 20px;">Laden...</div>
+                </div>
+            </div>
+
+            <!-- Buildings & Upgrades -->
+            <div class="section">
+                <div class="tab-container">
+                    <button class="tab-btn active" onclick="switchTab('buildings')" id="tab-buildings">🏗️ Gebäude</button>
+                    <button class="tab-btn" onclick="switchTab('upgrades')" id="tab-upgrades">⬆️ Verbesserungen</button>
+                </div>
+                
+                <div class="tab-content" id="tab-content-buildings">
+                    <div class="building-list" id="building-list">
+                        <div style="text-align: center; color: #666; padding: 20px;">Laden...</div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="tab-content-upgrades" style="display: none;">
+                    <div class="upgrade-list" id="upgrade-list">
+                        <div style="text-align: center; color: #666; padding: 20px;">Laden...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Panel -->
+        <div class="event-panel">
+            <div class="event-header">
+                <h2>🌙 Mondnacht Event</h2>
+                <button class="event-toggle" id="event-toggle" onclick="toggleEvent()">Event starten</button>
+            </div>
+            <div class="event-content" id="event-content" style="display: none;">
+                <div class="event-currency">
+                    <h3>✨ Mondstaub: <span id="event-mondstaub">0</span></h3>
+                    <p>Verbleibende Zeit: <span id="event-timer">24</span> Stunden</p>
+                </div>
+                <h3>🌙 Event-Shop</h3>
+                <div class="event-shop" id="event-shop"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tooltip element -->
+    <div id="tooltip" class="plant-tooltip"></div>
+
+    <!-- Plant Index Modal -->
+    <div id="plant-index-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📚 Pflanzen-Index</h2>
+                <button class="modal-close" onclick="closePlantIndex()">✕</button>
+            </div>
+            <div class="modal-body">
+                <h3>🎲 Seltenheits-Wahrscheinlichkeiten</h3>
+                <div class="rarity-probabilities">
+                    <div class="rarity-prob" style="color: #9e9e9e;">Gewöhnlich: ~52%</div>
+                    <div class="rarity-prob" style="color: #4caf50;">Ungewöhnlich: ~28%</div>
+                    <div class="rarity-prob" style="color: #2196f3;">Selten: ~14%</div>
+                    <div class="rarity-prob" style="color: #ffeb3b;">Legendär: ~3.5%</div>
+                    <div class="rarity-prob" style="color: #9c27b0;">Mythisch: ~1.7%</div>
+                    <div class="rarity-prob" style="color: #212121;">Göttlich: ~0.9%</div>
+                    <div class="rarity-prob" style="color: #e91e63;">Prismatisch: ~0.3%</div>
+                    <div class="rarity-prob" style="background: linear-gradient(135deg, #9c27b0, #2196f3, #87ceeb); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Transzendent: ~0.1%</div>
+                    <div class="rarity-prob" style="background: linear-gradient(135deg, #f44336, #ff9800, #ffeb3b); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Himmlisch: ~0.05%</div>
+                </div>
+                <h3>🌱 Alle Pflanzen</h3>
+                <div class="plant-index-grid" id="plant-index-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        const gameState = {
+            money: 10,
+            round: 1,
+            roundTime: 0,
+            selectedSeed: null,
+            tiles: Array(16).fill(null),
+            buildings: {
+                brunnen: false,
+                kompost: false,
+                scheune: false,
+                gewaechshaus: false,
+                marktstand: false
+            },
+            upgrades: {
+                shopUpgradeLevel: 0,
+                guteErde: false
+            },
+            inventory: {},
+            eventActive: false,
+            eventTime: 48,
+            mondstaub: 0,
+            lastSaveTime: Date.now(),
+            shopSeeds: [],
+            discoveredPlants: []
+        };
+
+        // Plant Database
+        const plants = {
+            // Gewöhnlich
+            karotte: { name: 'Karotte', emoji: '🥕', rarity: 'gewöhnlich', price: 1, growTime: 1, sellValue: 4, harvestType: 'single' },
+            kartoffel: { name: 'Kartoffel', emoji: '🥔', rarity: 'gewöhnlich', price: 1, growTime: 3, sellValue: 7, harvestType: 'single' },
+            salat: { name: 'Salat', emoji: '🥬', rarity: 'gewöhnlich', price: 2, growTime: 1, sellValue: 1, harvestType: 'multi' },
+            blume: { name: 'Blume', emoji: '🌸', rarity: 'gewöhnlich', price: 2, growTime: 1, sellValue: 2, harvestType: 'multi' },
+            erdbeere: { name: 'Erdbeere', emoji: '🍓', rarity: 'gewöhnlich', price: 3, growTime: 2, sellValue: 2, harvestType: 'multi' },
+            // Ungewöhnlich
+            zwiebel: { name: 'Zwiebel', emoji: '🧅', rarity: 'ungewöhnlich', price: 3, growTime: 2, sellValue: 8, harvestType: 'single' },
+            kuerbis: { name: 'Kürbis', emoji: '🎃', rarity: 'ungewöhnlich', price: 4, growTime: 4, sellValue: 12, harvestType: 'single' },
+            tomate: { name: 'Tomate', emoji: '🍅', rarity: 'ungewöhnlich', price: 3, growTime: 2, sellValue: 6, harvestType: 'multi' },
+            paprika: { name: 'Paprika', emoji: '🫑', rarity: 'ungewöhnlich', price: 4, growTime: 3, sellValue: 9, harvestType: 'multi' },
+            blaubeere: { name: 'Blaubeere', emoji: '🫐', rarity: 'ungewöhnlich', price: 5, growTime: 3, sellValue: 10, harvestType: 'multi' },
+            // Selten
+            wassermelone: { name: 'Wassermelone', emoji: '🍉', rarity: 'selten', price: 8, growTime: 5, sellValue: 20, harvestType: 'single' },
+            kokosnuss: { name: 'Kokosnuss', emoji: '🥥', rarity: 'selten', price: 10, growTime: 6, sellValue: 25, harvestType: 'single' },
+            bambus: { name: 'Bambus', emoji: '🎋', rarity: 'selten', price: 7, growTime: 4, sellValue: 15, harvestType: 'multi' },
+            sonnenblume: { name: 'Sonnenblume', emoji: '🌻', rarity: 'selten', price: 6, growTime: 3, sellValue: 12, harvestType: 'multi' },
+            kaktus: { name: 'Kaktus', emoji: '🌵', rarity: 'selten', price: 8, growTime: 5, sellValue: 18, harvestType: 'multi' },
+            // Legendär
+            drachenfrucht: { name: 'Drachenfrucht', emoji: '🐉', rarity: 'legendär', price: 15, growTime: 8, sellValue: 40, harvestType: 'single' },
+            mandragora: { name: 'Mandragora', emoji: '🌿', rarity: 'legendär', price: 20, growTime: 10, sellValue: 50, harvestType: 'single' },
+            feuerrose: { name: 'Feuerrose', emoji: '🌹', rarity: 'legendär', price: 18, growTime: 7, sellValue: 45, harvestType: 'multi' },
+            mondblüte: { name: 'Mondblüte', emoji: '🌙', rarity: 'legendär', price: 25, growTime: 12, sellValue: 60, harvestType: 'multi' },
+            // Mythisch
+            kristallrose: { name: 'Kristallrose', emoji: '💎', rarity: 'mythisch', price: 30, growTime: 15, sellValue: 80, harvestType: 'single' },
+            himmelstraube: { name: 'Himmels-Traube', emoji: '🍇', rarity: 'mythisch', price: 35, growTime: 18, sellValue: 100, harvestType: 'single' },
+            sternenkuerbis: { name: 'Sternenkürbis', emoji: '⭐', rarity: 'mythisch', price: 40, growTime: 20, sellValue: 120, harvestType: 'multi' },
+            // Göttlich
+            weltbaum: { name: 'Weltbaum', emoji: '🌳', rarity: 'göttlich', price: 100, growTime: 30, sellValue: 300, harvestType: 'single' },
+            ewigeLotus: { name: 'Ewige Lotusblüte', emoji: '🪷', rarity: 'göttlich', price: 150, growTime: 40, sellValue: 500, harvestType: 'multi' },
+            // Prismatic
+            prismatic: { name: 'Prismatische Blume', emoji: '🌈', rarity: 'prismatisch', price: 200, growTime: 50, sellValue: 1000, harvestType: 'multi' },
+            // Transzendent
+            voidBlume: { name: 'Void-Blume', emoji: '🌌', rarity: 'transzendent', price: 500, growTime: 100, sellValue: 5000, harvestType: 'multi' },
+            // Himmlisch
+            sonnenkern: { name: 'Sonnenkern', emoji: '☀️', rarity: 'himmlisch', price: 1000, growTime: 200, sellValue: 20000, harvestType: 'multi' }
+        };
+
+        // Event Plants
+        const eventPlants = {
+            mondfarn: { name: 'Mondfarn', emoji: '🌿', rarity: 'gewöhnlich', price: 5, growTime: 2, sellValue: 15, harvestType: 'single', effect: 'nightOnly' },
+            schattenlilie: { name: 'Schattenlilie', emoji: '🌑', rarity: 'ungewöhnlich', price: 8, growTime: 3, sellValue: 25, harvestType: 'multi', effect: 'alwaysNass' },
+            sternenstaubPilz: { name: 'Sternenstaub-Pilz', emoji: '🍄', rarity: 'selten', price: 12, growTime: 4, sellValue: 40, harvestType: 'multi', effect: 'bonusSeeds' },
+            mondkristall: { name: 'Mondkristall', emoji: '💠', rarity: 'legendär', price: 20, growTime: 6, sellValue: 70, harvestType: 'single', effect: 'highMutation' }
+        };
+
+        // Buildings
+        const buildings = {
+            brunnen: { name: 'Brunnen', cost: 8, effect: 'Alle Pflanzen wachsen 1 Stunde schneller', emoji: '💧' },
+            kompost: { name: 'Kompost', cost: 6, effect: 'Ausgewählte Pflanze +20% Verkaufswert', emoji: '🗑️' },
+            scheune: { name: 'Scheune', cost: 12, effect: 'Ernte lagern für später', emoji: '🏠' },
+            gewaechshaus: { name: 'Gewächshaus', cost: 20, effect: 'Einige Felder ignorieren Restriktionen', emoji: '🏡' },
+            marktstand: { name: 'Marktstand', cost: 30, effect: 'Zeigt 5 Karten statt 4', emoji: '🏪' }
+        };
+
+        // Upgrades
+        const upgrades = {
+            shopUpgrade: { name: 'Markt-Erweiterung', emoji: '📈' },
+            guteErde: { name: 'Gute Erde', emoji: '🌍', cost: 10, effect: '+10% Verkaufswert auf alle Ernten' }
+        };
+
+        // Shop upgrade costs per level
+        const shopUpgradeCosts = [50, 100, 200, 500, 1000];
+        const shopUpgradeUnlocks = ['Mythisch', 'Göttlich', 'Prismatisch', 'Transzendent', 'Himmlisch'];
+
+        // Rarity colors
+        const rarityColors = {
+            gewöhnlich: '#9e9e9e',
+            ungewöhnlich: '#4caf50',
+            selten: '#2196f3',
+            legendär: '#ffeb3b',
+            mythisch: '#9c27b0',
+            göttlich: '#212121',
+            prismatisch: '#e91e63',
+            transzendent: 'linear-gradient(135deg, #9c27b0 0%, #2196f3 50%, #87ceeb 100%)',
+            himmlisch: 'linear-gradient(135deg, #f44336 0%, #ff9800 50%, #ffeb3b 100%)'
+        };
+
+        // Rarity weights (probability weights)
+        const rarityWeights = {
+            gewöhnlich: 50,
+            ungewöhnlich: 30,
+            selten: 15,
+            legendär: 4,
+            mythisch: 0.9,
+            göttlich: 0.1,
+            prismatisch: 0.05,
+            transzendent: 0.02,
+            himmlisch: 0.01
+        };
+
+        // Mutation names
+        const mutationNames = ['', 'Nass', 'Vergoldet', 'Riesig', 'Regenbogen'];
+
+        // Weighted random selection based on rarity
+        function getWeightedRandomPlant(availablePlants) {
+            const weightedPlants = [];
+            let totalWeight = 0;
+            
+            availablePlants.forEach(plantId => {
+                const plant = plants[plantId];
+                const weight = rarityWeights[plant.rarity] || 1;
+                weightedPlants.push({ plantId, weight });
+                totalWeight += weight;
+            });
+            
+            let random = Math.random() * totalWeight;
+            for (const item of weightedPlants) {
+                random -= item.weight;
+                if (random <= 0) {
+                    return item.plantId;
+                }
+            }
+            
+            return weightedPlants[0].plantId;
+        }
+
+        // Save game to localStorage
+        function saveGame() {
+            gameState.lastSaveTime = Date.now();
+            localStorage.setItem('ernteZeitSave', JSON.stringify(gameState));
+        }
+
+        // Load game from localStorage
+        function loadGame() {
+            const saved = localStorage.getItem('ernteZeitSave');
+            if (saved) {
+                const loaded = JSON.parse(saved);
+                Object.assign(gameState, loaded);
+                
+                // Fallback for old save files with shopUpgrade boolean
+                if (loaded.upgrades && loaded.upgrades.shopUpgrade !== undefined && loaded.upgrades.shopUpgradeLevel === undefined) {
+                    gameState.upgrades.shopUpgradeLevel = loaded.upgrades.shopUpgrade ? 3 : 0;
+                    delete gameState.upgrades.shopUpgrade;
+                }
+                
+                // Fallback for missing upgrades object
+                if (!gameState.upgrades) {
+                    gameState.upgrades = { shopUpgradeLevel: 0, guteErde: false };
+                }
+                
+                // Fallback for missing discoveredPlants array
+                if (!gameState.discoveredPlants) {
+                    gameState.discoveredPlants = [];
+                }
+                
+                // Calculate elapsed time in hours
+                const now = Date.now();
+                const elapsedHours = (now - gameState.lastSaveTime) / (1000 * 60 * 60);
+                
+                // Update plant progress based on elapsed time
+                gameState.tiles.forEach(tile => {
+                    if (tile && tile.progress < tile.totalTime) {
+                        tile.progress += elapsedHours;
+                        if (tile.progress > tile.totalTime) {
+                            tile.progress = tile.totalTime;
+                        }
+                    }
+                });
+                
+                // Update round timer (1 hour per round)
+                gameState.roundTime += elapsedHours;
+                let roundsPassed = 0;
+                while (gameState.roundTime >= 1) {
+                    gameState.round++;
+                    gameState.roundTime -= 1;
+                    gameState.selectedSeed = null; // Deselect seed on new round
+                    roundsPassed++;
+                }
+                
+                // Clear shop if rounds passed while offline (will be refreshed on render)
+                if (roundsPassed > 0) {
+                    gameState.shopSeeds = [];
+                }
+                
+                // Update event timer (in hours)
+                if (gameState.eventActive) {
+                    gameState.eventTime -= elapsedHours;
+                    if (gameState.eventTime <= 0) {
+                        gameState.eventActive = false;
+                        gameState.eventTime = 24;
+                    }
+                }
+                
+                // Update last save time
+                gameState.lastSaveTime = now;
+            }
+        }
+
+        // Initialize game
+        function init() {
+            loadGame();
+            renderFarm();
+            renderShop();
+            renderBuildings();
+            renderUpgrades();
+            renderEventShop();
+            startTimer();
+        }
+
+        // Render farm grid
+        function renderFarm() {
+            const grid = document.getElementById('farm-grid');
+            grid.innerHTML = '';
+            
+            gameState.tiles.forEach((tile, index) => {
+                const tileEl = document.createElement('div');
+                tileEl.className = 'tile';
+                
+                if (!tile) {
+                    tileEl.classList.add('empty');
+                    tileEl.innerHTML = '<span style="font-size: 2em; opacity: 0.5;">+</span>';
+                    tileEl.onclick = () => plantSeed(index);
+                } else {
+                    const plant = plants[tile.plantId] || eventPlants[tile.plantId];
+                    const progress = (tile.progress / tile.totalTime) * 100;
+                    const remainingTime = tile.totalTime - tile.progress;
+                    const rarityColor = rarityColors[plant.rarity] || '#4caf50';
+                    
+                    // Use rainbow gradient for prismatic
+                    const progressBarStyle = plant.rarity === 'prismatisch' 
+                        ? `width: ${progress}%; background: linear-gradient(90deg, #ff9800, #e91e63, #9c27b0, #2196f3, #4caf50)`
+                        : `width: ${progress}%; background: ${rarityColor}`;
+                    
+                    // Build tooltip text
+                    let timeText = '';
+                    if (tile.progress >= tile.totalTime) {
+                        tileEl.classList.add('ready');
+                        timeText = 'Bereit zur Ernte!';
+                    } else {
+                        const hours = Math.floor(remainingTime);
+                        const minutes = Math.floor((remainingTime - hours) * 60);
+                        if (hours > 0) {
+                            timeText = `Noch ${hours}h ${minutes}min`;
+                        } else {
+                            timeText = `Noch ${minutes}min`;
+                        }
+                    }
+                    
+                    const mutationText = tile.mutation > 0 ? `\n🧬 Mutation: ${mutationNames[tile.mutation]}` : '';
+                    const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${plant.sellValue}€\n🔄 Erntetyp: ${plant.harvestType === 'single' ? 'Einmalig' : 'Mehrfach'}\n⏳ ${timeText}${mutationText}`;
+                    
+                    tileEl.innerHTML = `
+                        <div class="tile-emoji">${plant.emoji}</div>
+                        <div class="tile-progress">
+                            <div class="tile-progress-bar" style="${progressBarStyle}"></div>
+                        </div>
+                        ${tile.mutation > 0 ? `<div class="tile-mutation mutation-${tile.mutation}">${mutationNames[tile.mutation]}</div>` : ''}
+                        <button class="tile-harvest-btn" onclick="harvest(${index}, event)">Ernten</button>
+                        <button class="tile-delete-btn" onclick="deletePlant(${index}, event)">🗑️</button>
+                    `;
+                    
+                    tileEl.onclick = () => selectTile(index);
+                    tileEl.onmouseover = (e) => showTooltip(tooltipText, e.clientX, e.clientY);
+                    tileEl.onmouseout = () => hideTooltip();
+                }
+                
+                grid.appendChild(tileEl);
+            });
+        }
+
+        // Render shop
+        function renderShop() {
+            const shop = document.getElementById('shop-cards');
+            shop.innerHTML = '';
+            
+            // If no shop seeds, generate new ones
+            if (gameState.shopSeeds.length === 0) {
+                refreshShop();
+            }
+            
+            // Display available shop seeds with quantities
+            gameState.shopSeeds.forEach(seed => {
+                const plant = plants[seed.plantId];
+                if (!plant) return;
+                
+                const card = document.createElement('div');
+                const rarityClass = `card-${plant.rarity}`;
+                card.className = `card ${rarityClass}`;
+                if (gameState.selectedSeed === seed.plantId) card.classList.add('selected');
+                
+                const quantity = Math.floor(seed.quantity);
+                const profit = plant.sellValue - plant.price;
+                const profitPercent = Math.round((profit / plant.price) * 100);
+                const profitDisplay = plant.harvestType === 'multi' ? `${profitPercent}%+` : `${profitPercent}%`;
+                
+                card.innerHTML = `
+                    <div class="card-emoji">${plant.emoji}</div>
+                    <div class="card-header">
+                        <div class="card-name">${plant.name}</div>
+                        <div class="card-rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
+                    </div>
+                    <div class="card-quantity">x${quantity}</div>
+                    <div class="card-stats">
+                        <div><span>💰 Preis</span><span>${plant.price}€</span></div>
+                        <div><span>⏱️ Wachsen</span><span>${plant.growTime}h</span></div>
+                        <div><span>💵 Verkauf</span><span>${plant.sellValue}€</span></div>
+                        <div><span>📈 Gewinn</span><span style="color: ${profit >= 0 ? '#4caf50' : '#f44336'}">${profitDisplay}</span></div>
+                        <div><span>🔄 Typ</span><span>${plant.harvestType === 'single' ? 'Einmalig' : 'Mehrfach'}</span></div>
+                    </div>
+                    <button class="buy-btn" onclick="selectSeed('${seed.plantId}')">
+                        ${gameState.selectedSeed === seed.plantId ? '✓ Ausgewählt' : 'Auswählen'}
+                    </button>
+                `;
+                
+                shop.appendChild(card);
+            });
+        }
+
+        // Refresh shop with new seeds
+        function refreshShop() {
+            const cardCount = gameState.buildings.marktstand ? 5 : 4;
+            const level = gameState.upgrades.shopUpgradeLevel || 0;
+            
+            // Define unlocked rarities based on upgrade level
+            const unlockedRarities = {
+                0: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär'],
+                1: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch'],
+                2: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich'],
+                3: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich', 'prismatisch'],
+                4: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich', 'prismatisch', 'transzendent'],
+                5: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich', 'prismatisch', 'transzendent', 'himmlisch']
+            };
+            
+            const availablePlants = Object.keys(plants).filter(id => {
+                const plant = plants[id];
+                if (!plant || !plant.rarity) return false;
+                const rarities = unlockedRarities[Math.min(level, 5)] || unlockedRarities[0];
+                return rarities.includes(plant.rarity);
+            });
+            
+            // Frequency weights for shop (common appears 15x more than legendary)
+            const frequencyWeights = {
+                gewöhnlich: 15,
+                ungewöhnlich: 8,
+                selten: 4,
+                legendär: 1,
+                mythisch: 0.5,
+                göttlich: 0.25,
+                prismatisch: 0.1,
+                transzendent: 0.05,
+                himmlisch: 0.02
+            };
+            
+            // Weighted random selection (unique plants)
+            const selected = [];
+            const tempAvailable = [...availablePlants];
+            for (let i = 0; i < cardCount && tempAvailable.length > 0; i++) {
+                const weightedPlants = [];
+                let totalWeight = 0;
+                
+                tempAvailable.forEach(plantId => {
+                    const plant = plants[plantId];
+                    const weight = frequencyWeights[plant.rarity] || 1;
+                    weightedPlants.push({ plantId, weight });
+                    totalWeight += weight;
+                });
+                
+                let random = Math.random() * totalWeight;
+                for (const item of weightedPlants) {
+                    random -= item.weight;
+                    if (random <= 0) {
+                        selected.push(item.plantId);
+                        const index = tempAvailable.indexOf(item.plantId);
+                        tempAvailable.splice(index, 1);
+                        break;
+                    }
+                }
+            }
+            
+            // Assign quantities based on rarity with variation and minimum of 1
+            gameState.shopSeeds = selected.map(plantId => {
+                const rarity = plants[plantId].rarity;
+                const baseQuantity = frequencyWeights[rarity] || 1;
+                
+                // Variation range based on rarity (more variation for lower rarities)
+                const variationRanges = {
+                    gewöhnlich: 0.4,      // ±60% (0.4 to 1.0)
+                    ungewöhnlich: 0.5,    // ±50% (0.5 to 1.0)
+                    selten: 0.6,        // ±40% (0.6 to 1.0)
+                    legendär: 0.8,   // ±20% (0.8 to 1.0)
+                    mythisch: 0.9,       // ±10% (0.9 to 1.0)
+                    göttlich: 0.95,      // ±5% (0.95 to 1.0)
+                    prismatisch: 1.0,     // No variation
+                    transzendent: 1.0,   // No variation
+                    himmlisch: 1.0       // No variation
+                };
+                
+                const variation = variationRanges[rarity] || 0.7;
+                const randomFactor = variation + Math.random() * (1 - variation);
+                const quantity = Math.max(1, Math.floor(baseQuantity * randomFactor));
+                
+                return {
+                    plantId: plantId,
+                    quantity: quantity
+                };
+            });
+        }
+
+        // Render buildings
+        function renderBuildings() {
+            const list = document.getElementById('building-list');
+            list.innerHTML = '';
+            
+            Object.entries(buildings).forEach(([id, building]) => {
+                const owned = gameState.buildings[id];
+                const el = document.createElement('div');
+                el.className = `building ${owned ? 'owned' : ''}`;
+                
+                el.innerHTML = `
+                    <div class="building-info">
+                        <h3>${building.emoji} ${building.name}</h3>
+                        <p>${building.effect}</p>
+                    </div>
+                    ${owned ? '<span>✅ Besitzt</span>' : `<button class="building-btn" onclick="buyBuilding('${id}')" ${gameState.money < building.cost ? 'disabled' : ''}>${building.cost}€</button>`}
+                `;
+                
+                list.appendChild(el);
+            });
+        }
+
+        // Render upgrades
+        function renderUpgrades() {
+            const list = document.getElementById('upgrade-list');
+            list.innerHTML = '';
+            
+            // Render shop upgrade (tiered)
+            const level = gameState.upgrades.shopUpgradeLevel;
+            const maxLevel = 5;
+            const shopUpgrade = upgrades.shopUpgrade;
+            
+            const shopEl = document.createElement('div');
+            shopEl.className = `upgrade ${level >= maxLevel ? 'owned' : ''}`;
+            
+            if (level >= maxLevel) {
+                shopEl.innerHTML = `
+                    <div class="upgrade-info">
+                        <h3>${shopUpgrade.emoji} ${shopUpgrade.name}</h3>
+                        <p>Stufe ${level}/5 - Alle Seltenheiten freigeschaltet</p>
+                    </div>
+                    <span>✅ Maximum</span>
+                `;
+            } else {
+                const cost = shopUpgradeCosts[level];
+                const nextUnlock = shopUpgradeUnlocks[level];
+                shopEl.innerHTML = `
+                    <div class="upgrade-info">
+                        <h3>${shopUpgrade.emoji} ${shopUpgrade.name}</h3>
+                        <p>Stufe ${level}/5 - Freischaltet: ${nextUnlock}</p>
+                    </div>
+                    <button class="upgrade-btn" onclick="buyUpgrade('shopUpgrade')" ${gameState.money < cost ? 'disabled' : ''}>${cost}€</button>
+                `;
+            }
+            
+            list.appendChild(shopEl);
+            
+            // Render Gute Erde upgrade
+            const guteErde = upgrades.guteErde;
+            const guteErdeOwned = gameState.upgrades.guteErde;
+            
+            const guteErdeEl = document.createElement('div');
+            guteErdeEl.className = `upgrade ${guteErdeOwned ? 'owned' : ''}`;
+            
+            if (guteErdeOwned) {
+                guteErdeEl.innerHTML = `
+                    <div class="upgrade-info">
+                        <h3>${guteErde.emoji} ${guteErde.name}</h3>
+                        <p>${guteErde.effect}</p>
+                    </div>
+                    <span>✅ Besitzt</span>
+                `;
+            } else {
+                guteErdeEl.innerHTML = `
+                    <div class="upgrade-info">
+                        <h3>${guteErde.emoji} ${guteErde.name}</h3>
+                        <p>${guteErde.effect}</p>
+                    </div>
+                    <button class="upgrade-btn" onclick="buyUpgrade('guteErde')" ${gameState.money < guteErde.cost ? 'disabled' : ''}>${guteErde.cost}€</button>
+                `;
+            }
+            
+            list.appendChild(guteErdeEl);
+        }
+
+        // Render event shop
+        function renderEventShop() {
+            const shop = document.getElementById('event-shop');
+            shop.innerHTML = '';
+            
+            Object.entries(eventPlants).forEach(([id, plant]) => {
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                
+                card.innerHTML = `
+                    <div class="event-card-emoji">${plant.emoji}</div>
+                    <div class="card-name">${plant.name}</div>
+                    <div class="card-rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
+                    <div class="card-stats">
+                        <div>✨ Preis: ${plant.price} Mondstaub</div>
+                        <div>⏱️ Wachsen: ${plant.growTime}h</div>
+                        <div>💵 Verkauf: ${plant.sellValue}€</div>
+                        <div>🎯 ${plant.effect}</div>
+                    </div>
+                    <button class="buy-btn" onclick="buyEventSeed('${id}')">
+                        Kaufen
+                    </button>
+                `;
+                
+                shop.appendChild(card);
+            });
+        }
+
+        // Select seed
+        function selectSeed(plantId) {
+            // Check if seed is still available in shop
+            const seed = gameState.shopSeeds.find(s => s.plantId === plantId);
+            if (!seed || seed.quantity <= 0) {
+                showNotification('Dieser Samen ist nicht mehr verfügbar!', 'error');
+                return;
+            }
+            
+            gameState.selectedSeed = plantId;
+            renderShop();
+            saveGame();
+            showNotification(`${plants[plantId].name} ausgewählt`);
+        }
+
+        // Plant seed
+        function plantSeed(tileIndex) {
+            if (!gameState.selectedSeed) {
+                showNotification('Wähle zuerst einen Samen aus!', 'error');
+                return;
+            }
+            
+            // Check if seed is still available in shop
+            const seed = gameState.shopSeeds.find(s => s.plantId === gameState.selectedSeed);
+            if (!seed || seed.quantity <= 0) {
+                showNotification('Dieser Samen ist nicht mehr verfügbar!', 'error');
+                gameState.selectedSeed = null;
+                renderShop();
+                return;
+            }
+            
+            const plant = plants[gameState.selectedSeed];
+            if (gameState.money < plant.price) {
+                showNotification('Nicht genug Geld!', 'error');
+                return;
+            }
+            
+            gameState.money -= plant.price;
+            let growTime = plant.growTime;
+            
+            if (gameState.buildings.brunnen) {
+                growTime = Math.max(1, growTime - 1);
+            }
+            
+            gameState.tiles[tileIndex] = {
+                plantId: gameState.selectedSeed,
+                progress: 0,
+                totalTime: growTime,
+                mutation: 0
+            };
+            
+            // Mark plant as discovered
+            if (!gameState.discoveredPlants.includes(gameState.selectedSeed)) {
+                gameState.discoveredPlants.push(gameState.selectedSeed);
+            }
+            
+            // Decrease seed quantity
+            seed.quantity--;
+            
+            // Remove seed from shop if quantity is 0
+            if (seed.quantity <= 0) {
+                const seedIndex = gameState.shopSeeds.indexOf(seed);
+                if (seedIndex > -1) {
+                    gameState.shopSeeds.splice(seedIndex, 1);
+                }
+                // Only deselect if quantity is 0
+                gameState.selectedSeed = null;
+            }
+            
+            updateUI();
+            renderFarm();
+            renderShop();
+            saveGame();
+            showNotification(`${plant.name} gepflanzt!`);
+        }
+
+        // Harvest
+        function harvest(tileIndex, event) {
+            event.stopPropagation();
+            const tile = gameState.tiles[tileIndex];
+            if (!tile || tile.progress < tile.totalTime) return;
+            
+            const plant = plants[tile.plantId] || eventPlants[tile.plantId];
+            let sellValue = plant.sellValue;
+            
+            // Apply mutation effects
+            if (tile.mutation === 1) sellValue *= 1.2; // Nass
+            if (tile.mutation === 2) sellValue *= 2; // Vergoldet
+            if (tile.mutation === 3) sellValue *= 3; // Riesig
+            if (tile.mutation === 4) sellValue *= 5; // Regenbogen
+            
+            // Apply building effects
+            if (gameState.buildings.kompost) sellValue *= 1.2;
+            
+            // Apply upgrade effects
+            if (gameState.upgrades.guteErde) sellValue *= 1.1;
+            
+            gameState.money += Math.floor(sellValue);
+            
+            // For multi-harvest plants, don't remove
+            if (plant.harvestType === 'single') {
+                gameState.tiles[tileIndex] = null;
+            } else {
+                tile.progress = 0;
+            }
+            
+            updateUI();
+            renderFarm();
+            saveGame();
+            showNotification(`${plant.name} geerntet! +${Math.floor(sellValue)}€`);
+        }
+
+        // Harvest all ready plants
+        function harvestAll() {
+            let totalEarned = 0;
+            let harvestedCount = 0;
+            
+            gameState.tiles.forEach((tile, index) => {
+                if (tile && tile.progress >= tile.totalTime) {
+                    const plant = plants[tile.plantId] || eventPlants[tile.plantId];
+                    let sellValue = plant.sellValue;
+                    
+                    // Apply mutation effects
+                    if (tile.mutation === 1) sellValue *= 1.2;
+                    if (tile.mutation === 2) sellValue *= 2;
+                    if (tile.mutation === 3) sellValue *= 3;
+                    if (tile.mutation === 4) sellValue *= 5;
+                    
+                    // Apply building effects
+                    if (gameState.buildings.kompost) sellValue *= 1.2;
+                    
+                    // Apply upgrade effects
+                    if (gameState.upgrades.guteErde) sellValue *= 1.1;
+                    
+                    gameState.money += Math.floor(sellValue);
+                    totalEarned += Math.floor(sellValue);
+                    harvestedCount++;
+                    
+                    // For multi-harvest plants, don't remove
+                    if (plant.harvestType === 'single') {
+                        gameState.tiles[index] = null;
+                    } else {
+                        tile.progress = 0;
+                    }
+                }
+            });
+            
+            if (harvestedCount > 0) {
+                updateUI();
+                renderFarm();
+                saveGame();
+                showNotification(`${harvestedCount} Pflanzen geerntet! +${totalEarned}€`);
+            } else {
+                showNotification('Keine Pflanzen bereit zur Ernte!', 'error');
+            }
+        }
+
+        // Select tile (for future features)
+        function selectTile(tileIndex) {
+            // Could be used for compost targeting, etc.
+        }
+
+        // Delete plant
+        function deletePlant(tileIndex, event) {
+            event.stopPropagation();
+            const tile = gameState.tiles[tileIndex];
+            if (!tile) return;
+            
+            const plant = plants[tile.plantId] || eventPlants[tile.plantId];
+            
+            if (confirm(`${plant.name} entfernen?`)) {
+                gameState.tiles[tileIndex] = null;
+                renderFarm();
+                saveGame();
+                showNotification(`${plant.name} entfernt`);
+            }
+        }
+
+        // Buy building
+        function buyBuilding(buildingId) {
+            const building = buildings[buildingId];
+            if (gameState.money < building.cost) {
+                showNotification('Nicht genug Geld!', 'error');
+                return;
+            }
+            
+            gameState.money -= building.cost;
+            gameState.buildings[buildingId] = true;
+            
+            updateUI();
+            renderBuildings();
+            renderShop();
+            saveGame();
+            showNotification(`${building.name} gekauft!`);
+        }
+
+        // Buy upgrade
+        function buyUpgrade(upgradeId) {
+            if (upgradeId === 'shopUpgrade') {
+                const level = gameState.upgrades.shopUpgradeLevel;
+                const maxLevel = 5;
+                
+                if (level >= maxLevel) {
+                    showNotification('Bereits auf Maximum!', 'error');
+                    return;
+                }
+                
+                const cost = shopUpgradeCosts[level];
+                if (gameState.money < cost) {
+                    showNotification('Nicht genug Geld!', 'error');
+                    return;
+                }
+                
+                gameState.money -= cost;
+                gameState.upgrades.shopUpgradeLevel++;
+                
+                updateUI();
+                renderUpgrades();
+                renderShop();
+                saveGame();
+                showNotification(`Markt-Erweiterung Stufe ${gameState.upgrades.shopUpgradeLevel} gekauft!`);
+            } else if (upgradeId === 'guteErde') {
+                if (gameState.upgrades.guteErde) {
+                    showNotification('Bereits besitzt!', 'error');
+                    return;
+                }
+                
+                const upgrade = upgrades.guteErde;
+                if (gameState.money < upgrade.cost) {
+                    showNotification('Nicht genug Geld!', 'error');
+                    return;
+                }
+                
+                gameState.money -= upgrade.cost;
+                gameState.upgrades.guteErde = true;
+                
+                updateUI();
+                renderUpgrades();
+                saveGame();
+                showNotification(`${upgrade.name} gekauft!`);
+            }
+        }
+
+        // Buy event seed
+        function buyEventSeed(plantId) {
+            const plant = eventPlants[plantId];
+            if (gameState.mondstaub < plant.price) {
+                showNotification('Nicht genug Mondstaub!', 'error');
+                return;
+            }
+            
+            gameState.mondstaub -= plant.price;
+            gameState.selectedSeed = plantId;
+            
+            updateUI();
+            saveGame();
+            showNotification(`${plant.name} ausgewählt!`);
+        }
+
+        // Toggle event
+        function toggleEvent() {
+            gameState.eventActive = !gameState.eventActive;
+            const toggle = document.getElementById('event-toggle');
+            const content = document.getElementById('event-content');
+            const stat = document.getElementById('mondstaub-stat');
+            
+            if (gameState.eventActive) {
+                toggle.textContent = 'Event beenden';
+                toggle.style.background = '#f44336';
+                content.style.display = 'block';
+                stat.style.display = 'block';
+                gameState.eventTime = 24; // Reset to 24 hours
+                renderEventShop();
+            } else {
+                toggle.textContent = 'Event starten';
+                toggle.style.background = '';
+                content.style.display = 'none';
+                stat.style.display = 'none';
+            }
+            
+            updateUI();
+            saveGame();
+        }
+
+        // Update UI
+        function updateUI() {
+            document.getElementById('money').textContent = gameState.money;
+            document.getElementById('round').textContent = gameState.round;
+            document.getElementById('mondstaub').textContent = gameState.mondstaub;
+            document.getElementById('event-mondstaub').textContent = gameState.mondstaub;
+            document.getElementById('event-timer').textContent = gameState.eventTime;
+            
+            // Re-render upgrades to update button states
+            renderUpgrades();
+            renderBuildings();
+            
+            // Calculate time until next hour (next round)
+            const now = new Date();
+            const minutesUntilNextHour = 59 - now.getMinutes();
+            const secondsUntilNextMinute = 59 - now.getSeconds();
+            document.getElementById('next-round').textContent = 
+                `${minutesUntilNextHour}:${secondsUntilNextMinute.toString().padStart(2, '0')}`;
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            notification.style.background = type === 'error' ? '#f44336' : '#4caf50';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Show tooltip
+        function showTooltip(text, x, y) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.textContent = text;
+            tooltip.style.left = x + 'px';
+            tooltip.style.top = (y - 10) + 'px';
+            tooltip.classList.add('visible');
+        }
+
+        // Hide tooltip
+        function hideTooltip() {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.classList.remove('visible');
+        }
+
+        // Switch tab
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(`tab-content-${tabName}`).style.display = 'block';
+            
+            // Add active class to selected tab button
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        // Show plant index modal
+        function showPlantIndex() {
+            const modal = document.getElementById('plant-index-modal');
+            const grid = document.getElementById('plant-index-grid');
+            grid.innerHTML = '';
+            
+            // Populate plant index
+            Object.entries(plants).forEach(([id, plant]) => {
+                const isDiscovered = gameState.discoveredPlants.includes(id);
+                const item = document.createElement('div');
+                item.className = 'plant-index-item';
+                item.style.borderColor = rarityColors[plant.rarity];
+                
+                if (isDiscovered) {
+                    item.innerHTML = `
+                        <div class="emoji">${plant.emoji}</div>
+                        <div class="name">${plant.name}</div>
+                        <div class="rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
+                    `;
+                } else {
+                    item.innerHTML = `
+                        <div class="emoji">?</div>
+                        <div class="name">???</div>
+                        <div class="rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
+                    `;
+                }
+                
+                grid.appendChild(item);
+            });
+            
+            modal.style.display = 'flex';
+        }
+
+        // Close plant index modal
+        function closePlantIndex() {
+            document.getElementById('plant-index-modal').style.display = 'none';
+        }
+
+        // Add 1 hour for testing
+        function addTestHour() {
+            const hoursToAdd = 1;
+            
+            // Update plant progress
+            gameState.tiles.forEach(tile => {
+                if (tile && tile.progress < tile.totalTime) {
+                    tile.progress += hoursToAdd;
+                    if (tile.progress > tile.totalTime) {
+                        tile.progress = tile.totalTime;
+                    }
+                }
+            });
+            
+            // Update round timer (1 hour per round)
+            gameState.roundTime += hoursToAdd;
+            while (gameState.roundTime >= 1) {
+                gameState.round++;
+                gameState.roundTime -= 1;
+                gameState.selectedSeed = null; // Deselect seed on new round
+                refreshShop();
+                renderShop();
+            }
+            
+            // Update event timer (in hours)
+            if (gameState.eventActive) {
+                gameState.eventTime -= hoursToAdd;
+                if (gameState.eventTime <= 0) {
+                    gameState.eventActive = false;
+                    gameState.eventTime = 24;
+                }
+            }
+            
+            updateUI();
+            updateProgressBars();
+            saveGame();
+            showNotification('1 Stunde hinzugefügt!');
+        }
+
+        // Update progress bars without re-rendering entire grid
+        function updateProgressBars() {
+            gameState.tiles.forEach((tile, index) => {
+                if (tile) {
+                    const progress = (tile.progress / tile.totalTime) * 100;
+                    const tileEl = document.querySelector(`.farm-grid > div:nth-child(${index + 1})`);
+                    if (tileEl) {
+                        const progressBar = tileEl.querySelector('.tile-progress-bar');
+                        if (progressBar) {
+                            progressBar.style.width = `${progress}%`;
+                        }
+                        
+                        const plant = plants[tile.plantId] || eventPlants[tile.plantId];
+                        const rarityColor = rarityColors[plant.rarity] || '#4caf50';
+                        
+                        // Use rainbow gradient for prismatic
+                        if (plant.rarity === 'prismatisch') {
+                            progressBar.style.background = 'linear-gradient(90deg, #ff9800, #e91e63, #9c27b0, #2196f3, #4caf50)';
+                        } else {
+                            progressBar.style.background = rarityColor;
+                        }
+                        
+                        const remainingTime = tile.totalTime - tile.progress;
+                        
+                        // Update tooltip text
+                        let timeText = '';
+                        if (tile.progress >= tile.totalTime && !tileEl.classList.contains('ready')) {
+                            tileEl.classList.add('ready');
+                            timeText = 'Bereit zur Ernte!';
+                        } else if (tile.progress < tile.totalTime) {
+                            if (tileEl.classList.contains('ready')) {
+                                tileEl.classList.remove('ready');
+                            }
+                            const hours = Math.floor(remainingTime);
+                            const minutes = Math.floor((remainingTime - hours) * 60);
+                            if (hours > 0) {
+                                timeText = `Noch ${hours}h ${minutes}min`;
+                            } else {
+                                timeText = `Noch ${minutes}min`;
+                            }
+                        }
+                        
+                        const mutationText = tile.mutation > 0 ? `\n🧬 Mutation: ${mutationNames[tile.mutation]}` : '';
+                        const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${plant.sellValue}€\n🔄 Erntetyp: ${plant.harvestType === 'single' ? 'Einmalig' : 'Mehrfach'}\n⏳ ${timeText}${mutationText}`;
+                        
+                        // Update mouseover handler
+                        tileEl.onmouseover = (e) => showTooltip(tooltipText, e.clientX, e.clientY);
+                    }
+                }
+            });
+        }
+
+        // Game timer
+        function startTimer() {
+            let lastTick = Date.now();
+            let saveCounter = 0;
+            setInterval(() => {
+                const now = Date.now();
+                const elapsedSeconds = (now - lastTick) / 1000;
+                const elapsedHours = elapsedSeconds / 3600; // Convert to hours
+                lastTick = now;
+                
+                // Update plant growth
+                gameState.tiles.forEach((tile, index) => {
+                    if (tile && tile.progress < tile.totalTime) {
+                        tile.progress += elapsedHours;
+                        if (tile.progress > tile.totalTime) {
+                            tile.progress = tile.totalTime;
+                        }
+                    }
+                });
+                
+                // Update round timer (1 hour per round)
+                gameState.roundTime += elapsedHours;
+                if (gameState.roundTime >= 1) {
+                    gameState.round++;
+                    gameState.roundTime -= 1;
+                    gameState.selectedSeed = null; // Deselect seed on new round
+                    refreshShop(); // Refresh shop with new seeds each round
+                    renderShop();
+                }
+                
+                // Update event timer (in hours)
+                if (gameState.eventActive) {
+                    gameState.eventTime -= elapsedHours;
+                    if (gameState.eventTime <= 0) {
+                        gameState.eventActive = false;
+                        gameState.eventTime = 24;
+                        // Update UI to hide event
+                        const toggle = document.getElementById('event-toggle');
+                        const content = document.getElementById('event-content');
+                        const stat = document.getElementById('mondstaub-stat');
+                        toggle.textContent = 'Event starten';
+                        toggle.style.background = '';
+                        content.style.display = 'none';
+                        stat.style.display = 'none';
+                    }
+                }
+                
+                updateUI();
+                updateProgressBars();
+                
+                // Auto-save every 5 seconds
+                saveCounter += elapsedSeconds;
+                if (saveCounter >= 5) {
+                    gameState.lastSaveTime = Date.now();
+                    saveGame();
+                    saveCounter = 0;
+                }
+            }, 1000); // Update every second instead of 100ms
+        }
+
+        // Start game
+        init();
+    </script>
+</body>
+</html>
