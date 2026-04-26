@@ -171,7 +171,45 @@
         }
 
         .tile.empty {
-            background: linear-gradient(135deg, #a1887f 0%, #8d6e63 100%);
+            background:
+                radial-gradient(ellipse at 30% 25%, #6d4c41 0%, #4e342e 55%, #3e2723 100%);
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.35), inset 0 -1px 3px rgba(255,255,255,0.04);
+        }
+
+        body.dark-mode .tile.empty {
+            background:
+                radial-gradient(ellipse at 30% 25%, #3e2723 0%, #2e1b0f 55%, #1a0f08 100%);
+        }
+
+        .tile.greenhouse {
+            border-color: rgba(100, 200, 220, 0.35);
+        }
+
+        .tile.greenhouse.empty {
+            background:
+                radial-gradient(ellipse at 30% 25%, #4a5e3a 0%, #2d3e22 55%, #1c2a13 100%);
+            box-shadow:
+                inset 0 2px 6px rgba(0,0,0,0.35),
+                inset 0 0 12px rgba(100, 220, 180, 0.08),
+                0 0 0 1px rgba(100, 200, 220, 0.2);
+        }
+
+        body.dark-mode .tile.greenhouse.empty {
+            background:
+                radial-gradient(ellipse at 30% 25%, #2d3e22 0%, #1c2a13 55%, #0e1a09 100%);
+        }
+
+        .tile.greenhouse:not(.empty) {
+            box-shadow: inset 0 0 10px rgba(100, 220, 180, 0.08), 0 0 0 1px rgba(100, 200, 220, 0.2);
+        }
+
+        .tile-greenhouse-badge {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            font-size: 0.7em;
+            opacity: 0.7;
+            line-height: 1;
         }
 
         .tile.selected {
@@ -351,6 +389,199 @@
             text-align: center;
         }
 
+        .admin-section {
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .admin-section h3 {
+            margin: 0 0 12px 0;
+            font-size: 1em;
+        }
+
+        .admin-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .admin-row input[type="number"],
+        .admin-row input[type="text"],
+        .admin-row select {
+            flex: 1;
+            min-width: 100px;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95em;
+        }
+
+        .admin-row button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            background: #388e3c;
+            color: white;
+        }
+
+        .admin-row button.secondary {
+            background: #1976d2;
+        }
+
+        .admin-login-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .admin-login-wrap input {
+            width: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        .admin-login-wrap button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            background: #333;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .admin-plant-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .admin-plant-tag {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            background: #e0e0e0;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: border-color 0.15s;
+        }
+
+        .admin-plant-tag.selected {
+            border-color: #333;
+        }
+
+        .plant-detail-hero {
+            font-size: 5em;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .plant-detail-name {
+            font-size: 1.6em;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .plant-detail-rarity {
+            display: inline-block;
+            font-size: 0.85em;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 20px;
+            background: #f0f0f0;
+            margin-bottom: 20px;
+        }
+
+        .plant-detail-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .plant-detail-stat {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 12px 8px;
+        }
+
+        .plant-detail-stat .stat-val {
+            font-size: 1.3em;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .plant-detail-stat .stat-lbl {
+            font-size: 0.72em;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .plant-detail-extras {
+            text-align: left;
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .plant-detail-extra-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.92em;
+        }
+
+        .plant-detail-extra-row .lbl { color: #777; }
+        .plant-detail-extra-row .val { font-weight: 700; }
+
+        .plant-index-item.discovered {
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .plant-index-item.discovered:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .discovery-stats {
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .discovery-total {
+            font-size: 1.05em;
+            margin-bottom: 10px;
+        }
+
+        .discovery-rarities {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 6px;
+        }
+
+        .discovery-rarity {
+            font-size: 0.88em;
+            font-weight: 600;
+        }
+
         .plant-index-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -448,6 +679,12 @@
         .card-himmlisch {
             border-color: #ff9800;
             background: linear-gradient(135deg, #f44336 0%, #ff9800 50%, #ffeb3b 100%);
+            color: white;
+        }
+        .card-admin {
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #1a1a1a 0%, #555 50%, #e0e0e0 100%) padding-box,
+                        linear-gradient(135deg, #000 0%, #fff 100%) border-box;
             color: white;
         }
 
@@ -908,7 +1145,7 @@
                     <div class="stat-value">✨ <span id="mondstaub">0</span></div>
                 </div>
                 <button onclick="openProfileModal()" id="profile-btn" style="background: linear-gradient(135deg, #7b1fa2 0%, #4a148c 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)'">👤 Profil</button>
-                <button onclick="addTestHour()" style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)'">⏩ +1h Test</button>
+                <button onclick="openAdmin()" style="background: linear-gradient(135deg, #424242 0%, #212121 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)'">🔧 Admin</button>
             </div>
         </header>
 
@@ -990,9 +1227,70 @@
                     <div class="rarity-prob" style="background: linear-gradient(135deg, #9c27b0, #2196f3, #87ceeb); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Transzendent: ~0.1%</div>
                     <div class="rarity-prob" style="background: linear-gradient(135deg, #f44336, #ff9800, #ffeb3b); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Himmlisch: ~0.05%</div>
                 </div>
+                <div class="discovery-stats">
+                    <div class="discovery-total" id="discovery-total"></div>
+                    <div class="discovery-rarities" id="discovery-rarities"></div>
+                </div>
                 <h3>🌱 Alle Pflanzen</h3>
                 <div class="plant-index-grid" id="plant-index-grid"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- Admin Modal -->
+    <div id="admin-modal" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width:480px;">
+            <div class="modal-header">
+                <h2>🔧 Admin Panel</h2>
+                <button class="modal-close" onclick="closeAdmin()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="admin-login-section" class="admin-login-wrap">
+                    <div style="color:#666; font-size:0.9em;">Code eingeben</div>
+                    <input type="password" id="admin-code-input" placeholder="••••" onkeydown="if(event.key==='Enter')adminLogin()">
+                    <button onclick="adminLogin()">Einloggen</button>
+                    <div id="admin-login-error" style="color:#e53935;font-size:0.85em;display:none;">Falscher Code</div>
+                </div>
+                <div id="admin-content" style="display:none;">
+                    <!-- Geld -->
+                    <div class="admin-section">
+                        <h3>💰 Geld anpassen</h3>
+                        <div class="admin-row">
+                            <input type="number" id="admin-money-val" placeholder="Betrag" min="0">
+                            <button onclick="adminSetMoney(false)">Setzen</button>
+                            <button class="secondary" onclick="adminSetMoney(true)">Addieren</button>
+                        </div>
+                    </div>
+                    <!-- Zeit -->
+                    <div class="admin-section">
+                        <h3>⏱️ Zeit hinzufügen</h3>
+                        <div class="admin-row">
+                            <input type="number" id="admin-hours-val" placeholder="Stunden" value="1" min="0.1" step="0.5">
+                            <button onclick="adminAddTime()">Hinzufügen</button>
+                        </div>
+                    </div>
+                    <!-- Shop -->
+                    <div class="admin-section">
+                        <h3>🏪 Pflanze in Shop</h3>
+                        <div class="admin-row">
+                            <select id="admin-plant-select" style="flex:2;"></select>
+                            <input type="number" id="admin-plant-qty" value="5" min="1" style="flex:0.5; min-width:60px;">
+                            <button onclick="adminAddToShop()">In Shop</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plant Detail Modal -->
+    <div id="plant-detail-modal" class="modal" style="display:none; z-index:1100;">
+        <div class="modal-content" style="max-width:420px;">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closePlantDetail()" style="margin-right:auto; background:none; border:none; font-size:1.1em; cursor:pointer; color:#555;">← Zurück</button>
+                <button class="modal-close" onclick="closePlantDetail()">✕</button>
+            </div>
+            <div class="modal-body" id="plant-detail-body" style="text-align:center;"></div>
         </div>
     </div>
 
@@ -1020,58 +1318,96 @@
             mondstaub: 0,
             lastSaveTime: Date.now(),
             shopSeeds: [],
+            shopLastRefreshHour: Math.floor(Date.now() / 3600000),
+            brunnenPrice: 10,
+            brunnenResetDay: new Date().toDateString(),
             discoveredPlants: []
         };
 
         // Plant Database
         const plants = {
-            // Gewöhnlich
-            karotte: { name: 'Karotte', emoji: '🥕', rarity: 'gewöhnlich', price: 1, growTime: 1, sellValue: 4, harvestType: 'single' },
-            kartoffel: { name: 'Kartoffel', emoji: '🥔', rarity: 'gewöhnlich', price: 1, growTime: 3, sellValue: 7, harvestType: 'single' },
-            salat: { name: 'Salat', emoji: '🥬', rarity: 'gewöhnlich', price: 2, growTime: 1, sellValue: 1, harvestType: 'multi' },
-            blume: { name: 'Blume', emoji: '🌸', rarity: 'gewöhnlich', price: 2, growTime: 1, sellValue: 2, harvestType: 'multi' },
-            erdbeere: { name: 'Erdbeere', emoji: '🍓', rarity: 'gewöhnlich', price: 3, growTime: 2, sellValue: 2, harvestType: 'multi' },
-            moosblatt: { name: 'Moosblatt', emoji: '🍀', rarity: 'gewöhnlich', price: 2, growTime: 1, sellValue: 3, harvestType: 'multi' },
-            // Ungewöhnlich
-            zwiebel: { name: 'Zwiebel', emoji: '🧅', rarity: 'ungewöhnlich', price: 3, growTime: 2, sellValue: 8, harvestType: 'single' },
-            kuerbis: { name: 'Kürbis', emoji: '🎃', rarity: 'ungewöhnlich', price: 4, growTime: 4, sellValue: 12, harvestType: 'single' },
-            tomate: { name: 'Tomate', emoji: '🍅', rarity: 'ungewöhnlich', price: 3, growTime: 2, sellValue: 6, harvestType: 'multi' },
-            paprika: { name: 'Paprika', emoji: '🫑', rarity: 'ungewöhnlich', price: 4, growTime: 3, sellValue: 9, harvestType: 'multi' },
-            blaubeere: { name: 'Blaubeere', emoji: '🫐', rarity: 'ungewöhnlich', price: 5, growTime: 3, sellValue: 10, harvestType: 'multi' },
-            zitronengras: { name: 'Zitronengras', emoji: '🌾', rarity: 'ungewöhnlich', price: 4, growTime: 3, sellValue: 11, harvestType: 'multi' },
-            lavendel: { name: 'Lavendel', emoji: '💜', rarity: 'ungewöhnlich', price: 5, growTime: 3, sellValue: 13, harvestType: 'single' },
-            // Selten
-            wassermelone: { name: 'Wassermelone', emoji: '🍉', rarity: 'selten', price: 8, growTime: 5, sellValue: 20, harvestType: 'single' },
-            kokosnuss: { name: 'Kokosnuss', emoji: '🥥', rarity: 'selten', price: 10, growTime: 6, sellValue: 25, harvestType: 'single' },
-            bambus: { name: 'Bambus', emoji: '🎋', rarity: 'selten', price: 7, growTime: 4, sellValue: 15, harvestType: 'multi' },
-            sonnenblume: { name: 'Sonnenblume', emoji: '🌻', rarity: 'selten', price: 6, growTime: 3, sellValue: 12, harvestType: 'multi' },
-            kaktus: { name: 'Kaktus', emoji: '🌵', rarity: 'selten', price: 8, growTime: 5, sellValue: 18, harvestType: 'multi' },
-            pilz: { name: 'Pilz', emoji: '🍄', rarity: 'selten', price: 9, growTime: 5, sellValue: 22, harvestType: 'single' },
-            edelweiss: { name: 'Edelweiß', emoji: '🌼', rarity: 'selten', price: 10, growTime: 6, sellValue: 24, harvestType: 'multi' },
-            // Legendär
-            drachenfrucht: { name: 'Drachenfrucht', emoji: '🐉', rarity: 'legendär', price: 15, growTime: 8, sellValue: 40, harvestType: 'single' },
-            mandragora: { name: 'Mandragora', emoji: '🌿', rarity: 'legendär', price: 20, growTime: 10, sellValue: 50, harvestType: 'single' },
-            feuerrose: { name: 'Feuerrose', emoji: '🌹', rarity: 'legendär', price: 18, growTime: 7, sellValue: 45, harvestType: 'multi' },
-            mondblüte: { name: 'Mondblüte', emoji: '🌙', rarity: 'legendär', price: 25, growTime: 12, sellValue: 60, harvestType: 'multi' },
-            eisblume: { name: 'Eisblume', emoji: '❄️', rarity: 'legendär', price: 22, growTime: 10, sellValue: 52, harvestType: 'single' },
-            glanzkraut: { name: 'Glanzkraut', emoji: '✨', rarity: 'legendär', price: 28, growTime: 12, sellValue: 60, harvestType: 'multi' },
-            // Mythisch
-            kristallrose: { name: 'Kristallrose', emoji: '💎', rarity: 'mythisch', price: 30, growTime: 15, sellValue: 80, harvestType: 'single' },
-            himmelstraube: { name: 'Himmels-Traube', emoji: '🍇', rarity: 'mythisch', price: 35, growTime: 18, sellValue: 100, harvestType: 'single' },
-            sternenkuerbis: { name: 'Sternenkürbis', emoji: '⭐', rarity: 'mythisch', price: 40, growTime: 20, sellValue: 120, harvestType: 'multi' },
-            traumwinde: { name: 'Traumwinde', emoji: '🌙', rarity: 'mythisch', price: 45, growTime: 22, sellValue: 130, harvestType: 'multi' },
-            // Göttlich
-            weltbaum: { name: 'Weltbaum', emoji: '🌳', rarity: 'göttlich', price: 100, growTime: 30, sellValue: 300, harvestType: 'single' },
-            ewigeLotus: { name: 'Ewige Lotusblüte', emoji: '🪷', rarity: 'göttlich', price: 150, growTime: 40, sellValue: 500, harvestType: 'multi' },
-            sonnenfeder: { name: 'Sonnenfeder', emoji: '🪶', rarity: 'göttlich', price: 120, growTime: 35, sellValue: 340, harvestType: 'single' },
-            // Prismatic
-            prismatic: { name: 'Prismatische Blume', emoji: '🌈', rarity: 'prismatisch', price: 200, growTime: 50, sellValue: 1000, harvestType: 'multi' },
-            // Transzendent
-            voidBlume: { name: 'Void-Blume', emoji: '🌌', rarity: 'transzendent', price: 500, growTime: 100, sellValue: 5000, harvestType: 'multi' },
-            sternenflamme: { name: 'Sternenflamme', emoji: '🔥', rarity: 'transzendent', price: 520, growTime: 110, sellValue: 5100, harvestType: 'multi' },
-            // Himmlisch
-            sonnenkern: { name: 'Sonnenkern', emoji: '☀️', rarity: 'himmlisch', price: 1000, growTime: 200, sellValue: 20000, harvestType: 'multi' }
-        };
+            // ─── Gewöhnlich ───────────────────────────────
+            karotte:        { name: 'Karotte',           emoji: '🥕', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 3,      harvestType: 'single' }, // ×1.58
+            kartoffel:      { name: 'Kartoffel',         emoji: '🥔', rarity: 'gewöhnlich',   price: 3,    growTime: 3,   sellValue: 5,      harvestType: 'single' }, // ×1.74
+            salat:          { name: 'Salat',             emoji: '🥬', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 1,      harvestType: 'multi'  }, // ×0.32
+            blume:          { name: 'Blume',             emoji: '🌸', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 1,      harvestType: 'multi'  }, // ×0.32
+            erdbeere:       { name: 'Erdbeere',          emoji: '🍓', rarity: 'gewöhnlich',   price: 3,    growTime: 2,   sellValue: 1,      harvestType: 'multi'  }, // ×0.33
+            moosblatt:      { name: 'Moosblatt',         emoji: '🍀', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 1,      harvestType: 'multi'  }, // ×0.32
+            ruebe:          { name: 'Rübe',              emoji: '🫚', rarity: 'gewöhnlich',   price: 2,    growTime: 2,   sellValue: 3,      harvestType: 'single' }, // ×1.66
+            mais:           { name: 'Mais',              emoji: '🌽', rarity: 'gewöhnlich',   price: 2,    growTime: 2,   sellValue: 1,      harvestType: 'multi'  }, // ×0.33
+
+            // ─── Ungewöhnlich ─────────────────────────────
+            zwiebel:        { name: 'Zwiebel',           emoji: '🧅', rarity: 'ungewöhnlich', price: 5,    growTime: 2,   sellValue: 8,      harvestType: 'single' }, // ×1.66
+            kuerbis:        { name: 'Kürbis',            emoji: '🎃', rarity: 'ungewöhnlich', price: 8,    growTime: 4,   sellValue: 15,     harvestType: 'single' }, // ×1.82
+            tomate:         { name: 'Tomate',            emoji: '🍅', rarity: 'ungewöhnlich', price: 5,    growTime: 2,   sellValue: 2,      harvestType: 'multi'  }, // ×0.33
+            paprika:        { name: 'Paprika',           emoji: '🫑', rarity: 'ungewöhnlich', price: 6,    growTime: 3,   sellValue: 2,      harvestType: 'multi'  }, // ×0.35
+            blaubeere:      { name: 'Blaubeere',         emoji: '🫐', rarity: 'ungewöhnlich', price: 7,    growTime: 3,   sellValue: 3,      harvestType: 'multi'  }, // ×0.35
+            zitronengras:   { name: 'Zitronengras',      emoji: '🌾', rarity: 'ungewöhnlich', price: 6,    growTime: 3,   sellValue: 2,      harvestType: 'multi'  }, // ×0.35
+            lavendel:       { name: 'Lavendel',          emoji: '💜', rarity: 'ungewöhnlich', price: 7,    growTime: 3,   sellValue: 13,     harvestType: 'single' }, // ×1.74
+            aubergine:      { name: 'Aubergine',         emoji: '🍆', rarity: 'ungewöhnlich', price: 6,    growTime: 3,   sellValue: 2,      harvestType: 'multi'  }, // ×0.35
+            knoblauch:      { name: 'Knoblauch',         emoji: '🧄', rarity: 'ungewöhnlich', price: 5,    growTime: 2,   sellValue: 8,      harvestType: 'single' }, // ×1.66
+
+            // ─── Selten ───────────────────────────────────
+            wassermelone:   { name: 'Wassermelone',      emoji: '🍉', rarity: 'selten',       price: 15,   growTime: 5,   sellValue: 29,     harvestType: 'single' }, // ×1.90
+            kokosnuss:      { name: 'Kokosnuss',         emoji: '🥥', rarity: 'selten',       price: 18,   growTime: 6,   sellValue: 36,     harvestType: 'single' }, // ×1.98
+            bambus:         { name: 'Bambus',            emoji: '🎋', rarity: 'selten',       price: 12,   growTime: 4,   sellValue: 5,      harvestType: 'multi'  }, // ×0.36
+            sonnenblume:    { name: 'Sonnenblume',       emoji: '🌻', rarity: 'selten',       price: 11,   growTime: 4,   sellValue: 4,      harvestType: 'multi'  }, // ×0.36
+            kaktus:         { name: 'Kaktus',            emoji: '🌵', rarity: 'selten',       price: 14,   growTime: 5,   sellValue: 7,      harvestType: 'multi'  }, // ×0.38
+            pilz:           { name: 'Pilz',              emoji: '🍄', rarity: 'selten',       price: 16,   growTime: 5,   sellValue: 30,     harvestType: 'single' }, // ×1.90
+            edelweiss:      { name: 'Edelweiß',          emoji: '🌼', rarity: 'selten',       price: 18,   growTime: 6,   sellValue: 9,      harvestType: 'multi'  }, // ×0.39
+            mango:          { name: 'Mango',             emoji: '🥭', rarity: 'selten',       price: 13,   growTime: 4,   sellValue: 5,      harvestType: 'multi'  }, // ×0.36
+            ingwer:         { name: 'Ingwer',            emoji: '🫚', rarity: 'selten',       price: 16,   growTime: 5,   sellValue: 30,     harvestType: 'single' }, // ×1.90
+            broetchenbaum:  { name: 'Brötchenbaum',      emoji: '🥐', rarity: 'selten',       price: 14,   growTime: 5,   sellValue: 7,      harvestType: 'multi'  }, // ×0.38
+
+            // ─── Legendär ─────────────────────────────────
+            drachenfrucht:  { name: 'Drachenfrucht',     emoji: '🐉', rarity: 'legendär',     price: 30,   growTime: 8,   sellValue: 64,     harvestType: 'single' }, // ×2.14
+            mandragora:     { name: 'Mandragora',        emoji: '🌿', rarity: 'legendär',     price: 40,   growTime: 10,  sellValue: 92,     harvestType: 'single' }, // ×2.30
+            feuerrose:      { name: 'Feuerrose',         emoji: '🌹', rarity: 'legendär',     price: 33,   growTime: 8,   sellValue: 14,     harvestType: 'multi'  }, // ×0.42
+            mondblüte:      { name: 'Mondblüte',         emoji: '🌙', rarity: 'legendär',     price: 45,   growTime: 12,  sellValue: 22,     harvestType: 'multi'  }, // ×0.48
+            eisblume:       { name: 'Eisblume',          emoji: '❄️', rarity: 'legendär',     price: 40,   growTime: 10,  sellValue: 92,     harvestType: 'single' }, // ×2.30
+            glanzkraut:     { name: 'Glanzkraut',        emoji: '✨', rarity: 'legendär',     price: 45,   growTime: 12,  sellValue: 22,     harvestType: 'multi'  }, // ×0.48
+            geisterkraut:   { name: 'Geisterkraut',      emoji: '👻', rarity: 'legendär',     price: 35,   growTime: 9,   sellValue: 16,     harvestType: 'multi'  }, // ×0.44
+            donnerdistel:   { name: 'Donnerdistel',      emoji: '⚡', rarity: 'legendär',     price: 38,   growTime: 10,  sellValue: 87,     harvestType: 'single' }, // ×2.30
+
+            // ─── Mythisch ─────────────────────────────────
+            kristallrose:   { name: 'Kristallrose',      emoji: '💎', rarity: 'mythisch',     price: 70,   growTime: 15,  sellValue: 189,    harvestType: 'single' }, // ×2.70
+            himmelstraube:  { name: 'Himmels-Traube',    emoji: '🍇', rarity: 'mythisch',     price: 85,   growTime: 18,  sellValue: 243,    harvestType: 'single' }, // ×2.86
+            sternenkuerbis: { name: 'Sternenkürbis',     emoji: '⭐', rarity: 'mythisch',     price: 90,   growTime: 20,  sellValue: 54,     harvestType: 'multi'  }, // ×0.60
+            traumwinde:     { name: 'Traumwinde',        emoji: '🌙', rarity: 'mythisch',     price: 95,   growTime: 22,  sellValue: 58,     harvestType: 'multi'  }, // ×0.63
+            nebelrose:      { name: 'Nebelrose',         emoji: '🌫️', rarity: 'mythisch',     price: 75,   growTime: 16,  sellValue: 45,     harvestType: 'multi'  }, // ×0.54
+            schattenblatt:  { name: 'Schattenblatt',     emoji: '🖤', rarity: 'mythisch',     price: 80,   growTime: 17,  sellValue: 218,    harvestType: 'single' }, // ×2.72
+
+            // ─── Göttlich ─────────────────────────────────
+            weltbaum:       { name: 'Weltbaum',          emoji: '🌳', rarity: 'göttlich',     price: 200,  growTime: 30,  sellValue: 620,    harvestType: 'single' }, // ×3.10
+            ewigeLotus:     { name: 'Ewige Lotusblüte',  emoji: '🪷', rarity: 'göttlich',     price: 280,  growTime: 40,  sellValue: 196,    harvestType: 'multi'  }, // ×0.90
+            sonnenfeder:    { name: 'Sonnenfeder',       emoji: '🪶', rarity: 'göttlich',     price: 230,  growTime: 35,  sellValue: 747,    harvestType: 'single' }, // ×3.25
+            aetherwurzel:   { name: 'Ätherwurzel',       emoji: '🌐', rarity: 'göttlich',     price: 210,  growTime: 32,  sellValue: 142,    harvestType: 'multi'  }, // ×0.78
+            seelenblume:    { name: 'Seelenblume',       emoji: '💠', rarity: 'göttlich',     price: 260,  growTime: 38,  sellValue: 183,    harvestType: 'multi'  }, // ×0.87
+
+            // ─── Prismatisch ──────────────────────────────
+            prismatic:      { name: 'Prismatische Blume', emoji: '🌈', rarity: 'prismatisch', price: 450,  growTime: 50,  sellValue: 383,    harvestType: 'multi'  }, // ×1.05
+            lichtkelch:     { name: 'Lichtkelch',        emoji: '🏆', rarity: 'prismatisch',  price: 500,  growTime: 55,  sellValue: 1925,   harvestType: 'single' }, // ×3.85
+            regenbogenkraut:{ name: 'Regenbogenkraut',   emoji: '🎨', rarity: 'prismatisch',  price: 480,  growTime: 52,  sellValue: 403,    harvestType: 'multi'  }, // ×1.08
+
+            // ─── Transzendent ─────────────────────────────
+            voidBlume:      { name: 'Void-Blume',        emoji: '🌌', rarity: 'transzendent', price: 1100, growTime: 80,  sellValue: 1210,   harvestType: 'multi'  }, // ×1.50
+            sternenflamme:  { name: 'Sternenflamme',     emoji: '🔥', rarity: 'transzendent', price: 1200, growTime: 90,  sellValue: 1380,   harvestType: 'multi'  }, // ×1.65
+            leereblüte:     { name: 'Leereblüte',        emoji: '🕳️', rarity: 'transzendent', price: 1050, growTime: 80,  sellValue: 4620,   harvestType: 'single' }, // ×4.40
+            zeitkraut:      { name: 'Zeitkraut',         emoji: '⏳', rarity: 'transzendent', price: 1300, growTime: 100, sellValue: 6500,   harvestType: 'single' }, // ×5.00
+
+            // ─── Himmlisch ────────────────────────────────
+            sonnenkern:     { name: 'Sonnenkern',        emoji: '☀️', rarity: 'himmlisch',    price: 2200, growTime: 180, sellValue: 5940,   harvestType: 'multi'  }, // ×2.70
+            mondkern:       { name: 'Mondkern',          emoji: '🌕', rarity: 'himmlisch',    price: 2000, growTime: 160, sellValue: 10800,  harvestType: 'single' }, // ×5.40
+            sternenkern:    { name: 'Sternenkern',       emoji: '💫', rarity: 'himmlisch',    price: 2400, growTime: 200, sellValue: 6720,   harvestType: 'multi'  }, // ×2.80
+
+            // ─── Admin-exklusiv ───────────────────────────
+            broetchenbaum:  { name: 'Brötchenbaum',     emoji: '🥐', rarity: 'admin',        price: 5,    growTime: 3,   sellValue: 25,     harvestType: 'multi',   adminOnly: true },
+            // ─── Admin only ───────────────────────────────
+            gottesfunken:  { name: 'Gottesfunken',    emoji: '⚡', rarity: 'göttlich',     price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'single', adminOnly: true },
+            ursamenkorn:   { name: 'Ursamenkorn',     emoji: '🌱', rarity: 'admin',        price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'multi',  adminOnly: true },
+            schattenkern:  { name: 'Schattenkern',    emoji: '🌑', rarity: 'admin',        price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'single', adminOnly: true },
+            ewigkeitsblume:{ name: 'Ewigkeitsblume',  emoji: '🌀', rarity: 'admin',        price: 0,    growTime: 1,   sellValue: 99999,  harvestType: 'multi',  adminOnly: true },
+        };  
 
         // Event Plants
         const eventPlants = {
@@ -1083,7 +1419,7 @@
 
         // Buildings
         const buildings = {
-            brunnen: { name: 'Brunnen', cost: 8, effect: 'Alle Pflanzen wachsen 1 Stunde schneller', emoji: '💧' },
+            brunnen: { name: 'Brunnen', cost: 10, effect: 'Einmaliger Effekt: Alle Pflanzen wachsen sofort 4 Stunden weiter', emoji: '💧' },
             kompost: { name: 'Kompost', cost: 6, effect: '40% des Kaufpreises beim Löschen zurück', emoji: '🗑️' },
             gewaechshaus: { name: 'Gewächshaus', cost: 20, effect: '+1 Feld, Pflanzen wachsen 3h schneller (Max 4)', emoji: '🏡' },
             marktstand: { name: 'Marktstand', cost: 30, effect: 'Zeigt 5 Karten statt 4', emoji: '🏪' }
@@ -1109,7 +1445,8 @@
             göttlich: '#212121',
             prismatisch: '#e91e63',
             transzendent: 'linear-gradient(135deg, #9c27b0 0%, #2196f3 50%, #87ceeb 100%)',
-            himmlisch: 'linear-gradient(135deg, #f44336 0%, #ff9800 50%, #ffeb3b 100%)'
+            himmlisch: 'linear-gradient(135deg, #f44336 0%, #ff9800 50%, #ffeb3b 100%)',
+            admin: 'linear-gradient(135deg, #000000 0%, #888888 50%, #ffffff 100%)'
         };
 
         // Rarity weights (probability weights)
@@ -1179,6 +1516,16 @@
                 if (!gameState.discoveredPlants) {
                     gameState.discoveredPlants = [];
                 }
+
+                // Fallback for brunnen price system
+                if (!gameState.brunnenPrice) gameState.brunnenPrice = 10;
+                if (!gameState.brunnenResetDay) gameState.brunnenResetDay = new Date().toDateString();
+
+                // Reset brunnen price if a new day has started
+                if (gameState.brunnenResetDay !== new Date().toDateString()) {
+                    gameState.brunnenResetDay = new Date().toDateString();
+                    gameState.brunnenPrice = 10;
+                }
                 
                 // Fallback for old save files with gewaechshaus boolean
                 if (loaded.buildings && loaded.buildings.gewaechshaus === true) {
@@ -1216,8 +1563,11 @@
                     roundsPassed++;
                 }
                 
-                // Clear shop if rounds passed while offline (will be refreshed on render)
-                if (roundsPassed > 0) {
+                // Clear shop if a new clock hour passed while offline (will be refreshed on render)
+                const currentHour = Math.floor(Date.now() / 3600000);
+                if (!gameState.shopLastRefreshHour) gameState.shopLastRefreshHour = currentHour;
+                if (currentHour > gameState.shopLastRefreshHour) {
+                    gameState.shopLastRefreshHour = currentHour;
                     gameState.shopSeeds = [];
                 }
                 
@@ -1253,11 +1603,12 @@
             
             gameState.tiles.forEach((tile, index) => {
                 const tileEl = document.createElement('div');
-                tileEl.className = 'tile';
-                
+                const isGreenhouse = index >= 16;
+                tileEl.className = 'tile' + (isGreenhouse ? ' greenhouse' : '');
+
                 if (!tile) {
                     tileEl.classList.add('empty');
-                    tileEl.innerHTML = '<span style="font-size: 2em; opacity: 0.5;">+</span>';
+                    tileEl.innerHTML = `${isGreenhouse ? '<span class="tile-greenhouse-badge">🏡</span>' : ''}<span style="font-size: 2em; opacity: 0.5;">+</span>`;
                     tileEl.onclick = () => plantSeed(index);
                 } else {
                     const plant = plants[tile.plantId] || eventPlants[tile.plantId];
@@ -1289,6 +1640,7 @@
                     const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${plant.sellValue}€\n🔄 Erntetyp: ${plant.harvestType === 'single' ? 'Einmalig' : 'Mehrfach'}\n⏳ ${timeText}${mutationText}`;
                     
                     tileEl.innerHTML = `
+                        ${isGreenhouse ? '<span class="tile-greenhouse-badge">🏡</span>' : ''}
                         <div class="tile-emoji">${plant.emoji}</div>
                         <div class="tile-progress">
                             <div class="tile-progress-bar" style="${progressBarStyle}"></div>
@@ -1369,6 +1721,7 @@
             const availablePlants = Object.keys(plants).filter(id => {
                 const plant = plants[id];
                 if (!plant || !plant.rarity) return false;
+                if (plant.adminOnly) return false;
                 const rarities = unlockedRarities[Math.min(level, 5)] || unlockedRarities[0];
                 return rarities.includes(plant.rarity);
             });
@@ -1464,6 +1817,12 @@
                             <div class="building-info"><h3>${building.emoji} ${building.name}</h3><p>${building.effect}</p></div>
                             <button class="building-btn" onclick="buyBuilding('${id}')" ${gameState.money < cost ? 'disabled' : ''}>${cost}€ (${level}/${maxLevel})</button>`;
                     }
+                } else if (id === 'brunnen') {
+                    const brunnenCost = gameState.brunnenPrice || 10;
+                    el.className = 'building';
+                    el.innerHTML = `
+                        <div class="building-info"><h3>${building.emoji} ${building.name}</h3><p>${building.effect}</p><p style="font-size:0.8em;color:#888;margin-top:4px;">Preis verdoppelt sich pro Kauf · Reset um 0 Uhr</p></div>
+                        <button class="building-btn" onclick="buyBuilding('brunnen')" ${gameState.money < brunnenCost ? 'disabled' : ''}>${brunnenCost}€</button>`;
                 } else {
                     const owned = gameState.buildings[id];
                     el.className = `building ${owned ? 'owned' : ''}`;
@@ -1577,12 +1936,7 @@
             
             gameState.money -= plant.price;
             let growTime = plant.growTime;
-            
-            // Brunnen: -1h for all plants
-            if (gameState.buildings.brunnen) {
-                growTime = Math.max(1, growTime - 1);
-            }
-            
+
             // Gewächshaus: -3h for plants in extra fields (tiles beyond 16)
             if (tileIndex >= 16 && gameState.buildings.gewaechshaus > 0) {
                 growTime = Math.max(1, growTime - (3 * gameState.buildings.gewaechshaus));
@@ -1738,7 +2092,32 @@
         // Buy building
         function buyBuilding(buildingId) {
             const building = buildings[buildingId];
-            
+
+            // Brunnen: one-time consumable effect
+            if (buildingId === 'brunnen') {
+                const brunnenCost = gameState.brunnenPrice || 10;
+                if (gameState.money < brunnenCost) {
+                    showNotification('Nicht genug Geld!', 'error');
+                    return;
+                }
+                gameState.money -= brunnenCost;
+                gameState.brunnenPrice = brunnenCost * 2;
+                let boosted = 0;
+                gameState.tiles.forEach(tile => {
+                    if (tile && tile.progress < tile.totalTime) {
+                        tile.progress = Math.min(tile.totalTime, tile.progress + 4);
+                        boosted++;
+                    }
+                });
+                updateUI();
+                renderBuildings();
+                renderFarm();
+                updateProgressBars();
+                saveGame();
+                showNotification(`💧 Brunnen benutzt! ${boosted} Pflanze${boosted !== 1 ? 'n' : ''} um 4h gefördert.`);
+                return;
+            }
+
             // Special handling for Gewächshaus (max 4, exponential cost)
             if (buildingId === 'gewaechshaus') {
                 const currentLevel = gameState.buildings.gewaechshaus;
@@ -1950,19 +2329,67 @@
             const modal = document.getElementById('plant-index-modal');
             const grid = document.getElementById('plant-index-grid');
             grid.innerHTML = '';
-            
-            // Populate plant index
+
+            // Discovery stats
+            const raritiesInOrder = ['gewöhnlich','ungewöhnlich','selten','legendär','mythisch','göttlich','prismatisch','transzendent','himmlisch','admin'];
+            const rarityStats = {};
+            raritiesInOrder.forEach(r => { rarityStats[r] = { total: 0, discovered: 0 }; });
             Object.entries(plants).forEach(([id, plant]) => {
+                if (rarityStats[plant.rarity]) {
+                    rarityStats[plant.rarity].total++;
+                    if (gameState.discoveredPlants.includes(id)) rarityStats[plant.rarity].discovered++;
+                }
+            });
+            const totalPlants = Object.keys(plants).length;
+            const totalDiscovered = gameState.discoveredPlants.length;
+
+            document.getElementById('discovery-total').innerHTML = `Gesamt: <strong>${totalDiscovered}/${totalPlants}</strong> entdeckt`;
+
+            const rarDiv = document.getElementById('discovery-rarities');
+            rarDiv.innerHTML = raritiesInOrder.map(r => {
+                const s = rarityStats[r];
+                if (s.total === 0) return '';
+                const color = rarityColors[r];
+                const isGrad = color.startsWith('linear-gradient');
+                const style = isGrad
+                    ? `background:${color};-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;`
+                    : `color:${color};`;
+                const label = r.charAt(0).toUpperCase() + r.slice(1);
+                return `<div class="discovery-rarity"><span style="${style}">${label}</span>: ${s.discovered}/${s.total}</div>`;
+            }).join('');
+
+            // Populate plant index (sorted by rarity)
+            const rarityOrder = ['gewöhnlich','ungewöhnlich','selten','legendär','mythisch','göttlich','prismatisch','transzendent','himmlisch','admin'];
+            const sortedPlants = Object.entries(plants).sort((a, b) =>
+                rarityOrder.indexOf(a[1].rarity) - rarityOrder.indexOf(b[1].rarity)
+            );
+            sortedPlants.forEach(([id, plant]) => {
                 const isDiscovered = gameState.discoveredPlants.includes(id);
                 const item = document.createElement('div');
                 item.className = 'plant-index-item';
-                item.style.borderColor = rarityColors[plant.rarity];
+                const rc = rarityColors[plant.rarity];
+                if (rc && rc.startsWith('linear-gradient')) {
+                    item.style.border = '2px solid transparent';
+                    item.style.background = `#f9f9f9 padding-box, ${rc} border-box`;
+                } else {
+                    item.style.borderColor = rc;
+                }
                 
                 if (isDiscovered) {
+                    item.className += ' discovered';
                     item.innerHTML = `
                         <div class="emoji">${plant.emoji}</div>
                         <div class="name">${plant.name}</div>
                         <div class="rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
+                        ${plant.adminOnly ? '<div style="font-size:0.7em;color:#e53935;margin-top:2px;">🔒 Admin</div>' : ''}
+                    `;
+                    item.onclick = () => showPlantDetail(id);
+                } else if (plant.adminOnly) {
+                    item.innerHTML = `
+                        <div class="emoji">🔒</div>
+                        <div class="name">Gesperrt</div>
+                        <div class="rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
+                        <div style="font-size:0.7em;color:#e53935;margin-top:2px;">Exklusiv</div>
                     `;
                 } else {
                     item.innerHTML = `
@@ -1971,10 +2398,10 @@
                         <div class="rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
                     `;
                 }
-                
+
                 grid.appendChild(item);
             });
-            
+
             modal.style.display = 'flex';
         }
 
@@ -1983,31 +2410,159 @@
             document.getElementById('plant-index-modal').style.display = 'none';
         }
 
+        // Show plant detail modal
+        function showPlantDetail(id) {
+            const plant = plants[id];
+            if (!plant) return;
+
+            const color = rarityColors[plant.rarity] || '#888';
+            const isGrad = color.startsWith('linear-gradient');
+            const rarityStyle = isGrad
+                ? `background:${color};-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;`
+                : `color:${color};`;
+            const rarityBorderStyle = isGrad ? `border:2px solid #ccc;` : `border:2px solid ${color};`;
+
+            const isMulti = plant.harvestType === 'multi';
+            const profitFirst = plant.sellValue - plant.price;
+            const profitPerHour = (plant.sellValue / plant.growTime).toFixed(2);
+            const netPerHour = (profitFirst / plant.growTime).toFixed(2);
+
+            const harvestLabel = isMulti ? 'Mehrfach' : 'Einmalig';
+            const harvestDesc = isMulti
+                ? 'Pflanze bleibt nach der Ernte bestehen'
+                : 'Pflanze wird nach der Ernte entfernt';
+
+            const rarityNames = {
+                gewöhnlich: 'Gewöhnlich', ungewöhnlich: 'Ungewöhnlich', selten: 'Selten',
+                legendär: 'Legendär', mythisch: 'Mythisch', göttlich: 'Göttlich',
+                prismatisch: 'Prismatisch', transzendent: 'Transzendent', himmlisch: 'Himmlisch', admin: 'Admin'
+            };
+
+            const profitColor = profitFirst >= 0 ? '#388e3c' : '#e53935';
+
+            document.getElementById('plant-detail-body').innerHTML = `
+                <div class="plant-detail-hero">${plant.emoji}</div>
+                <div class="plant-detail-name">${plant.name}</div>
+                <div class="plant-detail-rarity" style="${rarityBorderStyle}">
+                    <span style="${rarityStyle}">${rarityNames[plant.rarity] || plant.rarity}</span>
+                </div>
+                ${plant.adminOnly ? '<div style="font-size:0.8em;color:#e53935;font-weight:700;margin-bottom:12px;">🔒 Exklusiv — nicht im Shop erhältlich</div>' : ''}
+
+                <div class="plant-detail-stats">
+                    <div class="plant-detail-stat">
+                        <div class="stat-val">💰 ${plant.price}€</div>
+                        <div class="stat-lbl">Kaufpreis</div>
+                    </div>
+                    <div class="plant-detail-stat">
+                        <div class="stat-val">⏱️ ${plant.growTime}h</div>
+                        <div class="stat-lbl">Wachstum</div>
+                    </div>
+                    <div class="plant-detail-stat">
+                        <div class="stat-val">🏷️ ${plant.sellValue}€</div>
+                        <div class="stat-lbl">Verkaufswert</div>
+                    </div>
+                </div>
+
+                <div class="plant-detail-extras">
+                    <div class="plant-detail-extra-row">
+                        <span class="lbl">Erntetyp</span>
+                        <span class="val">${harvestLabel}</span>
+                    </div>
+                    <div class="plant-detail-extra-row" style="font-size:0.8em; color:#999; margin-top:-4px;">
+                        <span>${harvestDesc}</span>
+                    </div>
+                    <div class="plant-detail-extra-row" style="margin-top:4px;">
+                        <span class="lbl">Gewinn (1. Ernte)</span>
+                        <span class="val" style="color:${profitColor}">${profitFirst >= 0 ? '+' : ''}${profitFirst}€</span>
+                    </div>
+                    ${isMulti ? `
+                    <div class="plant-detail-extra-row">
+                        <span class="lbl">Gewinn (Folgeernten)</span>
+                        <span class="val" style="color:#388e3c;">+${plant.sellValue}€</span>
+                    </div>` : ''}
+                    <div class="plant-detail-extra-row">
+                        <span class="lbl">Gewinn pro Stunde</span>
+                        <span class="val" style="color:${parseFloat(netPerHour) >= 0 ? '#388e3c' : '#e53935'};">${parseFloat(netPerHour) >= 0 ? '+' : ''}${netPerHour}€/h</span>
+                    </div>
+                    <div class="plant-detail-extra-row">
+                        <span class="lbl">Verkauf pro Stunde</span>
+                        <span class="val">+${profitPerHour}€/h</span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('plant-detail-modal').style.display = 'flex';
+        }
+
+        function closePlantDetail() {
+            document.getElementById('plant-detail-modal').style.display = 'none';
+        }
+
         // Add 1 hour for testing
-        function addTestHour() {
-            const hoursToAdd = 1;
-            
-            // Update plant progress
+        // ── Admin Panel ──────────────────────────────────────────────
+        const ADMIN_CODE = 'rs4adm';
+
+        function openAdmin() {
+            document.getElementById('admin-modal').style.display = 'flex';
+            document.getElementById('admin-login-section').style.display = 'flex';
+            document.getElementById('admin-content').style.display = 'none';
+            document.getElementById('admin-code-input').value = '';
+            document.getElementById('admin-login-error').style.display = 'none';
+        }
+
+        function closeAdmin() {
+            document.getElementById('admin-modal').style.display = 'none';
+        }
+
+        function adminLogin() {
+            const val = document.getElementById('admin-code-input').value;
+            if (val === ADMIN_CODE) {
+                document.getElementById('admin-login-section').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'block';
+                // Populate plant dropdown
+                const sel = document.getElementById('admin-plant-select');
+                sel.innerHTML = '';
+                const rarityOrder = ['gewöhnlich','ungewöhnlich','selten','legendär','mythisch','göttlich','prismatisch','transzendent','himmlisch','admin'];
+                const sorted = Object.entries(plants).sort((a, b) => {
+                    return rarityOrder.indexOf(a[1].rarity) - rarityOrder.indexOf(b[1].rarity);
+                });
+                sorted.forEach(([id, plant]) => {
+                    const opt = document.createElement('option');
+                    opt.value = id;
+                    opt.textContent = `${plant.emoji} ${plant.name} (${plant.rarity})`;
+                    sel.appendChild(opt);
+                });
+            } else {
+                document.getElementById('admin-login-error').style.display = 'block';
+            }
+        }
+
+        function adminSetMoney(add) {
+            const val = parseFloat(document.getElementById('admin-money-val').value);
+            if (isNaN(val)) return;
+            if (add) {
+                gameState.money += val;
+            } else {
+                gameState.money = val;
+            }
+            updateUI();
+            saveGame();
+            showNotification(add ? `+${val}€ hinzugefügt` : `Geld auf ${val}€ gesetzt`);
+        }
+
+        function adminAddTime() {
+            const hoursToAdd = parseFloat(document.getElementById('admin-hours-val').value) || 1;
             gameState.tiles.forEach(tile => {
                 if (tile && tile.progress < tile.totalTime) {
-                    tile.progress += hoursToAdd;
-                    if (tile.progress > tile.totalTime) {
-                        tile.progress = tile.totalTime;
-                    }
+                    tile.progress = Math.min(tile.totalTime, tile.progress + hoursToAdd);
                 }
             });
-            
-            // Update round timer (1 hour per round)
             gameState.roundTime += hoursToAdd;
             while (gameState.roundTime >= 1) {
                 gameState.round++;
                 gameState.roundTime -= 1;
-                gameState.selectedSeed = null; // Deselect seed on new round
-                refreshShop();
-                renderShop();
+                gameState.selectedSeed = null;
             }
-            
-            // Update event timer (in hours)
             if (gameState.eventActive) {
                 gameState.eventTime -= hoursToAdd;
                 if (gameState.eventTime <= 0) {
@@ -2015,11 +2570,27 @@
                     gameState.eventTime = 24;
                 }
             }
-            
+            refreshShop();
+            renderShop();
             updateUI();
             updateProgressBars();
             saveGame();
-            showNotification('1 Stunde hinzugefügt!');
+            showNotification(`${hoursToAdd}h hinzugefügt`);
+        }
+
+        function adminAddToShop() {
+            const plantId = document.getElementById('admin-plant-select').value;
+            const qty = parseInt(document.getElementById('admin-plant-qty').value) || 1;
+            if (!plantId || !plants[plantId]) return;
+            const existing = gameState.shopSeeds.find(s => s.plantId === plantId);
+            if (existing) {
+                existing.quantity += qty;
+            } else {
+                gameState.shopSeeds.push({ plantId, quantity: qty });
+            }
+            renderShop();
+            saveGame();
+            showNotification(`${plants[plantId].emoji} ${plants[plantId].name} ×${qty} in den Shop`);
         }
 
         // Update progress bars without re-rendering entire grid
@@ -2099,9 +2670,23 @@
                 if (gameState.roundTime >= 1) {
                     gameState.round++;
                     gameState.roundTime -= 1;
-                    gameState.selectedSeed = null; // Deselect seed on new round
-                    refreshShop(); // Refresh shop with new seeds each round
+                    gameState.selectedSeed = null;
+                }
+
+                // Refresh shop at every real clock hour (XX:00)
+                const currentHour = Math.floor(Date.now() / 3600000);
+                if (currentHour > (gameState.shopLastRefreshHour || 0)) {
+                    gameState.shopLastRefreshHour = currentHour;
+                    refreshShop();
                     renderShop();
+                }
+
+                // Reset brunnen price at midnight
+                const today = new Date().toDateString();
+                if (gameState.brunnenResetDay && gameState.brunnenResetDay !== today) {
+                    gameState.brunnenResetDay = today;
+                    gameState.brunnenPrice = 10;
+                    renderBuildings();
                 }
                 
                 // Update event timer (in hours)
@@ -2239,7 +2824,10 @@
                 upgrades: { shopUpgradeLevel: 0, guteErde: false },
                 discoveredPlants: [], mondstaub: 0,
                 eventActive: false, eventTime: 48,
-                lastSaveTime: Date.now()
+                lastSaveTime: Date.now(),
+                shopLastRefreshHour: Math.floor(Date.now() / 3600000),
+                brunnenPrice: 10,
+                brunnenResetDay: new Date().toDateString()
             };
         }
 
