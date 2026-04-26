@@ -26,6 +26,38 @@
         </div>
     </noscript>
     <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            --section-bg: white;
+            --text-color: #333;
+            --header-gradient: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            --stat-bg: rgba(255,255,255,0.2);
+            --section-title-color: #2e7d32;
+            --section-title-border: #4caf50;
+            --tile-bg: linear-gradient(135deg, #8d6e63 0%, #6d4c41 100%);
+            --card-bg: white;
+            --card-hover: #f5f5f5;
+            --button-bg: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            --modal-bg: white;
+            --modal-overlay: rgba(0,0,0,0.5);
+        }
+
+        body.dark-mode {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --section-bg: #1e1e2e;
+            --text-color: #e0e0e0;
+            --header-gradient: linear-gradient(135deg, #2d4a3e 0%, #1a2e27 100%);
+            --stat-bg: rgba(255,255,255,0.1);
+            --section-title-color: #81c784;
+            --section-title-border: #66bb6a;
+            --tile-bg: linear-gradient(135deg, #4a3728 0%, #3d2914 100%);
+            --card-bg: #2a2a3e;
+            --card-hover: #3a3a4e;
+            --button-bg: linear-gradient(135deg, #2d4a3e 0%, #1a2e27 100%);
+            --modal-bg: #2a2a3e;
+            --modal-overlay: rgba(0,0,0,0.7);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -34,9 +66,11 @@
         }
 
         body {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            background: var(--bg-gradient);
             min-height: 100vh;
             padding: 20px;
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .container {
@@ -46,7 +80,7 @@
 
         /* Header */
         header {
-            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            background: var(--header-gradient);
             color: white;
             padding: 20px 30px;
             border-radius: 15px;
@@ -69,7 +103,7 @@
         }
 
         .stat {
-            background: rgba(255,255,255,0.2);
+            background: var(--stat-bg);
             padding: 10px 20px;
             border-radius: 10px;
             backdrop-filter: blur(5px);
@@ -93,18 +127,19 @@
         }
 
         .section {
-            background: white;
+            background: var(--section-bg);
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: background 0.3s ease;
         }
 
         .section-title {
             font-size: 1.5em;
-            color: #2e7d32;
+            color: var(--section-title-color);
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 3px solid #4caf50;
+            border-bottom: 3px solid var(--section-title-border);
         }
 
         /* Farm Grid */
@@ -117,7 +152,7 @@
 
         .tile {
             aspect-ratio: 1;
-            background: linear-gradient(135deg, #8d6e63 0%, #6d4c41 100%);
+            background: var(--tile-bg);
             border-radius: 10px;
             display: flex;
             flex-direction: column;
@@ -252,7 +287,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: var(--modal-overlay);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -260,13 +295,14 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--modal-bg);
             border-radius: 16px;
             max-width: 600px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease;
         }
 
         .modal-header {
@@ -871,6 +907,7 @@
                     <div class="stat-label">Mondstaub</div>
                     <div class="stat-value">✨ <span id="mondstaub">0</span></div>
                 </div>
+                <button onclick="toggleDarkMode()" id="dark-mode-btn" style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)'">🌙 Dunkel</button>
                 <button onclick="addTestHour()" style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)'">⏩ +1h Test</button>
             </div>
         </header>
@@ -983,7 +1020,7 @@
                 brunnen: false,
                 kompost: false,
                 scheune: false,
-                gewaechshaus: false,
+                gewaechshaus: 0,
                 marktstand: false
             },
             upgrades: {
@@ -1050,9 +1087,9 @@
         // Buildings
         const buildings = {
             brunnen: { name: 'Brunnen', cost: 8, effect: 'Alle Pflanzen wachsen 1 Stunde schneller', emoji: '💧' },
-            kompost: { name: 'Kompost', cost: 6, effect: 'Ausgewählte Pflanze +20% Verkaufswert', emoji: '🗑️' },
+            kompost: { name: 'Kompost', cost: 6, effect: '40% des Kaufpreises beim Löschen zurück', emoji: '🗑️' },
             scheune: { name: 'Scheune', cost: 12, effect: 'Ernte lagern für später', emoji: '🏠' },
-            gewaechshaus: { name: 'Gewächshaus', cost: 20, effect: 'Einige Felder ignorieren Restriktionen', emoji: '🏡' },
+            gewaechshaus: { name: 'Gewächshaus', cost: 20, effect: '+1 Feld, Pflanzen wachsen 3h schneller (Max 4)', emoji: '🏡' },
             marktstand: { name: 'Marktstand', cost: 30, effect: 'Zeigt 5 Karten statt 4', emoji: '🏪' }
         };
 
@@ -1145,6 +1182,13 @@
                 // Fallback for missing discoveredPlants array
                 if (!gameState.discoveredPlants) {
                     gameState.discoveredPlants = [];
+                }
+                
+                // Fallback for old save files with gewaechshaus boolean
+                if (loaded.buildings && loaded.buildings.gewaechshaus === true) {
+                    gameState.buildings.gewaechshaus = 1;
+                } else if (loaded.buildings && loaded.buildings.gewaechshaus === false) {
+                    gameState.buildings.gewaechshaus = 0;
                 }
                 
                 // Calculate elapsed time in hours
@@ -1283,9 +1327,6 @@
                 if (gameState.selectedSeed === seed.plantId) card.classList.add('selected');
                 
                 const quantity = Math.floor(seed.quantity);
-                const profit = plant.sellValue - plant.price;
-                const profitPercent = Math.round((profit / plant.price) * 100);
-                const profitDisplay = plant.harvestType === 'multi' ? `${profitPercent}%+` : `${profitPercent}%`;
                 
                 card.innerHTML = `
                     <div class="card-emoji">${plant.emoji}</div>
@@ -1298,8 +1339,7 @@
                         <div><span>💰 Preis</span><span>${plant.price}€</span></div>
                         <div><span>⏱️ Wachsen</span><span>${plant.growTime}h</span></div>
                         <div><span>💵 Verkauf</span><span>${plant.sellValue}€</span></div>
-                        <div><span>📈 Gewinn</span><span style="color: ${profit >= 0 ? '#4caf50' : '#f44336'}">${profitDisplay}</span></div>
-                        <div><span>🔄 Typ</span><span>${plant.harvestType === 'single' ? 'Einmalig' : 'Mehrfach'}</span></div>
+                        <div><span> Typ</span><span>${plant.harvestType === 'single' ? 'Einmalig' : 'Mehrfach'}</span></div>
                     </div>
                     <button class="buy-btn" onclick="selectSeed('${seed.plantId}')">
                         ${gameState.selectedSeed === seed.plantId ? '✓ Ausgewählt' : 'Auswählen'}
@@ -1406,17 +1446,46 @@
             list.innerHTML = '';
             
             Object.entries(buildings).forEach(([id, building]) => {
-                const owned = gameState.buildings[id];
                 const el = document.createElement('div');
-                el.className = `building ${owned ? 'owned' : ''}`;
                 
-                el.innerHTML = `
-                    <div class="building-info">
-                        <h3>${building.emoji} ${building.name}</h3>
-                        <p>${building.effect}</p>
-                    </div>
-                    ${owned ? '<span>✅ Besitzt</span>' : `<button class="building-btn" onclick="buyBuilding('${id}')" ${gameState.money < building.cost ? 'disabled' : ''}>${building.cost}€</button>`}
-                `;
+                // Special handling for Gewächshaus (level-based)
+                if (id === 'gewaechshaus') {
+                    const level = gameState.buildings.gewaechshaus;
+                    const maxLevel = 4;
+                    const cost = 20 * Math.pow(2, level);
+                    
+                    el.className = `building ${level >= maxLevel ? 'owned' : ''}`;
+                    
+                    if (level >= maxLevel) {
+                        el.innerHTML = `
+                            <div class="building-info">
+                                <h3>${building.emoji} ${building.name}</h3>
+                                <p>${building.effect}</p>
+                            </div>
+                            <span>✅ Maximum (${level}/${maxLevel})</span>
+                        `;
+                    } else {
+                        el.innerHTML = `
+                            <div class="building-info">
+                                <h3>${building.emoji} ${building.name}</h3>
+                                <p>${building.effect}</p>
+                            </div>
+                            <button class="building-btn" onclick="buyBuilding('${id}')" ${gameState.money < cost ? 'disabled' : ''}>${cost}€ (${level}/${maxLevel})</button>
+                        `;
+                    }
+                } else {
+                    // Normal buildings
+                    const owned = gameState.buildings[id];
+                    el.className = `building ${owned ? 'owned' : ''}`;
+                    
+                    el.innerHTML = `
+                        <div class="building-info">
+                            <h3>${building.emoji} ${building.name}</h3>
+                            <p>${building.effect}</p>
+                        </div>
+                        ${owned ? '<span>✅ Besitzt</span>' : `<button class="building-btn" onclick="buyBuilding('${id}')" ${gameState.money < building.cost ? 'disabled' : ''}>${building.cost}€</button>`}
+                    `;
+                }
                 
                 list.appendChild(el);
             });
@@ -1553,8 +1622,14 @@
             gameState.money -= plant.price;
             let growTime = plant.growTime;
             
+            // Brunnen: -1h for all plants
             if (gameState.buildings.brunnen) {
                 growTime = Math.max(1, growTime - 1);
+            }
+            
+            // Gewächshaus: -3h for plants in extra fields (tiles beyond 16)
+            if (tileIndex >= 16 && gameState.buildings.gewaechshaus > 0) {
+                growTime = Math.max(1, growTime - (3 * gameState.buildings.gewaechshaus));
             }
             
             gameState.tiles[tileIndex] = {
@@ -1684,29 +1759,78 @@
             const plant = plants[tile.plantId] || eventPlants[tile.plantId];
             
             if (confirm(`${plant.name} entfernen?`)) {
+                // Give back 40% of purchase price if Kompost is active
+                let refund = 0;
+                if (gameState.buildings.kompost) {
+                    refund = Math.floor(plant.price * 0.4);
+                    gameState.money += refund;
+                }
+                
                 gameState.tiles[tileIndex] = null;
+                updateUI();
                 renderFarm();
                 saveGame();
-                showNotification(`${plant.name} entfernt`);
+                
+                if (refund > 0) {
+                    showNotification(`${plant.name} entfernt! +${refund}€ zurück`);
+                } else {
+                    showNotification(`${plant.name} entfernt`);
+                }
             }
         }
 
         // Buy building
         function buyBuilding(buildingId) {
             const building = buildings[buildingId];
-            if (gameState.money < building.cost) {
-                showNotification('Nicht genug Geld!', 'error');
-                return;
-            }
             
-            gameState.money -= building.cost;
-            gameState.buildings[buildingId] = true;
+            // Special handling for Gewächshaus (max 4, exponential cost)
+            if (buildingId === 'gewaechshaus') {
+                const currentLevel = gameState.buildings.gewaechshaus;
+                const maxLevel = 4;
+                
+                if (currentLevel >= maxLevel) {
+                    showNotification('Maximum von 4 Gewächshäusern erreicht!', 'error');
+                    return;
+                }
+                
+                // Exponential cost: 20, 40, 80, 160
+                const cost = 20 * Math.pow(2, currentLevel);
+                
+                if (gameState.money < cost) {
+                    showNotification('Nicht genug Geld!', 'error');
+                    return;
+                }
+                
+                gameState.money -= cost;
+                gameState.buildings.gewaechshaus++;
+                
+                // Add 1 extra tile per Gewächshaus
+                gameState.tiles.push(null);
+                
+                showNotification(`${building.name} gekauft! (${gameState.buildings.gewaechshaus}/${maxLevel})`);
+            } else {
+                // Normal buildings
+                if (gameState.buildings[buildingId]) {
+                    showNotification('Bereits gekauft!', 'error');
+                    return;
+                }
+                
+                if (gameState.money < building.cost) {
+                    showNotification('Nicht genug Geld!', 'error');
+                    return;
+                }
+                
+                gameState.money -= building.cost;
+                gameState.buildings[buildingId] = true;
+                
+                showNotification(`${building.name} gekauft!`);
+            }
             
             updateUI();
             renderBuildings();
+            renderFarm();
             renderShop();
             saveGame();
-            showNotification(`${building.name} gekauft!`);
         }
 
         // Buy upgrade
@@ -2051,8 +2175,37 @@
             }, 1000); // Update every second instead of 100ms
         }
 
+        // Toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.getElementById('dark-mode-btn');
+            if (document.body.classList.contains('dark-mode')) {
+                btn.textContent = '☀️ Hell';
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                btn.textContent = '🌙 Dunkel';
+                localStorage.setItem('darkMode', 'false');
+            }
+        }
+
+        // Load dark mode preference
+        function loadDarkMode() {
+            const darkMode = localStorage.getItem('darkMode');
+            if (darkMode === 'true') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('dark-mode-btn').textContent = '☀️ Hell';
+            }
+        }
+
         // Start game
         init();
+        loadDarkMode();
+
+        // Save before closing/refreshing
+        window.addEventListener('beforeunload', () => {
+            gameState.lastSaveTime = Date.now();
+            saveGame();
+        });
     </script>
 </body>
 </html>
