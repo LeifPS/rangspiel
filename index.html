@@ -1401,7 +1401,7 @@
         karotte:        { name: 'Karotte',           emoji: '🥕', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 5,      harvestType: 'single' },
         kartoffel:      { name: 'Kartoffel',         emoji: '🥔', rarity: 'gewöhnlich',   price: 3,    growTime: 3,   sellValue: 9,      harvestType: 'single' },
         salat:          { name: 'Salat',             emoji: '🥬', rarity: 'gewöhnlich',   price: 2,    growTime: 1,   sellValue: 2,      harvestType: 'multi'  },
-        blume:          { name: 'Blume',             emoji: '🌸', rarity: 'gewöhnlich',   price: 3,    growTime: 1,   sellValue: 4,      harvestType: 'multi'  },
+        blume:          { name: 'Blume',             emoji: '🌸', rarity: 'gewöhnlich',   price: 5,    growTime: 1,   sellValue: 4,      harvestType: 'multi'  },
         erdbeere:       { name: 'Erdbeere',          emoji: '🍓', rarity: 'gewöhnlich',   price: 4,    growTime: 2,   sellValue: 3,      harvestType: 'multi'  },
         moosblatt:      { name: 'Moosblatt',         emoji: '🍀', rarity: 'gewöhnlich',   price: 4,    growTime: 1,   sellValue: 3,      harvestType: 'multi'  },
         ruebe:          { name: 'Rübe',              emoji: '🫚', rarity: 'gewöhnlich',   price: 3,    growTime: 2,   sellValue: 5,      harvestType: 'single' },
@@ -1530,7 +1530,7 @@
         kompost: { name: 'Kompost', cost: 6, effect: '40% des Kaufpreises beim Löschen zurück', emoji: '🗑️' },
         gewaechshaus: { name: 'Gewächshaus', cost: 20, effect: '+1 Feld, Pflanzen wachsen 3h schneller (Max 4)', emoji: '🏡' },
         marktstand: { name: 'Marktstand', cost: 30, effect: 'Zeigt 5 Karten statt 4', emoji: '🏪' },
-        scheune: { name: 'Scheune', cost: 100, effect: 'Lagere Samen statt sie zu löschen (Max 3 Plätze)', emoji: '🏚️' }
+        scheune: { name: 'Scheune', cost: 20, effect: 'Lagere Samen statt sie zu löschen (Max 6 Plätze)', emoji: '🏚️' }
     };
 
     // Upgrades
@@ -1637,15 +1637,15 @@
             if (!gameState.upgrades) gameState.upgrades = { guteErde: false };
             if (loaded.upgrades && loaded.upgrades.shopUpgrade !== undefined) {
                 const oldLevel = loaded.upgrades.shopUpgrade ? 3 : 0;
-                if (!gameState.ruf) gameState.ruf = [0,10,30,75,175,400][Math.min(oldLevel, 5)];
+                if (gameState.ruf === undefined) gameState.ruf = [0,10,30,75,175,400][Math.min(oldLevel, 5)];
                 delete gameState.upgrades.shopUpgrade;
             }
             if (loaded.upgrades && loaded.upgrades.shopUpgradeLevel !== undefined) {
                 const oldLevel = loaded.upgrades.shopUpgradeLevel || 0;
-                if (!gameState.ruf) gameState.ruf = [0,10,30,75,175,400][Math.min(oldLevel, 5)];
+                if (gameState.ruf === undefined) gameState.ruf = [0,10,30,75,175,400][Math.min(oldLevel, 5)];
                 delete gameState.upgrades.shopUpgradeLevel;
             }
-            if (!gameState.ruf) gameState.ruf = 0;
+            if (gameState.ruf === undefined) gameState.ruf = 0;
             
             // Fallback for missing discoveredPlants array
             if (!gameState.discoveredPlants) {
@@ -1655,6 +1655,9 @@
             if (!gameState.buildings.scheune) gameState.buildings.scheune = 0;
             if (!gameState.scheuneLager) gameState.scheuneLager = [];
             if (!gameState.brunnenLastUsed) gameState.brunnenLastUsed = 0;
+            if (gameState.mondMuenzen === undefined) gameState.mondMuenzen = 0;
+            if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
+            if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
             
             // Fallback for old save files with gewaechshaus boolean
             if (loaded.buildings && loaded.buildings.gewaechshaus === true) {
@@ -1701,7 +1704,7 @@
             }
 
             // Mondladen restock: wenn seit letztem Save eine Event-Stunde vergangen ist
-            if (!gameState.mondShopLastEventHour) gameState.mondShopLastEventHour = -1;
+            if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
             const currentEventHour = [5,10,15,20].includes(new Date().getHours()) ? new Date().getHours() : -1;
             if (currentEventHour !== -1 && gameState.mondShopLastEventHour !== currentEventHour) {
                 gameState.mondShopLastEventHour = currentEventHour;
@@ -1837,7 +1840,7 @@
             
             const scheuneLevel = gameState.buildings.scheune || 0;
             const lager = gameState.scheuneLager || [];
-            const scheuneHasRoom = scheuneLevel > 0 && lager.length < scheuneLevel;
+            const scheuneHasRoom = scheuneLevel > 0 && lager.length < scheuneMaxSlots();
             card.innerHTML = `
                 <div class="card-emoji">${plant.emoji}</div>
                 <div class="card-header">
@@ -1941,6 +1944,11 @@
         });
     }
 
+    function scheuneMaxSlots() {
+        const scheuneSlots = [0, 2, 4, 6];
+        return scheuneSlots[gameState.buildings.scheune || 0] || 0;
+    }
+
     // Render buildings and upgrades (combined)
     function renderBuildings() {
         const list = document.getElementById('building-list');
@@ -1980,17 +1988,20 @@
             } else if (id === 'scheune') {
                 const level = gameState.buildings.scheune || 0;
                 const maxLevel = 3;
-                const cost = 100 * Math.pow(2, level);
+                const scheuneCosts = [20, 50, 100];
+                const scheuneSlots = [2, 4, 6];
+                const cost = scheuneCosts[level] || 0;
+                const slots = scheuneSlots[level - 1] || 0;
                 el.className = `building ${level >= maxLevel ? 'owned' : ''}`;
                 el.innerHTML = `
                     <div class="building-info">
                         <h3>${building.emoji} ${building.name}</h3>
                         <p>${building.effect}</p>
-                        ${level > 0 ? `<p style="font-size:0.8em;color:#888;margin-top:2px;">Stufe ${level}/${maxLevel}</p>` : ''}
+                        ${level > 0 ? `<p style="font-size:0.8em;color:#888;margin-top:2px;">Stufe ${level}/${maxLevel} · ${slots} Plätze</p>` : ''}
                     </div>
                     ${level >= maxLevel
-                        ? '<span>✅ Maximum</span>'
-                        : `<button class="building-btn" onclick="buyBuilding('scheune')" ${gameState.money < cost ? 'disabled' : ''}>${cost}€ ${level > 0 ? `(${level}/${maxLevel})` : ''}</button>`}`;
+                        ? '<span>✅ Maximum (6 Plätze)</span>'
+                        : `<button class="building-btn" onclick="buyBuilding('scheune')" ${gameState.money < cost ? 'disabled' : ''}>${cost}€ → ${scheuneSlots[level]} Plätze</button>`}`;
             } else {
                 const owned = gameState.buildings[id];
                 el.className = `building ${owned ? 'owned' : ''}`;
@@ -2015,7 +2026,7 @@
         if (level === 0) { section.style.display = 'none'; return; }
         section.style.display = '';
         const lager = gameState.scheuneLager || [];
-        const maxSlots = level;
+        const maxSlots = scheuneMaxSlots();
         countEl.textContent = '(' + lager.length + '/' + maxSlots + ')';
         list.innerHTML = '';
         for (let i = 0; i < maxSlots; i++) {
@@ -2073,7 +2084,7 @@
             if (!plant) { showNotification('Pflanze nicht gefunden!', 'error'); return; }
             let growTime = plant.growTime;
             if (tileIndex >= 16 && gameState.buildings.gewaechshaus > 0) {
-                growTime = Math.max(1, growTime - (3 * gameState.buildings.gewaechshaus));
+                growTime = Math.max(1, growTime - 3);
             }
             gameState.tiles[tileIndex] = { plantId: gameState.selectedSeed, progress: 0, totalTime: growTime, mutation: 0 };
             gameState.scheuneLager.splice(scheuneSlot, 1);
@@ -2104,7 +2115,7 @@
 
         // Gewächshaus: -3h for plants in extra fields (tiles beyond 16)
         if (tileIndex >= 16 && gameState.buildings.gewaechshaus > 0) {
-            growTime = Math.max(1, growTime - (3 * gameState.buildings.gewaechshaus));
+            growTime = Math.max(1, growTime - 3);
         }
         
         gameState.tiles[tileIndex] = {
@@ -2232,7 +2243,7 @@
     function buyIntoScheune(plantId, event) {
         if (event) event.stopPropagation();
         if (!gameState.scheuneLager) gameState.scheuneLager = [];
-        const maxSlots = gameState.buildings.scheune || 0;
+        const maxSlots = scheuneMaxSlots();
         if (gameState.scheuneLager.length >= maxSlots) {
             showNotification('Scheune ist voll!', 'error');
             return;
@@ -2273,7 +2284,7 @@
         const plant = plants[tile.plantId] || eventPlants[tile.plantId];
         const hasSheune = gameState.buildings.scheune > 0;
         const lager = gameState.scheuneLager || [];
-        const maxSlots = gameState.buildings.scheune || 0;
+        const maxSlots = scheuneMaxSlots();
         const lagerFull = lager.length >= maxSlots;
 
         if (hasSheune) {
@@ -2290,7 +2301,7 @@
         if (existing) existing.remove();
 
         const lager = gameState.scheuneLager || [];
-        const maxSlots = gameState.buildings.scheune || 0;
+        const maxSlots = scheuneMaxSlots();
 
         const dialog = document.createElement('div');
         dialog.id = 'scheune-dialog';
@@ -2354,7 +2365,7 @@
         const tile = gameState.tiles[tileIndex];
         if (!tile) return;
         if (!gameState.scheuneLager) gameState.scheuneLager = [];
-        const maxSlots = gameState.buildings.scheune || 0;
+        const maxSlots = scheuneMaxSlots();
         if (gameState.scheuneLager.length >= maxSlots) {
             showNotification('Scheune ist voll!', 'error');
             return;
@@ -2456,11 +2467,13 @@
         } else if (buildingId === 'scheune') {
             const currentLevel = gameState.buildings.scheune || 0;
             const maxLevel = 3;
+            const scheuneCosts = [20, 50, 100];
+            const scheuneSlots = [2, 4, 6];
             if (currentLevel >= maxLevel) {
-                showNotification('Scheune bereits auf Maximum (3)!', 'error');
+                showNotification('Scheune bereits auf Maximum (6 Plätze)!', 'error');
                 return;
             }
-            const cost = 100 * Math.pow(2, currentLevel);
+            const cost = scheuneCosts[currentLevel];
             if (gameState.money < cost) {
                 showNotification('Nicht genug Geld!', 'error');
                 return;
@@ -2468,7 +2481,7 @@
             gameState.money -= cost;
             gameState.buildings.scheune = currentLevel + 1;
             if (!gameState.scheuneLager) gameState.scheuneLager = [];
-            showNotification(`🏚️ Scheune Stufe ${gameState.buildings.scheune} gekauft! +1 Samenplatz`);
+            showNotification(`🏚️ Scheune Stufe ${gameState.buildings.scheune} gekauft! ${scheuneSlots[currentLevel]} Plätze`);
             renderScheuneLager();
         } else {
             // Normal buildings
@@ -3313,6 +3326,7 @@
 
     function switchProfile(profileNum) {
         saveGame();
+        _mondAdminOverride = false;
         localStorage.setItem('ernteZeitActiveProfile', profileNum);
         Object.assign(gameState, defaultGameState());
         loadGame();
@@ -3376,20 +3390,23 @@
             if (!gameState.upgrades) gameState.upgrades = { guteErde: false };
             if (loaded.upgrades && loaded.upgrades.shopUpgrade !== undefined) {
                 const oldLevel = loaded.upgrades.shopUpgrade ? 3 : 0;
-                if (!gameState.ruf) gameState.ruf = [0,10,30,75,175,400][Math.min(oldLevel, 5)];
+                if (gameState.ruf === undefined) gameState.ruf = [0,10,30,75,175,400][Math.min(oldLevel, 5)];
                 delete gameState.upgrades.shopUpgrade;
             }
             if (loaded.upgrades && loaded.upgrades.shopUpgradeLevel !== undefined) {
                 const oldLevel = loaded.upgrades.shopUpgradeLevel || 0;
-                if (!gameState.ruf) gameState.ruf = [0,10,30,75,175,400][Math.min(oldLevel, 5)];
+                if (gameState.ruf === undefined) gameState.ruf = [0,10,30,75,175,400][Math.min(oldLevel, 5)];
                 delete gameState.upgrades.shopUpgradeLevel;
             }
-            if (!gameState.ruf) gameState.ruf = 0;
+            if (gameState.ruf === undefined) gameState.ruf = 0;
             if (!gameState.discoveredPlants) gameState.discoveredPlants = [];
             if (loaded.buildings && loaded.buildings.gewaechshaus === true) gameState.buildings.gewaechshaus = 1;
             else if (loaded.buildings && loaded.buildings.gewaechshaus === false) gameState.buildings.gewaechshaus = 0;
             while (gameState.tiles.length < 16) gameState.tiles.push(null);
             if (!gameState.brunnenLastUsed) gameState.brunnenLastUsed = 0;
+            if (gameState.mondMuenzen === undefined) gameState.mondMuenzen = 0;
+            if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
+            if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
 
             const now = Date.now();
             const elapsedHours = (now - gameState.lastSaveTime) / (1000 * 60 * 60);
