@@ -258,13 +258,12 @@
 
     .tile-mutation {
         position: absolute;
-        top: 5px;
-        left: 5px;
-        font-size: 0.8em;
-        padding: 2px 6px;
-        border-radius: 5px;
-        background: rgba(0,0,0,0.7);
-        color: white;
+        top: 4px;
+        left: 4px;
+        font-size: 1em;
+        line-height: 1;
+        display: flex;
+        gap: 2px;
     }
 
     .tile-harvest-btn {
@@ -1093,12 +1092,6 @@
     }
 
     /* Mutation indicators */
-    .mutation-0 { background: rgba(158,158,158,0.8); }
-    .mutation-1 { background: rgba(33,150,243,0.8); }
-    .mutation-2 { background: rgba(255,215,0,0.8); }
-    .mutation-3 { background: rgba(244,67,54,0.8); }
-    .mutation-4 { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3); }
-    .mutation-5 { background: linear-gradient(90deg, #1a0533, #7b1fa2, #ce93d8, #7b1fa2, #1a0533); background-size: 200% 100%; animation: lunarShimmer 2s linear infinite; color: #fff; }
     @keyframes lunarShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
     /* Responsive */
@@ -1601,7 +1594,32 @@
     }
 
     // Mutation names
-    const mutationNames = ['', 'Nass', 'Vergoldet', 'Riesig', 'Regenbogen', 'Lunar'];
+    // Mutations: id -> { emoji, label, multiplier }
+    const mutationDefs = {
+        lunar:      { emoji: '🌙', label: 'Lunar',      multiplier: 1.5  },
+        gold:       { emoji: '🪙', label: 'Gold',       multiplier: 1.5  },
+        regenbogen: { emoji: '🌈', label: 'Regenbogen', multiplier: 3.0  },
+    };
+
+    function calcSellValue(tile, baseSellValue) {
+        let val = baseSellValue;
+        const muts = Array.isArray(tile.mutations) ? tile.mutations : [];
+        muts.forEach(id => { if (mutationDefs[id]) val *= mutationDefs[id].multiplier; });
+        return val;
+    }
+
+    function rollMutations(existingMuts, mondschrein) {
+        const muts = [...(existingMuts || [])];
+        if (mondschrein && Math.random() < 0.2 && !muts.includes('lunar')) muts.push('lunar');
+        if (Math.random() < 0.05 && !muts.includes('gold')) muts.push('gold');
+        if (Math.random() < 0.01 && !muts.includes('regenbogen')) muts.push('regenbogen');
+        return muts;
+    }
+
+    function mutationEmojis(tile) {
+        const muts = Array.isArray(tile.mutations) ? tile.mutations : [];
+        return muts.map(id => mutationDefs[id] ? mutationDefs[id].emoji : '').join('');
+    }
 
     // Weighted random selection based on rarity
     function getWeightedRandomPlant(availablePlants) {
@@ -1785,15 +1803,10 @@
                     }
                 }
                 
-                const mutationText = tile.mutation > 0 ? `\n🧬 Mutation: ${mutationNames[tile.mutation]}` : '';
-                let tooltipSellValue = plant.sellValue;
-                if (tile.mutation === 1) tooltipSellValue *= 1.2;
-                if (tile.mutation === 2) tooltipSellValue *= 2;
-                if (tile.mutation === 3) tooltipSellValue *= 3;
-                if (tile.mutation === 4) tooltipSellValue *= 5;
-                if (tile.mutation === 5) tooltipSellValue *= 1.5;
-
-                const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity.charAt(0).toUpperCase() + plant.rarity.slice(1)}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${Math.floor(tooltipSellValue)}€${tile.mutation > 0 ? ' (mit Mutation)' : ''}\n🔄 Erntetyp: ${plant.harvestType === 'single' ? '●' : '● ● ●'}\n⏳ ${timeText}${mutationText}`;
+                const tileMutsA = Array.isArray(tile.mutations) ? tile.mutations : [];
+                const mutationText = tileMutsA.length > 0 ? `\n🧬 ${tileMutsA.map(id => (mutationDefs[id]?.emoji||'') + (mutationDefs[id]?.label||id)).join(', ')}` : '';
+                const tooltipSellValue = Math.floor(calcSellValue(tile, plant.sellValue));
+                const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity.charAt(0).toUpperCase() + plant.rarity.slice(1)}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${tooltipSellValue}€${tileMutsA.length > 0 ? ' (mit Mutation)' : ''}\n🔄 Erntetyp: ${plant.harvestType === 'single' ? '●' : '● ● ●'}\n⏳ ${timeText}${mutationText}`;
                 
                 tileEl.innerHTML = `
                     ${isGreenhouse ? '<span class="tile-greenhouse-badge">🏡</span>' : ''}
@@ -1801,7 +1814,7 @@
                     <div class="tile-progress">
                         <div class="tile-progress-bar" style="${progressBarStyle}"></div>
                     </div>
-                    ${tile.mutation > 0 ? `<div class="tile-mutation mutation-${tile.mutation}">${mutationNames[tile.mutation]}</div>` : ''}
+                    ${mutationEmojis(tile) ? `<div class="tile-mutation">${mutationEmojis(tile)}</div>` : ''}
                     <button class="tile-harvest-btn"
                         onclick="harvest(${index}, event)"
                         ontouchend="harvest(${index}, event); event.preventDefault();">Ernten</button>
@@ -2069,13 +2082,14 @@
             const entry = lager[i];
             const plantId = entry ? (typeof entry === 'object' ? entry.plantId : entry) : null;
             const wasPlanted = entry && typeof entry === 'object' ? entry.wasPlanted : false;
-            const savedMutation = entry && typeof entry === 'object' ? (entry.mutation || 0) : 0;
+            // savedMutation handled via savedMuts2 below
             const span = document.createElement('span');
             if (plantId) {
                 const p = plants[plantId] || eventPlants[plantId];
                 span.style.cssText = 'background:rgba(0,0,0,0.08);border-radius:8px;padding:6px 10px;font-size:0.85em;cursor:pointer;border:2px solid transparent;transition:border-color 0.15s;';
                 span.title = wasPlanted ? 'Bereits bepflanzt gewesen – keine neue Mutation möglich' : 'Klicken zum Platzieren';
-                const mutLabel = savedMutation > 0 ? ` <span style="opacity:0.7;font-size:0.8em;">🧬${mutationNames[savedMutation]}</span>` : (wasPlanted ? ' <span style="opacity:0.4;font-size:0.8em;">●</span>' : '');
+                const savedMuts2 = entry && typeof entry === 'object' && Array.isArray(entry.mutations) ? entry.mutations : [];
+                const mutLabel = savedMuts2.length > 0 ? ` <span style="opacity:0.8;">${savedMuts2.map(id => mutationDefs[id]?.emoji||'').join('')}</span>` : (wasPlanted ? ' <span style="opacity:0.4;font-size:0.8em;">●</span>' : '');
                 span.innerHTML = (p ? p.emoji : '?') + ' ' + (p ? p.name : plantId) + mutLabel + ' <span style="opacity:0.5;">▶</span>';
                 span.onclick = () => placeFromScheune(i);
                 span.onmouseover = () => span.style.borderColor = '#795548';
@@ -2129,19 +2143,15 @@
             }
             // Mutation: gespeicherte wiederherstellen, oder bei wasPlanted=false neu würfeln
             const wasPlanted = typeof scheuneEntry === 'object' ? scheuneEntry.wasPlanted : false;
-            const savedMutation = typeof scheuneEntry === 'object' ? (scheuneEntry.mutation || 0) : 0;
-            let lunarMutation = 0;
-            if (wasPlanted) {
-                lunarMutation = savedMutation; // gespeicherte Mutation beibehalten
-            } else {
-                lunarMutation = (gameState.buildings.mondschrein && Math.random() < 0.2) ? 5 : 0;
-            }
-            gameState.tiles[tileIndex] = { plantId: gameState.selectedSeed, progress: 0, totalTime: growTime, mutation: lunarMutation };
+            const savedMuts = typeof scheuneEntry === 'object' && Array.isArray(scheuneEntry.mutations) ? scheuneEntry.mutations : [];
+            const newMuts = wasPlanted ? savedMuts : rollMutations([], gameState.buildings.mondschrein);
+            gameState.tiles[tileIndex] = { plantId: gameState.selectedSeed, progress: 0, totalTime: growTime, mutations: newMuts, mutation: 0 };
             gameState.scheuneLager.splice(scheuneSlot, 1);
             gameState._scheuneSlot = null;
             gameState.selectedSeed = null;
             updateUI(); renderFarm(); renderShop(); renderBuildings(); renderScheuneLager(); saveGame();
-            showNotification(`${plant.name} aus Scheune gepflanzt!${lunarMutation ? ' 🌙 Lunar!' : ''}`);
+            const mutMsg = newMuts.map(id => mutationDefs[id]?.emoji || '').join('');
+            showNotification(`${plant.name} aus Scheune gepflanzt!${mutMsg ? ' ' + mutMsg : ''}`);
             return;
         }
 
@@ -2169,14 +2179,14 @@
             growTime = Math.max(1, growTime - 3);
         }
 
-        // Mondschrein: 20% Chance auf Lunar-Mutation
-        const lunarMutation = gameState.buildings.mondschrein && Math.random() < 0.2 ? 5 : 0;
+        const newMuts = rollMutations([], gameState.buildings.mondschrein);
 
         gameState.tiles[tileIndex] = {
             plantId: gameState.selectedSeed,
             progress: 0,
             totalTime: growTime,
-            mutation: lunarMutation
+            mutations: newMuts,
+            mutation: 0
         };
         
         // Mark plant as discovered
@@ -2202,7 +2212,8 @@
         renderShop();
         saveGame();
         addRuf(1);
-        showNotification(`${plant.name} gepflanzt!${lunarMutation ? ' 🌙 Lunar-Mutation!' : ''}`);
+        const mutMsgN = newMuts.map(id => mutationDefs[id]?.emoji || '').join('');
+        showNotification(`${plant.name} gepflanzt!${mutMsgN ? ' ' + mutMsgN : ''}`);
     }
 
     // Harvest
@@ -2214,14 +2225,8 @@
         const plant = plants[tile.plantId] || eventPlants[tile.plantId];
         let sellValue = plant.sellValue;
         
-        // Apply mutation effects
-        if (tile.mutation === 1) sellValue *= 1.2; // Nass
-        if (tile.mutation === 2) sellValue *= 2; // Vergoldet
-        if (tile.mutation === 3) sellValue *= 3; // Riesig
-        if (tile.mutation === 4) sellValue *= 5; // Regenbogen
-        if (tile.mutation === 5) sellValue *= 1.5; // Lunar
+        sellValue = calcSellValue(tile, sellValue);
 
-        // Apply building effects
 
 
         gameState.money += Math.floor(sellValue);
@@ -2258,11 +2263,7 @@
                 let sellValue = plant.sellValue;
                 
                 // Apply mutation effects
-                if (tile.mutation === 1) sellValue *= 1.2;
-                if (tile.mutation === 2) sellValue *= 2;
-                if (tile.mutation === 3) sellValue *= 3;
-                if (tile.mutation === 4) sellValue *= 5;
-                if (tile.mutation === 5) sellValue *= 1.5; // Lunar
+                sellValue = calcSellValue(tile, sellValue);
                 
                 // Apply building effects
 
@@ -2320,7 +2321,7 @@
                 gameState.shopSeeds.splice(gameState.shopSeeds.indexOf(seed), 1);
             }
         }
-        gameState.scheuneLager.push({ plantId, wasPlanted: false });
+        gameState.scheuneLager.push({ plantId, wasPlanted: false, mutations: [] });
         if (!gameState.discoveredPlants.includes(plantId)) {
             gameState.discoveredPlants.push(plantId);
         }
@@ -2427,7 +2428,7 @@
             showNotification('Scheune ist voll!', 'error');
             return;
         }
-        gameState.scheuneLager.push({ plantId: tile.plantId, wasPlanted: true, mutation: tile.mutation || 0 });
+        gameState.scheuneLager.push({ plantId: tile.plantId, wasPlanted: true, mutations: Array.isArray(tile.mutations) ? tile.mutations : [] });
         gameState.tiles[tileIndex] = null;
         updateUI();
         renderFarm();
@@ -3276,15 +3277,10 @@
                         }
                     }
                     
-                    const mutationText = tile.mutation > 0 ? `\n🧬 Mutation: ${mutationNames[tile.mutation]}` : '';
-                    let tooltipSellValue = plant.sellValue;
-                    if (tile.mutation === 1) tooltipSellValue *= 1.2;
-                    if (tile.mutation === 2) tooltipSellValue *= 2;
-                    if (tile.mutation === 3) tooltipSellValue *= 3;
-                    if (tile.mutation === 4) tooltipSellValue *= 5;
-                    if (tile.mutation === 5) tooltipSellValue *= 1.5;
-
-                    const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity.charAt(0).toUpperCase() + plant.rarity.slice(1)}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${Math.floor(tooltipSellValue)}€${tile.mutation > 0 ? ' (mit Mutation)' : ''}\n🔄 Erntetyp: ${plant.harvestType === 'single' ? '●' : '● ● ●'}\n⏳ ${timeText}${mutationText}`;
+                    const tileMutsB = Array.isArray(tile.mutations) ? tile.mutations : [];
+                    const mutationText = tileMutsB.length > 0 ? `\n🧬 ${tileMutsB.map(id => (mutationDefs[id]?.emoji||'') + (mutationDefs[id]?.label||id)).join(', ')}` : '';
+                    const tooltipSellValue2 = Math.floor(calcSellValue(tile, plant.sellValue));
+                    const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity.charAt(0).toUpperCase() + plant.rarity.slice(1)}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${tooltipSellValue2}€${tileMutsB.length > 0 ? ' (mit Mutation)' : ''}\n🔄 Erntetyp: ${plant.harvestType === 'single' ? '●' : '● ● ●'}\n⏳ ${timeText}${mutationText}`;
                     
                     // Update mouseover handler
                     tileEl.onmouseover = (e) => showTooltip(tooltipText, e.clientX, e.clientY);
