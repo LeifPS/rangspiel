@@ -1391,7 +1391,7 @@
         mondMuenzen: 0,
         mondShopSeeds: [],
         mondShopLastEventHour: -1,
-        mondEventStartRound: -1,
+        mondEventEndTime: -1,
         mondEventTriggeredHour: -1,
         lastSaveTime: Date.now(),
         shopSeeds: [],
@@ -1665,7 +1665,7 @@
             if (gameState.mondMuenzen === undefined) gameState.mondMuenzen = 0;
             if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
-            if (gameState.mondEventStartRound === undefined) gameState.mondEventStartRound = -1;
+            if (gameState.mondEventEndTime === undefined) gameState.mondEventEndTime = -1;
             if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
             
             // Fallback for old save files with gewaechshaus boolean
@@ -1714,7 +1714,7 @@
 
             // Mondladen restock: wenn seit letztem Save eine Event-Stunde vergangen ist
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
-            if (gameState.mondEventStartRound === undefined) gameState.mondEventStartRound = -1;
+            if (gameState.mondEventEndTime === undefined) gameState.mondEventEndTime = -1;
             if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
             const currentEventHour = EVENT_HOURS.includes(new Date().getHours()) ? new Date().getHours() : -1;
             if (currentEventHour !== -1 && gameState.mondEventTriggeredHour !== currentEventHour) {
@@ -1786,7 +1786,14 @@
                 }
                 
                 const mutationText = tile.mutation > 0 ? `\n🧬 Mutation: ${mutationNames[tile.mutation]}` : '';
-                const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity.charAt(0).toUpperCase() + plant.rarity.slice(1)}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${plant.sellValue}€\n🔄 Erntetyp: ${plant.harvestType === 'single' ? '●' : '● ● ●'}\n⏳ ${timeText}${mutationText}`;
+                let tooltipSellValue = plant.sellValue;
+                if (tile.mutation === 1) tooltipSellValue *= 1.2;
+                if (tile.mutation === 2) tooltipSellValue *= 2;
+                if (tile.mutation === 3) tooltipSellValue *= 3;
+                if (tile.mutation === 4) tooltipSellValue *= 5;
+                if (tile.mutation === 5) tooltipSellValue *= 1.5;
+
+                const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity.charAt(0).toUpperCase() + plant.rarity.slice(1)}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${Math.floor(tooltipSellValue)}€${tile.mutation > 0 ? ' (mit Mutation)' : ''}\n🔄 Erntetyp: ${plant.harvestType === 'single' ? '●' : '● ● ●'}\n⏳ ${timeText}${mutationText}`;
                 
                 tileEl.innerHTML = `
                     ${isGreenhouse ? '<span class="tile-greenhouse-badge">🏡</span>' : ''}
@@ -1838,16 +1845,17 @@
         
         // Display available shop seeds with quantities
         gameState.shopSeeds.forEach(seed => {
-            const plant = plants[seed.plantId];
+            const plant = plants[seed.plantId] || eventPlants[seed.plantId];
             if (!plant) return;
-            
+
             const card = document.createElement('div');
             const rarityClass = `card-${plant.rarity}`;
             card.className = `card ${rarityClass}`;
             if (gameState.selectedSeed === seed.plantId) card.classList.add('selected');
-            
+
             const quantity = Math.floor(seed.quantity);
-            
+            const displayPrice = seed.freeFromMond ? '0€ 🌙' : `${plant.price}€`;
+
             const scheuneLevel = gameState.buildings.scheune || 0;
             const lager = gameState.scheuneLager || [];
             const scheuneHasRoom = scheuneLevel > 0 && lager.length < scheuneMaxSlots();
@@ -1859,7 +1867,7 @@
                 </div>
                 <div class="card-quantity">x${quantity}</div>
                 <div class="card-stats">
-                    <div><span>💰 Preis</span><span>${plant.price}€</span></div>
+                    <div><span>💰 Preis</span><span>${displayPrice}</span></div>
                     <div><span>⏱️ Wachsen</span><span>${plant.growTime}h</span></div>
                     <div><span>💵 Verkauf</span><span>${plant.sellValue}€</span></div>
                     <div><span> Typ</span><span>${plant.harvestType === 'single' ? '●' : '● ● ●'}</span></div>
@@ -1867,9 +1875,9 @@
                 <button class="buy-btn" onclick="selectSeed('${seed.plantId}')">
                     ${gameState.selectedSeed === seed.plantId ? '✓ Ausgewählt' : 'Auswählen'}
                 </button>
-                ${scheuneHasRoom ? `<button class="buy-btn" style="margin-top:4px;background:linear-gradient(135deg,#795548,#4e342e);" onclick="buyIntoScheune('${seed.plantId}', event)">🏚️ In Scheune (${plant.price}€)</button>` : ''}
+                ${scheuneHasRoom ? `<button class="buy-btn" style="margin-top:4px;background:linear-gradient(135deg,#795548,#4e342e);" onclick="buyIntoScheune('${seed.plantId}', event)">🏚️ In Scheune (${displayPrice})</button>` : ''}
             `;
-            
+
             shop.appendChild(card);
         });
     }
@@ -2058,13 +2066,17 @@
         countEl.textContent = '(' + lager.length + '/' + maxSlots + ')';
         list.innerHTML = '';
         for (let i = 0; i < maxSlots; i++) {
-            const plantId = lager[i];
+            const entry = lager[i];
+            const plantId = entry ? (typeof entry === 'object' ? entry.plantId : entry) : null;
+            const wasPlanted = entry && typeof entry === 'object' ? entry.wasPlanted : false;
+            const savedMutation = entry && typeof entry === 'object' ? (entry.mutation || 0) : 0;
             const span = document.createElement('span');
             if (plantId) {
                 const p = plants[plantId] || eventPlants[plantId];
                 span.style.cssText = 'background:rgba(0,0,0,0.08);border-radius:8px;padding:6px 10px;font-size:0.85em;cursor:pointer;border:2px solid transparent;transition:border-color 0.15s;';
-                span.title = 'Klicken zum Platzieren';
-                span.innerHTML = (p ? p.emoji : '?') + ' ' + (p ? p.name : plantId) + ' <span style="opacity:0.5;">▶</span>';
+                span.title = wasPlanted ? 'Bereits bepflanzt gewesen – keine neue Mutation möglich' : 'Klicken zum Platzieren';
+                const mutLabel = savedMutation > 0 ? ` <span style="opacity:0.7;font-size:0.8em;">🧬${mutationNames[savedMutation]}</span>` : (wasPlanted ? ' <span style="opacity:0.4;font-size:0.8em;">●</span>' : '');
+                span.innerHTML = (p ? p.emoji : '?') + ' ' + (p ? p.name : plantId) + mutLabel + ' <span style="opacity:0.5;">▶</span>';
                 span.onclick = () => placeFromScheune(i);
                 span.onmouseover = () => span.style.borderColor = '#795548';
                 span.onmouseout = () => span.style.borderColor = 'transparent';
@@ -2103,18 +2115,27 @@
 
         // Check if coming from Scheune
         const scheuneSlot = gameState._scheuneSlot;
-        const fromScheune = scheuneSlot !== undefined && scheuneSlot !== null
-            && gameState.scheuneLager && gameState.scheuneLager[scheuneSlot] === gameState.selectedSeed;
+        const scheuneEntry = scheuneSlot !== undefined && scheuneSlot !== null && gameState.scheuneLager
+            ? gameState.scheuneLager[scheuneSlot] : null;
+        const fromScheune = scheuneEntry !== null && scheuneEntry !== undefined &&
+            (typeof scheuneEntry === 'object' ? scheuneEntry.plantId : scheuneEntry) === gameState.selectedSeed;
 
         if (fromScheune) {
-            // Plant from Scheune – no cost, remove from lager
             const plant = plants[gameState.selectedSeed] || eventPlants[gameState.selectedSeed];
             if (!plant) { showNotification('Pflanze nicht gefunden!', 'error'); return; }
             let growTime = plant.growTime;
             if (tileIndex >= 16 && gameState.buildings.gewaechshaus > 0) {
                 growTime = Math.max(1, growTime - 3);
             }
-            const lunarMutation = gameState.buildings.mondschrein && Math.random() < 0.2 ? 5 : 0;
+            // Mutation: gespeicherte wiederherstellen, oder bei wasPlanted=false neu würfeln
+            const wasPlanted = typeof scheuneEntry === 'object' ? scheuneEntry.wasPlanted : false;
+            const savedMutation = typeof scheuneEntry === 'object' ? (scheuneEntry.mutation || 0) : 0;
+            let lunarMutation = 0;
+            if (wasPlanted) {
+                lunarMutation = savedMutation; // gespeicherte Mutation beibehalten
+            } else {
+                lunarMutation = (gameState.buildings.mondschrein && Math.random() < 0.2) ? 5 : 0;
+            }
             gameState.tiles[tileIndex] = { plantId: gameState.selectedSeed, progress: 0, totalTime: growTime, mutation: lunarMutation };
             gameState.scheuneLager.splice(scheuneSlot, 1);
             gameState._scheuneSlot = null;
@@ -2132,14 +2153,15 @@
             renderShop();
             return;
         }
-        
-        const plant = plants[gameState.selectedSeed];
-        if (gameState.money < plant.price) {
+
+        const plant = plants[gameState.selectedSeed] || eventPlants[gameState.selectedSeed];
+        const actualPrice = seed.freeFromMond ? 0 : plant.price;
+        if (gameState.money < actualPrice) {
             showNotification('Nicht genug Geld!', 'error');
             return;
         }
-        
-        gameState.money -= plant.price;
+
+        gameState.money -= actualPrice;
         let growTime = plant.growTime;
 
         // Gewächshaus: -3h for plants in extra fields (tiles beyond 16)
@@ -2200,7 +2222,7 @@
         if (tile.mutation === 5) sellValue *= 1.5; // Lunar
 
         // Apply building effects
-        if (gameState.buildings.kompost) sellValue *= 1.2;
+
 
         gameState.money += Math.floor(sellValue);
 
@@ -2243,7 +2265,7 @@
                 if (tile.mutation === 5) sellValue *= 1.5; // Lunar
                 
                 // Apply building effects
-                if (gameState.buildings.kompost) sellValue *= 1.2;
+
                 
                 gameState.money += Math.floor(sellValue);
                 totalEarned += Math.floor(sellValue);
@@ -2282,22 +2304,23 @@
             showNotification('Scheune ist voll!', 'error');
             return;
         }
-        const plant = plants[plantId];
+        const plant = plants[plantId] || eventPlants[plantId];
         if (!plant) return;
-        if (gameState.money < plant.price) {
+        const seed = gameState.shopSeeds.find(s => s.plantId === plantId);
+        const actualPrice = (seed && seed.freeFromMond) ? 0 : plant.price;
+        if (gameState.money < actualPrice) {
             showNotification('Nicht genug Geld!', 'error');
             return;
         }
         // Deduct cost and remove one from shop
-        gameState.money -= plant.price;
-        const seed = gameState.shopSeeds.find(s => s.plantId === plantId);
+        gameState.money -= actualPrice;
         if (seed) {
             seed.quantity--;
             if (seed.quantity <= 0) {
                 gameState.shopSeeds.splice(gameState.shopSeeds.indexOf(seed), 1);
             }
         }
-        gameState.scheuneLager.push(plantId);
+        gameState.scheuneLager.push({ plantId, wasPlanted: false });
         if (!gameState.discoveredPlants.includes(plantId)) {
             gameState.discoveredPlants.push(plantId);
         }
@@ -2404,7 +2427,7 @@
             showNotification('Scheune ist voll!', 'error');
             return;
         }
-        gameState.scheuneLager.push(tile.plantId);
+        gameState.scheuneLager.push({ plantId: tile.plantId, wasPlanted: true, mutation: tile.mutation || 0 });
         gameState.tiles[tileIndex] = null;
         updateUI();
         renderFarm();
@@ -2417,11 +2440,12 @@
 
     function placeFromScheune(slotIndex) {
         const lager = gameState.scheuneLager || [];
-        const plantId = lager[slotIndex];
+        const entry = lager[slotIndex];
+        if (!entry) return;
+        const plantId = typeof entry === 'object' ? entry.plantId : entry;
         if (!plantId) return;
-        // Select this seed for planting
         gameState.selectedSeed = plantId;
-        gameState._scheuneSlot = slotIndex; // remember which slot to remove from
+        gameState._scheuneSlot = slotIndex;
         renderFarm();
         renderShop();
         showNotification(`${(plants[plantId] || eventPlants[plantId] || {}).name || plantId} ausgewählt – auf ein Feld klicken!`);
@@ -2601,8 +2625,7 @@
 
     function isMondEventActive() {
         if (_mondAdminOverride) return true;
-        // Event ist aktiv wenn es in dieser Runde gestartet wurde
-        return gameState.mondEventStartRound !== -1 && gameState.round === gameState.mondEventStartRound;
+        return gameState.mondEventEndTime > 0 && Date.now() < gameState.mondEventEndTime;
     }
 
     function checkMondEventTrigger() {
@@ -2611,9 +2634,10 @@
         if (!isEventHour) return false;
         // Nur triggern wenn diese Event-Stunde noch nicht für dieses Profil getriggert wurde
         if (gameState.mondEventTriggeredHour === h) return false;
-        // Event starten
+        // Event starten: läuft 1 Stunde (bis zur nächsten vollen Stunde)
         gameState.mondEventTriggeredHour = h;
-        gameState.mondEventStartRound = gameState.round;
+        const now = new Date();
+        gameState.mondEventEndTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h + 1, 0, 0, 0).getTime();
         gameState.mondShopLastEventHour = h;
         refreshMondShopSeeds();
         return true;
@@ -2757,14 +2781,23 @@
         gameState.mondMuenzen -= plant.price;
         seed.quantity--;
         if (seed.quantity <= 0) gameState.mondShopSeeds.splice(idx, 1);
-        gameState.selectedSeed = seed.plantId;
+
+        // Pflanze in regulären Shop mit Preis 0 eintragen
+        const existing = gameState.shopSeeds.find(s => s.plantId === seed.plantId);
+        if (existing) {
+            existing.quantity++;
+        } else {
+            gameState.shopSeeds.push({ plantId: seed.plantId, quantity: 1, freeFromMond: true });
+        }
+
         if (!gameState.discoveredPlants.includes(seed.plantId)) {
             gameState.discoveredPlants.push(seed.plantId);
         }
         updateUI();
+        renderShop();
         renderMondladen();
         saveGame();
-        showNotification(`${plant.name} gekauft – auf ein Feld klicken!`);
+        showNotification(`${plant.name} gekauft – jetzt im Shop verfügbar!`);
     }
 
     // Update UI
@@ -3186,15 +3219,13 @@
         const btn = document.getElementById('admin-mond-btn');
         const status = document.getElementById('admin-mond-status');
         if (_mondAdminOverride) {
-            // Setze StartRound auf aktuelle Runde für Admin-Override
-            gameState.mondEventStartRound = gameState.round;
+            gameState.mondEventEndTime = Date.now() + 60 * 60 * 1000; // 1h
             if (!gameState.mondShopSeeds || gameState.mondShopSeeds.length === 0) refreshMondShopSeeds();
             btn.textContent = 'Event deaktivieren';
             btn.style.background = '#c62828';
-            const mins = Math.round((1 - gameState.roundTime) * 60);
-            status.textContent = 'Aktiv bis Rundenende (~' + Math.max(0, mins) + ' Min.)';
+            status.textContent = 'Aktiv für 1 Stunde';
         } else {
-            gameState.mondEventStartRound = -1;
+            gameState.mondEventEndTime = -1;
             btn.textContent = 'Event aktivieren';
             btn.style.background = '';
             status.textContent = 'Deaktiviert';
@@ -3246,7 +3277,14 @@
                     }
                     
                     const mutationText = tile.mutation > 0 ? `\n🧬 Mutation: ${mutationNames[tile.mutation]}` : '';
-                    const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity.charAt(0).toUpperCase() + plant.rarity.slice(1)}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${plant.sellValue}€\n🔄 Erntetyp: ${plant.harvestType === 'single' ? '●' : '● ● ●'}\n⏳ ${timeText}${mutationText}`;
+                    let tooltipSellValue = plant.sellValue;
+                    if (tile.mutation === 1) tooltipSellValue *= 1.2;
+                    if (tile.mutation === 2) tooltipSellValue *= 2;
+                    if (tile.mutation === 3) tooltipSellValue *= 3;
+                    if (tile.mutation === 4) tooltipSellValue *= 5;
+                    if (tile.mutation === 5) tooltipSellValue *= 1.5;
+
+                    const tooltipText = `${plant.emoji} ${plant.name}\n⭐ Seltenheit: ${plant.rarity.charAt(0).toUpperCase() + plant.rarity.slice(1)}\n💰 Preis: ${plant.price}€\n⏱️ Wachsen: ${plant.growTime}h\n💵 Verkauf: ${Math.floor(tooltipSellValue)}€${tile.mutation > 0 ? ' (mit Mutation)' : ''}\n🔄 Erntetyp: ${plant.harvestType === 'single' ? '●' : '● ● ●'}\n⏳ ${timeText}${mutationText}`;
                     
                     // Update mouseover handler
                     tileEl.onmouseover = (e) => showTooltip(tooltipText, e.clientX, e.clientY);
@@ -3302,10 +3340,9 @@
                 if (overlay && overlay.style.display !== 'none') renderMondladen();
             }
 
-            // Event beenden wenn Runde vorbei (1 Runde nach Start)
-            const wasActive = gameState.mondEventStartRound !== -1 && gameState.round > gameState.mondEventStartRound;
-            if (wasActive && !_mondAdminOverride) {
-                gameState.mondEventStartRound = -1;
+            // Event beenden wenn Echtzeit abgelaufen
+            if (!_mondAdminOverride && gameState.mondEventEndTime > 0 && Date.now() >= gameState.mondEventEndTime) {
+                gameState.mondEventEndTime = -1;
                 syncEventPanel();
                 renderBuildings();
                 showNotification('🌙 Mondnacht ist vorbei.');
@@ -3434,7 +3471,7 @@
             ruf: 0,
             discoveredPlants: [], mondMuenzen: 0,
             mondShopSeeds: [], mondShopLastEventHour: -1,
-            mondEventStartRound: -1, mondEventTriggeredHour: -1,
+            mondEventEndTime: -1, mondEventTriggeredHour: -1,
             lastSaveTime: Date.now(),
             shopLastRefreshHour: Math.floor(Date.now() / 3600000),
             brunnenLastUsed: 0
@@ -3478,7 +3515,7 @@
             if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
-            if (gameState.mondEventStartRound === undefined) gameState.mondEventStartRound = -1;
+            if (gameState.mondEventEndTime === undefined) gameState.mondEventEndTime = -1;
             if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
             const now = Date.now();
             const elapsedHours = (now - gameState.lastSaveTime) / (1000 * 60 * 60);
