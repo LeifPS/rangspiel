@@ -1098,6 +1098,8 @@
     .mutation-2 { background: rgba(255,215,0,0.8); }
     .mutation-3 { background: rgba(244,67,54,0.8); }
     .mutation-4 { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3); }
+    .mutation-5 { background: linear-gradient(90deg, #1a0533, #7b1fa2, #ce93d8, #7b1fa2, #1a0533); background-size: 200% 100%; animation: lunarShimmer 2s linear infinite; color: #fff; }
+    @keyframes lunarShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
     /* Responsive */
     /* ── Tablet ── */
@@ -1377,7 +1379,8 @@
             kompost: false,
             gewaechshaus: 0,
             marktstand: false,
-            scheune: 0
+            scheune: 0,
+            mondschrein: false
         },
         upgrades: {
             guteErde: false
@@ -1388,6 +1391,8 @@
         mondMuenzen: 0,
         mondShopSeeds: [],
         mondShopLastEventHour: -1,
+        mondEventStartRound: -1,
+        mondEventTriggeredHour: -1,
         lastSaveTime: Date.now(),
         shopSeeds: [],
         shopLastRefreshHour: Math.floor(Date.now() / 3600000),
@@ -1530,7 +1535,8 @@
         kompost: { name: 'Kompost', cost: 6, effect: '40% des Kaufpreises beim Löschen zurück', emoji: '🗑️' },
         gewaechshaus: { name: 'Gewächshaus', cost: 20, effect: '+1 Feld, Pflanzen wachsen 3h schneller (Max 4)', emoji: '🏡' },
         marktstand: { name: 'Marktstand', cost: 30, effect: 'Zeigt 5 Karten statt 4', emoji: '🏪' },
-        scheune: { name: 'Scheune', cost: 20, effect: 'Lagere Samen statt sie zu löschen (Max 6 Plätze)', emoji: '🏚️' }
+        scheune: { name: 'Scheune', cost: 20, effect: 'Lagere Samen statt sie zu löschen (Max 6 Plätze)', emoji: '🏚️' },
+        mondschrein: { name: 'Mondschrein', cost: 12, mondMuenzen: true, effect: '20% Chance auf Lunar-Mutation beim Pflanzen (1.5× Wert)', emoji: '🌙' }
     };
 
     // Upgrades
@@ -1595,7 +1601,7 @@
     }
 
     // Mutation names
-    const mutationNames = ['', 'Nass', 'Vergoldet', 'Riesig', 'Regenbogen'];
+    const mutationNames = ['', 'Nass', 'Vergoldet', 'Riesig', 'Regenbogen', 'Lunar'];
 
     // Weighted random selection based on rarity
     function getWeightedRandomPlant(availablePlants) {
@@ -1653,11 +1659,14 @@
             }
 
             if (!gameState.buildings.scheune) gameState.buildings.scheune = 0;
+            if (gameState.buildings.mondschrein === undefined) gameState.buildings.mondschrein = false;
             if (!gameState.scheuneLager) gameState.scheuneLager = [];
             if (!gameState.brunnenLastUsed) gameState.brunnenLastUsed = 0;
             if (gameState.mondMuenzen === undefined) gameState.mondMuenzen = 0;
             if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
+            if (gameState.mondEventStartRound === undefined) gameState.mondEventStartRound = -1;
+            if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
             
             // Fallback for old save files with gewaechshaus boolean
             if (loaded.buildings && loaded.buildings.gewaechshaus === true) {
@@ -1705,10 +1714,11 @@
 
             // Mondladen restock: wenn seit letztem Save eine Event-Stunde vergangen ist
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
-            const currentEventHour = [5,10,15,20].includes(new Date().getHours()) ? new Date().getHours() : -1;
-            if (currentEventHour !== -1 && gameState.mondShopLastEventHour !== currentEventHour) {
-                gameState.mondShopLastEventHour = currentEventHour;
-                // refreshMondShopSeeds noch nicht verfügbar hier, flag setzen
+            if (gameState.mondEventStartRound === undefined) gameState.mondEventStartRound = -1;
+            if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
+            const currentEventHour = EVENT_HOURS.includes(new Date().getHours()) ? new Date().getHours() : -1;
+            if (currentEventHour !== -1 && gameState.mondEventTriggeredHour !== currentEventHour) {
+                // Event-Stunde aktiv und noch nicht getriggert → beim Init auslösen
                 gameState._mondNeedsRestock = true;
             }
             
@@ -1720,10 +1730,10 @@
     // Initialize game
     function init() {
         loadGame();
-        // Mondladen offline-Restock
+        // Mondnacht offline-Check: falls Event-Stunde beim Öffnen aktiv
         if (gameState._mondNeedsRestock) {
             delete gameState._mondNeedsRestock;
-            refreshMondShopSeeds();
+            checkMondEventTrigger();
         }
         renderFarm();
         renderShop();
@@ -1956,6 +1966,8 @@
 
         // Buildings
         Object.entries(buildings).forEach(([id, building]) => {
+            // Mondschrein: nur bei aktivem Nacht-Event anzeigen (außer bereits gekauft)
+            if (id === 'mondschrein') return; // Wird separat unten gerendert
             const el = document.createElement('div');
 
             if (id === 'gewaechshaus') {
@@ -2012,6 +2024,22 @@
             list.appendChild(el);
         });
 
+        // Mondschrein: nur bei aktivem Nacht-Event oder wenn bereits besessen
+        if (isMondEventActive() || gameState.buildings.mondschrein) {
+            const ms = buildings.mondschrein;
+            const owned = gameState.buildings.mondschrein;
+            const el = document.createElement('div');
+            el.className = `building ${owned ? 'owned' : ''}`;
+            el.style.cssText = 'border-color:#7b1fa2;background:linear-gradient(135deg,rgba(123,31,162,0.12),transparent);';
+            if (owned) {
+                el.innerHTML = `<div class="building-info"><h3>${ms.emoji} ${ms.name}</h3><p>${ms.effect}</p></div><span>✅ Aktiv</span>`;
+            } else {
+                const canAfford = (gameState.mondMuenzen || 0) >= ms.cost;
+                el.innerHTML = `<div class="building-info"><h3>${ms.emoji} ${ms.name}</h3><p>${ms.effect}</p><p style="font-size:0.8em;color:#ce93d8;margin-top:3px;">🌙 Nur während Mondnacht kaufbar</p></div>
+                    <button class="building-btn" style="background:linear-gradient(135deg,#7b1fa2,#4a148c);color:#fff;" onclick="buyMondschrein()" ${!canAfford ? 'disabled' : ''}>${ms.cost} 🌙</button>`;
+            }
+            list.appendChild(el);
+        }
 
     }
 
@@ -2086,12 +2114,13 @@
             if (tileIndex >= 16 && gameState.buildings.gewaechshaus > 0) {
                 growTime = Math.max(1, growTime - 3);
             }
-            gameState.tiles[tileIndex] = { plantId: gameState.selectedSeed, progress: 0, totalTime: growTime, mutation: 0 };
+            const lunarMutation = gameState.buildings.mondschrein && Math.random() < 0.2 ? 5 : 0;
+            gameState.tiles[tileIndex] = { plantId: gameState.selectedSeed, progress: 0, totalTime: growTime, mutation: lunarMutation };
             gameState.scheuneLager.splice(scheuneSlot, 1);
             gameState._scheuneSlot = null;
             gameState.selectedSeed = null;
             updateUI(); renderFarm(); renderShop(); renderBuildings(); renderScheuneLager(); saveGame();
-            showNotification(`${plant.name} aus Scheune gepflanzt!`);
+            showNotification(`${plant.name} aus Scheune gepflanzt!${lunarMutation ? ' 🌙 Lunar!' : ''}`);
             return;
         }
 
@@ -2117,12 +2146,15 @@
         if (tileIndex >= 16 && gameState.buildings.gewaechshaus > 0) {
             growTime = Math.max(1, growTime - 3);
         }
-        
+
+        // Mondschrein: 20% Chance auf Lunar-Mutation
+        const lunarMutation = gameState.buildings.mondschrein && Math.random() < 0.2 ? 5 : 0;
+
         gameState.tiles[tileIndex] = {
             plantId: gameState.selectedSeed,
             progress: 0,
             totalTime: growTime,
-            mutation: 0
+            mutation: lunarMutation
         };
         
         // Mark plant as discovered
@@ -2148,7 +2180,7 @@
         renderShop();
         saveGame();
         addRuf(1);
-        showNotification(`${plant.name} gepflanzt!`);
+        showNotification(`${plant.name} gepflanzt!${lunarMutation ? ' 🌙 Lunar-Mutation!' : ''}`);
     }
 
     // Harvest
@@ -2165,10 +2197,11 @@
         if (tile.mutation === 2) sellValue *= 2; // Vergoldet
         if (tile.mutation === 3) sellValue *= 3; // Riesig
         if (tile.mutation === 4) sellValue *= 5; // Regenbogen
-        
+        if (tile.mutation === 5) sellValue *= 1.5; // Lunar
+
         // Apply building effects
         if (gameState.buildings.kompost) sellValue *= 1.2;
-        
+
         gameState.money += Math.floor(sellValue);
 
         // Mondmünzen bei aktivem Event
@@ -2207,6 +2240,7 @@
                 if (tile.mutation === 2) sellValue *= 2;
                 if (tile.mutation === 3) sellValue *= 3;
                 if (tile.mutation === 4) sellValue *= 5;
+                if (tile.mutation === 5) sellValue *= 1.5; // Lunar
                 
                 // Apply building effects
                 if (gameState.buildings.kompost) sellValue *= 1.2;
@@ -2508,6 +2542,28 @@
         saveGame();
     }
 
+    function buyMondschrein() {
+        if (!isMondEventActive()) {
+            showNotification('Mondschrein nur während Mondnacht kaufbar!', 'error');
+            return;
+        }
+        if (gameState.buildings.mondschrein) {
+            showNotification('Mondschrein bereits aktiv!', 'error');
+            return;
+        }
+        const cost = buildings.mondschrein.cost;
+        if ((gameState.mondMuenzen || 0) < cost) {
+            showNotification('Nicht genug Mondmünzen!', 'error');
+            return;
+        }
+        gameState.mondMuenzen -= cost;
+        gameState.buildings.mondschrein = true;
+        updateUI();
+        renderBuildings();
+        saveGame();
+        showNotification('🌙 Mondschrein errichtet! Pflanzen erhalten 20% Lunar-Chance.');
+    }
+
     // Buy upgrade
     function renderRufBadge() {
         const badge = document.getElementById('ruf-badge');
@@ -2545,8 +2601,22 @@
 
     function isMondEventActive() {
         if (_mondAdminOverride) return true;
+        // Event ist aktiv wenn es in dieser Runde gestartet wurde
+        return gameState.mondEventStartRound !== -1 && gameState.round === gameState.mondEventStartRound;
+    }
+
+    function checkMondEventTrigger() {
         const h = new Date().getHours();
-        return EVENT_HOURS.includes(h);
+        const isEventHour = EVENT_HOURS.includes(h);
+        if (!isEventHour) return false;
+        // Nur triggern wenn diese Event-Stunde noch nicht für dieses Profil getriggert wurde
+        if (gameState.mondEventTriggeredHour === h) return false;
+        // Event starten
+        gameState.mondEventTriggeredHour = h;
+        gameState.mondEventStartRound = gameState.round;
+        gameState.mondShopLastEventHour = h;
+        refreshMondShopSeeds();
+        return true;
     }
 
     function getMondEventNextTime() {
@@ -2616,15 +2686,8 @@
     }
 
     function checkMondRestock() {
-        // Immer befüllen wenn Laden leer, nur bei Event-Stunden neu würfeln
-        const h = new Date().getHours();
-        const eventHour = _mondAdminOverride ? 99 : h;
         const needsRestock = !gameState.mondShopSeeds || gameState.mondShopSeeds.length === 0;
-        const newEventHour = isMondEventActive() && gameState.mondShopLastEventHour !== eventHour;
-        if (needsRestock || newEventHour) {
-            gameState.mondShopLastEventHour = eventHour;
-            refreshMondShopSeeds();
-        }
+        if (needsRestock) refreshMondShopSeeds();
     }
 
     function openMondladen() {
@@ -2642,8 +2705,8 @@
         document.getElementById('mondladen-muenzen').textContent = gameState.mondMuenzen || 0;
         const statusEl = document.getElementById('mondladen-event-status');
         statusEl.textContent = active
-            ? '✅ Event läuft – Ernten gibt Mondmünzen!'
-            : `⏳ Kein Event aktiv – nächstes um ${String(getMondEventNextTime().next).padStart(2,'0')}:00 Uhr`;
+            ? '🌙 Mondnacht läuft – Ernten gibt Mondmünzen!'
+            : `Nächste Mondnacht um ${String(getMondEventNextTime().next).padStart(2,'0')}:00 Uhr`;
         statusEl.style.color = active ? '#66bb6a' : '';
 
         const shop = document.getElementById('mondladen-shop');
@@ -3123,11 +3186,15 @@
         const btn = document.getElementById('admin-mond-btn');
         const status = document.getElementById('admin-mond-status');
         if (_mondAdminOverride) {
+            // Setze StartRound auf aktuelle Runde für Admin-Override
+            gameState.mondEventStartRound = gameState.round;
+            if (!gameState.mondShopSeeds || gameState.mondShopSeeds.length === 0) refreshMondShopSeeds();
             btn.textContent = 'Event deaktivieren';
             btn.style.background = '#c62828';
             const mins = Math.round((1 - gameState.roundTime) * 60);
             status.textContent = 'Aktiv bis Rundenende (~' + Math.max(0, mins) + ' Min.)';
         } else {
+            gameState.mondEventStartRound = -1;
             btn.textContent = 'Event aktivieren';
             btn.style.background = '';
             status.textContent = 'Deaktiviert';
@@ -3215,11 +3282,6 @@
                 gameState.round++;
                 gameState.roundTime -= 1;
                 gameState.selectedSeed = null;
-                // Override läuft nur 1 Runde
-                if (_mondAdminOverride) {
-                    _mondAdminOverride = false;
-                    syncEventPanel();
-                }
             }
 
             // Refresh shop at every real clock hour (XX:00)
@@ -3230,16 +3292,23 @@
                 renderShop();
             }
 
-            // Mondladen live-Restock wenn Event-Stunde beginnt
-            const nowH = new Date().getHours();
-            const isEventH = [5,10,15,20].includes(nowH);
-            if (isEventH && gameState.mondShopLastEventHour !== nowH) {
-                gameState.mondShopLastEventHour = nowH;
-                refreshMondShopSeeds();
+            // Mondnacht Event: triggern wenn Event-Stunde beginnt
+            const triggered = checkMondEventTrigger();
+            if (triggered) {
                 syncEventPanel();
-                // Modal live aktualisieren falls offen
+                renderBuildings();
+                showNotification('🌙 Mondnacht beginnt! Ernten gibt Mondmünzen.');
                 const overlay = document.getElementById('mondladen-modal-overlay');
                 if (overlay && overlay.style.display !== 'none') renderMondladen();
+            }
+
+            // Event beenden wenn Runde vorbei (1 Runde nach Start)
+            const wasActive = gameState.mondEventStartRound !== -1 && gameState.round > gameState.mondEventStartRound;
+            if (wasActive && !_mondAdminOverride) {
+                gameState.mondEventStartRound = -1;
+                syncEventPanel();
+                renderBuildings();
+                showNotification('🌙 Mondnacht ist vorbei.');
             }
 
 
@@ -3359,12 +3428,13 @@
             money: 10, round: 1, roundTime: 0, selectedSeed: null,
             tiles: Array(16).fill(null),
             inventory: {}, shopSeeds: [],
-            buildings: { brunnen: false, kompost: false, gewaechshaus: 0, marktstand: false, scheune: 0 },
+            buildings: { brunnen: false, kompost: false, gewaechshaus: 0, marktstand: false, scheune: 0, mondschrein: false },
             scheuneLager: [],
             upgrades: { guteErde: false },
             ruf: 0,
             discoveredPlants: [], mondMuenzen: 0,
             mondShopSeeds: [], mondShopLastEventHour: -1,
+            mondEventStartRound: -1, mondEventTriggeredHour: -1,
             lastSaveTime: Date.now(),
             shopLastRefreshHour: Math.floor(Date.now() / 3600000),
             brunnenLastUsed: 0
@@ -3407,7 +3477,9 @@
             if (gameState.mondMuenzen === undefined) gameState.mondMuenzen = 0;
             if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
-
+            if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
+            if (gameState.mondEventStartRound === undefined) gameState.mondEventStartRound = -1;
+            if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
             const now = Date.now();
             const elapsedHours = (now - gameState.lastSaveTime) / (1000 * 60 * 60);
 
