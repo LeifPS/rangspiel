@@ -260,11 +260,22 @@
         position: absolute;
         top: 4px;
         left: 4px;
-        font-size: 1em;
+        font-size: 0.85em;
         line-height: 1;
         display: flex;
         gap: 2px;
     }
+    .tile-mutation span {
+        padding: 2px 4px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+    .mut-gold       { background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b); background-size: 200% 200%; animation: mutShine 2s ease infinite; }
+    .mut-lunar      { background: linear-gradient(135deg, #1a0533, #7b1fa2, #ce93d8, #7b1fa2, #1a0533); background-size: 200% 100%; animation: lunarShimmer 2s linear infinite; }
+    .mut-regenbogen { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff); background-size: 200% 100%; animation: rainbowSlide 1.5s linear infinite; }
+    @keyframes mutShine     { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    @keyframes lunarShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    @keyframes rainbowSlide { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
 
     .tile-harvest-btn {
         position: absolute;
@@ -1618,7 +1629,7 @@
 
     function mutationEmojis(tile) {
         const muts = Array.isArray(tile.mutations) ? tile.mutations : [];
-        return muts.map(id => mutationDefs[id] ? mutationDefs[id].emoji : '').join('');
+        return muts.map(id => mutationDefs[id] ? `<span class="mut-${id}">${mutationDefs[id].emoji}</span>` : '').join('');
     }
 
     // Weighted random selection based on rarity
@@ -1697,6 +1708,27 @@
             while (gameState.tiles.length < 16) {
                 gameState.tiles.push(null);
             }
+
+            // Migration: ScheuneLager alte Formate (string oder {mutation:N}) → {mutations:[]}
+            gameState.scheuneLager = gameState.scheuneLager.map(entry => {
+                if (!entry) return entry;
+                if (typeof entry === 'string') return { plantId: entry, wasPlanted: false, mutations: [] };
+                if (!Array.isArray(entry.mutations)) {
+                    const legacyId2 = legacyMap[(entry.mutation || 0) - 1];
+                    entry.mutations = legacyId2 ? [legacyId2] : [];
+                    delete entry.mutation;
+                }
+                return entry;
+            });
+            const legacyMap = ['nass', 'vergoldet', 'riesig', 'regenbogen', 'lunar'];
+            gameState.tiles.forEach(tile => {
+                if (!tile) return;
+                if (!Array.isArray(tile.mutations)) {
+                    const legacyId = legacyMap[(tile.mutation || 0) - 1];
+                    tile.mutations = legacyId ? [legacyId] : [];
+                }
+                delete tile.mutation;
+            });
 
             // Calculate elapsed time in hours
             const now = Date.now();
