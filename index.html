@@ -263,12 +263,18 @@
         font-size: 0.85em;
         line-height: 1;
         display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
         gap: 2px;
+        z-index: 1;
     }
     .tile-mutation span {
         padding: 2px 4px;
         border-radius: 4px;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
     .mut-gold       { background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b); background-size: 200% 200%; animation: mutShine 2s ease infinite; }
     .mut-lunar      { background: linear-gradient(135deg, #1a0533, #7b1fa2, #ce93d8, #7b1fa2, #1a0533); background-size: 200% 100%; animation: lunarShimmer 2s linear infinite; }
@@ -1371,6 +1377,8 @@
 </div>
 
 <script>
+    const HOUR_MS = 60 * 60 * 1000;
+
     // Game State
     const gameState = {
         money: 10,
@@ -1399,6 +1407,7 @@
         mondEventTriggeredHour: -1,
         lastSaveTime: Date.now(),
         shopSeeds: [],
+        roundLastTriggerHour: Math.floor(Date.now() / HOUR_MS),
         shopLastRefreshHour: Math.floor(Date.now() / 3600000),
         brunnenLastUsed: 0,
         discoveredPlants: []
@@ -1661,6 +1670,36 @@
         localStorage.setItem('ernteZeitSave', JSON.stringify(gameState));
     }
 
+    function getClockHour(timestamp = Date.now()) {
+        return Math.floor(timestamp / HOUR_MS);
+    }
+
+    function getClockHourProgress(timestamp = Date.now()) {
+        return (timestamp % HOUR_MS) / HOUR_MS;
+    }
+
+    function ensureRoundTracking(timestamp = Date.now()) {
+        if (!Number.isFinite(gameState.roundLastTriggerHour)) {
+            const fallbackTime = Number.isFinite(gameState.lastSaveTime) ? gameState.lastSaveTime : timestamp;
+            gameState.roundLastTriggerHour = getClockHour(fallbackTime);
+        }
+    }
+
+    function advanceRoundsToCurrentHour(timestamp = Date.now()) {
+        ensureRoundTracking(timestamp);
+        const currentHour = getClockHour(timestamp);
+        const roundsPassed = currentHour - gameState.roundLastTriggerHour;
+
+        if (roundsPassed > 0) {
+            gameState.round += roundsPassed;
+            gameState.roundLastTriggerHour = currentHour;
+            gameState.selectedSeed = null;
+        }
+
+        gameState.roundTime = getClockHourProgress(timestamp);
+        return Math.max(0, roundsPassed);
+    }
+
     // Load game from localStorage
     function loadGame() {
         const saved = localStorage.getItem('ernteZeitSave');
@@ -1696,6 +1735,7 @@
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
             if (gameState.mondEventEndTime === undefined) gameState.mondEventEndTime = -1;
             if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
+            if (!Number.isFinite(gameState.roundLastTriggerHour)) gameState.roundLastTriggerHour = getClockHour(gameState.lastSaveTime || Date.now());
             
             // Fallback for old save files with gewaechshaus boolean
             if (loaded.buildings && loaded.buildings.gewaechshaus === true) {
@@ -1744,15 +1784,8 @@
                 }
             });
             
-            // Update round timer (1 hour per round)
-            gameState.roundTime += elapsedHours;
-            let roundsPassed = 0;
-            while (gameState.roundTime >= 1) {
-                gameState.round++;
-                gameState.roundTime -= 1;
-                gameState.selectedSeed = null; // Deselect seed on new round
-                roundsPassed++;
-            }
+            // Advance rounds only on real clock-hour boundaries.
+            advanceRoundsToCurrentHour(now);
             
             // Clear shop if a new clock hour passed while offline (will be refreshed on render)
             const currentHour = Math.floor(Date.now() / 3600000);
@@ -2845,10 +2878,15 @@
         // Event panel
         syncEventPanel();
 
-        // Calculate time until next hour (next round)
+        // Calculate time until the next real clock hour (next round)
         const now = new Date();
-        const minutesUntilNextHour = 59 - now.getMinutes();
-        const secondsUntilNextMinute = 59 - now.getSeconds();
+        const nextHour = new Date(now);
+        nextHour.setMinutes(0, 0, 0);
+        nextHour.setHours(nextHour.getHours() + 1);
+        const diffMs = Math.max(0, nextHour.getTime() - now.getTime());
+        const totalSeconds = Math.ceil(diffMs / 1000);
+        const minutesUntilNextHour = Math.floor(totalSeconds / 60);
+        const secondsUntilNextMinute = totalSeconds % 60;
         document.getElementById('next-round').textContent =
             `${minutesUntilNextHour}:${secondsUntilNextMinute.toString().padStart(2, '0')}`;
     }
@@ -3217,10 +3255,12 @@
                 tile.progress = Math.min(tile.totalTime, tile.progress + hoursToAdd);
             }
         });
+        ensureRoundTracking();
         gameState.roundTime += hoursToAdd;
         while (gameState.roundTime >= 1) {
             gameState.round++;
             gameState.roundTime -= 1;
+            gameState.roundLastTriggerHour++;
             gameState.selectedSeed = null;
         }
 
@@ -3342,13 +3382,8 @@
                 }
             });
             
-            // Update round timer (1 hour per round)
-            gameState.roundTime += elapsedHours;
-            if (gameState.roundTime >= 1) {
-                gameState.round++;
-                gameState.roundTime -= 1;
-                gameState.selectedSeed = null;
-            }
+            // Advance rounds only on real clock-hour boundaries.
+            advanceRoundsToCurrentHour(now);
 
             // Refresh shop at every real clock hour (XX:00)
             const currentHour = Math.floor(Date.now() / 3600000);
@@ -3501,6 +3536,7 @@
             mondShopSeeds: [], mondShopLastEventHour: -1,
             mondEventEndTime: -1, mondEventTriggeredHour: -1,
             lastSaveTime: Date.now(),
+            roundLastTriggerHour: Math.floor(Date.now() / HOUR_MS),
             shopLastRefreshHour: Math.floor(Date.now() / 3600000),
             brunnenLastUsed: 0
         };
@@ -3545,6 +3581,7 @@
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
             if (gameState.mondEventEndTime === undefined) gameState.mondEventEndTime = -1;
             if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
+            if (!Number.isFinite(gameState.roundLastTriggerHour)) gameState.roundLastTriggerHour = getClockHour(gameState.lastSaveTime || Date.now());
             const now = Date.now();
             const elapsedHours = (now - gameState.lastSaveTime) / (1000 * 60 * 60);
 
@@ -3556,8 +3593,7 @@
             });
 
             // Round advancement
-            gameState.roundTime += elapsedHours;
-            while (gameState.roundTime >= 1) { gameState.round++; gameState.roundTime -= 1; gameState.selectedSeed = null; }
+            advanceRoundsToCurrentHour(now);
 
             // Shop refresh: clear if a new clock hour has passed
             const currentHour = Math.floor(now / 3600000);
