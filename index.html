@@ -279,6 +279,9 @@
     .mut-gold       { background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b); background-size: 200% 200%; animation: mutShine 2s ease infinite; }
     .mut-lunar      { background: linear-gradient(135deg, #1a0533, #7b1fa2, #ce93d8, #7b1fa2, #1a0533); background-size: 200% 100%; animation: lunarShimmer 2s linear infinite; }
     .mut-regenbogen { background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff); background-size: 200% 100%; animation: rainbowSlide 1.5s linear infinite; }
+    .mut-riesig     { background: linear-gradient(135deg, #1b5e20, #4caf50, #a5d6a7); background-size: 200% 200%; animation: mutShine 2.5s ease infinite; }
+    .mut-verwurzelt { background: linear-gradient(135deg, #3e2723, #795548, #bcaaa4); background-size: 200% 200%; animation: mutShine 3s ease infinite; }
+    .mut-blutig     { background: linear-gradient(135deg, #7f0000, #e53935, #ef9a9a); background-size: 200% 200%; animation: mutShine 2s ease infinite; }
     @keyframes mutShine     { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     @keyframes lunarShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     @keyframes rainbowSlide { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
@@ -618,15 +621,58 @@
     }
 
     .discovery-stats {
-        margin-bottom: 20px;
+        margin-bottom: 16px;
         padding: 12px 16px;
         background: #f5f5f5;
         border-radius: 10px;
     }
 
+    body.dark-mode .discovery-stats { background: #2a2a3e; }
+
     .discovery-total {
         font-size: 1.05em;
+        margin-bottom: 8px;
+    }
+
+    .discovery-progress-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
         margin-bottom: 10px;
+    }
+
+    .discovery-progress-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82em;
+        font-weight: 600;
+    }
+
+    .discovery-progress-row .dp-label {
+        min-width: 90px;
+        text-transform: capitalize;
+    }
+
+    .discovery-progress-row .dp-bar-wrap {
+        flex: 1;
+        height: 8px;
+        background: rgba(0,0,0,0.1);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .discovery-progress-row .dp-bar {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.4s ease;
+    }
+
+    .discovery-progress-row .dp-count {
+        min-width: 36px;
+        text-align: right;
+        opacity: 0.7;
+        font-size: 0.9em;
     }
 
     .discovery-rarities {
@@ -640,17 +686,74 @@
         font-weight: 600;
     }
 
+    .plant-index-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .plant-index-search {
+        width: 100%;
+        padding: 9px 14px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 0.95em;
+        background: var(--card-bg);
+        color: var(--text-color);
+        outline: none;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+    }
+
+    .plant-index-search:focus { border-color: #4caf50; }
+
+    .plant-index-filter-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .plant-filter-btn {
+        padding: 4px 10px;
+        border: 2px solid transparent;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.78em;
+        font-weight: bold;
+        background: rgba(128,128,128,0.12);
+        color: var(--text-color);
+        transition: all 0.15s;
+    }
+
+    .plant-filter-btn.active {
+        background: #4caf50;
+        color: white;
+    }
+
+    .plant-index-section-header {
+        font-size: 0.75em;
+        font-weight: 700;
+        opacity: 0.45;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin: 14px 0 6px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(128,128,128,0.15);
+    }
+
     .plant-index-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 8px;
     }
 
     .plant-index-item {
-        padding: 10px;
-        background: #f9f9f9;
-        border-radius: 8px;
+        padding: 10px 8px;
+        background: var(--card-bg);
+        border-radius: 10px;
         border: 2px solid #e0e0e0;
+        position: relative;
     }
 
     .plant-index-item .emoji {
@@ -662,13 +765,31 @@
         font-weight: bold;
         text-align: center;
         margin-top: 5px;
+        font-size: 0.88em;
     }
 
     .plant-index-item .rarity {
-        font-size: 0.8em;
+        font-size: 0.75em;
         text-align: center;
-        margin-top: 3px;
+        margin-top: 2px;
         text-transform: capitalize;
+    }
+
+    .plant-index-item .quick-info {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 5px;
+        font-size: 0.75em;
+        opacity: 0.7;
+    }
+
+    .plant-index-empty {
+        grid-column: 1/-1;
+        text-align: center;
+        opacity: 0.5;
+        padding: 20px;
+        font-size: 0.9em;
     }
 
     /* Shop Cards */
@@ -1117,6 +1238,29 @@
         .main-grid { grid-template-columns: 1fr 1fr; }
     }
 
+    @media (min-width: 769px) and (max-width: 1200px) {
+        /* Tablet: Farm nimmt volle Breite, Shop+Gebäude nebeneinander darunter */
+        .main-grid {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+        }
+        .main-grid > .section:first-child {
+            grid-column: 1 / -1;
+        }
+        .farm-grid {
+            grid-template-columns: repeat(6, 1fr);
+        }
+        .header-stats {
+            gap: 12px;
+            font-size: 1.1em;
+        }
+        .shop-cards {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        body { padding: 12px; }
+        .section { padding: 16px; }
+    }
+
     /* ── Mobile & Touch ── */
     @media (max-width: 768px) {
         body { padding: 10px; }
@@ -1292,19 +1436,30 @@
             <button class="modal-close" onclick="closePlantIndex()">✕</button>
         </div>
         <div class="modal-body">
-            <h3>🎲 Seltenheits-Wahrscheinlichkeiten</h3>
-            <div id="rarity-probabilities-dynamic"></div>
             <div class="discovery-stats">
                 <div class="discovery-total" id="discovery-total"></div>
+                <div class="discovery-progress-bars" id="discovery-progress-bars"></div>
                 <div class="discovery-rarities" id="discovery-rarities"></div>
             </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
-                <h3 style="margin:0;">🌱 Alle Pflanzen</h3>
+
+            <details style="margin-bottom:14px;">
+                <summary style="cursor:pointer;font-size:0.85em;font-weight:600;opacity:0.6;user-select:none;">🎲 Seltenheits-Wahrscheinlichkeiten</summary>
+                <div style="margin-top:8px;" id="rarity-probabilities-dynamic"></div>
+            </details>
+
+            <div class="plant-index-controls">
+                <input class="plant-index-search" id="plant-index-search" type="text" placeholder="🔍 Pflanze suchen..." oninput="renderPlantIndexGrid()" />
+                <div class="plant-index-filter-row" id="plant-index-filter-row">
+                    <button class="plant-filter-btn active" data-filter="alle" onclick="setPlantIndexFilter('alle')">Alle</button>
+                    <button class="plant-filter-btn" data-filter="entdeckt" onclick="setPlantIndexFilter('entdeckt')">✅ Entdeckt</button>
+                    <button class="plant-filter-btn" data-filter="unentdeckt" onclick="setPlantIndexFilter('unentdeckt')">❓ Unentdeckt</button>
+                </div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;">
                     <button class="plant-sort-btn" data-sort="rarity" onclick="setPlantIndexSort('rarity')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">⭐ Seltenheit</button>
                     <button class="plant-sort-btn" data-sort="name" onclick="setPlantIndexSort('name')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">🔤 Name</button>
                     <button class="plant-sort-btn" data-sort="discovered" onclick="setPlantIndexSort('discovered')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">✅ Entdeckt</button>
                     <button class="plant-sort-btn" data-sort="price" onclick="setPlantIndexSort('price')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">💰 Preis</button>
+                    <button class="plant-sort-btn" data-sort="gemischt" onclick="setPlantIndexSort('gemischt')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">🔀 Gemischt</button>
                 </div>
             </div>
             <div class="plant-index-grid" id="plant-index-grid"></div>
@@ -1549,7 +1704,9 @@
         gewaechshaus: { name: 'Gewächshaus', cost: 20, effect: '+1 Feld, Pflanzen wachsen 3h schneller (Max 4)', emoji: '🏡' },
         marktstand: { name: 'Marktstand', cost: 30, effect: 'Zeigt 5 Karten statt 4', emoji: '🏪' },
         scheune: { name: 'Scheune', cost: 20, effect: 'Lagere Samen statt sie zu löschen (Max 6 Plätze)', emoji: '🏚️' },
-        mondschrein: { name: 'Mondschrein', cost: 12, mondMuenzen: true, effect: '20% Chance auf Lunar-Mutation beim Pflanzen (1.5× Wert)', emoji: '🌙' }
+        mondschrein: { name: 'Mondschrein', cost: 12, mondMuenzen: true, effect: '10% Chance auf Lunar-Mutation (25% während Mondnacht)', emoji: '🌙' },
+        duengerwerk: { name: 'Düngerwerk', cost: 35, effect: '10% Chance auf Riesig-Mutation (+100% Wert, +50% Wachstumszeit) · Ein/Ausschaltbar', emoji: '🌿' },
+        altesBaumhaus: { name: 'Altes Baumhaus', cost: 50, effect: '6% Chance auf Verwurzelt-Mutation (Single-Pflanze einmal extra ernten)', emoji: '🕸️' }
     };
 
     // Upgrades
@@ -1576,25 +1733,28 @@
     };
 
     // Rarity weights (probability weights)
+    const HIDDEN_RARITIES = ['kosmisch', 'uralt', 'absolut', 'geheim'];
+
     const rarityWeights = {
-        gewöhnlich: 50,
-        ungewöhnlich: 30,
-        selten: 15,
-        legendär: 4,
-        mythisch: 0.9,
-        göttlich: 0.1,
-        prismatisch: 0.05,
-        transzendent: 0.02,
-        himmlisch: 0.01
+        gewöhnlich:   5000,
+        ungewöhnlich: 2500,
+        selten:       1000,
+        legendär:      800,
+        mythisch:      600,
+        göttlich:      500,
+        prismatisch:   300,
+        transzendent:  150,
+        himmlisch:      50
     };
 
     // Händler-Ruf System
     const rufStufen = [
-        { name: 'Unbekannt',    threshold: 0,    unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär'] },
-        { name: 'Bekannt',      threshold: 10,   unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch'] },
-        { name: 'Angesehen',    threshold: 30,   unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich'] },
-        { name: 'Geschätzt',    threshold: 75,   unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich', 'prismatisch'] },
-        { name: 'Berühmt',      threshold: 175,  unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich', 'prismatisch', 'transzendent'] },
+        { name: 'Unbekannt',    threshold: 0,    unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten'] },
+        { name: 'Bekannt',      threshold: 10,   unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär'] },
+        { name: 'Angesehen',    threshold: 30,   unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch'] },
+        { name: 'Geschätzt',    threshold: 75,   unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich'] },
+        { name: 'Berühmt',      threshold: 175,  unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich', 'prismatisch'] },
+        { name: 'Gefeiert',     threshold: 280,  unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich', 'prismatisch', 'transzendent'] },
         { name: 'Legendär',     threshold: 400,  unlocks: ['gewöhnlich', 'ungewöhnlich', 'selten', 'legendär', 'mythisch', 'göttlich', 'prismatisch', 'transzendent', 'himmlisch'] },
     ];
 
@@ -1619,18 +1779,32 @@
         lunar:      { emoji: '🌙', label: 'Lunar',      multiplier: 1.5  },
         gold:       { emoji: '🪙', label: 'Gold',       multiplier: 1.5  },
         regenbogen: { emoji: '🌈', label: 'Regenbogen', multiplier: 3.0  },
+        riesig:     { emoji: '🌿', label: 'Riesig',     multiplier: 2.0  },
+        verwurzelt: { emoji: '🕸️', label: 'Verwurzelt', multiplier: 1.0  },
+        blutig:     { emoji: '🩸', label: 'Blutig',     multiplier: 1.4  },
     };
 
     function calcSellValue(tile, baseSellValue) {
-        let val = baseSellValue;
         const muts = Array.isArray(tile.mutations) ? tile.mutations : [];
-        muts.forEach(id => { if (mutationDefs[id]) val *= mutationDefs[id].multiplier; });
-        return val;
+        if (muts.length === 0) return baseSellValue;
+        const totalBonus = muts.reduce((sum, id) => {
+            return sum + (mutationDefs[id] ? mutationDefs[id].multiplier - 1 : 0);
+        }, 0);
+        return baseSellValue * (1 + totalBonus);
     }
 
     function rollMutations(existingMuts, mondschrein) {
         const muts = [...(existingMuts || [])];
-        if (mondschrein && Math.random() < 0.2 && !muts.includes('lunar')) muts.push('lunar');
+        if (mondschrein && !muts.includes('lunar')) {
+            const lunarChance = isMondEventActive() ? 0.25 : 0.10;
+            if (Math.random() < lunarChance) muts.push('lunar');
+        }
+        if (gameState.buildings.duengerwerk && gameState.buildings.duengerwerkAktiv && !muts.includes('riesig')) {
+            if (Math.random() < 0.10) muts.push('riesig');
+        }
+        if (gameState.buildings.altesBaumhaus && !muts.includes('verwurzelt')) {
+            if (Math.random() < 0.06) muts.push('verwurzelt');
+        }
         if (Math.random() < 0.05 && !muts.includes('gold')) muts.push('gold');
         if (Math.random() < 0.01 && !muts.includes('regenbogen')) muts.push('regenbogen');
         return muts;
@@ -1728,13 +1902,18 @@
 
             if (!gameState.buildings.scheune) gameState.buildings.scheune = 0;
             if (gameState.buildings.mondschrein === undefined) gameState.buildings.mondschrein = false;
+            if (gameState.buildings.duengerwerk === undefined) gameState.buildings.duengerwerk = false;
+            if (gameState.buildings.duengerwerkAktiv === undefined) gameState.buildings.duengerwerkAktiv = false;
+            if (gameState.buildings.altesBaumhaus === undefined) gameState.buildings.altesBaumhaus = false;
             if (!gameState.scheuneLager) gameState.scheuneLager = [];
             if (!gameState.brunnenLastUsed) gameState.brunnenLastUsed = 0;
+            if (!gameState.plantStats) gameState.plantStats = {};
             if (gameState.mondMuenzen === undefined) gameState.mondMuenzen = 0;
             if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
             if (gameState.mondEventEndTime === undefined) gameState.mondEventEndTime = -1;
             if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
+            if (gameState.blutmond === undefined) gameState.blutmond = false;
             if (!Number.isFinite(gameState.roundLastTriggerHour)) gameState.roundLastTriggerHour = getClockHour(gameState.lastSaveTime || Date.now());
             
             // Fallback for old save files with gewaechshaus boolean
@@ -1750,6 +1929,7 @@
             }
 
             // Migration: ScheuneLager alte Formate (string oder {mutation:N}) → {mutations:[]}
+            const legacyMap = ['nass', 'vergoldet', 'riesig', 'regenbogen', 'lunar'];
             gameState.scheuneLager = gameState.scheuneLager.map(entry => {
                 if (!entry) return entry;
                 if (typeof entry === 'string') return { plantId: entry, wasPlanted: false, mutations: [] };
@@ -1760,7 +1940,6 @@
                 }
                 return entry;
             });
-            const legacyMap = ['nass', 'vergoldet', 'riesig', 'regenbogen', 'lunar'];
             gameState.tiles.forEach(tile => {
                 if (!tile) return;
                 if (!Array.isArray(tile.mutations)) {
@@ -1972,19 +2151,24 @@
             return unlockedRarities.includes(plant.rarity);
         });
         
-        // Frequency weights for shop (common appears 15x more than legendary)
+        // Frequency weights for shop
         const frequencyWeights = {
             gewöhnlich: 15,
             ungewöhnlich: 8,
-            selten: 4,
-            legendär: 1,
+            selten: 6,
+            legendär: 1.5,
             mythisch: 0.5,
             göttlich: 0.25,
             prismatisch: 0.1,
             transzendent: 0.05,
             himmlisch: 0.02
         };
-        
+
+        // Ruf-Bonus: ab Stufe 3 (Angesehen) leicht bessere Chancen auf selten+
+        const rufIndex = rufStufen.indexOf(getRufStufe());
+        const rufBonus = [0, 0, 0.15, 0.3, 0.5, 0.7][rufIndex] || 0;
+        const rareBoosted = ['selten', 'legendär', 'mythisch', 'göttlich', 'prismatisch', 'transzendent', 'himmlisch'];
+
         // Weighted random selection (unique plants)
         const selected = [];
         const tempAvailable = [...availablePlants];
@@ -1994,7 +2178,8 @@
             
             tempAvailable.forEach(plantId => {
                 const plant = plants[plantId];
-                const weight = frequencyWeights[plant.rarity] || 1;
+                let weight = frequencyWeights[plant.rarity] || 1;
+                if (rufBonus > 0 && rareBoosted.includes(plant.rarity)) weight *= (1 + rufBonus);
                 weightedPlants.push({ plantId, weight });
                 totalWeight += weight;
             });
@@ -2052,8 +2237,10 @@
 
         // Buildings
         Object.entries(buildings).forEach(([id, building]) => {
-            // Mondschrein: nur bei aktivem Nacht-Event anzeigen (außer bereits gekauft)
-            if (id === 'mondschrein') return; // Wird separat unten gerendert
+        // Mondladen-Gebäude separat gerendert
+        if (id === 'mondschrein') return;
+        if (id === 'duengerwerk') return;
+        if (id === 'altesBaumhaus') return;
             const el = document.createElement('div');
 
             if (id === 'gewaechshaus') {
@@ -2127,6 +2314,39 @@
             list.appendChild(el);
         }
 
+        // Düngerwerk: mit Ein/Aus-Button
+        {
+            const dw = buildings.duengerwerk;
+            const owned = gameState.buildings.duengerwerk;
+            const aktiv = gameState.buildings.duengerwerkAktiv;
+            const el = document.createElement('div');
+            el.className = `building ${owned ? 'owned' : ''}`;
+            if (owned) {
+                el.innerHTML = `
+                    <div class="building-info"><h3>${dw.emoji} ${dw.name}</h3><p>${dw.effect}</p></div>
+                    <button class="building-btn" onclick="toggleDuengerwerk()" style="background:${aktiv ? 'linear-gradient(135deg,#388e3c,#1b5e20)' : 'rgba(128,128,128,0.3)'};">
+                        ${aktiv ? '✅ An' : '⏸️ Aus'}
+                    </button>`;
+            } else {
+                el.innerHTML = `
+                    <div class="building-info"><h3>${dw.emoji} ${dw.name}</h3><p>${dw.effect}</p></div>
+                    <button class="building-btn" onclick="buyBuilding('duengerwerk')" ${gameState.money < dw.cost ? 'disabled' : ''}>${dw.cost}€</button>`;
+            }
+            list.appendChild(el);
+        }
+
+        // Altes Baumhaus
+        {
+            const ab = buildings.altesBaumhaus;
+            const owned = gameState.buildings.altesBaumhaus;
+            const el = document.createElement('div');
+            el.className = `building ${owned ? 'owned' : ''}`;
+            el.innerHTML = `
+                <div class="building-info"><h3>${ab.emoji} ${ab.name}</h3><p>${ab.effect}</p></div>
+                ${owned ? '<span>✅ Besitzt</span>' : `<button class="building-btn" onclick="buyBuilding('altesBaumhaus')" ${gameState.money < ab.cost ? 'disabled' : ''}>${ab.cost}€</button>`}`;
+            list.appendChild(el);
+        }
+
     }
 
     function renderUpgrades() { renderBuildings(); }
@@ -2185,6 +2405,28 @@
         showNotification(`${plants[plantId].name} ausgewählt`);
     }
 
+    // ── Plant stats tracking ─────────────────────────────────────────
+    function ensurePlantStats(plantId) {
+        if (!gameState.plantStats) gameState.plantStats = {};
+        if (!gameState.plantStats[plantId]) {
+            gameState.plantStats[plantId] = { planted: 0, harvested: 0, bestHarvest: 0, discoveredDate: null };
+        }
+        return gameState.plantStats[plantId];
+    }
+    function trackPlanted(plantId) { ensurePlantStats(plantId).planted++; }
+    function trackHarvested(plantId, value) {
+        const s = ensurePlantStats(plantId);
+        s.harvested++;
+        if (Math.floor(value) > s.bestHarvest) s.bestHarvest = Math.floor(value);
+    }
+    function trackDiscovered(plantId) {
+        const s = ensurePlantStats(plantId);
+        if (!s.discoveredDate) {
+            const d = new Date();
+            s.discoveredDate = `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`;
+        }
+    }
+
     // Plant seed
     function plantSeed(tileIndex) {
         if (!gameState.selectedSeed) {
@@ -2210,7 +2452,8 @@
             const wasPlanted = typeof scheuneEntry === 'object' ? scheuneEntry.wasPlanted : false;
             const savedMuts = typeof scheuneEntry === 'object' && Array.isArray(scheuneEntry.mutations) ? scheuneEntry.mutations : [];
             const newMuts = wasPlanted ? savedMuts : rollMutations([], gameState.buildings.mondschrein);
-            gameState.tiles[tileIndex] = { plantId: gameState.selectedSeed, progress: 0, totalTime: growTime, mutations: newMuts, mutation: 0 };
+            const riesigBonusS = newMuts.includes('riesig') ? 1.5 : 1;
+            gameState.tiles[tileIndex] = { plantId: gameState.selectedSeed, progress: 0, totalTime: Math.floor(growTime * riesigBonusS), mutations: newMuts, mutation: 0 };
             gameState.scheuneLager.splice(scheuneSlot, 1);
             gameState._scheuneSlot = null;
             gameState.selectedSeed = null;
@@ -2244,12 +2487,13 @@
             growTime = Math.max(1, growTime - 3);
         }
 
-        const newMuts = rollMutations([], gameState.buildings.mondschrein);
+        const newMuts = rollMutations(seed.forcedMutations || [], gameState.buildings.mondschrein);
+        const riesigBonus = newMuts.includes('riesig') ? 1.5 : 1;
 
         gameState.tiles[tileIndex] = {
             plantId: gameState.selectedSeed,
             progress: 0,
-            totalTime: growTime,
+            totalTime: Math.floor(growTime * riesigBonus),
             mutations: newMuts,
             mutation: 0
         };
@@ -2257,7 +2501,9 @@
         // Mark plant as discovered
         if (!gameState.discoveredPlants.includes(gameState.selectedSeed)) {
             gameState.discoveredPlants.push(gameState.selectedSeed);
+            trackDiscovered(gameState.selectedSeed);
         }
+        trackPlanted(gameState.selectedSeed);
         
         // Decrease seed quantity
         seed.quantity--;
@@ -2295,6 +2541,7 @@
 
 
         gameState.money += Math.floor(sellValue);
+        trackHarvested(tile.plantId, sellValue);
 
         // Mondmünzen bei aktivem Event
         let mondBonus = 0;
@@ -2303,8 +2550,12 @@
             gameState.mondMuenzen = (gameState.mondMuenzen || 0) + mondBonus;
         }
         
-        // For multi-harvest plants, don't remove
-        if (plant.harvestType === 'single') {
+        // Verwurzelt: Single-Pflanze bekommt eine Bonusernte, dann Mutation entfernen
+        const hasVerwurzelt = Array.isArray(tile.mutations) && tile.mutations.includes('verwurzelt');
+        if (plant.harvestType === 'single' && hasVerwurzelt) {
+            tile.mutations = tile.mutations.filter(m => m !== 'verwurzelt');
+            tile.progress = 0;
+        } else if (plant.harvestType === 'single') {
             gameState.tiles[tileIndex] = null;
         } else {
             tile.progress = 0;
@@ -2336,6 +2587,7 @@
                 gameState.money += Math.floor(sellValue);
                 totalEarned += Math.floor(sellValue);
                 harvestedCount++;
+                trackHarvested(tile.plantId, sellValue);
                 if (isMondEventActive()) {
                     const mb = 1;
                     gameState.mondMuenzen = (gameState.mondMuenzen || 0) + mb;
@@ -2521,6 +2773,12 @@
     function buyBuilding(buildingId) {
         const building = buildings[buildingId];
 
+        // Mondschrein: eigene Kauflogik
+        if (buildingId === 'mondschrein') {
+            buyMondschrein();
+            return;
+        }
+
         // Brunnen: freischalten oder benutzen
         if (buildingId === 'brunnen') {
             if (!gameState.buildings.brunnen) {
@@ -2632,6 +2890,13 @@
         saveGame();
     }
 
+    function toggleDuengerwerk() {
+        gameState.buildings.duengerwerkAktiv = !gameState.buildings.duengerwerkAktiv;
+        renderBuildings();
+        saveGame();
+        showNotification(gameState.buildings.duengerwerkAktiv ? '🌿 Düngerwerk aktiviert!' : '🌿 Düngerwerk deaktiviert.');
+    }
+
     function buyMondschrein() {
         if (!isMondEventActive()) {
             showNotification('Mondschrein nur während Mondnacht kaufbar!', 'error');
@@ -2651,7 +2916,7 @@
         updateUI();
         renderBuildings();
         saveGame();
-        showNotification('🌙 Mondschrein errichtet! Pflanzen erhalten 20% Lunar-Chance.');
+        showNotification('🌙 Mondschrein errichtet! Pflanzen erhalten 10% Lunar-Chance (25% während Mondnacht).');
     }
 
     // Buy upgrade
@@ -2685,7 +2950,7 @@
     // Buy event seed
     // ── Mondnacht Event System ────────────────────────────────────────
 
-    const EVENT_HOURS = [5, 10, 15, 20]; // Uhrzeiten wann Event aktiv ist
+    const EVENT_HOURS = [0, 5, 10, 15, 20]; // Uhrzeiten wann Event aktiv ist
 
     let _mondAdminOverride = false;
 
@@ -2705,6 +2970,7 @@
         const now = new Date();
         gameState.mondEventEndTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h + 1, 0, 0, 0).getTime();
         gameState.mondShopLastEventHour = h;
+        gameState.blutmond = Math.random() < 0.10;
         refreshMondShopSeeds();
         return true;
     }
@@ -2748,7 +3014,7 @@
                       : rar === 'legendär'  ? 2
                       : rar === 'selten'    ? Math.floor(Math.random() * 2) + 2
                       : Math.floor(Math.random() * 3) + 3;
-            return { plantId: id, quantity: qty };
+            return { plantId: id, quantity: qty, mutations: gameState.blutmond ? ['blutig'] : [] };
         });
     }
 
@@ -2760,10 +3026,10 @@
         const active = isMondEventActive();
 
         if (active) {
-            panel.style.borderColor = '#7b1fa2';
-            panel.style.boxShadow = '0 0 20px rgba(123,31,162,0.4)';
-            title.textContent = '🌙 Mondnacht läuft!';
-            sub.textContent = 'Ernten gibt jetzt Mondmünzen · ' + getMondEventNextTime().hoursUntil + 'h bis nächste Session';
+            panel.style.borderColor = gameState.blutmond ? '#b71c1c' : '#7b1fa2';
+            panel.style.boxShadow = gameState.blutmond ? '0 0 20px rgba(183,28,28,0.5)' : '0 0 20px rgba(123,31,162,0.4)';
+            title.textContent = gameState.blutmond ? '🩸 Blutmondnacht läuft!' : '🌙 Mondnacht läuft!';
+            sub.textContent = (gameState.blutmond ? 'Alle Shop-Pflanzen haben Blutig-Mutation · ' : 'Ernten gibt jetzt Mondmünzen · ') + getMondEventNextTime().hoursUntil + 'h bis nächste Session';
             stat.style.display = '';
         } else {
             panel.style.borderColor = '';
@@ -2806,10 +3072,12 @@
             if (!plant || seed.quantity <= 0) return;
             const rc = rarityColors[plant.rarity] || '#999';
             const isGrad = rc.startsWith('linear-gradient');
+            const isBlutig = Array.isArray(seed.mutations) && seed.mutations.includes('blutig');
             const card = document.createElement('div');
             card.className = 'card';
-            card.style.cssText = 'border:2px solid ' + (isGrad ? 'transparent' : rc) + ';'
-                + (isGrad ? 'background:linear-gradient(var(--card-bg),var(--card-bg)) padding-box,' + rc + ' border-box;' : '');
+            card.style.cssText = 'border:2px solid ' + (isBlutig ? '#b71c1c' : isGrad ? 'transparent' : rc) + ';'
+                + (isGrad && !isBlutig ? 'background:linear-gradient(var(--card-bg),var(--card-bg)) padding-box,' + rc + ' border-box;' : '')
+                + (isBlutig ? 'background:linear-gradient(var(--card-bg),var(--card-bg)) padding-box,linear-gradient(135deg,#b71c1c,#e53935) border-box;' : '');
             const canAfford = (gameState.mondMuenzen || 0) >= plant.price;
             card.innerHTML = `
                 <div class="card-emoji">${plant.emoji}</div>
@@ -2817,11 +3085,12 @@
                     <div class="card-name">${plant.name}</div>
                     <div class="card-rarity" style="color:${isGrad?'inherit':rc}">${plant.rarity}</div>
                 </div>
+                ${isBlutig ? '<div style="font-size:0.8em;color:#e53935;font-weight:700;">🩸 Blutig (×1.4)</div>' : ''}
                 <div class="card-quantity">x${seed.quantity}</div>
                 <div class="card-stats">
                     <div><span>🌙 Preis</span><span>${plant.price} 🌙</span></div>
                     <div><span>⏱️ Wachsen</span><span>${plant.growTime}h</span></div>
-                    <div><span>💵 Verkauf</span><span>${plant.sellValue}€</span></div>
+                    <div><span>💵 Verkauf</span><span>${isBlutig ? Math.floor(plant.sellValue * 1.4) : plant.sellValue}€</span></div>
                     <div><span>Typ</span><span>${plant.harvestType === 'single' ? '●' : '● ● ●'}</span></div>
                 </div>
                 <button class="buy-btn" ${!canAfford ? 'disabled' : ''} onclick="buyMondSeed(${idx})">
@@ -2845,15 +3114,16 @@
             return;
         }
         gameState.mondMuenzen -= plant.price;
+        const seedMutations = Array.isArray(seed.mutations) ? [...seed.mutations] : [];
         seed.quantity--;
         if (seed.quantity <= 0) gameState.mondShopSeeds.splice(idx, 1);
 
-        // Pflanze in regulären Shop mit Preis 0 eintragen
-        const existing = gameState.shopSeeds.find(s => s.plantId === seed.plantId);
+        // Pflanze in regulären Shop mit Preis 0 eintragen, Mutation mitgeben
+        const existing = gameState.shopSeeds.find(s => s.plantId === seed.plantId && JSON.stringify(s.forcedMutations || []) === JSON.stringify(seedMutations));
         if (existing) {
             existing.quantity++;
         } else {
-            gameState.shopSeeds.push({ plantId: seed.plantId, quantity: 1, freeFromMond: true });
+            gameState.shopSeeds.push({ plantId: seed.plantId, quantity: 1, freeFromMond: true, forcedMutations: seedMutations });
         }
 
         if (!gameState.discoveredPlants.includes(seed.plantId)) {
@@ -2963,30 +3233,30 @@
     }
 
     // Show plant index modal
-    let _plantIndexSort = 'rarity'; // 'rarity' | 'name' | 'discovered' | 'price'
+    let _plantIndexSort = 'rarity';
+    let _plantIndexFilter = 'alle';
 
     function showPlantIndex() {
         const modal = document.getElementById('plant-index-modal');
         modal.style.display = 'flex';
 
-        // Discovery stats
         const raritiesInOrder = ['gewöhnlich','ungewöhnlich','selten','legendär','mythisch','göttlich','prismatisch','transzendent','himmlisch','kosmisch','uralt','absolut','geheim'];
         const rarityStats = {};
         raritiesInOrder.forEach(r => { rarityStats[r] = { total: 0, discovered: 0 }; });
         Object.entries(plants).forEach(([id, plant]) => {
             if (rarityStats[plant.rarity]) {
-                rarityStats[plant.rarity].total++;
+                if (!HIDDEN_RARITIES.includes(plant.rarity)) rarityStats[plant.rarity].total++;
                 if (gameState.discoveredPlants.includes(id)) rarityStats[plant.rarity].discovered++;
             }
         });
-        const totalPlants = Object.keys(plants).length;
-        const totalDiscovered = gameState.discoveredPlants.length;
+        const totalPlants = Object.values(plants).filter(p => !HIDDEN_RARITIES.includes(p.rarity)).length;
+        const totalDiscovered = gameState.discoveredPlants.filter(id => plants[id] && !HIDDEN_RARITIES.includes(plants[id].rarity)).length;
 
-        // Render rarity probabilities dynamically
+        // Wahrscheinlichkeiten
         const totalWeight = Object.values(rarityWeights).reduce((a, b) => a + b, 0);
         const probDiv = document.getElementById('rarity-probabilities-dynamic');
         probDiv.innerHTML = '<div class="rarity-probabilities">' +
-            raritiesInOrder.filter(r => r !== 'geheim').map(r => {
+            raritiesInOrder.filter(r => !HIDDEN_RARITIES.includes(r)).map(r => {
                 const color = rarityColors[r];
                 const isGrad = color && color.startsWith('linear-gradient');
                 const textStyle = isGrad
@@ -2999,9 +3269,7 @@
                     chanceStr = '<span style="opacity:0.6;font-size:0.85em;">nur per Shop</span>';
                 } else {
                     const pct = weight / totalWeight * 100;
-                    chanceStr = pct >= 0.1
-                        ? `~${pct.toFixed(pct >= 1 ? 1 : 2)}%`
-                        : `~${pct.toFixed(4)}%`;
+                    chanceStr = pct >= 0.1 ? `~${pct.toFixed(pct >= 1 ? 1 : 2)}%` : `~${pct.toFixed(4)}%`;
                 }
                 const barWidth = weight === 0 ? 0 : Math.min(100, Math.max(2, weight / totalWeight * 100 * 2));
                 const borderColor = isGrad ? '#ccc' : color;
@@ -3009,21 +3277,55 @@
             }).join('') +
         '</div>';
 
-        document.getElementById('discovery-total').innerHTML = `Gesamt: <strong>${totalDiscovered}/${totalPlants}</strong> entdeckt`;
+        // Gesamtfortschritt
+        const pct = totalPlants > 0 ? Math.round(totalDiscovered / totalPlants * 100) : 0;
+        document.getElementById('discovery-total').innerHTML =
+            `Gesamt: <strong>${totalDiscovered}/${totalPlants}</strong> entdeckt &nbsp;<span style="opacity:0.5;font-size:0.9em;">(${pct}%)</span>`;
 
-        const rarDiv = document.getElementById('discovery-rarities');
-        rarDiv.innerHTML = raritiesInOrder.map(r => {
+        // Fortschrittsbalken pro Seltenheit
+        const barsDiv = document.getElementById('discovery-progress-bars');
+        barsDiv.innerHTML = raritiesInOrder.filter(r => !HIDDEN_RARITIES.includes(r)).map(r => {
             const s = rarityStats[r];
             if (s.total === 0) return '';
             const color = rarityColors[r];
-            const isGrad = color.startsWith('linear-gradient');
-            const style = isGrad
+            const isGrad = color && color.startsWith('linear-gradient');
+            const barColor = isGrad ? '#aaa' : color;
+            const labelStyle = isGrad
                 ? `background:${color};-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;`
                 : `color:${color};`;
-            const label = r.charAt(0).toUpperCase() + r.slice(1);
-            return `<div class="discovery-rarity"><span style="${style}">${label}</span>: ${s.discovered}/${s.total}</div>`;
+            const barPct = Math.round(s.discovered / s.total * 100);
+            return `<div class="discovery-progress-row">
+                <span class="dp-label" style="${labelStyle}">${r.charAt(0).toUpperCase() + r.slice(1)}</span>
+                <div class="dp-bar-wrap"><div class="dp-bar" style="width:${barPct}%;background:${barColor};"></div></div>
+                <span class="dp-count">${s.discovered}/${s.total}</span>
+            </div>`;
         }).join('');
 
+        // Versteckte Seltenheiten (nur wenn entdeckt)
+        const rarDiv = document.getElementById('discovery-rarities');
+        rarDiv.innerHTML = raritiesInOrder.map(r => {
+            const s = rarityStats[r];
+            if (HIDDEN_RARITIES.includes(r)) {
+                if (s.discovered === 0) return '';
+                const color = rarityColors[r];
+                const isGrad = color && color.startsWith('linear-gradient');
+                const style = isGrad
+                    ? `background:${color};-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;`
+                    : `color:${color};`;
+                const label = r.charAt(0).toUpperCase() + r.slice(1);
+                return `<div class="discovery-rarity"><span style="${style}">${label}</span>: ${s.discovered} 🔒</div>`;
+            }
+            return '';
+        }).join('');
+
+        renderPlantIndexGrid();
+    }
+
+    function setPlantIndexFilter(filter) {
+        _plantIndexFilter = filter;
+        document.querySelectorAll('.plant-filter-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.filter === filter);
+        });
         renderPlantIndexGrid();
     }
 
@@ -3041,8 +3343,27 @@
             btn.style.color = btn.dataset.sort === _plantIndexSort ? 'white' : 'var(--text-color)';
         });
 
-        let entries = Object.entries(plants);
+        const searchVal = (document.getElementById('plant-index-search')?.value || '').toLowerCase().trim();
 
+        let entries = Object.entries(plants).filter(([id, plant]) => {
+            // Versteckte Seltenheiten nur wenn entdeckt
+            if (HIDDEN_RARITIES.includes(plant.rarity)) return gameState.discoveredPlants.includes(id);
+            return true;
+        });
+
+        // Filter
+        if (_plantIndexFilter === 'entdeckt') entries = entries.filter(([id]) => gameState.discoveredPlants.includes(id));
+        if (_plantIndexFilter === 'unentdeckt') entries = entries.filter(([id, plant]) => !gameState.discoveredPlants.includes(id) && !plant.adminOnly);
+
+        // Suche
+        if (searchVal) {
+            entries = entries.filter(([id, plant]) => {
+                if (gameState.discoveredPlants.includes(id)) return plant.name.toLowerCase().includes(searchVal);
+                return false; // Unentdeckte nicht durchsuchbar
+            });
+        }
+
+        // Sortierung
         if (_plantIndexSort === 'rarity') {
             entries.sort((a, b) => rarityOrder.indexOf(a[1].rarity) - rarityOrder.indexOf(b[1].rarity));
         } else if (_plantIndexSort === 'name') {
@@ -3057,8 +3378,19 @@
         } else if (_plantIndexSort === 'price') {
             entries.sort((a, b) => b[1].price - a[1].price);
         }
+        // gemischt: keine Sortierung
 
-        entries.forEach(([id, plant]) => {
+        if (entries.length === 0) {
+            grid.innerHTML = '<div class="plant-index-empty">Keine Pflanzen gefunden.</div>';
+            return;
+        }
+
+        // Abschnitte nur wenn nicht gemischt
+        const showSections = _plantIndexFilter === 'alle' && !searchVal && _plantIndexSort !== 'gemischt';
+        const discovered = entries.filter(([id]) => gameState.discoveredPlants.includes(id));
+        const undiscovered = entries.filter(([id]) => !gameState.discoveredPlants.includes(id));
+
+        const renderItem = ([id, plant]) => {
             const isDiscovered = gameState.discoveredPlants.includes(id);
             const item = document.createElement('div');
             item.className = 'plant-index-item';
@@ -3076,26 +3408,45 @@
                 item.innerHTML = `
                     <div class="emoji">${plant.emoji}</div>
                     <div class="name">${plant.name}</div>
-                    <div class="rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
-                    ${plant.adminOnly ? '<div style="font-size:0.7em;color:#e53935;margin-top:2px;">🔒 Admin</div>' : ''}
+                    <div class="rarity" style="color:${rarityColors[plant.rarity]}">${plant.rarity}</div>
+                    <div class="quick-info">
+                        <span title="Wachstumszeit">⏱️${plant.growTime}h</span>
+                        <span title="Verkaufspreis">🏷️${plant.sellValue}€</span>
+                    </div>
+                    ${plant.adminOnly ? '<div style="font-size:0.7em;color:#e53935;text-align:center;margin-top:2px;">🔒 Admin</div>' : ''}
                 `;
                 item.onclick = () => showPlantDetail(id);
             } else if (plant.adminOnly) {
                 item.innerHTML = `
                     <div class="emoji">🔒</div>
                     <div class="name">Gesperrt</div>
-                    <div class="rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
-                    <div style="font-size:0.7em;color:#e53935;margin-top:2px;">Exklusiv</div>
+                    <div class="rarity" style="color:${rarityColors[plant.rarity]}">${plant.rarity}</div>
                 `;
             } else {
                 item.innerHTML = `
-                    <div class="emoji">?</div>
-                    <div class="name">???</div>
-                    <div class="rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
+                    <div class="emoji" style="opacity:0.4;">?</div>
+                    <div class="name" style="opacity:0.4;">???</div>
+                    <div class="rarity" style="color:${rarityColors[plant.rarity]}">${plant.rarity}</div>
                 `;
             }
             grid.appendChild(item);
-        });
+        };
+
+        if (showSections && discovered.length > 0 && undiscovered.length > 0) {
+            const dHeader = document.createElement('div');
+            dHeader.className = 'plant-index-section-header';
+            dHeader.textContent = `✅ Entdeckt (${discovered.length})`;
+            grid.appendChild(dHeader);
+            discovered.forEach(renderItem);
+
+            const uHeader = document.createElement('div');
+            uHeader.className = 'plant-index-section-header';
+            uHeader.textContent = `❓ Noch nicht entdeckt (${undiscovered.length})`;
+            grid.appendChild(uHeader);
+            undiscovered.forEach(renderItem);
+        } else {
+            entries.forEach(renderItem);
+        }
     }
 
     function setPlantIndexSort(mode) {
@@ -3122,8 +3473,10 @@
 
         const isMulti = plant.harvestType === 'multi';
         const profitFirst = plant.sellValue - plant.price;
-        const profitPerHour = (plant.sellValue / plant.growTime).toFixed(2);
-        const netPerHour = (profitFirst / plant.growTime).toFixed(2);
+        // Single: Gewinn/h = (sellValue - price) / growTime
+        // Multi:  1. Ernte: (sellValue - price) / growTime, Folgeernten: sellValue / growTime
+        const netPerHourFirst = (profitFirst / plant.growTime).toFixed(2);
+        const revenuePerHour = (plant.sellValue / plant.growTime).toFixed(2);
 
         const harvestLabel = isMulti ? '● ● ●' : '●';
         const harvestDesc = isMulti
@@ -3164,14 +3517,14 @@
             <div class="plant-detail-extras">
                 <div class="plant-detail-extra-row">
                     <span class="lbl">Erntetyp</span>
-                    <span class="val">${harvestLabel}</span>
+                    <span class="val">${isMulti ? '● ● ●' : '●'}</span>
                 </div>
                 <div class="plant-detail-extra-row" style="font-size:0.8em; color:#999; margin-top:-4px;">
-                    <span>${harvestDesc}</span>
+                    <span>${isMulti ? 'Pflanze bleibt nach der Ernte bestehen' : 'Pflanze wird nach der Ernte entfernt'}</span>
                 </div>
                 <div class="plant-detail-extra-row" style="margin-top:4px;">
-                    <span class="lbl">Gewinn (1. Ernte)</span>
-                    <span class="val" style="color:${profitColor}">${profitFirst >= 0 ? '+' : ''}${profitFirst}€</span>
+                    <span class="lbl">${isMulti ? 'Gewinn (1. Ernte)' : 'Gewinn'}</span>
+                    <span class="val" style="color:${profitFirst >= 0 ? '#388e3c' : '#e53935'}">${profitFirst >= 0 ? '+' : ''}${profitFirst}€</span>
                 </div>
                 ${isMulti ? `
                 <div class="plant-detail-extra-row">
@@ -3179,14 +3532,27 @@
                     <span class="val" style="color:#388e3c;">+${plant.sellValue}€</span>
                 </div>` : ''}
                 <div class="plant-detail-extra-row">
-                    <span class="lbl">Gewinn pro Stunde</span>
-                    <span class="val" style="color:${parseFloat(netPerHour) >= 0 ? '#388e3c' : '#e53935'};">${parseFloat(netPerHour) >= 0 ? '+' : ''}${netPerHour}€/h</span>
+                    <span class="lbl">${isMulti ? 'Gewinn/h (1. Ernte)' : 'Gewinn pro Stunde'}</span>
+                    <span class="val" style="color:${parseFloat(netPerHourFirst) >= 0 ? '#388e3c' : '#e53935'};">${parseFloat(netPerHourFirst) >= 0 ? '+' : ''}${netPerHourFirst}€/h</span>
                 </div>
+                ${isMulti ? `
                 <div class="plant-detail-extra-row">
-                    <span class="lbl">Verkauf pro Stunde</span>
-                    <span class="val">+${profitPerHour}€/h</span>
-                </div>
+                    <span class="lbl">Gewinn/h (Folgeernten)</span>
+                    <span class="val" style="color:#388e3c;">+${revenuePerHour}€/h</span>
+                </div>` : ''}
             </div>
+
+            ${(() => {
+                const s = gameState.plantStats && gameState.plantStats[id];
+                if (!s || (!s.planted && !s.harvested && !s.discoveredDate)) return '';
+                return `<div class="plant-detail-extras" style="margin-top:12px;border-top:1px solid rgba(128,128,128,0.15);padding-top:12px;">
+                    <div style="font-size:0.75em;font-weight:700;opacity:0.5;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Deine Statistiken</div>
+                    ${s.discoveredDate ? `<div class="plant-detail-extra-row"><span class="lbl">📅 Entdeckt am</span><span class="val">${s.discoveredDate}</span></div>` : ''}
+                    ${s.planted ? `<div class="plant-detail-extra-row"><span class="lbl">🌱 Gepflanzt</span><span class="val">${s.planted}×</span></div>` : ''}
+                    ${s.harvested ? `<div class="plant-detail-extra-row"><span class="lbl">🌾 Geerntet</span><span class="val">${s.harvested}×</span></div>` : ''}
+                    ${s.bestHarvest ? `<div class="plant-detail-extra-row"><span class="lbl">🏆 Beste Ernte</span><span class="val" style="color:#f9a825;">${s.bestHarvest}€</span></div>` : ''}
+                </div>`;
+            })()}
         `;
 
         document.getElementById('plant-detail-modal').style.display = 'flex';
@@ -3506,6 +3872,7 @@
         renderScheuneLager();
         syncEventPanel();
         updateUI();
+        renderRufBadge();
     }
 
     function renameProfile(profileNum) {
@@ -3528,17 +3895,19 @@
             money: 10, round: 1, roundTime: 0, selectedSeed: null,
             tiles: Array(16).fill(null),
             inventory: {}, shopSeeds: [],
-            buildings: { brunnen: false, kompost: false, gewaechshaus: 0, marktstand: false, scheune: 0, mondschrein: false },
+            buildings: { brunnen: false, kompost: false, gewaechshaus: 0, marktstand: false, scheune: 0, mondschrein: false, duengerwerk: false, duengerwerkAktiv: false, altesBaumhaus: false },
             scheuneLager: [],
             upgrades: { guteErde: false },
             ruf: 0,
             discoveredPlants: [], mondMuenzen: 0,
             mondShopSeeds: [], mondShopLastEventHour: -1,
             mondEventEndTime: -1, mondEventTriggeredHour: -1,
+            blutmond: false,
             lastSaveTime: Date.now(),
             roundLastTriggerHour: Math.floor(Date.now() / HOUR_MS),
             shopLastRefreshHour: Math.floor(Date.now() / 3600000),
-            brunnenLastUsed: 0
+            brunnenLastUsed: 0,
+            plantStats: {}
         };
     }
 
@@ -3575,13 +3944,38 @@
             else if (loaded.buildings && loaded.buildings.gewaechshaus === false) gameState.buildings.gewaechshaus = 0;
             while (gameState.tiles.length < 16) gameState.tiles.push(null);
             if (!gameState.brunnenLastUsed) gameState.brunnenLastUsed = 0;
+            if (!gameState.plantStats) gameState.plantStats = {};
             if (gameState.mondMuenzen === undefined) gameState.mondMuenzen = 0;
             if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
             if (gameState.mondEventEndTime === undefined) gameState.mondEventEndTime = -1;
             if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
+            if (gameState.blutmond === undefined) gameState.blutmond = false;
             if (!Number.isFinite(gameState.roundLastTriggerHour)) gameState.roundLastTriggerHour = getClockHour(gameState.lastSaveTime || Date.now());
+
+            // Migration: ScheuneLager alte Formate (string oder {mutation:N}) → {mutations:[]}
+            if (!gameState.scheuneLager) gameState.scheuneLager = [];
+            const _legacyMapP = ['nass', 'vergoldet', 'riesig', 'regenbogen', 'lunar'];
+            gameState.scheuneLager = gameState.scheuneLager.map(entry => {
+                if (!entry) return entry;
+                if (typeof entry === 'string') return { plantId: entry, wasPlanted: false, mutations: [] };
+                if (!Array.isArray(entry.mutations)) {
+                    const _lid = _legacyMapP[(entry.mutation || 0) - 1];
+                    entry.mutations = _lid ? [_lid] : [];
+                    delete entry.mutation;
+                }
+                return entry;
+            });
+            gameState.tiles.forEach(tile => {
+                if (!tile) return;
+                if (!Array.isArray(tile.mutations)) {
+                    const _lid2 = _legacyMapP[(tile.mutation || 0) - 1];
+                    tile.mutations = _lid2 ? [_lid2] : [];
+                }
+                delete tile.mutation;
+            });
+
             const now = Date.now();
             const elapsedHours = (now - gameState.lastSaveTime) / (1000 * 60 * 60);
 
