@@ -282,6 +282,14 @@
     .mut-riesig     { background: linear-gradient(135deg, #1b5e20, #4caf50, #a5d6a7); background-size: 200% 200%; animation: mutShine 2.5s ease infinite; }
     .mut-verwurzelt { background: linear-gradient(135deg, #3e2723, #795548, #bcaaa4); background-size: 200% 200%; animation: mutShine 3s ease infinite; }
     .mut-blutig     { background: linear-gradient(135deg, #7f0000, #e53935, #ef9a9a); background-size: 200% 200%; animation: mutShine 2s ease infinite; }
+    .tile.ackerland { border-color: #e65100; background: rgba(230, 81, 0, 0.07); }
+    .tile-ackerland-badge {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        font-size: 0.7em;
+        opacity: 0.8;
+    }
     @keyframes mutShine     { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     @keyframes lunarShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     @keyframes rainbowSlide { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
@@ -1793,7 +1801,8 @@
         marktstand: { name: 'Marktstand', cost: 30, effect: 'Zeigt 5 Karten statt 4', emoji: '🏪' },
         scheune: { name: 'Scheune', cost: 20, effect: 'Lagere Samen statt sie zu löschen (Max 6 Plätze)', emoji: '🏚️' },
         mondschrein: { name: 'Mondschrein', cost: 12, mondMuenzen: true, effect: '10% Chance auf Lunar-Mutation (25% während Mondnacht)', emoji: '🌙' },
-        blutschrein: { name: 'Blutschrein', cost: 30, mondMuenzen: true, effect: 'Lunar-Mutation hat 50% Chance durch Blutig (×1.8) ersetzt zu werden', emoji: '🩸' },
+        blutschrein: { name: 'Blutschrein', cost: 30, mondMuenzen: true, effect: 'Lunar-Mutation hat 50% Chance durch Blutig (×2.0) ersetzt zu werden', emoji: '🩸' },
+        ackerland: { name: 'Ackerland', cost: 250, effect: 'Schaltet zusätzliche Acker-Felder frei · 10% Chance auf Reif (×1.5) · 4 Stufen', emoji: '🌾' },
         duengerwerk: { name: 'Düngerwerk', cost: 35, effect: '10% / 12% / 15% Chance auf Riesig-Mutation · Ausbaubar · Ein/Ausschaltbar', emoji: '🌿' },
         altesBaumhaus: { name: 'Altes Baumhaus', cost: 50, effect: '6% / 8% / 10% Chance auf Verwurzelt-Mutation · Ausbaubar', emoji: '🕸️' }
     };
@@ -1870,7 +1879,8 @@
         regenbogen: { emoji: '🌈', label: 'Regenbogen', multiplier: 3.0  },
         riesig:     { emoji: '🌿', label: 'Riesig',     multiplier: 2.0  },
         verwurzelt: { emoji: '🕸️', label: 'Verwurzelt', multiplier: 1.0  },
-        blutig:     { emoji: '🩸', label: 'Blutig',     multiplier: 1.8  },
+        blutig:     { emoji: '🩸', label: 'Blutig',     multiplier: 2.0  },
+        reif:       { emoji: '🌾', label: 'Reif',       multiplier: 1.5  },
     };
 
     function calcSellValue(tile, baseSellValue) {
@@ -1887,7 +1897,7 @@
         if (!gameState.seenMutations.includes(id)) gameState.seenMutations.push(id);
     }
 
-    function rollMutations(existingMuts, mondschrein) {
+    function rollMutations(existingMuts, mondschrein, isAckerland) {
         const muts = [...(existingMuts || [])];
         existingMuts && existingMuts.forEach(id => trackSeenMutation(id));
         if (mondschrein && !muts.includes('lunar')) {
@@ -1907,6 +1917,9 @@
         if (gameState.buildings.altesBaumhaus > 0 && !muts.includes('verwurzelt')) {
             const verwurzeltChance = [0, 0.06, 0.08, 0.10][gameState.buildings.altesBaumhaus] || 0.06;
             if (Math.random() < verwurzeltChance) { muts.push('verwurzelt'); trackSeenMutation('verwurzelt'); }
+        }
+        if (isAckerland && !muts.includes('reif')) {
+            if (Math.random() < 0.10) { muts.push('reif'); trackSeenMutation('reif'); }
         }
         if (Math.random() < 0.05 && !muts.includes('gold')) { muts.push('gold'); trackSeenMutation('gold'); }
         if (Math.random() < 0.01 && !muts.includes('regenbogen')) { muts.push('regenbogen'); trackSeenMutation('regenbogen'); }
@@ -2012,6 +2025,7 @@
             if (gameState.buildings.kompost === false) gameState.buildings.kompost = 0;
             if (gameState.buildings.mondschrein === undefined) gameState.buildings.mondschrein = false;
             if (gameState.buildings.blutschrein === undefined) gameState.buildings.blutschrein = false;
+            if (gameState.buildings.ackerland === undefined) gameState.buildings.ackerland = 0;
             if (gameState.buildings.duengerwerk === undefined) gameState.buildings.duengerwerk = 0;
             if (gameState.buildings.duengerwerk === true) gameState.buildings.duengerwerk = 1;
             if (gameState.buildings.duengerwerk === false) gameState.buildings.duengerwerk = 0;
@@ -2129,12 +2143,13 @@
         
         gameState.tiles.forEach((tile, index) => {
             const tileEl = document.createElement('div');
-            const isGreenhouse = index >= 16;
-            tileEl.className = 'tile' + (isGreenhouse ? ' greenhouse' : '');
+            const isGreenhouse = index >= 16 && index < ackerlandStartIndex();
+            const isAckerland = isAckerlandTile(index);
+            tileEl.className = 'tile' + (isGreenhouse ? ' greenhouse' : '') + (isAckerland ? ' ackerland' : '');
 
             if (!tile) {
                 tileEl.classList.add('empty');
-                tileEl.innerHTML = `${isGreenhouse ? '<span class="tile-greenhouse-badge">🏡</span>' : ''}<span style="font-size: 2em; opacity: 0.5;">+</span>`;
+                tileEl.innerHTML = `${isGreenhouse ? '<span class="tile-greenhouse-badge">🏡</span>' : ''}${isAckerland ? '<span class="tile-ackerland-badge">🌾</span>' : ''}<span style="font-size: 2em; opacity: 0.5;">+</span>`;
                 tileEl.onclick = () => plantSeed(index);
             } else {
                 const plant = plants[tile.plantId] || eventPlants[tile.plantId];
@@ -2169,6 +2184,7 @@
                 
                 tileEl.innerHTML = `
                     ${isGreenhouse ? '<span class="tile-greenhouse-badge">🏡</span>' : ''}
+                    ${isAckerland ? '<span class="tile-ackerland-badge">🌾</span>' : ''}
                     <div class="tile-emoji">${plant.emoji}</div>
                     <div class="tile-progress">
                         <div class="tile-progress-bar" style="${progressBarStyle}"></div>
@@ -2341,6 +2357,25 @@
         });
     }
 
+    function ackerlandStartIndex() {
+        return 16 + (gameState.buildings.gewaechshaus || 0);
+    }
+
+    function isAckerlandTile(index) {
+        return index >= ackerlandStartIndex() && index < ackerlandStartIndex() + (gameState.buildings.ackerland || 0);
+    }
+
+    function deleteScheuneSlot(index) {
+        const entry = gameState.scheuneLager[index];
+        if (!entry) return;
+        const plant = plants[entry.plantId] || eventPlants[entry.plantId];
+        const name = plant ? plant.name : entry.plantId;
+        if (!confirm(`${name} aus der Scheune entfernen?`)) return;
+        gameState.scheuneLager.splice(index, 1);
+        renderScheuneLager();
+        saveGame();
+    }
+
     function scheuneMaxSlots() {
         const scheuneSlots = [0, 2, 4, 6];
         return scheuneSlots[gameState.buildings.scheune || 0] || 0;
@@ -2360,6 +2395,7 @@
         if (id === 'altesBaumhaus') return;
         if (id === 'brunnen') return;
         if (id === 'kompost') return;
+        if (id === 'ackerland') return;
             const el = document.createElement('div');
 
             if (id === 'gewaechshaus') {
@@ -2438,6 +2474,27 @@
             list.appendChild(el);
         }
 
+        // Ackerland: stufenbar
+        {
+            const al = buildings.ackerland;
+            const level = gameState.buildings.ackerland || 0;
+            const costs = [250, 500, 750, 1000];
+            const el = document.createElement('div');
+            el.className = `building ${level > 0 ? 'owned' : ''}`;
+            if (level > 0) el.style.borderColor = '#e65100';
+            if (level === 0) {
+                el.innerHTML = `<div class="building-info"><h3>${al.emoji} ${al.name}</h3><p>${al.effect}</p></div>
+                    <button class="building-btn" onclick="buyBuilding('ackerland')" ${gameState.money < costs[0] ? 'disabled' : ''}>${costs[0]}€</button>`;
+            } else if (level < 4) {
+                el.innerHTML = `<div class="building-info"><h3>${al.emoji} ${al.name} <small style="opacity:0.6;">Stufe ${level}</small></h3>
+                    <p>${level} Acker-Feld${level > 1 ? 'er' : ''} · 10% Reif-Chance</p></div>
+                    <button class="building-btn" onclick="buyBuilding('ackerland')" ${gameState.money < costs[level] ? 'disabled' : ''}>⬆️ ${costs[level]}€</button>`;
+            } else {
+                el.innerHTML = `<div class="building-info"><h3>${al.emoji} ${al.name} <small style="opacity:0.6;">Stufe 4 MAX</small></h3>
+                    <p>4 Acker-Felder · 10% Reif-Chance</p></div><span>✅ Max</span>`;
+            }
+            list.appendChild(el);
+        }
         // Brunnen: stufenbar + nutzbar
         {
             const bb = buildings.brunnen;
@@ -2592,7 +2649,7 @@
                 span.title = wasPlanted ? 'Bereits bepflanzt gewesen – keine neue Mutation möglich' : 'Klicken zum Platzieren';
                 const savedMuts2 = entry && typeof entry === 'object' && Array.isArray(entry.mutations) ? entry.mutations : [];
                 const mutLabel = savedMuts2.length > 0 ? ` <span style="opacity:0.8;">${savedMuts2.map(id => mutationDefs[id]?.emoji||'').join('')}</span>` : (wasPlanted ? ' <span style="opacity:0.4;font-size:0.8em;">●</span>' : '');
-                span.innerHTML = (p ? p.emoji : '?') + ' ' + (p ? p.name : plantId) + mutLabel + ' <span style="opacity:0.5;">▶</span>';
+                span.innerHTML = (p ? p.emoji : '?') + ' ' + (p ? p.name : plantId) + mutLabel + ' <span style="opacity:0.5;">▶</span> <span class="scheune-del" onclick="event.stopPropagation();deleteScheuneSlot('+i+')" style="opacity:0.4;cursor:pointer;font-size:0.85em;margin-left:4px;" title="Entfernen">🗑️</span>';
                 span.onclick = () => placeFromScheune(i);
                 span.onmouseover = () => span.style.borderColor = '#795548';
                 span.onmouseout = () => span.style.borderColor = 'transparent';
@@ -2668,7 +2725,7 @@
             // Mutation: gespeicherte wiederherstellen, oder bei wasPlanted=false neu würfeln
             const wasPlanted = typeof scheuneEntry === 'object' ? scheuneEntry.wasPlanted : false;
             const savedMuts = typeof scheuneEntry === 'object' && Array.isArray(scheuneEntry.mutations) ? scheuneEntry.mutations : [];
-            const newMuts = wasPlanted ? savedMuts : rollMutations([], gameState.buildings.mondschrein);
+            const newMuts = wasPlanted ? savedMuts : rollMutations([], gameState.buildings.mondschrein, isAckerlandTile(tileIndex));
             const riesigBonusS = newMuts.includes('riesig') ? 1.5 : 1;
             gameState.tiles[tileIndex] = { plantId: gameState.selectedSeed, progress: 0, totalTime: Math.floor(growTime * riesigBonusS), mutations: newMuts, mutation: 0 };
             gameState.scheuneLager.splice(scheuneSlot, 1);
@@ -2704,7 +2761,7 @@
             growTime = Math.max(1, growTime - 3);
         }
 
-        const newMuts = rollMutations(seed.forcedMutations || [], gameState.buildings.mondschrein);
+        const newMuts = rollMutations(seed.forcedMutations || [], gameState.buildings.mondschrein, isAckerlandTile(tileIndex));
         const riesigBonus = newMuts.includes('riesig') ? 1.5 : 1;
 
         gameState.tiles[tileIndex] = {
@@ -2955,7 +3012,8 @@
             showNotification('Scheune ist voll!', 'error');
             return;
         }
-        gameState.scheuneLager.push({ plantId: tile.plantId, wasPlanted: true, mutations: Array.isArray(tile.mutations) ? tile.mutations : [] });
+        const mutsToSave = Array.isArray(tile.mutations) ? tile.mutations.filter(m => m !== 'reif') : [];
+        gameState.scheuneLager.push({ plantId: tile.plantId, wasPlanted: true, mutations: mutsToSave });
         gameState.tiles[tileIndex] = null;
         updateUI();
         renderFarm();
@@ -2986,6 +3044,20 @@
         // Mondschrein: eigene Kauflogik
         if (buildingId === 'mondschrein') {
             buyMondschrein();
+            return;
+        }
+
+        // Ackerland: stufenbar
+        if (buildingId === 'ackerland') {
+            const costs = [250, 500, 750, 1000];
+            const level = gameState.buildings.ackerland || 0;
+            if (level >= 4) { showNotification('Ackerland bereits auf Maximum!', 'error'); return; }
+            if (gameState.money < costs[level]) { showNotification('Nicht genug Geld!', 'error'); return; }
+            gameState.money -= costs[level];
+            gameState.buildings.ackerland = level + 1;
+            gameState.tiles.push(null); // Neues Tile hinzufügen
+            showNotification(`🌾 Ackerland Stufe ${gameState.buildings.ackerland}! Neues Acker-Feld freigeschaltet.`);
+            updateUI(); renderFarm(); renderBuildings(); saveGame();
             return;
         }
 
@@ -4240,7 +4312,7 @@
             money: 10, round: 1, roundTime: 0, selectedSeed: null,
             tiles: Array(16).fill(null),
             inventory: {}, shopSeeds: [],
-            buildings: { brunnen: 0, kompost: 0, gewaechshaus: 0, marktstand: false, scheune: 0, mondschrein: false, blutschrein: false, duengerwerk: 0, duengerwerkAktiv: false, altesBaumhaus: 0 },
+            buildings: { brunnen: 0, kompost: 0, gewaechshaus: 0, marktstand: false, scheune: 0, mondschrein: false, blutschrein: false, ackerland: 0, duengerwerk: 0, duengerwerkAktiv: false, altesBaumhaus: 0 },
             scheuneLager: [],
             upgrades: { guteErde: false },
             ruf: 0,
@@ -4309,6 +4381,10 @@
             if (gameState.buildings.duengerwerk === true) gameState.buildings.duengerwerk = 1;
             if (gameState.buildings.duengerwerk === false) gameState.buildings.duengerwerk = 0;
             if (gameState.buildings.blutschrein === undefined) gameState.buildings.blutschrein = false;
+            if (gameState.buildings.ackerland === undefined) gameState.buildings.ackerland = 0;
+            // Sicherstellen dass genug Tiles vorhanden sind (Normal + GH + Ackerland)
+            const expectedTiles = 16 + (gameState.buildings.gewaechshaus || 0) + (gameState.buildings.ackerland || 0);
+            while (gameState.tiles.length < expectedTiles) gameState.tiles.push(null);
             if (gameState.buildings.altesBaumhaus === undefined) gameState.buildings.altesBaumhaus = 0;
             if (gameState.buildings.altesBaumhaus === true) gameState.buildings.altesBaumhaus = 1;
             if (gameState.buildings.altesBaumhaus === false) gameState.buildings.altesBaumhaus = 0;
