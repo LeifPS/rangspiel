@@ -792,6 +792,81 @@
         font-size: 0.9em;
     }
 
+    .index-tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 16px;
+        border-bottom: 2px solid rgba(128,128,128,0.15);
+        padding-bottom: 0;
+    }
+
+    .index-tab-btn {
+        padding: 8px 18px;
+        border: none;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        font-size: 0.9em;
+        font-weight: 700;
+        background: transparent;
+        color: var(--text-color);
+        opacity: 0.5;
+        transition: all 0.2s;
+        margin-bottom: -2px;
+        border-bottom: 2px solid transparent;
+    }
+
+    .index-tab-btn.active {
+        opacity: 1;
+        border-bottom: 2px solid #4caf50;
+        color: #4caf50;
+    }
+
+    .index-tab-panel { display: none; }
+    .index-tab-panel.active { display: block; }
+
+    .mutation-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 2px solid rgba(128,128,128,0.15);
+        margin-bottom: 10px;
+        background: var(--card-bg);
+        position: relative;
+    }
+
+    .mutation-card .mut-badge-large {
+        font-size: 1.6em;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .mutation-card .mut-info { flex: 1; }
+    .mutation-card .mut-name { font-weight: 700; font-size: 1em; }
+    .mutation-card .mut-desc { font-size: 0.82em; opacity: 0.7; margin-top: 3px; }
+    .mutation-card .mut-source { font-size: 0.78em; opacity: 0.55; margin-top: 4px; font-style: italic; }
+
+    .mutation-card .mut-seen-badge {
+        font-size: 0.75em;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 20px;
+        background: #e8f5e9;
+        color: #2e7d32;
+        flex-shrink: 0;
+        align-self: center;
+    }
+
+    body.dark-mode .mutation-card .mut-seen-badge { background: #1b5e20; color: #a5d6a7; }
+
+    .mutation-card.unseen { opacity: 0.45; }
+
     /* Shop Cards */
     .shop-cards {
         display: grid;
@@ -1432,37 +1507,50 @@
 <div id="plant-index-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>📚 Pflanzen-Index</h2>
+            <h2>📚 Index</h2>
             <button class="modal-close" onclick="closePlantIndex()">✕</button>
         </div>
         <div class="modal-body">
-            <div class="discovery-stats">
-                <div class="discovery-total" id="discovery-total"></div>
-                <div class="discovery-progress-bars" id="discovery-progress-bars"></div>
-                <div class="discovery-rarities" id="discovery-rarities"></div>
+            <div class="index-tabs">
+                <button class="index-tab-btn active" onclick="switchIndexTab('pflanzen')">🌱 Pflanzen</button>
+                <button class="index-tab-btn" onclick="switchIndexTab('mutationen')">✨ Mutationen</button>
             </div>
 
-            <details style="margin-bottom:14px;">
-                <summary style="cursor:pointer;font-size:0.85em;font-weight:600;opacity:0.6;user-select:none;">🎲 Seltenheits-Wahrscheinlichkeiten</summary>
-                <div style="margin-top:8px;" id="rarity-probabilities-dynamic"></div>
-            </details>
+            <!-- Tab: Pflanzen -->
+            <div class="index-tab-panel active" id="index-tab-pflanzen">
+                <div class="discovery-stats">
+                    <div class="discovery-total" id="discovery-total"></div>
+                    <div class="discovery-progress-bars" id="discovery-progress-bars"></div>
+                    <div class="discovery-rarities" id="discovery-rarities"></div>
+                </div>
 
-            <div class="plant-index-controls">
-                <input class="plant-index-search" id="plant-index-search" type="text" placeholder="🔍 Pflanze suchen..." oninput="renderPlantIndexGrid()" />
-                <div class="plant-index-filter-row" id="plant-index-filter-row">
-                    <button class="plant-filter-btn active" data-filter="alle" onclick="setPlantIndexFilter('alle')">Alle</button>
-                    <button class="plant-filter-btn" data-filter="entdeckt" onclick="setPlantIndexFilter('entdeckt')">✅ Entdeckt</button>
-                    <button class="plant-filter-btn" data-filter="unentdeckt" onclick="setPlantIndexFilter('unentdeckt')">❓ Unentdeckt</button>
+                <details style="margin-bottom:14px;">
+                    <summary style="cursor:pointer;font-size:0.85em;font-weight:600;opacity:0.6;user-select:none;">🎲 Seltenheits-Wahrscheinlichkeiten</summary>
+                    <div style="margin-top:8px;" id="rarity-probabilities-dynamic"></div>
+                </details>
+
+                <div class="plant-index-controls">
+                    <input class="plant-index-search" id="plant-index-search" type="text" placeholder="🔍 Pflanze suchen..." oninput="renderPlantIndexGrid()" />
+                    <div class="plant-index-filter-row" id="plant-index-filter-row">
+                        <button class="plant-filter-btn active" data-filter="alle" onclick="setPlantIndexFilter('alle')">Alle</button>
+                        <button class="plant-filter-btn" data-filter="entdeckt" onclick="setPlantIndexFilter('entdeckt')">✅ Entdeckt</button>
+                        <button class="plant-filter-btn" data-filter="unentdeckt" onclick="setPlantIndexFilter('unentdeckt')">❓ Unentdeckt</button>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                        <button class="plant-sort-btn" data-sort="rarity" onclick="setPlantIndexSort('rarity')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">⭐ Seltenheit</button>
+                        <button class="plant-sort-btn" data-sort="name" onclick="setPlantIndexSort('name')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">🔤 Name</button>
+                        <button class="plant-sort-btn" data-sort="discovered" onclick="setPlantIndexSort('discovered')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">✅ Entdeckt</button>
+                        <button class="plant-sort-btn" data-sort="price" onclick="setPlantIndexSort('price')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">💰 Preis</button>
+                        <button class="plant-sort-btn" data-sort="gemischt" onclick="setPlantIndexSort('gemischt')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">🔀 Gemischt</button>
+                    </div>
                 </div>
-                <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                    <button class="plant-sort-btn" data-sort="rarity" onclick="setPlantIndexSort('rarity')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">⭐ Seltenheit</button>
-                    <button class="plant-sort-btn" data-sort="name" onclick="setPlantIndexSort('name')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">🔤 Name</button>
-                    <button class="plant-sort-btn" data-sort="discovered" onclick="setPlantIndexSort('discovered')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">✅ Entdeckt</button>
-                    <button class="plant-sort-btn" data-sort="price" onclick="setPlantIndexSort('price')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">💰 Preis</button>
-                    <button class="plant-sort-btn" data-sort="gemischt" onclick="setPlantIndexSort('gemischt')" style="padding:5px 10px;border:none;border-radius:8px;cursor:pointer;font-size:0.8em;font-weight:bold;transition:all 0.2s;">🔀 Gemischt</button>
-                </div>
+                <div class="plant-index-grid" id="plant-index-grid"></div>
             </div>
-            <div class="plant-index-grid" id="plant-index-grid"></div>
+
+            <!-- Tab: Mutationen -->
+            <div class="index-tab-panel" id="index-tab-mutationen">
+                <div id="mutation-index-content"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -1793,20 +1881,26 @@
         return baseSellValue * (1 + totalBonus);
     }
 
+    function trackSeenMutation(id) {
+        if (!gameState.seenMutations) gameState.seenMutations = [];
+        if (!gameState.seenMutations.includes(id)) gameState.seenMutations.push(id);
+    }
+
     function rollMutations(existingMuts, mondschrein) {
         const muts = [...(existingMuts || [])];
+        existingMuts && existingMuts.forEach(id => trackSeenMutation(id));
         if (mondschrein && !muts.includes('lunar')) {
             const lunarChance = isMondEventActive() ? 0.25 : 0.10;
-            if (Math.random() < lunarChance) muts.push('lunar');
+            if (Math.random() < lunarChance) { muts.push('lunar'); trackSeenMutation('lunar'); }
         }
         if (gameState.buildings.duengerwerk && gameState.buildings.duengerwerkAktiv && !muts.includes('riesig')) {
-            if (Math.random() < 0.10) muts.push('riesig');
+            if (Math.random() < 0.10) { muts.push('riesig'); trackSeenMutation('riesig'); }
         }
         if (gameState.buildings.altesBaumhaus && !muts.includes('verwurzelt')) {
-            if (Math.random() < 0.06) muts.push('verwurzelt');
+            if (Math.random() < 0.06) { muts.push('verwurzelt'); trackSeenMutation('verwurzelt'); }
         }
-        if (Math.random() < 0.05 && !muts.includes('gold')) muts.push('gold');
-        if (Math.random() < 0.01 && !muts.includes('regenbogen')) muts.push('regenbogen');
+        if (Math.random() < 0.05 && !muts.includes('gold')) { muts.push('gold'); trackSeenMutation('gold'); }
+        if (Math.random() < 0.01 && !muts.includes('regenbogen')) { muts.push('regenbogen'); trackSeenMutation('regenbogen'); }
         return muts;
     }
 
@@ -1908,6 +2002,7 @@
             if (!gameState.scheuneLager) gameState.scheuneLager = [];
             if (!gameState.brunnenLastUsed) gameState.brunnenLastUsed = 0;
             if (!gameState.plantStats) gameState.plantStats = {};
+            if (!gameState.seenMutations) gameState.seenMutations = [];
             if (gameState.mondMuenzen === undefined) gameState.mondMuenzen = 0;
             if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
@@ -3232,6 +3327,55 @@
         document.getElementById(`tab-${tabName}`).classList.add('active');
     }
 
+    let _activeIndexTab = 'pflanzen';
+
+    function switchIndexTab(tab) {
+        _activeIndexTab = tab;
+        document.querySelectorAll('.index-tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase().includes(tab === 'pflanzen' ? 'pflanz' : 'mutat'));
+        });
+        document.querySelectorAll('.index-tab-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('index-tab-' + tab).classList.add('active');
+        if (tab === 'mutationen') renderMutationIndex();
+    }
+
+    function renderMutationIndex() {
+        const container = document.getElementById('mutation-index-content');
+        const seen = gameState.seenMutations || [];
+        const total = Object.keys(mutationDefs).length;
+        const seenCount = Object.keys(mutationDefs).filter(id => seen.includes(id)).length;
+
+        const mutationInfo = {
+            gold:       { desc: '×1.5 Verkaufswert',                        source: 'Zufällig beim Pflanzen (~5%)' },
+            regenbogen: { desc: '×3.0 Verkaufswert',                        source: 'Zufällig beim Pflanzen (~1%)' },
+            lunar:      { desc: '×1.5 Verkaufswert',                        source: 'Mondschrein-Gebäude (10%, 25% bei Mondnacht)' },
+            riesig:     { desc: '×2.0 Verkaufswert, +50% Wachstumszeit',    source: 'Düngerwerk-Gebäude (~10%, wenn aktiviert)' },
+            verwurzelt: { desc: 'Single-Pflanze einmal extra erntbar',       source: 'Altes Baumhaus-Gebäude (~6%)' },
+            blutig:     { desc: '×1.4 Verkaufswert',                        source: 'Blutmondnacht (10% Chance pro Mondnacht) – alle Shop-Pflanzen erhalten diese Mutation' },
+        };
+
+        let html = `<div style="margin-bottom:14px;">
+            <div style="font-size:1em;font-weight:700;">Entdeckt: <strong>${seenCount}/${total}</strong></div>
+            <div style="font-size:0.82em;opacity:0.5;margin-top:2px;">Mutationen die du schon auf einer Pflanze hattest</div>
+        </div>`;
+
+        Object.entries(mutationDefs).forEach(([id, def]) => {
+            const isSeen = seen.includes(id);
+            const info = mutationInfo[id] || { desc: '', source: '' };
+            html += `<div class="mutation-card ${isSeen ? '' : 'unseen'}">
+                <div class="mut-badge-large mut-${id}">${def.emoji}</div>
+                <div class="mut-info">
+                    <div class="mut-name">${def.label}</div>
+                    <div class="mut-desc">${info.desc}</div>
+                    <div class="mut-source">📍 ${isSeen ? info.source : '???'}</div>
+                </div>
+                <div class="mut-seen-badge">${isSeen ? '✅ Gesehen' : '❓ Neu'}</div>
+            </div>`;
+        });
+
+        container.innerHTML = html;
+    }
+
     // Show plant index modal
     let _plantIndexSort = 'rarity';
     let _plantIndexFilter = 'alle';
@@ -3907,7 +4051,8 @@
             roundLastTriggerHour: Math.floor(Date.now() / HOUR_MS),
             shopLastRefreshHour: Math.floor(Date.now() / 3600000),
             brunnenLastUsed: 0,
-            plantStats: {}
+            plantStats: {},
+            seenMutations: []
         };
     }
 
@@ -3945,6 +4090,7 @@
             while (gameState.tiles.length < 16) gameState.tiles.push(null);
             if (!gameState.brunnenLastUsed) gameState.brunnenLastUsed = 0;
             if (!gameState.plantStats) gameState.plantStats = {};
+            if (!gameState.seenMutations) gameState.seenMutations = [];
             if (gameState.mondMuenzen === undefined) gameState.mondMuenzen = 0;
             if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
