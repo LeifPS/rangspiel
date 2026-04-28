@@ -282,6 +282,8 @@
     .mut-riesig     { background: linear-gradient(135deg, #1b5e20, #4caf50, #a5d6a7); background-size: 200% 200%; animation: mutShine 2.5s ease infinite; }
     .mut-verwurzelt { background: linear-gradient(135deg, #3e2723, #795548, #bcaaa4); background-size: 200% 200%; animation: mutShine 3s ease infinite; }
     .mut-blutig     { background: linear-gradient(135deg, #7f0000, #e53935, #ef9a9a); background-size: 200% 200%; animation: mutShine 2s ease infinite; }
+    .mut-reif       { background: linear-gradient(135deg, #e65100, #ff9800, #ffe082); background-size: 200% 200%; animation: mutShine 2.5s ease infinite; }
+    .mut-lunara     { background: linear-gradient(135deg, #1a237e, #7986cb, #fffde7, #7986cb, #1a237e); background-size: 200% 100%; animation: lunarShimmer 2s linear infinite; }
     .tile.ackerland { border-color: #e65100; background: rgba(230, 81, 0, 0.07); }
     .tile-ackerland-badge {
         position: absolute;
@@ -1638,12 +1640,12 @@
         selectedSeed: null,
         tiles: Array(16).fill(null),
         buildings: {
-            brunnen: false,
-            kompost: false,
+            brunnen: 0,
+            kompost: 0,
             gewaechshaus: 0,
             marktstand: false,
             scheune: 0,
-            mondschrein: false
+            mondschrein: 0
         },
         upgrades: {
             guteErde: false
@@ -1881,6 +1883,7 @@
         verwurzelt: { emoji: '🕸️', label: 'Verwurzelt', multiplier: 1.0  },
         blutig:     { emoji: '🩸', label: 'Blutig',     multiplier: 2.0  },
         reif:       { emoji: '🌾', label: 'Reif',       multiplier: 1.5  },
+        lunara:     { emoji: '🌕', label: 'Lunara',     multiplier: 2.5  },
     };
 
     function calcSellValue(tile, baseSellValue) {
@@ -1900,10 +1903,16 @@
     function rollMutations(existingMuts, mondschrein, isAckerland) {
         const muts = [...(existingMuts || [])];
         existingMuts && existingMuts.forEach(id => trackSeenMutation(id));
-        if (mondschrein && !muts.includes('lunar')) {
-            const lunarChance = isMondEventActive() ? 0.25 : 0.10;
+        if (mondschrein > 0 && !muts.includes('lunar') && !muts.includes('lunara')) {
+            const msLevel = gameState.buildings.mondschrein === true ? 1 : (parseInt(gameState.buildings.mondschrein) || 0);
+            const baseChances = [0, 0.10, 0.12, 0.14];
+            const nightChances = [0, 0.25, 0.30, 0.35];
+            const lunarChance = isMondEventActive() ? nightChances[msLevel] : baseChances[msLevel];
             if (Math.random() < lunarChance) {
-                if (gameState.buildings.blutschrein && Math.random() < 0.5) {
+                // Stufe 3: 5% Chance auf Lunara (Blutschrein greift nicht)
+                if (msLevel >= 3 && Math.random() < 0.05) {
+                    muts.push('lunara'); trackSeenMutation('lunara');
+                } else if (gameState.buildings.blutschrein && Math.random() < 0.5) {
                     muts.push('blutig'); trackSeenMutation('blutig');
                 } else {
                     muts.push('lunar'); trackSeenMutation('lunar');
@@ -2023,7 +2032,9 @@
             if (gameState.buildings.kompost === undefined) gameState.buildings.kompost = 0;
             if (gameState.buildings.kompost === true) gameState.buildings.kompost = 1;
             if (gameState.buildings.kompost === false) gameState.buildings.kompost = 0;
-            if (gameState.buildings.mondschrein === undefined) gameState.buildings.mondschrein = false;
+            if (gameState.buildings.mondschrein === undefined) gameState.buildings.mondschrein = 0;
+            if (gameState.buildings.mondschrein === true) gameState.buildings.mondschrein = 1;
+            if (gameState.buildings.mondschrein === false) gameState.buildings.mondschrein = 0;
             if (gameState.buildings.blutschrein === undefined) gameState.buildings.blutschrein = false;
             if (gameState.buildings.ackerland === undefined) gameState.buildings.ackerland = 0;
             if (gameState.buildings.duengerwerk === undefined) gameState.buildings.duengerwerk = 0;
@@ -2368,11 +2379,26 @@
     function deleteScheuneSlot(index) {
         const entry = gameState.scheuneLager[index];
         if (!entry) return;
-        const plant = plants[entry.plantId] || eventPlants[entry.plantId];
-        const name = plant ? plant.name : entry.plantId;
-        if (!confirm(`${name} aus der Scheune entfernen?`)) return;
+        const plantId = typeof entry === 'object' ? entry.plantId : entry;
+        const plant = plants[plantId] || eventPlants[plantId];
+        const name = plant ? plant.name : plantId;
+        let confirmMsg = `${name} aus der Scheune entfernen?`;
+        let refundMsg = '';
+        if (gameState.buildings.kompost > 0 && plant) {
+            const rates = [0, 0.4, 0.5, 0.6];
+            const refund = Math.floor(plant.price * rates[gameState.buildings.kompost]);
+            confirmMsg += `\n(${Math.round(rates[gameState.buildings.kompost]*100)}% Kompost-Erstattung: ${refund}€)`;
+        }
+        if (!confirm(confirmMsg)) return;
+        if (gameState.buildings.kompost > 0 && plant) {
+            const rates = [0, 0.4, 0.5, 0.6];
+            const refund = Math.floor(plant.price * rates[gameState.buildings.kompost]);
+            gameState.money += refund;
+            showNotification(`🗑️ ${name} entfernt · +${refund}€ Kompost-Erstattung`);
+        }
         gameState.scheuneLager.splice(index, 1);
         renderScheuneLager();
+        updateUI();
         saveGame();
     }
 
@@ -2396,6 +2422,8 @@
         if (id === 'brunnen') return;
         if (id === 'kompost') return;
         if (id === 'ackerland') return;
+        if (id === 'scheune') return;
+        if (id === 'gewaechshaus') return;
             const el = document.createElement('div');
 
             if (id === 'gewaechshaus') {
@@ -2528,19 +2556,78 @@
             list.appendChild(el);
         }
 
-        // Mondschrein: nur bei aktivem Nacht-Event oder wenn bereits besessen
-        if (isMondEventActive() || gameState.buildings.mondschrein) {
-            const ms = buildings.mondschrein;
-            const owned = gameState.buildings.mondschrein;
+        // Gewächshaus: stufenbar (bis 4)
+        {
+            const gb = buildings.gewaechshaus;
+            const level = gameState.buildings.gewaechshaus;
+            const maxLevel = 4;
+            const cost = 20 * Math.pow(2, level);
             const el = document.createElement('div');
-            el.className = `building ${owned ? 'owned' : ''}`;
-            el.style.cssText = 'border-color:#7b1fa2;background:linear-gradient(135deg,rgba(123,31,162,0.12),transparent);';
-            if (owned) {
-                el.innerHTML = `<div class="building-info"><h3>${ms.emoji} ${ms.name}</h3><p>${ms.effect}</p></div><span>✅ Aktiv</span>`;
+            el.className = `building ${level > 0 ? 'owned' : ''}`;
+            if (level === 0) {
+                el.innerHTML = `<div class="building-info"><h3>${gb.emoji} ${gb.name}</h3><p>${gb.effect}</p></div>
+                    <button class="building-btn" onclick="buyBuilding('gewaechshaus')" ${gameState.money < cost ? 'disabled' : ''}>${cost}€</button>`;
+            } else if (level < maxLevel) {
+                el.innerHTML = `<div class="building-info"><h3>${gb.emoji} ${gb.name} <small style="opacity:0.6;">Stufe ${level}/${maxLevel}</small></h3>
+                    <p>${level} extra Feld${level > 1 ? 'er' : ''}</p></div>
+                    <button class="building-btn" onclick="buyBuilding('gewaechshaus')" ${gameState.money < cost ? 'disabled' : ''}>⬆️ ${cost}€</button>`;
             } else {
-                const canAfford = (gameState.mondMuenzen || 0) >= ms.cost;
-                el.innerHTML = `<div class="building-info"><h3>${ms.emoji} ${ms.name}</h3><p>${ms.effect}</p><p style="font-size:0.8em;color:#ce93d8;margin-top:3px;">🌙 Nur während Mondnacht kaufbar</p></div>
-                    <button class="building-btn" style="background:linear-gradient(135deg,#7b1fa2,#4a148c);color:#fff;" onclick="buyMondschrein()" ${!canAfford ? 'disabled' : ''}>${ms.cost} 🌙</button>`;
+                el.innerHTML = `<div class="building-info"><h3>${gb.emoji} ${gb.name} <small style="opacity:0.6;">Stufe ${maxLevel} MAX</small></h3>
+                    <p>${maxLevel} extra Felder</p></div><span>✅ Max</span>`;
+            }
+            list.appendChild(el);
+        }
+
+        // Scheune: stufenbar (bis 3)
+        {
+            const sb = buildings.scheune;
+            const level = gameState.buildings.scheune || 0;
+            const costs = [20, 50, 100];
+            const slots = [2, 4, 6];
+            const el = document.createElement('div');
+            el.className = `building ${level > 0 ? 'owned' : ''}`;
+            if (level === 0) {
+                el.innerHTML = `<div class="building-info"><h3>${sb.emoji} ${sb.name}</h3><p>${sb.effect}</p></div>
+                    <button class="building-btn" onclick="buyBuilding('scheune')" ${gameState.money < costs[0] ? 'disabled' : ''}>${costs[0]}€</button>`;
+            } else if (level < 3) {
+                el.innerHTML = `<div class="building-info"><h3>${sb.emoji} ${sb.name} <small style="opacity:0.6;">Stufe ${level}</small></h3>
+                    <p>${slots[level-1]} Plätze</p></div>
+                    <button class="building-btn" onclick="buyBuilding('scheune')" ${gameState.money < costs[level] ? 'disabled' : ''}>⬆️ ${costs[level]}€</button>`;
+            } else {
+                el.innerHTML = `<div class="building-info"><h3>${sb.emoji} ${sb.name} <small style="opacity:0.6;">Stufe 3 MAX</small></h3>
+                    <p>6 Plätze</p></div><span>✅ Max</span>`;
+            }
+            list.appendChild(el);
+        }
+
+        // Mondschrein: stufenbar, nur bei Mondnacht kaufbar/upgradebar
+        const msRawLevel = gameState.buildings.mondschrein;
+        const msLevel = msRawLevel === true ? 1 : (parseInt(msRawLevel) || 0);
+        if (isMondEventActive() || msLevel > 0) {
+            const ms = buildings.mondschrein;
+            const level = msLevel;
+            const msCosts = [12, 25, 50];
+            const msChances = ['10%', '12%', '14%'];
+            const msNightChances = ['25%', '30%', '35%'];
+            const el = document.createElement('div');
+            el.className = `building ${level > 0 ? 'owned' : ''}`;
+            el.style.cssText = 'border-color:#7b1fa2;background:linear-gradient(135deg,rgba(123,31,162,0.12),transparent);';
+            if (level === 0) {
+                const canAfford = (gameState.mondMuenzen || 0) >= msCosts[0];
+                el.innerHTML = `<div class="building-info"><h3>${ms.emoji} ${ms.name}</h3><p>${ms.effect}</p>
+                    <p style="font-size:0.8em;color:#ce93d8;margin-top:3px;">🌙 Nur während Mondnacht kaufbar/upgradebar</p></div>
+                    <button class="building-btn" style="background:linear-gradient(135deg,#7b1fa2,#4a148c);color:#fff;" onclick="buyMondschrein()" ${!canAfford ? 'disabled' : ''}>${msCosts[0]} 🌙</button>`;
+            } else if (level < 3) {
+                const canAfford = (gameState.mondMuenzen || 0) >= msCosts[level];
+                const upgradeBtn = isMondEventActive()
+                    ? `<button class="building-btn" style="background:linear-gradient(135deg,#7b1fa2,#4a148c);color:#fff;margin-bottom:4px;" onclick="buyMondschrein()" ${!canAfford ? 'disabled' : ''}>⬆️ ${msCosts[level]} 🌙</button>`
+                    : `<span style="font-size:0.78em;opacity:0.5;display:block;margin-bottom:4px;">Upgrade nur nachts</span>`;
+                el.innerHTML = `<div class="building-info"><h3>${ms.emoji} ${ms.name} <small style="opacity:0.6;">Stufe ${level}</small></h3>
+                    <p>Lunar: <strong>${msChances[level-1]}</strong> · Nacht: <strong>${msNightChances[level-1]}</strong></p></div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">${upgradeBtn}<span style="font-size:0.8em;color:#ce93d8;">✅ Aktiv</span></div>`;
+            } else {
+                el.innerHTML = `<div class="building-info"><h3>${ms.emoji} ${ms.name} <small style="opacity:0.6;">Stufe 3 MAX</small></h3>
+                    <p>Lunar: <strong>14%</strong> · Nacht: <strong>35%</strong> · Lunara bei Stufe 3 aktiv</p></div><span>✅ Max</span>`;
             }
             list.appendChild(el);
         }
@@ -3207,12 +3294,15 @@
             showNotification(`🏚️ Scheune Stufe ${gameState.buildings.scheune} gekauft! ${scheuneSlots[currentLevel]} Plätze`);
             renderScheuneLager();
         } else {
-            // Normal buildings
+            // Normal buildings (einfacher Kauf)
             if (gameState.buildings[buildingId]) {
                 showNotification('Bereits gekauft!', 'error');
                 return;
             }
-            
+            if (!building || building.cost === undefined) {
+                showNotification('Unbekanntes Gebäude!', 'error');
+                return;
+            }
             if (gameState.money < building.cost) {
                 showNotification('Nicht genug Geld!', 'error');
                 return;
@@ -3259,24 +3349,25 @@
 
     function buyMondschrein() {
         if (!isMondEventActive()) {
-            showNotification('Mondschrein nur während Mondnacht kaufbar!', 'error');
+            showNotification('Mondschrein nur während Mondnacht kaufbar/upgradebar!', 'error');
             return;
         }
-        if (gameState.buildings.mondschrein) {
-            showNotification('Mondschrein bereits aktiv!', 'error');
-            return;
-        }
-        const cost = buildings.mondschrein.cost;
-        if ((gameState.mondMuenzen || 0) < cost) {
+        const level = gameState.buildings.mondschrein || 0;
+        if (level >= 3) { showNotification('Mondschrein bereits auf Maximum!', 'error'); return; }
+        const costs = [12, 25, 50];
+        if ((gameState.mondMuenzen || 0) < costs[level]) {
             showNotification('Nicht genug Mondmünzen!', 'error');
             return;
         }
-        gameState.mondMuenzen -= cost;
-        gameState.buildings.mondschrein = true;
-        updateUI();
-        renderBuildings();
-        saveGame();
-        showNotification('🌙 Mondschrein errichtet! Pflanzen erhalten 10% Lunar-Chance (25% während Mondnacht).');
+        gameState.mondMuenzen -= costs[level];
+        gameState.buildings.mondschrein = level + 1;
+        const msgs = [
+            '🌙 Mondschrein errichtet! Lunar-Chance: 10% (Nacht: 25%)',
+            '🌙 Mondschrein Stufe 2! Lunar-Chance: 12% (Nacht: 30%)',
+            '🌙 Mondschrein Stufe 3 MAX! Lunara-Mutation freigeschaltet!',
+        ];
+        showNotification(msgs[level]);
+        updateUI(); renderBuildings(); saveGame();
     }
 
     // Buy upgrade
@@ -3617,7 +3708,9 @@
             lunar:      { desc: '×1.5 Verkaufswert',                        source: 'Mondschrein-Gebäude (10%, 25% bei Mondnacht)' },
             riesig:     { desc: '×2.0 Verkaufswert, +50% Wachstumszeit',    source: 'Düngerwerk-Gebäude (~10-15%, wenn aktiviert)' },
             verwurzelt: { desc: 'Single-Pflanze einmal extra erntbar',       source: 'Altes Baumhaus-Gebäude (~6-10%)' },
-            blutig:     { desc: '×1.8 Verkaufswert',                        source: 'Blutmondnacht (alle Shop-Pflanzen) · oder Blutschrein (50% Chance wenn Lunar gewürfelt wird)' },
+            blutig:     { desc: '×2.0 Verkaufswert',                        source: 'Blutmondnacht (alle Shop-Pflanzen) · oder Blutschrein (50% wenn Lunar gewürfelt)' },
+            reif:       { desc: '×1.5 Verkaufswert · nur auf Acker-Feldern', source: 'Ackerland-Gebäude (~10%) · verschwindet beim Einlagern in Scheune' },
+            lunara:     { desc: '×2.5 Verkaufswert · ersetzt Lunar',         source: 'Mondschrein Stufe 3 · 5% Chance wenn Lunar gewürfelt wird' },
         };
 
         let html = `<div style="margin-bottom:14px;">
@@ -4312,7 +4405,7 @@
             money: 10, round: 1, roundTime: 0, selectedSeed: null,
             tiles: Array(16).fill(null),
             inventory: {}, shopSeeds: [],
-            buildings: { brunnen: 0, kompost: 0, gewaechshaus: 0, marktstand: false, scheune: 0, mondschrein: false, blutschrein: false, ackerland: 0, duengerwerk: 0, duengerwerkAktiv: false, altesBaumhaus: 0 },
+            buildings: { brunnen: 0, kompost: 0, gewaechshaus: 0, marktstand: false, scheune: 0, mondschrein: 0, blutschrein: false, ackerland: 0, duengerwerk: 0, duengerwerkAktiv: false, altesBaumhaus: 0 },
             scheuneLager: [],
             upgrades: { guteErde: false },
             ruf: 0,
@@ -4380,6 +4473,9 @@
             if (gameState.buildings.duengerwerk === undefined) gameState.buildings.duengerwerk = 0;
             if (gameState.buildings.duengerwerk === true) gameState.buildings.duengerwerk = 1;
             if (gameState.buildings.duengerwerk === false) gameState.buildings.duengerwerk = 0;
+            if (gameState.buildings.mondschrein === undefined) gameState.buildings.mondschrein = 0;
+            if (gameState.buildings.mondschrein === true) gameState.buildings.mondschrein = 1;
+            if (gameState.buildings.mondschrein === false) gameState.buildings.mondschrein = 0;
             if (gameState.buildings.blutschrein === undefined) gameState.buildings.blutschrein = false;
             if (gameState.buildings.ackerland === undefined) gameState.buildings.ackerland = 0;
             // Sicherstellen dass genug Tiles vorhanden sind (Normal + GH + Ackerland)
