@@ -1787,14 +1787,15 @@
 
     // Buildings
     const buildings = {
-        brunnen: { name: 'Brunnen', cost: 40, effect: 'Alle Pflanzen wachsen sofort 4 Stunden weiter · Lädt sich alle 24h auf', emoji: '💧' },
-        kompost: { name: 'Kompost', cost: 6, effect: '40% des Kaufpreises beim Löschen zurück', emoji: '🗑️' },
+        brunnen: { name: 'Brunnen', cost: 40, effect: '4/5/6h Wachstum für alle Pflanzen · Cooldown 24/22/20h · Ausbaubar', emoji: '💧' },
+        kompost: { name: 'Kompost', cost: 20, effect: '40%/50%/60% des Kaufpreises beim Löschen zurück · Ausbaubar', emoji: '🗑️' },
         gewaechshaus: { name: 'Gewächshaus', cost: 20, effect: '+1 Feld, Pflanzen wachsen 3h schneller (Max 4)', emoji: '🏡' },
         marktstand: { name: 'Marktstand', cost: 30, effect: 'Zeigt 5 Karten statt 4', emoji: '🏪' },
         scheune: { name: 'Scheune', cost: 20, effect: 'Lagere Samen statt sie zu löschen (Max 6 Plätze)', emoji: '🏚️' },
         mondschrein: { name: 'Mondschrein', cost: 12, mondMuenzen: true, effect: '10% Chance auf Lunar-Mutation (25% während Mondnacht)', emoji: '🌙' },
-        duengerwerk: { name: 'Düngerwerk', cost: 35, effect: '10% Chance auf Riesig-Mutation (+100% Wert, +50% Wachstumszeit) · Ein/Ausschaltbar', emoji: '🌿' },
-        altesBaumhaus: { name: 'Altes Baumhaus', cost: 50, effect: '6% Chance auf Verwurzelt-Mutation (Single-Pflanze einmal extra ernten)', emoji: '🕸️' }
+        blutschrein: { name: 'Blutschrein', cost: 30, mondMuenzen: true, effect: 'Lunar-Mutation hat 50% Chance durch Blutig (×1.8) ersetzt zu werden', emoji: '🩸' },
+        duengerwerk: { name: 'Düngerwerk', cost: 35, effect: '10% / 12% / 15% Chance auf Riesig-Mutation · Ausbaubar · Ein/Ausschaltbar', emoji: '🌿' },
+        altesBaumhaus: { name: 'Altes Baumhaus', cost: 50, effect: '6% / 8% / 10% Chance auf Verwurzelt-Mutation · Ausbaubar', emoji: '🕸️' }
     };
 
     // Upgrades
@@ -1869,7 +1870,7 @@
         regenbogen: { emoji: '🌈', label: 'Regenbogen', multiplier: 3.0  },
         riesig:     { emoji: '🌿', label: 'Riesig',     multiplier: 2.0  },
         verwurzelt: { emoji: '🕸️', label: 'Verwurzelt', multiplier: 1.0  },
-        blutig:     { emoji: '🩸', label: 'Blutig',     multiplier: 1.4  },
+        blutig:     { emoji: '🩸', label: 'Blutig',     multiplier: 1.8  },
     };
 
     function calcSellValue(tile, baseSellValue) {
@@ -1891,13 +1892,21 @@
         existingMuts && existingMuts.forEach(id => trackSeenMutation(id));
         if (mondschrein && !muts.includes('lunar')) {
             const lunarChance = isMondEventActive() ? 0.25 : 0.10;
-            if (Math.random() < lunarChance) { muts.push('lunar'); trackSeenMutation('lunar'); }
+            if (Math.random() < lunarChance) {
+                if (gameState.buildings.blutschrein && Math.random() < 0.5) {
+                    muts.push('blutig'); trackSeenMutation('blutig');
+                } else {
+                    muts.push('lunar'); trackSeenMutation('lunar');
+                }
+            }
         }
-        if (gameState.buildings.duengerwerk && gameState.buildings.duengerwerkAktiv && !muts.includes('riesig')) {
-            if (Math.random() < 0.10) { muts.push('riesig'); trackSeenMutation('riesig'); }
+        if (gameState.buildings.duengerwerk > 0 && gameState.buildings.duengerwerkAktiv && !muts.includes('riesig')) {
+            const riesigChance = [0, 0.10, 0.12, 0.15][gameState.buildings.duengerwerk] || 0.10;
+            if (Math.random() < riesigChance) { muts.push('riesig'); trackSeenMutation('riesig'); }
         }
-        if (gameState.buildings.altesBaumhaus && !muts.includes('verwurzelt')) {
-            if (Math.random() < 0.06) { muts.push('verwurzelt'); trackSeenMutation('verwurzelt'); }
+        if (gameState.buildings.altesBaumhaus > 0 && !muts.includes('verwurzelt')) {
+            const verwurzeltChance = [0, 0.06, 0.08, 0.10][gameState.buildings.altesBaumhaus] || 0.06;
+            if (Math.random() < verwurzeltChance) { muts.push('verwurzelt'); trackSeenMutation('verwurzelt'); }
         }
         if (Math.random() < 0.05 && !muts.includes('gold')) { muts.push('gold'); trackSeenMutation('gold'); }
         if (Math.random() < 0.01 && !muts.includes('regenbogen')) { muts.push('regenbogen'); trackSeenMutation('regenbogen'); }
@@ -1995,10 +2004,21 @@
             }
 
             if (!gameState.buildings.scheune) gameState.buildings.scheune = 0;
+            if (gameState.buildings.brunnen === undefined) gameState.buildings.brunnen = 0;
+            if (gameState.buildings.brunnen === true) gameState.buildings.brunnen = 1;
+            if (gameState.buildings.brunnen === false) gameState.buildings.brunnen = 0;
+            if (gameState.buildings.kompost === undefined) gameState.buildings.kompost = 0;
+            if (gameState.buildings.kompost === true) gameState.buildings.kompost = 1;
+            if (gameState.buildings.kompost === false) gameState.buildings.kompost = 0;
             if (gameState.buildings.mondschrein === undefined) gameState.buildings.mondschrein = false;
-            if (gameState.buildings.duengerwerk === undefined) gameState.buildings.duengerwerk = false;
+            if (gameState.buildings.blutschrein === undefined) gameState.buildings.blutschrein = false;
+            if (gameState.buildings.duengerwerk === undefined) gameState.buildings.duengerwerk = 0;
+            if (gameState.buildings.duengerwerk === true) gameState.buildings.duengerwerk = 1;
+            if (gameState.buildings.duengerwerk === false) gameState.buildings.duengerwerk = 0;
             if (gameState.buildings.duengerwerkAktiv === undefined) gameState.buildings.duengerwerkAktiv = false;
-            if (gameState.buildings.altesBaumhaus === undefined) gameState.buildings.altesBaumhaus = false;
+            if (gameState.buildings.altesBaumhaus === undefined) gameState.buildings.altesBaumhaus = 0;
+            if (gameState.buildings.altesBaumhaus === true) gameState.buildings.altesBaumhaus = 1;
+            if (gameState.buildings.altesBaumhaus === false) gameState.buildings.altesBaumhaus = 0;
             if (!gameState.scheuneLager) gameState.scheuneLager = [];
             if (!gameState.brunnenLastUsed) gameState.brunnenLastUsed = 0;
             if (!gameState.plantStats) gameState.plantStats = {};
@@ -2211,10 +2231,11 @@
             const scheuneLevel = gameState.buildings.scheune || 0;
             const lager = gameState.scheuneLager || [];
             const scheuneHasRoom = scheuneLevel > 0 && lager.length < scheuneMaxSlots();
+            const isDiscovered = gameState.discoveredPlants.includes(seed.plantId);
             card.innerHTML = `
                 <div class="card-emoji">${plant.emoji}</div>
                 <div class="card-header">
-                    <div class="card-name">${plant.name}</div>
+                    <div class="card-name" style="${!isDiscovered ? 'font-style:italic;opacity:0.65;' : ''}">${plant.name}${!isDiscovered ? ' ✨' : ''}</div>
                     <div class="card-rarity" style="color: ${rarityColors[plant.rarity]}">${plant.rarity}</div>
                 </div>
                 <div class="card-quantity">x${quantity}</div>
@@ -2332,10 +2353,13 @@
 
         // Buildings
         Object.entries(buildings).forEach(([id, building]) => {
-        // Mondladen-Gebäude separat gerendert
+        // Separat gerendert
         if (id === 'mondschrein') return;
+        if (id === 'blutschrein') return;
         if (id === 'duengerwerk') return;
         if (id === 'altesBaumhaus') return;
+        if (id === 'brunnen') return;
+        if (id === 'kompost') return;
             const el = document.createElement('div');
 
             if (id === 'gewaechshaus') {
@@ -2392,6 +2416,61 @@
             list.appendChild(el);
         });
 
+        // Kompost: stufenbar
+        {
+            const kb = buildings.kompost;
+            const level = gameState.buildings.kompost;
+            const costs = [20, 30, 50];
+            const rates = ['40%', '50%', '60%'];
+            const el = document.createElement('div');
+            el.className = `building ${level > 0 ? 'owned' : ''}`;
+            if (level === 0) {
+                el.innerHTML = `<div class="building-info"><h3>${kb.emoji} ${kb.name}</h3><p>${kb.effect}</p></div>
+                    <button class="building-btn" onclick="buyBuilding('kompost')" ${gameState.money < costs[0] ? 'disabled' : ''}>${costs[0]}€</button>`;
+            } else if (level < 3) {
+                el.innerHTML = `<div class="building-info"><h3>${kb.emoji} ${kb.name} <small style="opacity:0.6;">Stufe ${level}</small></h3>
+                    <p>Erstattung: <strong>${rates[level-1]}</strong></p></div>
+                    <button class="building-btn" onclick="buyBuilding('kompost')" ${gameState.money < costs[level] ? 'disabled' : ''}>⬆️ ${costs[level]}€</button>`;
+            } else {
+                el.innerHTML = `<div class="building-info"><h3>${kb.emoji} ${kb.name} <small style="opacity:0.6;">Stufe 3 MAX</small></h3>
+                    <p>Erstattung: <strong>60%</strong></p></div><span>✅ Max</span>`;
+            }
+            list.appendChild(el);
+        }
+
+        // Brunnen: stufenbar + nutzbar
+        {
+            const bb = buildings.brunnen;
+            const level = gameState.buildings.brunnen;
+            const costs = [40, 100, 500];
+            const boosts = [4, 5, 6];
+            const cooldowns = [24, 22, 20];
+            const el = document.createElement('div');
+            el.className = `building ${level > 0 ? 'owned' : ''}`;
+            if (level === 0) {
+                el.innerHTML = `<div class="building-info"><h3>${bb.emoji} ${bb.name}</h3><p>${bb.effect}</p></div>
+                    <button class="building-btn" onclick="buyBuilding('brunnen')" ${gameState.money < costs[0] ? 'disabled' : ''}>${costs[0]}€</button>`;
+            } else {
+                const cooldownMs = cooldowns[level-1] * 3600000;
+                const elapsed = Date.now() - (gameState.brunnenLastUsed || 0);
+                const ready = elapsed >= cooldownMs;
+                const hoursLeft = ready ? 0 : Math.ceil((cooldownMs - elapsed) / 3600000);
+                const upgradeBtn = level < 3
+                    ? `<button class="building-btn" onclick="buyBuilding('brunnenUpgrade')" ${gameState.money < costs[level] ? 'disabled' : ''} style="margin-bottom:4px;">⬆️ ${costs[level]}€</button>`
+                    : `<span style="font-size:0.8em;opacity:0.6;display:block;margin-bottom:4px;">MAX</span>`;
+                el.innerHTML = `<div class="building-info">
+                    <h3>${bb.emoji} ${bb.name} <small style="opacity:0.6;">Stufe ${level}${level===3?' MAX':''}</small></h3>
+                    <p>+${boosts[level-1]}h Boost · ${cooldowns[level-1]}h Cooldown</p></div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                        ${upgradeBtn}
+                        <button class="building-btn" onclick="buyBuilding('brunnen')" ${!ready ? 'disabled' : ''} style="background:${ready?'linear-gradient(135deg,#1565c0,#0d47a1)':'rgba(128,128,128,0.3)'};">
+                            ${ready ? '💧 Benutzen' : `⏳ ${hoursLeft}h`}
+                        </button>
+                    </div>`;
+            }
+            list.appendChild(el);
+        }
+
         // Mondschrein: nur bei aktivem Nacht-Event oder wenn bereits besessen
         if (isMondEventActive() || gameState.buildings.mondschrein) {
             const ms = buildings.mondschrein;
@@ -2409,36 +2488,79 @@
             list.appendChild(el);
         }
 
-        // Düngerwerk: mit Ein/Aus-Button
-        {
-            const dw = buildings.duengerwerk;
-            const owned = gameState.buildings.duengerwerk;
-            const aktiv = gameState.buildings.duengerwerkAktiv;
+        // Blutschrein: nur während Blutmond + Mondschrein besessen
+        if ((gameState.blutmond && gameState.buildings.mondschrein) || gameState.buildings.blutschrein) {
+            const bs = buildings.blutschrein;
+            const owned = gameState.buildings.blutschrein;
             const el = document.createElement('div');
             el.className = `building ${owned ? 'owned' : ''}`;
+            el.style.cssText = 'border-color:#b71c1c;background:linear-gradient(135deg,rgba(183,28,28,0.12),transparent);';
             if (owned) {
-                el.innerHTML = `
-                    <div class="building-info"><h3>${dw.emoji} ${dw.name}</h3><p>${dw.effect}</p></div>
-                    <button class="building-btn" onclick="toggleDuengerwerk()" style="background:${aktiv ? 'linear-gradient(135deg,#388e3c,#1b5e20)' : 'rgba(128,128,128,0.3)'};">
-                        ${aktiv ? '✅ An' : '⏸️ Aus'}
-                    </button>`;
+                el.innerHTML = `<div class="building-info"><h3>${bs.emoji} ${bs.name}</h3><p>${bs.effect}</p></div><span>✅ Aktiv</span>`;
             } else {
-                el.innerHTML = `
-                    <div class="building-info"><h3>${dw.emoji} ${dw.name}</h3><p>${dw.effect}</p></div>
-                    <button class="building-btn" onclick="buyBuilding('duengerwerk')" ${gameState.money < dw.cost ? 'disabled' : ''}>${dw.cost}€</button>`;
+                const canAfford = (gameState.mondMuenzen || 0) >= bs.cost;
+                el.innerHTML = `<div class="building-info"><h3>${bs.emoji} ${bs.name}</h3><p>${bs.effect}</p>
+                    <p style="font-size:0.8em;color:#ef9a9a;margin-top:3px;">🩸 Nur während Blutmondnacht kaufbar</p></div>
+                    <button class="building-btn" style="background:linear-gradient(135deg,#b71c1c,#7f0000);color:#fff;" onclick="buyBlutschrein()" ${!canAfford ? 'disabled' : ''}>${bs.cost} 🌙</button>`;
             }
             list.appendChild(el);
         }
 
-        // Altes Baumhaus
+        // Düngerwerk: stufenbar + Ein/Aus
+        {
+            const dw = buildings.duengerwerk;
+            const level = gameState.buildings.duengerwerk;
+            const aktiv = gameState.buildings.duengerwerkAktiv;
+            const costs = [35, 75, 150];
+            const chances = ['10%', '12%', '15%'];
+            const el = document.createElement('div');
+            el.className = `building ${level > 0 ? 'owned' : ''}`;
+            if (level === 0) {
+                el.innerHTML = `
+                    <div class="building-info"><h3>${dw.emoji} ${dw.name}</h3><p>${dw.effect}</p></div>
+                    <button class="building-btn" onclick="buyBuilding('duengerwerk')" ${gameState.money < costs[0] ? 'disabled' : ''}>${costs[0]}€</button>`;
+            } else {
+                const upgradeBtn = level < 3
+                    ? `<button class="building-btn" onclick="buyBuilding('duengerwerk')" ${gameState.money < costs[level] ? 'disabled' : ''} style="margin-bottom:4px;">⬆️ ${costs[level]}€</button>`
+                    : `<span style="font-size:0.8em;opacity:0.6;">MAX</span>`;
+                el.innerHTML = `
+                    <div class="building-info">
+                        <h3>${dw.emoji} ${dw.name} <small style="opacity:0.6;">Stufe ${level}${level === 3 ? ' MAX' : ''}</small></h3>
+                        <p>Riesig-Chance: <strong>${chances[level - 1]}</strong></p>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                        ${upgradeBtn}
+                        <button class="building-btn" onclick="toggleDuengerwerk()" style="background:${aktiv ? 'linear-gradient(135deg,#388e3c,#1b5e20)' : 'rgba(128,128,128,0.3)'};">
+                            ${aktiv ? '✅ An' : '⏸️ Aus'}
+                        </button>
+                    </div>`;
+            }
+            list.appendChild(el);
+        }
+
+        // Altes Baumhaus (stufenbar)
         {
             const ab = buildings.altesBaumhaus;
-            const owned = gameState.buildings.altesBaumhaus;
+            const level = gameState.buildings.altesBaumhaus;
+            const costs = [50, 100, 200];
+            const chances = ['6%', '8%', '10%'];
             const el = document.createElement('div');
-            el.className = `building ${owned ? 'owned' : ''}`;
-            el.innerHTML = `
-                <div class="building-info"><h3>${ab.emoji} ${ab.name}</h3><p>${ab.effect}</p></div>
-                ${owned ? '<span>✅ Besitzt</span>' : `<button class="building-btn" onclick="buyBuilding('altesBaumhaus')" ${gameState.money < ab.cost ? 'disabled' : ''}>${ab.cost}€</button>`}`;
+            el.className = `building ${level > 0 ? 'owned' : ''}`;
+            if (level === 0) {
+                el.innerHTML = `
+                    <div class="building-info"><h3>${ab.emoji} ${ab.name}</h3><p>${ab.effect}</p></div>
+                    <button class="building-btn" onclick="buyBuilding('altesBaumhaus')" ${gameState.money < costs[0] ? 'disabled' : ''}>${costs[0]}€</button>`;
+            } else if (level < 3) {
+                el.innerHTML = `
+                    <div class="building-info"><h3>${ab.emoji} ${ab.name} <small style="opacity:0.6;">Stufe ${level}</small></h3>
+                    <p>Verwurzelt-Chance: <strong>${chances[level - 1]}</strong></p></div>
+                    <button class="building-btn" onclick="buyBuilding('altesBaumhaus')" ${gameState.money < costs[level] ? 'disabled' : ''}>⬆️ ${costs[level]}€</button>`;
+            } else {
+                el.innerHTML = `
+                    <div class="building-info"><h3>${ab.emoji} ${ab.name} <small style="opacity:0.6;">Stufe 3 MAX</small></h3>
+                    <p>Verwurzelt-Chance: <strong>10%</strong></p></div>
+                    <span>✅ Max</span>`;
+            }
             list.appendChild(el);
         }
 
@@ -2752,18 +2874,10 @@
         const tile = gameState.tiles[tileIndex];
         if (!tile) return;
         const plant = plants[tile.plantId] || eventPlants[tile.plantId];
-        const hasSheune = gameState.buildings.scheune > 0;
         const lager = gameState.scheuneLager || [];
         const maxSlots = scheuneMaxSlots();
-        const lagerFull = lager.length >= maxSlots;
-
-        if (hasSheune) {
-            showDeleteDialog(tileIndex, plant, lagerFull);
-        } else {
-            if (confirm(`${plant.name} entfernen?`)) {
-                doDeletePlant(tileIndex, plant);
-            }
-        }
+        const lagerFull = gameState.buildings.scheune === 0 || lager.length >= maxSlots;
+        showDeleteDialog(tileIndex, plant, lagerFull);
     }
 
     function showDeleteDialog(tileIndex, plant, lagerFull) {
@@ -2789,7 +2903,7 @@
 
         const delBtn = document.createElement('button');
         delBtn.style.cssText = 'padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,#f44336,#b71c1c);color:white;font-weight:bold;cursor:pointer;font-size:0.95em;';
-        delBtn.textContent = '🗑️ Löschen' + (gameState.buildings.kompost ? ' (40% zurück)' : '');
+        delBtn.textContent = '🗑️ Löschen' + (gameState.buildings.kompost > 0 ? ` (${[0,40,50,60][gameState.buildings.kompost]}% zurück)` : '');
         delBtn.onclick = () => { dialog.remove(); doDeletePlant(tileIndex, plant); };
         btns.appendChild(delBtn);
 
@@ -2814,8 +2928,9 @@
         if (!tile) return;
         if (!plant) plant = plants[tile.plantId] || eventPlants[tile.plantId];
         let refund = 0;
-        if (gameState.buildings.kompost) {
-            refund = Math.floor(plant.price * 0.4);
+        if (gameState.buildings.kompost > 0) {
+            const rates = [0, 0.4, 0.5, 0.6];
+            refund = Math.floor(plant.price * (rates[gameState.buildings.kompost] || 0.4));
             gameState.money += refund;
         }
         gameState.tiles[tileIndex] = null;
@@ -2874,25 +2989,72 @@
             return;
         }
 
-        // Brunnen: freischalten oder benutzen
+        // Kompost: stufenbar
+        if (buildingId === 'kompost') {
+            const costs = [20, 30, 50];
+            const rates = ['40%', '50%', '60%'];
+            const level = gameState.buildings.kompost;
+            if (level >= 3) { showNotification('Kompost bereits auf Maximum!', 'error'); return; }
+            if (gameState.money < costs[level]) { showNotification('Nicht genug Geld!', 'error'); return; }
+            gameState.money -= costs[level];
+            gameState.buildings.kompost = level + 1;
+            showNotification(`🗑️ Kompost Stufe ${gameState.buildings.kompost}! Erstattung: ${rates[gameState.buildings.kompost - 1]}`);
+            updateUI(); renderBuildings(); saveGame();
+            return;
+        }
+
+        // Düngerwerk: stufenbar
+        if (buildingId === 'duengerwerk') {
+            const costs = [35, 75, 150];
+            const level = gameState.buildings.duengerwerk;
+            if (level >= 3) { showNotification('Düngerwerk bereits auf Maximum!', 'error'); return; }
+            const cost = costs[level];
+            if (gameState.money < cost) { showNotification('Nicht genug Geld!', 'error'); return; }
+            gameState.money -= cost;
+            gameState.buildings.duengerwerk = level + 1;
+            if (level === 0) gameState.buildings.duengerwerkAktiv = true;
+            const chances = ['10%', '12%', '15%'];
+            showNotification(`🌿 Düngerwerk Stufe ${gameState.buildings.duengerwerk}! Riesig-Chance: ${chances[gameState.buildings.duengerwerk - 1]}`);
+            updateUI(); renderBuildings(); saveGame();
+            return;
+        }
+
+        // Altes Baumhaus: stufenbar
+        if (buildingId === 'altesBaumhaus') {
+            const costs = [50, 100, 200];
+            const level = gameState.buildings.altesBaumhaus;
+            if (level >= 3) { showNotification('Altes Baumhaus bereits auf Maximum!', 'error'); return; }
+            const cost = costs[level];
+            if (gameState.money < cost) { showNotification('Nicht genug Geld!', 'error'); return; }
+            gameState.money -= cost;
+            gameState.buildings.altesBaumhaus = level + 1;
+            const chances = ['6%', '8%', '10%'];
+            showNotification(`🕸️ Altes Baumhaus Stufe ${gameState.buildings.altesBaumhaus}! Verwurzelt-Chance: ${chances[gameState.buildings.altesBaumhaus - 1]}`);
+            updateUI(); renderBuildings(); saveGame();
+            return;
+        }
+
+        // Brunnen: stufenbar + nutzbar
         if (buildingId === 'brunnen') {
-            if (!gameState.buildings.brunnen) {
-                // Freischalten
-                if (gameState.money < buildings.brunnen.cost) {
-                    showNotification('Nicht genug Geld!', 'error');
-                    return;
-                }
-                gameState.money -= buildings.brunnen.cost;
-                gameState.buildings.brunnen = true;
+            const costs = [40, 100, 500];
+            const boosts = [4, 5, 6];
+            const cooldowns = [24, 22, 20];
+            const level = gameState.buildings.brunnen;
+
+            if (level === 0) {
+                // Erster Kauf
+                if (gameState.money < costs[0]) { showNotification('Nicht genug Geld!', 'error'); return; }
+                gameState.money -= costs[0];
+                gameState.buildings.brunnen = 1;
                 gameState.brunnenLastUsed = 0;
-                updateUI();
-                renderBuildings();
-                saveGame();
-                showNotification('💧 Brunnen freigeschaltet!');
+                updateUI(); renderBuildings(); saveGame();
+                showNotification('💧 Brunnen freigeschaltet! +4h Boost, 24h Cooldown.');
                 return;
             }
-            // Benutzen (Cooldown prüfen)
-            const cooldownMs = 24 * 60 * 60 * 1000;
+
+            // Upgrade-Button (wird nur im Rendering gezeigt wenn noch nicht Max)
+            // Benutzen
+            const cooldownMs = cooldowns[level - 1] * 60 * 60 * 1000;
             const elapsed = Date.now() - (gameState.brunnenLastUsed || 0);
             if (elapsed < cooldownMs) {
                 const hoursLeft = Math.ceil((cooldownMs - elapsed) / (1000 * 60 * 60));
@@ -2900,19 +3062,31 @@
                 return;
             }
             gameState.brunnenLastUsed = Date.now();
+            const boost = boosts[level - 1];
             let boosted = 0;
             gameState.tiles.forEach(tile => {
                 if (tile && tile.progress < tile.totalTime) {
-                    tile.progress = Math.min(tile.totalTime, tile.progress + 4);
+                    tile.progress = Math.min(tile.totalTime, tile.progress + boost);
                     boosted++;
                 }
             });
-            updateUI();
-            renderBuildings();
-            renderFarm();
-            updateProgressBars();
-            saveGame();
-            showNotification(`💧 Brunnen benutzt! ${boosted} Pflanze${boosted !== 1 ? 'n' : ''} um 4h gefördert.`);
+            updateUI(); renderBuildings(); renderFarm(); updateProgressBars(); saveGame();
+            showNotification(`💧 Brunnen benutzt! ${boosted} Pflanze${boosted !== 1 ? 'n' : ''} um ${boost}h gefördert.`);
+            return;
+        }
+
+        // Brunnen Upgrade (separater Aufruf)
+        if (buildingId === 'brunnenUpgrade') {
+            const costs = [40, 100, 500];
+            const level = gameState.buildings.brunnen;
+            if (level >= 3) { showNotification('Brunnen bereits auf Maximum!', 'error'); return; }
+            if (gameState.money < costs[level]) { showNotification('Nicht genug Geld!', 'error'); return; }
+            gameState.money -= costs[level];
+            gameState.buildings.brunnen = level + 1;
+            const boosts = [4, 5, 6];
+            const cooldowns = [24, 22, 20];
+            showNotification(`💧 Brunnen Stufe ${gameState.buildings.brunnen}! +${boosts[gameState.buildings.brunnen-1]}h, ${cooldowns[gameState.buildings.brunnen-1]}h Cooldown.`);
+            updateUI(); renderBuildings(); saveGame();
             return;
         }
 
@@ -2990,6 +3164,25 @@
         renderBuildings();
         saveGame();
         showNotification(gameState.buildings.duengerwerkAktiv ? '🌿 Düngerwerk aktiviert!' : '🌿 Düngerwerk deaktiviert.');
+    }
+
+    function buyBlutschrein() {
+        if (!gameState.blutmond || !gameState.buildings.mondschrein) {
+            showNotification('Blutschrein nur während Blutmondnacht kaufbar (Mondschrein benötigt)!', 'error');
+            return;
+        }
+        if (gameState.buildings.blutschrein) {
+            showNotification('Blutschrein bereits aktiv!', 'error');
+            return;
+        }
+        if ((gameState.mondMuenzen || 0) < buildings.blutschrein.cost) {
+            showNotification('Nicht genug Mondmünzen!', 'error');
+            return;
+        }
+        gameState.mondMuenzen -= buildings.blutschrein.cost;
+        gameState.buildings.blutschrein = true;
+        updateUI(); renderBuildings(); saveGame();
+        showNotification('🩸 Blutschrein errichtet! Lunar-Mutationen haben jetzt 50% Chance auf Blutig (×1.8).');
     }
 
     function buyMondschrein() {
@@ -3174,10 +3367,11 @@
                 + (isGrad && !isBlutig ? 'background:linear-gradient(var(--card-bg),var(--card-bg)) padding-box,' + rc + ' border-box;' : '')
                 + (isBlutig ? 'background:linear-gradient(var(--card-bg),var(--card-bg)) padding-box,linear-gradient(135deg,#b71c1c,#e53935) border-box;' : '');
             const canAfford = (gameState.mondMuenzen || 0) >= plant.price;
+            const isMondDiscovered = gameState.discoveredPlants.includes(seed.plantId);
             card.innerHTML = `
                 <div class="card-emoji">${plant.emoji}</div>
                 <div class="card-header">
-                    <div class="card-name">${plant.name}</div>
+                    <div class="card-name" style="${!isMondDiscovered ? 'font-style:italic;opacity:0.65;' : ''}">${plant.name}${!isMondDiscovered ? ' ✨' : ''}</div>
                     <div class="card-rarity" style="color:${isGrad?'inherit':rc}">${plant.rarity}</div>
                 </div>
                 ${isBlutig ? '<div style="font-size:0.8em;color:#e53935;font-weight:700;">🩸 Blutig (×1.4)</div>' : ''}
@@ -3349,9 +3543,9 @@
             gold:       { desc: '×1.5 Verkaufswert',                        source: 'Zufällig beim Pflanzen (~5%)' },
             regenbogen: { desc: '×3.0 Verkaufswert',                        source: 'Zufällig beim Pflanzen (~1%)' },
             lunar:      { desc: '×1.5 Verkaufswert',                        source: 'Mondschrein-Gebäude (10%, 25% bei Mondnacht)' },
-            riesig:     { desc: '×2.0 Verkaufswert, +50% Wachstumszeit',    source: 'Düngerwerk-Gebäude (~10%, wenn aktiviert)' },
-            verwurzelt: { desc: 'Single-Pflanze einmal extra erntbar',       source: 'Altes Baumhaus-Gebäude (~6%)' },
-            blutig:     { desc: '×1.4 Verkaufswert',                        source: 'Blutmondnacht (10% Chance pro Mondnacht) – alle Shop-Pflanzen erhalten diese Mutation' },
+            riesig:     { desc: '×2.0 Verkaufswert, +50% Wachstumszeit',    source: 'Düngerwerk-Gebäude (~10-15%, wenn aktiviert)' },
+            verwurzelt: { desc: 'Single-Pflanze einmal extra erntbar',       source: 'Altes Baumhaus-Gebäude (~6-10%)' },
+            blutig:     { desc: '×1.8 Verkaufswert',                        source: 'Blutmondnacht (alle Shop-Pflanzen) · oder Blutschrein (50% Chance wenn Lunar gewürfelt wird)' },
         };
 
         let html = `<div style="margin-bottom:14px;">
@@ -3495,6 +3689,11 @@
             return true;
         });
 
+        // Mondpflanzen hinzufügen mit _isEvent-Flag
+        Object.entries(eventPlants).forEach(([id, plant]) => {
+            entries.push([id, { ...plant, _isEvent: true }]);
+        });
+
         // Filter
         if (_plantIndexFilter === 'entdeckt') entries = entries.filter(([id]) => gameState.discoveredPlants.includes(id));
         if (_plantIndexFilter === 'unentdeckt') entries = entries.filter(([id, plant]) => !gameState.discoveredPlants.includes(id) && !plant.adminOnly);
@@ -3553,11 +3752,11 @@
                     <div class="emoji">${plant.emoji}</div>
                     <div class="name">${plant.name}</div>
                     <div class="rarity" style="color:${rarityColors[plant.rarity]}">${plant.rarity}</div>
+                    ${plant._isEvent ? '<div style="font-size:0.7em;color:#ce93d8;font-weight:700;text-align:center;margin-top:2px;">🌙 Limited</div>' : ''}
                     <div class="quick-info">
                         <span title="Wachstumszeit">⏱️${plant.growTime}h</span>
                         <span title="Verkaufspreis">🏷️${plant.sellValue}€</span>
                     </div>
-                    ${plant.adminOnly ? '<div style="font-size:0.7em;color:#e53935;text-align:center;margin-top:2px;">🔒 Admin</div>' : ''}
                 `;
                 item.onclick = () => showPlantDetail(id);
             } else if (plant.adminOnly) {
@@ -3605,8 +3804,9 @@
 
     // Show plant detail modal
     function showPlantDetail(id) {
-        const plant = plants[id];
+        const plant = plants[id] || eventPlants[id];
         if (!plant) return;
+        const isEvent = !!eventPlants[id];
 
         const color = rarityColors[plant.rarity] || '#888';
         const isGrad = color.startsWith('linear-gradient');
@@ -3642,6 +3842,7 @@
                 <span style="${rarityStyle}">${rarityNames[plant.rarity] || plant.rarity}</span>
             </div>
             ${plant.adminOnly ? '<div style="font-size:0.8em;color:#e53935;font-weight:700;margin-bottom:12px;">🔒 Exklusiv — nicht im Shop erhältlich</div>' : ''}
+            ${isEvent ? '<div style="font-size:0.82em;color:#ce93d8;font-weight:700;margin-bottom:12px;">🌙 Limited Time — nur im Mondladen erhältlich</div>' : ''}
 
             <div class="plant-detail-stats">
                 <div class="plant-detail-stat">
@@ -4039,7 +4240,7 @@
             money: 10, round: 1, roundTime: 0, selectedSeed: null,
             tiles: Array(16).fill(null),
             inventory: {}, shopSeeds: [],
-            buildings: { brunnen: false, kompost: false, gewaechshaus: 0, marktstand: false, scheune: 0, mondschrein: false, duengerwerk: false, duengerwerkAktiv: false, altesBaumhaus: false },
+            buildings: { brunnen: 0, kompost: 0, gewaechshaus: 0, marktstand: false, scheune: 0, mondschrein: false, blutschrein: false, duengerwerk: 0, duengerwerkAktiv: false, altesBaumhaus: 0 },
             scheuneLager: [],
             upgrades: { guteErde: false },
             ruf: 0,
@@ -4091,6 +4292,12 @@
             if (!gameState.brunnenLastUsed) gameState.brunnenLastUsed = 0;
             if (!gameState.plantStats) gameState.plantStats = {};
             if (!gameState.seenMutations) gameState.seenMutations = [];
+            if (gameState.buildings.brunnen === undefined) gameState.buildings.brunnen = 0;
+            if (gameState.buildings.brunnen === true) gameState.buildings.brunnen = 1;
+            if (gameState.buildings.brunnen === false) gameState.buildings.brunnen = 0;
+            if (gameState.buildings.kompost === undefined) gameState.buildings.kompost = 0;
+            if (gameState.buildings.kompost === true) gameState.buildings.kompost = 1;
+            if (gameState.buildings.kompost === false) gameState.buildings.kompost = 0;
             if (gameState.mondMuenzen === undefined) gameState.mondMuenzen = 0;
             if (!gameState.mondShopSeeds) gameState.mondShopSeeds = [];
             if (gameState.mondShopLastEventHour === undefined) gameState.mondShopLastEventHour = -1;
@@ -4098,6 +4305,13 @@
             if (gameState.mondEventEndTime === undefined) gameState.mondEventEndTime = -1;
             if (gameState.mondEventTriggeredHour === undefined) gameState.mondEventTriggeredHour = -1;
             if (gameState.blutmond === undefined) gameState.blutmond = false;
+            if (gameState.buildings.duengerwerk === undefined) gameState.buildings.duengerwerk = 0;
+            if (gameState.buildings.duengerwerk === true) gameState.buildings.duengerwerk = 1;
+            if (gameState.buildings.duengerwerk === false) gameState.buildings.duengerwerk = 0;
+            if (gameState.buildings.blutschrein === undefined) gameState.buildings.blutschrein = false;
+            if (gameState.buildings.altesBaumhaus === undefined) gameState.buildings.altesBaumhaus = 0;
+            if (gameState.buildings.altesBaumhaus === true) gameState.buildings.altesBaumhaus = 1;
+            if (gameState.buildings.altesBaumhaus === false) gameState.buildings.altesBaumhaus = 0;
             if (!Number.isFinite(gameState.roundLastTriggerHour)) gameState.roundLastTriggerHour = getClockHour(gameState.lastSaveTime || Date.now());
 
             // Migration: ScheuneLager alte Formate (string oder {mutation:N}) → {mutations:[]}
