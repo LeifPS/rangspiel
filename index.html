@@ -284,6 +284,43 @@
     .mut-blutig     { background: linear-gradient(135deg, #7f0000, #e53935, #ef9a9a); background-size: 200% 200%; animation: mutShine 2s ease infinite; }
     .mut-reif       { background: linear-gradient(135deg, #e65100, #ff9800, #ffe082); background-size: 200% 200%; animation: mutShine 2.5s ease infinite; }
     .mut-lunara     { background: linear-gradient(135deg, #1a237e, #7986cb, #fffde7, #7986cb, #1a237e); background-size: 200% 100%; animation: lunarShimmer 2s linear infinite; }
+
+    .trade-plant-card {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        border: 2px solid rgba(128,128,128,0.2);
+        margin-bottom: 8px;
+        background: var(--card-bg);
+    }
+    .trade-plant-card .tpc-emoji { font-size: 1.8em; }
+    .trade-plant-card .tpc-info { flex: 1; }
+    .trade-plant-card .tpc-name { font-weight: 700; font-size: 0.9em; }
+    .trade-plant-card .tpc-stats { font-size: 0.75em; opacity: 0.65; margin-top: 2px; }
+    .trade-plant-card .tpc-muts { font-size: 0.75em; margin-top: 3px; }
+    .trade-plant-card .tpc-remove { cursor: pointer; opacity: 0.4; font-size: 1.1em; padding: 4px; }
+    .trade-plant-card .tpc-remove:hover { opacity: 1; }
+
+    .trade-request-card {
+        padding: 14px;
+        border-radius: 12px;
+        border: 2px solid rgba(128,128,128,0.2);
+        margin-bottom: 12px;
+        background: var(--card-bg);
+    }
+    .trade-request-card .trc-header { font-size: 0.8em; opacity: 0.55; margin-bottom: 10px; }
+    .trade-request-card .trc-plants { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center; }
+    .trade-request-card .trc-arrow { text-align: center; font-size: 1.4em; opacity: 0.5; }
+    .trade-request-card .trc-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .trade-accept-btn { flex: 1; padding: 9px; background: linear-gradient(135deg,#4caf50,#2e7d32); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700; }
+    .trade-decline-btn { flex: 1; padding: 9px; background: rgba(229,57,53,0.15); color:#e53935; border:2px solid #e53935; border-radius:8px; cursor:pointer; font-weight:700; }
+    .trade-cancel-btn { padding: 7px 14px; background: rgba(128,128,128,0.15); color:var(--text-color); border:none; border-radius:8px; cursor:pointer; font-size:0.85em; }
+    .tpm-opt-btn { padding: 10px 6px; border:2px solid rgba(128,128,128,0.2); border-radius:10px; cursor:pointer; background:var(--card-bg); color:var(--text-color); font-size:0.82em; font-weight:700; transition:all 0.15s; }
+    .tpm-opt-btn:hover { border-color:#4caf50; background:rgba(76,175,80,0.1); }
+    .tpm-opt-btn.tpm-scheune { border-color:#795548; }
+    .tpm-opt-btn.tpm-scheune:hover { background:rgba(121,85,72,0.1); }
     .tile.ackerland { border-color: #e65100; background: rgba(230, 81, 0, 0.07); }
     .tile-ackerland-badge {
         position: absolute;
@@ -1460,6 +1497,7 @@
                 <h2 class="section-title" style="margin: 0;">🌱 Mein Hof</h2>
                 <div style="display: flex; gap: 10px;">
                     <button onclick="showPlantIndex()" style="background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)'">ℹ️ Info</button>
+                    <button onclick="showTradeModal()" id="trade-btn" style="background: linear-gradient(135deg, #ff9800 0%, #e65100 100%); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s; position:relative;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)'">🤝 Tausch<span id="trade-badge" style="display:none;position:absolute;top:-6px;right:-6px;background:#e53935;color:white;border-radius:50%;width:18px;height:18px;font-size:0.7em;display:none;align-items:center;justify-content:center;font-weight:900;">!</span></button>
                     <button onclick="harvestAll()" style="background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.3)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)'">🌾 Ernte alle</button>
                 </div>
             </div>
@@ -2270,6 +2308,7 @@
                     <div><span>💰 Preis</span><span>${displayPrice}</span></div>
                     <div><span>⏱️ Wachsen</span><span>${plant.growTime}h</span></div>
                     <div><span>💵 Verkauf</span><span>${plant.sellValue}€</span></div>
+                    <div><span>📈 Gewinn/h</span><span>${plant.harvestType === 'multi' ? (plant.sellValue / plant.growTime).toFixed(1) : ((plant.sellValue - plant.price) / plant.growTime).toFixed(1)}€/h</span></div>
                     <div><span> Typ</span><span>${plant.harvestType === 'single' ? '●' : '● ● ●'}</span></div>
                 </div>
                 <button class="buy-btn" onclick="selectSeed('${seed.plantId}')">
@@ -3543,6 +3582,7 @@
                     <div><span>🌙 Preis</span><span>${plant.price} 🌙</span></div>
                     <div><span>⏱️ Wachsen</span><span>${plant.growTime}h</span></div>
                     <div><span>💵 Verkauf</span><span>${isBlutig ? Math.floor(plant.sellValue * 1.4) : plant.sellValue}€</span></div>
+                    <div><span>📈 Gewinn/h</span><span>${(() => { const sv = isBlutig ? Math.floor(plant.sellValue*1.4) : plant.sellValue; return plant.harvestType==='multi' ? (sv/plant.growTime).toFixed(1) : ((sv-plant.price)/plant.growTime).toFixed(1); })()}€/h</span></div>
                     <div><span>Typ</span><span>${plant.harvestType === 'single' ? '●' : '● ● ●'}</span></div>
                 </div>
                 <button class="buy-btn" ${!canAfford ? 'disabled' : ''} onclick="buyMondSeed(${idx})">
@@ -3735,6 +3775,575 @@
         container.innerHTML = html;
     }
 
+    // ══════════════════════════════════════════════════════
+    // TRADE SYSTEM
+    // ══════════════════════════════════════════════════════
+
+    const TRADE_STORAGE_KEY = 'ernteZeitTrades';
+    let _tradeOfferItems = [];
+    let _tradeWantItems = [];
+    let _tradeTargetProfile = null;
+    let _tradePickerMode = null;
+
+    function getAllTrades() {
+        try { return JSON.parse(localStorage.getItem(TRADE_STORAGE_KEY) || '[]'); } catch { return []; }
+    }
+
+    function saveTrades(trades) {
+        localStorage.setItem(TRADE_STORAGE_KEY, JSON.stringify(trades));
+    }
+
+    function getIncomingTrades() {
+        const me = getActiveProfile();
+        return getAllTrades().filter(t => t.toProfile === me && t.status === 'pending');
+    }
+
+    function updateTradeBadge() {
+        const count = getIncomingTrades().length;
+        const badge = document.getElementById('trade-badge');
+        const btn = document.getElementById('trade-btn');
+        if (!badge || !btn) return;
+        const unlocked = tradeUnlocked();
+        btn.style.opacity = unlocked ? '1' : '0.45';
+        btn.title = unlocked ? '' : 'Braucht 15 selbst entdeckte Pflanzen';
+        if (count > 0 && unlocked) {
+            badge.style.display = 'flex';
+            badge.textContent = count;
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    function tradePlantCard(item, showRemove, removeCallback) {
+        const plant = plants[item.plantId] || eventPlants[item.plantId];
+        if (!plant) return '';
+        const rc = rarityColors[plant.rarity] || '#999';
+        const muts = item.mutations || [];
+        const mutMultiplier = 1 + muts.reduce((s, id) => s + (mutationDefs[id] ? mutationDefs[id].multiplier - 1 : 0), 0);
+        const sellVal = Math.floor(plant.sellValue * mutMultiplier);
+        const isMulti = plant.harvestType === 'multi';
+        const pph = isMulti
+            ? (sellVal / plant.growTime).toFixed(2)
+            : ((sellVal - plant.price) / plant.growTime).toFixed(2);
+        const mutBadges = muts.map(id => mutationDefs[id] ? `<span class="mut-badge mut-${id}">${mutationDefs[id].emoji}</span>` : '').join('');
+        const sourceLabel = item.source === 'field' ? `Feld ${item.tileIndex + 1}` : 'Scheune';
+        return `<div class="trade-plant-card">
+            <div class="tpc-emoji">${plant.emoji}</div>
+            <div class="tpc-info">
+                <div class="tpc-name">${plant.name} <span style="font-size:0.75em;opacity:0.5;">(${sourceLabel})</span></div>
+                <div class="tpc-stats">💰 ${plant.price}€ · 🏷️ ${sellVal}€ · 📈 ${pph}€/h</div>
+                ${mutBadges ? `<div class="tpc-muts">${mutBadges}</div>` : ''}
+            </div>
+            ${showRemove ? `<span class="tpc-remove" onclick="${removeCallback}">✕</span>` : ''}
+        </div>`;
+    }
+
+    function tradeUnlocked() {
+        const selfDiscovered = gameState.discoveredPlants.filter(id => {
+            const s = gameState.plantStats && gameState.plantStats[id];
+            // Selbst entdeckt wenn: kein receivedFrom, oder selbst gepflanzt, oder selbst in Scheune gelegt
+            if (!s || !s.receivedFrom) return true;
+            if (s.planted > 0) return true;
+            // Liegt ohne receivedFrom in Scheune
+            return (gameState.scheuneLager || []).some(e => {
+                if (!e) return false;
+                const pid = typeof e === 'object' ? e.plantId : e;
+                return pid === id && !e.receivedFrom;
+            });
+        });
+        return selfDiscovered.length >= 15;
+    }
+
+    function showTradeModal() {
+        if (!tradeUnlocked()) {
+            const selfDiscovered = gameState.discoveredPlants.filter(id => {
+                const s = gameState.plantStats && gameState.plantStats[id];
+                if (!s || !s.receivedFrom) return true;
+                if (s.planted > 0) return true;
+                return (gameState.scheuneLager || []).some(e => {
+                    if (!e) return false;
+                    const pid = typeof e === 'object' ? e.plantId : e;
+                    return pid === id && !e.receivedFrom;
+                });
+            }).length;
+            showNotification(`🔒 Tausch freigeschaltet bei 15 selbst entdeckten Pflanzen (${selfDiscovered}/15)`, 'error');
+            return;
+        }
+        _tradeOfferItems = [];
+        _tradeWantItems = [];
+        _tradeTargetProfile = null;
+        document.getElementById('trade-modal').style.display = 'flex';
+        switchTradeTab('send');
+        renderTradeProfileSelect();
+        renderTradeOfferList();
+        renderTradeWantList();
+        renderTradeInbox();
+        renderTradeOutbox();
+    }
+
+    function closeTradeModal() {
+        document.getElementById('trade-modal').style.display = 'none';
+    }
+
+    function switchTradeTab(tab) {
+        ['send','inbox','outbox'].forEach(t => {
+            document.getElementById('trade-tab-' + t).classList.toggle('active', t === tab);
+            document.getElementById('trade-tab-' + t + '-btn').classList.toggle('active', t === tab);
+        });
+        if (tab === 'inbox') renderTradeInbox();
+        if (tab === 'outbox') renderTradeOutbox();
+    }
+
+    function renderTradeProfileSelect() {
+        const me = getActiveProfile();
+        const container = document.getElementById('trade-profile-select');
+        container.innerHTML = '';
+        for (let i = 1; i <= 3; i++) {
+            if (i === me) continue;
+            if (!localStorage.getItem(getSaveKey(i))) continue;
+            const btn = document.createElement('button');
+            btn.style.cssText = 'padding:7px 14px;border-radius:20px;border:2px solid;cursor:pointer;font-weight:700;font-size:0.85em;transition:all 0.2s;';
+            const isSelected = _tradeTargetProfile === i;
+            btn.style.background = isSelected ? '#ff9800' : 'transparent';
+            btn.style.borderColor = '#ff9800';
+            btn.style.color = isSelected ? 'white' : 'var(--text-color)';
+            btn.textContent = getProfileName(i);
+            btn.onclick = () => { _tradeTargetProfile = i; _tradeWantItems = []; renderTradeProfileSelect(); renderTradeWantList(); };
+            container.appendChild(btn);
+        }
+        if (!container.children.length) {
+            container.innerHTML = '<span style="opacity:0.5;font-size:0.85em;">Keine anderen Profile gefunden.</span>';
+        }
+    }
+
+    function renderTradeOfferList() {
+        const el = document.getElementById('trade-offer-list');
+        if (!_tradeOfferItems.length) { el.innerHTML = '<div style="opacity:0.4;font-size:0.85em;padding:8px;">Noch nichts ausgewählt.</div>'; return; }
+        el.innerHTML = _tradeOfferItems.map((item, i) => tradePlantCard(item, true, `removeTradeItem('offer',${i})`)).join('');
+    }
+
+    function renderTradeWantList() {
+        const el = document.getElementById('trade-want-list');
+        if (!_tradeTargetProfile) { el.innerHTML = '<div style="opacity:0.4;font-size:0.85em;padding:8px;">Erst Profil auswählen.</div>'; return; }
+        if (!_tradeWantItems.length) { el.innerHTML = '<div style="opacity:0.4;font-size:0.85em;padding:8px;">Noch nichts ausgewählt.</div>'; return; }
+        el.innerHTML = _tradeWantItems.map((item, i) => tradePlantCard(item, true, `removeTradeItem('want',${i})`)).join('');
+    }
+
+    function removeTradeItem(side, index) {
+        if (side === 'offer') _tradeOfferItems.splice(index, 1);
+        else _tradeWantItems.splice(index, 1);
+        renderTradeOfferList();
+        renderTradeWantList();
+    }
+
+    function openTradePickerOffer() {
+        _tradePickerMode = 'offer';
+        renderTradePicker(getActiveProfile(), gameState);
+        document.getElementById('trade-picker-modal').style.display = 'flex';
+    }
+
+    function openTradePickerWant() {
+        if (!_tradeTargetProfile) { showNotification('Erst ein Profil auswählen!', 'error'); return; }
+        _tradePickerMode = 'want';
+        let targetState = null;
+        try { targetState = JSON.parse(localStorage.getItem(getSaveKey(_tradeTargetProfile))); } catch {}
+        if (!targetState) { showNotification('Profil hat keine Daten!', 'error'); return; }
+        renderTradePicker(_tradeTargetProfile, targetState);
+        document.getElementById('trade-picker-modal').style.display = 'flex';
+    }
+
+    function renderTradePicker(profileNum, state) {
+        const list = document.getElementById('trade-picker-list');
+        list.innerHTML = '';
+        const items = [];
+
+        // Felder
+        (state.tiles || []).forEach((tile, i) => {
+            if (!tile) return;
+            const plant = plants[tile.plantId] || eventPlants[tile.plantId];
+            if (!plant) return;
+            items.push({ source: 'field', tileIndex: i, scheuneIndex: null, plantId: tile.plantId, mutations: tile.mutations || [] });
+        });
+
+        // Scheune
+        (state.scheuneLager || []).forEach((entry, i) => {
+            if (!entry) return;
+            const plantId = typeof entry === 'object' ? entry.plantId : entry;
+            const plant = plants[plantId] || eventPlants[plantId];
+            if (!plant) return;
+            items.push({ source: 'scheune', tileIndex: null, scheuneIndex: i, plantId, mutations: (typeof entry === 'object' ? entry.mutations : []) || [] });
+        });
+
+        if (!items.length) {
+            list.innerHTML = '<div style="opacity:0.5;padding:20px;text-align:center;">Keine Pflanzen verfügbar.</div>';
+            return;
+        }
+
+        items.forEach((item, idx) => {
+            const plant = plants[item.plantId] || eventPlants[item.plantId];
+            const rc = rarityColors[plant.rarity] || '#999';
+            const muts = item.mutations || [];
+            const mutMultiplier = 1 + muts.reduce((s, id) => s + (mutationDefs[id] ? mutationDefs[id].multiplier - 1 : 0), 0);
+            const sellVal = Math.floor(plant.sellValue * mutMultiplier);
+            const isMultiP = plant.harvestType === 'multi';
+            const pph = isMultiP
+                ? (sellVal / plant.growTime).toFixed(2)
+                : ((sellVal - plant.price) / plant.growTime).toFixed(2);
+            const mutBadges = muts.map(id => mutationDefs[id] ? `<span class="mut-badge mut-${id}">${mutationDefs[id].emoji}</span>` : '').join('');
+            const sourceLabel = item.source === 'field' ? `Feld ${item.tileIndex + 1}` : 'Scheune';
+
+            const div = document.createElement('div');
+            div.className = 'trade-plant-card';
+            div.style.cursor = 'pointer';
+            div.style.borderColor = rc.startsWith('linear') ? 'rgba(128,128,128,0.2)' : rc;
+            div.innerHTML = `
+                <div class="tpc-emoji">${plant.emoji}</div>
+                <div class="tpc-info">
+                    <div class="tpc-name">${plant.name} <span style="font-size:0.75em;opacity:0.5;">(${sourceLabel})</span></div>
+                    <div class="tpc-stats">💰 ${plant.price}€ · 🏷️ ${sellVal}€ · 📈 ${pph}€/h</div>
+                    ${mutBadges ? `<div class="tpc-muts">${mutBadges}</div>` : ''}
+                </div>
+                <span style="font-size:1.2em;opacity:0.5;">➕</span>`;
+            div.onclick = () => {
+                if (_tradePickerMode === 'offer') { _tradeOfferItems.push(item); renderTradeOfferList(); }
+                else { _tradeWantItems.push(item); renderTradeWantList(); }
+                document.getElementById('trade-picker-modal').style.display = 'none';
+            };
+            list.appendChild(div);
+        });
+    }
+
+    function sendTradeRequest() {
+        if (!_tradeTargetProfile) { showNotification('Kein Zielprofil gewählt!', 'error'); return; }
+        if (!_tradeOfferItems.length && !_tradeWantItems.length) { showNotification('Mindestens eine Pflanze auswählen!', 'error'); return; }
+        const me = getActiveProfile();
+        const trade = {
+            id: Date.now() + '_' + Math.random().toString(36).slice(2),
+            fromProfile: me,
+            toProfile: _tradeTargetProfile,
+            offerItems: _tradeOfferItems,
+            wantItems: _tradeWantItems,
+            status: 'pending',
+            createdAt: Date.now()
+        };
+        const trades = getAllTrades();
+        trades.push(trade);
+        saveTrades(trades);
+        showNotification(`🤝 Anfrage an ${getProfileName(_tradeTargetProfile)} gesendet!`);
+        _tradeOfferItems = [];
+        _tradeWantItems = [];
+        renderTradeOfferList();
+        renderTradeWantList();
+        switchTradeTab('outbox');
+    }
+
+    function renderTradeInbox() {
+        const el = document.getElementById('trade-inbox-content');
+        const me = getActiveProfile();
+        const incoming = getAllTrades().filter(t => t.toProfile === me && t.status === 'pending');
+        const countEl = document.getElementById('trade-inbox-count');
+        if (incoming.length) { countEl.style.display = 'inline'; countEl.textContent = incoming.length; }
+        else { countEl.style.display = 'none'; }
+
+        if (!incoming.length) { el.innerHTML = '<div style="opacity:0.5;text-align:center;padding:20px;">Keine offenen Anfragen.</div>'; return; }
+
+        el.innerHTML = incoming.map(t => {
+            const fromName = getProfileName(t.fromProfile);
+            const offerHTML = t.offerItems.map(item => tradePlantCard(item, false, '')).join('') || '<div style="opacity:0.4;font-size:0.85em;">Nichts angeboten</div>';
+            const wantHTML = t.wantItems.map(item => tradePlantCard(item, false, '')).join('') || '<div style="opacity:0.4;font-size:0.85em;">Nichts gewünscht</div>';
+            return `<div class="trade-request-card">
+                <div class="trc-header">Von <strong>${fromName}</strong> · ${new Date(t.createdAt).toLocaleString('de-DE')}</div>
+                <div class="trc-plants">
+                    <div><div style="font-size:0.75em;font-weight:700;opacity:0.5;margin-bottom:6px;">🎁 ANGEBOT:</div>${offerHTML}</div>
+                    <div class="trc-arrow">⇄</div>
+                    <div><div style="font-size:0.75em;font-weight:700;opacity:0.5;margin-bottom:6px;">🙏 WUNSCH:</div>${wantHTML}</div>
+                </div>
+                <div class="trc-actions">
+                    <button class="trade-accept-btn" onclick="acceptTrade('${t.id}')">✅ Annehmen</button>
+                    <button class="trade-decline-btn" onclick="declineTrade('${t.id}')">❌ Ablehnen</button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function renderTradeOutbox() {
+        const el = document.getElementById('trade-outbox-content');
+        const me = getActiveProfile();
+        const outgoing = getAllTrades().filter(t => t.fromProfile === me).slice(-10).reverse();
+        if (!outgoing.length) { el.innerHTML = '<div style="opacity:0.5;text-align:center;padding:20px;">Keine gesendeten Anfragen.</div>'; return; }
+
+        el.innerHTML = outgoing.map(t => {
+            const toName = getProfileName(t.toProfile);
+            const statusLabel = t.status === 'pending' ? '⏳ Ausstehend' : t.status === 'accepted' ? '✅ Angenommen' : '❌ Abgelehnt';
+            const statusColor = t.status === 'pending' ? '#ff9800' : t.status === 'accepted' ? '#4caf50' : '#e53935';
+            const offerHTML = t.offerItems.map(item => tradePlantCard(item, false, '')).join('') || '<div style="opacity:0.4;font-size:0.85em;">Nichts angeboten</div>';
+            const wantHTML = t.wantItems.map(item => tradePlantCard(item, false, '')).join('') || '<div style="opacity:0.4;font-size:0.85em;">Nichts gewünscht</div>';
+            return `<div class="trade-request-card">
+                <div class="trc-header">An <strong>${toName}</strong> · <span style="color:${statusColor};font-weight:700;">${statusLabel}</span></div>
+                <div class="trc-plants">
+                    <div><div style="font-size:0.75em;font-weight:700;opacity:0.5;margin-bottom:6px;">🎁 ICH BIETE:</div>${offerHTML}</div>
+                    <div class="trc-arrow">⇄</div>
+                    <div><div style="font-size:0.75em;font-weight:700;opacity:0.5;margin-bottom:6px;">🙏 ICH MÖCHTE:</div>${wantHTML}</div>
+                </div>
+                ${t.status === 'pending' ? `<div class="trc-actions"><button class="trade-cancel-btn" onclick="cancelTrade('${t.id}')">🗑️ Zurückziehen</button></div>` : ''}
+            </div>`;
+        }).join('');
+    }
+
+    function acceptTrade(tradeId) {
+        const trades = getAllTrades();
+        const trade = trades.find(t => t.id === tradeId);
+        if (!trade || trade.status !== 'pending') { showNotification('Anfrage nicht mehr gültig.', 'error'); renderTradeInbox(); return; }
+
+        const me = getActiveProfile();
+        const fromKey = getSaveKey(trade.fromProfile);
+
+        // Load sender state
+        let senderState = null;
+        try { senderState = JSON.parse(localStorage.getItem(fromKey)); } catch {}
+        if (!senderState) { showNotification('Senderprofil nicht gefunden!', 'error'); return; }
+
+        // Verify offer items still exist in sender's state
+        for (const item of trade.offerItems) {
+            if (!tradeItemExists(senderState, item)) {
+                showNotification('Eine angebotene Pflanze existiert nicht mehr!', 'error');
+                return;
+            }
+        }
+
+        // Verify want items still exist in receiver's (my) state
+        for (const item of trade.wantItems) {
+            if (!tradeItemExists(gameState, item)) {
+                showNotification('Eine gewünschte Pflanze existiert nicht mehr!', 'error');
+                return;
+            }
+        }
+
+        const fromName = getProfileName(trade.fromProfile);
+        const myName = getProfileName(me);
+
+        // Remove items from both sides
+        for (const item of trade.offerItems) removeTradeItemFromState(senderState, item);
+        for (const item of trade.wantItems) removeTradeItemFromState(gameState, item);
+
+        // Save sender state (their wantItems leave their state)
+        // Add offer items to sender's scheune as placeholder — they get placement popup too via pending trade
+        for (const item of trade.wantItems) {
+            addTradePendingPlacement(senderState, item, myName);
+        }
+        localStorage.setItem(fromKey, JSON.stringify(senderState));
+
+        // Mark trade accepted
+        trade.status = 'accepted';
+        saveTrades(trades);
+
+        // Discover plants for receiver
+        trade.offerItems.forEach(item => {
+            if (!gameState.discoveredPlants.includes(item.plantId)) {
+                gameState.discoveredPlants.push(item.plantId);
+                if (!gameState.plantStats) gameState.plantStats = {};
+                if (!gameState.plantStats[item.plantId]) gameState.plantStats[item.plantId] = { planted: 0, harvested: 0, bestHarvest: 0, discoveredDate: null, receivedFrom: null };
+                if (!gameState.plantStats[item.plantId].discoveredDate) {
+                    const d = new Date();
+                    gameState.plantStats[item.plantId].discoveredDate = `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`;
+                }
+                gameState.plantStats[item.plantId].receivedFrom = fromName;
+            }
+        });
+
+        saveGame();
+        showNotification(`✅ Tausch mit ${fromName} angenommen!`);
+        updateTradeBadge();
+        closeTradeModal();
+
+        // Start placement flow for received items
+        startTradePlacement(trade.offerItems, fromName);
+    }
+
+    // ── Trade Placement ─────────────────────────────────────────────
+    let _placementQueue = [];
+    let _placementFromName = '';
+
+    function addTradePendingPlacement(state, item, fromName) {
+        if (!state.tradePendingPlacements) state.tradePendingPlacements = [];
+        state.tradePendingPlacements.push({ ...item, fromName });
+    }
+
+    function checkPendingPlacements() {
+        if (!gameState.tradePendingPlacements || !gameState.tradePendingPlacements.length) return;
+        const pending = gameState.tradePendingPlacements.splice(0);
+        saveGame();
+        // Group by fromName and start placement
+        const byFrom = {};
+        pending.forEach(p => { (byFrom[p.fromName] = byFrom[p.fromName] || []).push(p); });
+        Object.entries(byFrom).forEach(([name, items]) => startTradePlacement(items, name));
+    }
+
+    function startTradePlacement(items, fromName) {
+        _placementQueue = items.map(item => ({ ...item, fromName }));
+        _placementFromName = fromName;
+        showNextPlacement();
+    }
+
+    function showNextPlacement() {
+        if (!_placementQueue.length) {
+            renderFarm(); renderScheuneLager(); updateUI();
+            return;
+        }
+        const item = _placementQueue[0];
+        const plant = plants[item.plantId] || eventPlants[item.plantId];
+        if (!plant) { _placementQueue.shift(); showNextPlacement(); return; }
+
+        const modal = document.getElementById('trade-placement-modal');
+        document.getElementById('tpm-title').textContent = `🤝 Von ${item.fromName} erhalten`;
+        document.getElementById('tpm-plant-name').textContent = `${plant.emoji} ${plant.name}`;
+        const muts = item.mutations || [];
+        document.getElementById('tpm-muts').innerHTML = muts.map(id => mutationDefs[id] ? `<span class="mut-badge mut-${id}">${mutationDefs[id].emoji} ${mutationDefs[id].label}</span>` : '').join(' ') || '<span style="opacity:0.5;">Keine Mutationen</span>';
+
+        // Build placement options
+        const opts = document.getElementById('tpm-options');
+        opts.innerHTML = '';
+
+        // Free tiles
+        const totalTiles = 16 + (gameState.buildings.gewaechshaus || 0) + (gameState.buildings.ackerland || 0);
+        let hasOptions = false;
+        for (let i = 0; i < totalTiles; i++) {
+            if (gameState.tiles[i]) continue;
+            const isGH = i >= 16 && i < ackerlandStartIndex();
+            const isAL = isAckerlandTile(i);
+            const label = isGH ? `🏡 Feld ${i+1}` : isAL ? `🌾 Feld ${i+1}` : `Feld ${i+1}`;
+            const btn = document.createElement('button');
+            btn.className = 'tpm-opt-btn';
+            btn.textContent = label;
+            btn.onclick = () => placeTradedPlant(item, 'field', i);
+            opts.appendChild(btn);
+            hasOptions = true;
+        }
+
+        // Scheune option
+        const scheuneLevel = gameState.buildings.scheune || 0;
+        if (scheuneLevel > 0) {
+            const slots = [2, 4, 6][scheuneLevel - 1];
+            const used = (gameState.scheuneLager || []).length;
+            if (used < slots) {
+                const btn = document.createElement('button');
+                btn.className = 'tpm-opt-btn tpm-scheune';
+                btn.textContent = `🏚️ Scheune (${used}/${slots})`;
+                btn.onclick = () => placeTradedPlant(item, 'scheune', null);
+                opts.appendChild(btn);
+                hasOptions = true;
+            }
+        }
+
+        if (!hasOptions) {
+            const msg = document.createElement('div');
+            msg.style.cssText = 'opacity:0.6;font-size:0.85em;padding:8px;';
+            msg.textContent = 'Keine freien Felder oder Scheune verfügbar!';
+            opts.appendChild(msg);
+            // Force into scheune anyway (no limit)
+            const btn = document.createElement('button');
+            btn.className = 'tpm-opt-btn';
+            btn.textContent = '🏚️ Trotzdem in Scheune';
+            btn.onclick = () => placeTradedPlant(item, 'scheune', null);
+            opts.appendChild(btn);
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function placeTradedPlant(item, where, tileIndex) {
+        document.getElementById('trade-placement-modal').style.display = 'none';
+        const plant = plants[item.plantId] || eventPlants[item.plantId];
+        if (!plant) { _placementQueue.shift(); showNextPlacement(); return; }
+        const muts = (item.mutations || []).filter(m => m !== 'reif');
+
+        if (where === 'field') {
+            const isAL = isAckerlandTile(tileIndex);
+            const finalMuts = isAL ? rollMutations(muts, 0, true) : muts;
+            const riesigBonus = finalMuts.includes('riesig') ? 1.5 : 1;
+            gameState.tiles[tileIndex] = {
+                plantId: item.plantId,
+                progress: 0,
+                totalTime: Math.floor(plant.growTime * riesigBonus),
+                mutations: finalMuts,
+                mutation: 0
+            };
+            trackPlanted(item.plantId);
+        } else {
+            if (!gameState.scheuneLager) gameState.scheuneLager = [];
+            gameState.scheuneLager.push({ plantId: item.plantId, wasPlanted: false, mutations: muts, receivedFrom: item.fromName });
+        }
+
+        // Discover + receivedFrom tracking
+        if (!gameState.discoveredPlants.includes(item.plantId)) {
+            gameState.discoveredPlants.push(item.plantId);
+        }
+        if (!gameState.plantStats) gameState.plantStats = {};
+        if (!gameState.plantStats[item.plantId]) gameState.plantStats[item.plantId] = { planted: 0, harvested: 0, bestHarvest: 0, discoveredDate: null, receivedFrom: null };
+        if (!gameState.plantStats[item.plantId].discoveredDate) {
+            const d = new Date();
+            gameState.plantStats[item.plantId].discoveredDate = `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}`;
+        }
+        if (!gameState.plantStats[item.plantId].receivedFrom) {
+            gameState.plantStats[item.plantId].receivedFrom = item.fromName;
+        }
+
+        saveGame();
+        _placementQueue.shift();
+        showNextPlacement();
+    }
+
+    function tradeItemExists(state, item) {
+        if (item.source === 'field') {
+            const tile = (state.tiles || [])[item.tileIndex];
+            return tile && tile.plantId === item.plantId;
+        } else {
+            const entry = (state.scheuneLager || [])[item.scheuneIndex];
+            if (!entry) return false;
+            const pid = typeof entry === 'object' ? entry.plantId : entry;
+            return pid === item.plantId;
+        }
+    }
+
+    function removeTradeItemFromState(state, item) {
+        if (item.source === 'field') {
+            if (state.tiles) state.tiles[item.tileIndex] = null;
+        } else {
+            if (state.scheuneLager) state.scheuneLager.splice(item.scheuneIndex, 1);
+        }
+    }
+
+    function addTradeItemToScheune(state, item, fromName) {
+        if (!state.scheuneLager) state.scheuneLager = [];
+        const muts = (item.mutations || []).filter(m => m !== 'reif');
+        state.scheuneLager.push({ plantId: item.plantId, wasPlanted: false, mutations: muts, receivedFrom: fromName });
+    }
+
+    function declineTrade(tradeId) {
+        const trades = getAllTrades();
+        const trade = trades.find(t => t.id === tradeId);
+        if (trade) { trade.status = 'declined'; saveTrades(trades); }
+        showNotification('Tausch abgelehnt.');
+        updateTradeBadge();
+        renderTradeInbox();
+    }
+
+    function cancelTrade(tradeId) {
+        const trades = getAllTrades();
+        const idx = trades.findIndex(t => t.id === tradeId);
+        if (idx !== -1) { trades.splice(idx, 1); saveTrades(trades); }
+        showNotification('Anfrage zurückgezogen.');
+        renderTradeOutbox();
+    }
+
+    function checkTradeNotifications() {
+        updateTradeBadge();
+    }
+
+    // ══════════════════════════════════════════════════════
+    // END TRADE SYSTEM
+    // ══════════════════════════════════════════════════════
+
     // Show plant index modal
     let _plantIndexSort = 'rarity';
     let _plantIndexFilter = 'alle';
@@ -3918,6 +4527,7 @@
                     <div class="name">${plant.name}</div>
                     <div class="rarity" style="color:${rarityColors[plant.rarity]}">${plant.rarity}</div>
                     ${plant._isEvent ? '<div style="font-size:0.7em;color:#ce93d8;font-weight:700;text-align:center;margin-top:2px;">🌙 Limited</div>' : ''}
+                    ${(() => { const s = gameState.plantStats && gameState.plantStats[id]; return (s && s.receivedFrom && !s.planted) ? `<div style="font-size:0.68em;color:#ff9800;text-align:center;margin-top:2px;">🤝 Von ${s.receivedFrom}</div>` : ''; })()}
                     <div class="quick-info">
                         <span title="Wachstumszeit">⏱️${plant.growTime}h</span>
                         <span title="Verkaufspreis">🏷️${plant.sellValue}€</span>
@@ -4058,6 +4668,7 @@
                 return `<div class="plant-detail-extras" style="margin-top:12px;border-top:1px solid rgba(128,128,128,0.15);padding-top:12px;">
                     <div style="font-size:0.75em;font-weight:700;opacity:0.5;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;">Deine Statistiken</div>
                     ${s.discoveredDate ? `<div class="plant-detail-extra-row"><span class="lbl">📅 Entdeckt am</span><span class="val">${s.discoveredDate}</span></div>` : ''}
+                    ${s.receivedFrom ? `<div class="plant-detail-extra-row"><span class="lbl">🤝 Erhalten von</span><span class="val" style="color:#ff9800;">${s.receivedFrom}</span></div>` : ''}
                     ${s.planted ? `<div class="plant-detail-extra-row"><span class="lbl">🌱 Gepflanzt</span><span class="val">${s.planted}×</span></div>` : ''}
                     ${s.harvested ? `<div class="plant-detail-extra-row"><span class="lbl">🌾 Geerntet</span><span class="val">${s.harvested}×</span></div>` : ''}
                     ${s.bestHarvest ? `<div class="plant-detail-extra-row"><span class="lbl">🏆 Beste Ernte</span><span class="val" style="color:#f9a825;">${s.bestHarvest}€</span></div>` : ''}
@@ -4291,6 +4902,7 @@
             
             updateUI();
             updateProgressBars();
+            checkTradeNotifications();
             
             // Auto-save every 5 seconds
             saveCounter += elapsedSeconds;
@@ -4383,6 +4995,7 @@
         syncEventPanel();
         updateUI();
         renderRufBadge();
+        checkPendingPlacements();
     }
 
     function renameProfile(profileNum) {
@@ -4573,5 +5186,80 @@
     </div>
 </div>
 
+<div id="trade-modal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:700px;">
+        <div class="modal-header">
+            <h2>🤝 Tauschbörse</h2>
+            <button class="modal-close" onclick="closeTradeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <div style="display:flex;gap:8px;margin-bottom:16px;border-bottom:2px solid rgba(128,128,128,0.15);padding-bottom:0;">
+                <button class="index-tab-btn active" id="trade-tab-send-btn" onclick="switchTradeTab('send')">📤 Anfrage senden</button>
+                <button class="index-tab-btn" id="trade-tab-inbox-btn" onclick="switchTradeTab('inbox')">📥 Eingang <span id="trade-inbox-count" style="display:none;background:#e53935;color:white;border-radius:10px;padding:1px 6px;font-size:0.8em;margin-left:4px;"></span></button>
+                <button class="index-tab-btn" id="trade-tab-outbox-btn" onclick="switchTradeTab('outbox')">📤 Gesendet</button>
+            </div>
+
+            <!-- Tab: Senden -->
+            <div id="trade-tab-send" class="index-tab-panel active">
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:0.85em;font-weight:700;opacity:0.6;">AN PROFIL:</label>
+                    <div id="trade-profile-select" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;"></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div>
+                        <div style="font-size:0.85em;font-weight:700;opacity:0.6;margin-bottom:8px;">🌱 ICH BIETE:</div>
+                        <div id="trade-offer-list" style="max-height:260px;overflow-y:auto;"></div>
+                        <button onclick="openTradePickerOffer()" style="width:100%;margin-top:8px;padding:8px;border:2px dashed rgba(128,128,128,0.3);border-radius:8px;background:transparent;cursor:pointer;color:var(--text-color);font-size:0.85em;">+ Pflanze hinzufügen</button>
+                    </div>
+                    <div>
+                        <div style="font-size:0.85em;font-weight:700;opacity:0.6;margin-bottom:8px;">🌿 ICH MÖCHTE:</div>
+                        <div id="trade-want-list" style="max-height:260px;overflow-y:auto;"></div>
+                        <button onclick="openTradePickerWant()" style="width:100%;margin-top:8px;padding:8px;border:2px dashed rgba(128,128,128,0.3);border-radius:8px;background:transparent;cursor:pointer;color:var(--text-color);font-size:0.85em;">+ Pflanze hinzufügen</button>
+                    </div>
+                </div>
+                <button onclick="sendTradeRequest()" style="width:100%;margin-top:16px;padding:12px;background:linear-gradient(135deg,#ff9800,#e65100);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:1em;">🤝 Anfrage senden</button>
+            </div>
+
+            <!-- Tab: Eingang -->
+            <div id="trade-tab-inbox" class="index-tab-panel">
+                <div id="trade-inbox-content"></div>
+            </div>
+
+            <!-- Tab: Gesendet -->
+            <div id="trade-tab-outbox" class="index-tab-panel">
+                <div id="trade-outbox-content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Plant Picker Modal für Trade -->
+<div id="trade-picker-modal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:500px;">
+        <div class="modal-header">
+            <h2>🌱 Pflanze auswählen</h2>
+            <button class="modal-close" onclick="document.getElementById('trade-picker-modal').style.display='none'">✕</button>
+        </div>
+        <div class="modal-body">
+            <div id="trade-picker-list"></div>
+        </div>
+    </div>
+</div>
+<!-- Trade Placement Modal -->
+<div id="trade-placement-modal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:440px;">
+        <div class="modal-header">
+            <h2 id="tpm-title">🤝 Pflanze platzieren</h2>
+        </div>
+        <div class="modal-body">
+            <div style="text-align:center;margin-bottom:16px;">
+                <div style="font-size:2em;" id="tpm-plant-name"></div>
+                <div style="margin-top:6px;" id="tpm-muts"></div>
+            </div>
+            <div style="font-size:0.85em;font-weight:700;opacity:0.5;margin-bottom:10px;">WO PLATZIEREN?</div>
+            <div id="tpm-options" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:300px;overflow-y:auto;"></div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
