@@ -1962,8 +1962,11 @@
             if (Math.random() < riesigChance) { muts.push('riesig'); trackSeenMutation('riesig'); }
         }
         if (gameState.buildings.altesBaumhaus > 0 && !muts.includes('verwurzelt')) {
-            const verwurzeltChance = [0, 0.06, 0.08, 0.10][gameState.buildings.altesBaumhaus] || 0.06;
-            if (Math.random() < verwurzeltChance) { muts.push('verwurzelt'); trackSeenMutation('verwurzelt'); }
+            const plant = plants[gameState.selectedSeed] || eventPlants[gameState.selectedSeed];
+            if (plant && plant.harvestType === 'single') {
+                const verwurzeltChance = [0, 0.06, 0.08, 0.10][gameState.buildings.altesBaumhaus] || 0.06;
+                if (Math.random() < verwurzeltChance) { muts.push('verwurzelt'); trackSeenMutation('verwurzelt'); }
+            }
         }
         if (isAckerland && !muts.includes('reif')) {
             if (Math.random() < 0.10) { muts.push('reif'); trackSeenMutation('reif'); }
@@ -3743,36 +3746,66 @@
         const seenCount = Object.keys(mutationDefs).filter(id => seen.includes(id)).length;
 
         const mutationInfo = {
-            gold:       { desc: '×1.5 Verkaufswert',                        source: 'Zufällig beim Pflanzen (~5%)' },
-            regenbogen: { desc: '×3.0 Verkaufswert',                        source: 'Zufällig beim Pflanzen (~1%)' },
-            lunar:      { desc: '×1.5 Verkaufswert',                        source: 'Mondschrein-Gebäude (10%, 25% bei Mondnacht)' },
-            riesig:     { desc: '×2.0 Verkaufswert, +50% Wachstumszeit',    source: 'Düngerwerk-Gebäude (~10-15%, wenn aktiviert)' },
-            verwurzelt: { desc: 'Single-Pflanze einmal extra erntbar',       source: 'Altes Baumhaus-Gebäude (~6-10%)' },
-            blutig:     { desc: '×2.0 Verkaufswert',                        source: 'Blutmondnacht (alle Shop-Pflanzen) · oder Blutschrein (50% wenn Lunar gewürfelt)' },
-            reif:       { desc: '×1.5 Verkaufswert · nur auf Acker-Feldern', source: 'Ackerland-Gebäude (~10%) · verschwindet beim Einlagern in Scheune' },
-            lunara:     { desc: '×2.5 Verkaufswert · ersetzt Lunar',         source: 'Mondschrein Stufe 3 · 5% Chance wenn Lunar gewürfelt wird' },
+            gold:       { source: 'Zufällig beim Pflanzen (~5%)' },
+            regenbogen: { source: 'Zufällig beim Pflanzen (~1%)' },
+            lunar:      { source: 'Mondschrein-Gebäude (10%, 25% bei Mondnacht)' },
+            riesig:     { source: 'Düngerwerk-Gebäude (~10-15%, wenn aktiviert)' },
+            verwurzelt: { source: 'Altes Baumhaus-Gebäude (~6-10%), nur Single-Pflanzen' },
+            blutig:     { source: 'Blutmondnacht (alle Shop-Pflanzen) · oder Blutschrein (50% wenn Lunar gewürfelt)' },
+            reif:       { source: 'Ackerland-Gebäude (~10%) · verschwindet beim Einlagern in Scheune' },
+            lunara:     { source: 'Mondschrein Stufe 3 · 5% Chance wenn Lunar gewürfelt wird' },
         };
 
-        let html = `<div style="margin-bottom:14px;">
-            <div style="font-size:1em;font-weight:700;">Entdeckt: <strong>${seenCount}/${total}</strong></div>
-            <div style="font-size:0.82em;opacity:0.5;margin-top:2px;">Mutationen die du schon auf einer Pflanze hattest</div>
-        </div>`;
+        let html = `<div style="margin-bottom:14px;font-size:0.9em;">
+            Entdeckt: <strong>${seenCount}/${total}</strong>
+        </div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;">`;
 
         Object.entries(mutationDefs).forEach(([id, def]) => {
             const isSeen = seen.includes(id);
-            const info = mutationInfo[id] || { desc: '', source: '' };
-            html += `<div class="mutation-card ${isSeen ? '' : 'unseen'}">
-                <div class="mut-badge-large mut-${id}">${def.emoji}</div>
-                <div class="mut-info">
-                    <div class="mut-name">${def.label}</div>
-                    <div class="mut-desc">${info.desc}</div>
-                    <div class="mut-source">📍 ${isSeen ? info.source : '???'}</div>
-                </div>
-                <div class="mut-seen-badge">${isSeen ? '✅ Gesehen' : '❓ Neu'}</div>
-            </div>`;
+            const info = mutationInfo[id] || { source: '' };
+            if (isSeen) {
+                html += `<div onclick="showMutationDetail('${id}')" style="cursor:pointer;text-align:center;padding:12px 8px;border-radius:12px;border:2px solid rgba(128,128,128,0.15);background:var(--card-bg);transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                    <div class="mut-badge-large mut-${id}" style="margin:0 auto 8px;">${def.emoji}</div>
+                    <div style="font-weight:700;font-size:0.85em;">${def.label}</div>
+                    <div style="font-size:0.78em;opacity:0.6;margin-top:3px;">×${def.multiplier}</div>
+                </div>`;
+            } else {
+                html += `<div style="text-align:center;padding:12px 8px;border-radius:12px;border:2px solid rgba(128,128,128,0.1);background:var(--card-bg);opacity:0.4;">
+                    <div style="width:40px;height:40px;border-radius:8px;background:rgba(128,128,128,0.2);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:1.3em;">?</div>
+                    <div style="font-weight:700;font-size:0.85em;">???</div>
+                    <div style="font-size:0.78em;opacity:0.6;margin-top:3px;">×?</div>
+                </div>`;
+            }
         });
 
+        html += '</div>';
         container.innerHTML = html;
+        container._mutationInfo = mutationInfo;
+    }
+
+    function showMutationDetail(id) {
+        const def = mutationDefs[id];
+        if (!def) return;
+        const container = document.getElementById('mutation-index-content');
+        const info = (container._mutationInfo || {})[id] || { source: '' };
+        const existing = document.getElementById('mutation-detail-popup');
+        if (existing) existing.remove();
+
+        const popup = document.createElement('div');
+        popup.id = 'mutation-detail-popup';
+        popup.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);';
+        popup.innerHTML = `<div style="background:var(--card-bg);border-radius:16px;padding:24px;max-width:320px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+            <div style="text-align:center;margin-bottom:16px;">
+                <div class="mut-badge-large mut-${id}" style="margin:0 auto 10px;width:52px;height:52px;font-size:1.8em;">${def.emoji}</div>
+                <div style="font-weight:700;font-size:1.1em;">${def.label}</div>
+                <div style="font-size:0.9em;opacity:0.6;margin-top:4px;">×${def.multiplier} Verkaufswert</div>
+            </div>
+            <div style="font-size:0.82em;opacity:0.6;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Herkunft</div>
+            <div style="font-size:0.88em;line-height:1.5;">${info.source}</div>
+            <button onclick="document.getElementById('mutation-detail-popup').remove()" style="width:100%;margin-top:18px;padding:10px;border:none;border-radius:10px;background:rgba(128,128,128,0.15);cursor:pointer;font-weight:700;color:var(--text-color);">Schließen</button>
+        </div>`;
+        popup.onclick = e => { if (e.target === popup) popup.remove(); };
+        document.body.appendChild(popup);
     }
 
     // ══════════════════════════════════════════════════════
@@ -4005,6 +4038,10 @@
                 </div>
                 <span style="font-size:1.2em;opacity:0.5;">➕</span>`;
             div.onclick = () => {
+                const isDupe = _tradePickerMode === 'offer'
+                    ? _tradeOfferItems.some(i => i.source === item.source && i.tileIndex === item.tileIndex && i.scheuneIndex === item.scheuneIndex)
+                    : _tradeWantItems.some(i => i.source === item.source && i.tileIndex === item.tileIndex && i.scheuneIndex === item.scheuneIndex);
+                if (isDupe) { showNotification('Diese Pflanze ist bereits ausgewählt!', 'error'); return; }
                 if (_tradePickerMode === 'offer') { _tradeOfferItems.push(item); renderTradeOfferList(); }
                 else { _tradeWantItems.push(item); renderTradeWantList(); }
                 document.getElementById('trade-picker-modal').style.display = 'none';
